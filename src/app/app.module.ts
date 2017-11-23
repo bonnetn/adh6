@@ -10,6 +10,7 @@ import { MembersComponent } from './members/members.component';
 import { RoomsComponent } from './rooms/rooms.component';
 import { PortsComponent } from './ports/ports.component';
 import { PatchingComponent } from './patching/patching.component';
+import { MemberService } from './member.service';
 
 
 @NgModule({
@@ -26,7 +27,7 @@ import { PatchingComponent } from './patching/patching.component';
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [MemberService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
