@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start2": "ng serve",
+    "start": "ng-swagger-gen && ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
