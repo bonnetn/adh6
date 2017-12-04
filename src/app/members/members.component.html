@@ -1,3 +1,5 @@
-<p>
-  members works!
-</p>
+<ul class="members-list">
+  <li *ngFor="let member of members$ | async" >
+    <a [routerLink]="['/member', member.username]">{{member.firstName}} {{member.lastName}}</a>
+  </li>
+</ul>

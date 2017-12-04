@@ -11,6 +11,8 @@ import { RoomsComponent } from './rooms/rooms.component';
 import { PortsComponent } from './ports/ports.component';
 import { PatchingComponent } from './patching/patching.component';
 
+import { ApiModule } from './api/api.module';
+import { MemberDetailsComponent } from './member-details/member-details.component';
 
 @NgModule({
   declarations: [
@@ -21,10 +23,12 @@ import { PatchingComponent } from './patching/patching.component';
     RoomsComponent,
     PortsComponent,
     PatchingComponent,
+    MemberDetailsComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ApiModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,0 +1,10 @@
+<div *ngIf="(member$ | async) as member">
+  <h1>{{ member.firstName }} {{ member.lastName }}</h1>
+  <img src="http://trombi.tem-tsp.eu/photo.php?uid={{ member.username }}"/>
+  <ul>
+    <li><strong>Identifiant DISI:</strong> {{ member.username }}</li>
+    <li><strong>Numéro de chambre:</strong> {{ member.roomNumber }}</li>
+    <li><strong>Commentaire:</strong> {{ member.comment }}</li>
+    <li><strong>Date de départ:</strong> {{ member.departureDate }}</li>
+  </ul>
+</div>

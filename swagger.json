@@ -9,6 +9,8 @@
       "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
+  "host" : "localhost:3000",
+  "basePath" : "/",
   "tags" : [ {
     "name" : "user",
     "description" : "Operations on users"
@@ -25,7 +27,7 @@
     "name" : "ports",
     "description" : "Operations on ports"
   } ],
-  "schemes" : [ "https", "http" ],
+  "schemes" : [ "http" ],
   "paths" : {
     "/user" : {
       "get" : {
@@ -63,7 +65,8 @@
               }
             }
           }
-        }
+        },
+        "x-swagger-router-controller" : "user"
       }
     },
     "/user/{username}" : {
@@ -89,13 +92,14 @@
           "404" : {
             "description" : "Not found"
           }
-        }
+        },
+        "x-swagger-router-controller" : "user"
       },
       "put" : {
         "tags" : [ "user" ],
         "summary" : "Update/create an user",
         "description" : "This can only be done by the logged in user.",
-        "operationId" : "updateCreateUser",
+        "operationId" : "putUser",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "username",
@@ -118,11 +122,9 @@
           },
           "204" : {
             "description" : "Updated"
-          },
-          "404" : {
-            "description" : "Not found"
           }
-        }
+        },
+        "x-swagger-router-controller" : "user"
       },
       "delete" : {
         "tags" : [ "user" ],
@@ -144,14 +146,15 @@
           "404" : {
             "description" : "Not found"
           }
-        }
+        },
+        "x-swagger-router-controller" : "user"
       }
     },
     "/device/" : {
       "get" : {
         "tags" : [ "devices" ],
         "summary" : "Filter devices",
-        "operationId" : "filterDevices",
+        "operationId" : "filterDevice",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "limit",
@@ -177,7 +180,8 @@
               }
             }
           }
-        }
+        },
+        "x-swagger-router-controller" : "device"
       }
     },
     "/device/{macAddress}" : {
@@ -203,12 +207,13 @@
           "404" : {
             "description" : "Not found"
           }
-        }
+        },
+        "x-swagger-router-controller" : "device"
       },
       "put" : {
         "tags" : [ "devices" ],
         "summary" : "Update/create a device",
-        "operationId" : "updateCreateDevice",
+        "operationId" : "putDevice",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "macAddress",
@@ -222,7 +227,7 @@
           "description" : "Device to update",
           "required" : true,
           "schema" : {
-            "$ref" : "#/definitions/Room"
+            "$ref" : "#/definitions/Device"
           }
         } ],
         "responses" : {
@@ -235,7 +240,8 @@
           "400" : {
             "description" : "Invalid mac address supplied / already in use"
           }
-        }
+        },
+        "x-swagger-router-controller" : "device"
       },
       "delete" : {
         "tags" : [ "devices" ],
@@ -256,14 +262,15 @@
           "404" : {
             "description" : "Not found"
           }
-        }
+        },
+        "x-swagger-router-controller" : "device"
       }
     },
     "/room/" : {
       "get" : {
         "tags" : [ "rooms" ],
         "summary" : "Filter rooms",
-        "operationId" : "filterRooms",
+        "operationId" : "filterRoom",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "limit",
@@ -283,7 +290,8 @@
               }
             }
           }
-        }
+        },
+        "x-swagger-router-controller" : "room"
       }
     },
     "/room/{roomNumber}" : {
@@ -308,12 +316,13 @@
           "404" : {
             "description" : "Not found"
           }
-        }
+        },
+        "x-swagger-router-controller" : "room"
       },
       "put" : {
         "tags" : [ "rooms" ],
         "summary" : "Update/create a room",
-        "operationId" : "updateCreateRoom",
+        "operationId" : "putRoom",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "roomNumber",
@@ -336,7 +345,8 @@
           "204" : {
             "description" : "Updated"
           }
-        }
+        },
+        "x-swagger-router-controller" : "room"
       },
       "delete" : {
         "tags" : [ "rooms" ],
@@ -356,14 +366,15 @@
           "404" : {
             "description" : "Not found"
           }
-        }
+        },
+        "x-swagger-router-controller" : "room"
       }
     },
     "/switch/" : {
       "get" : {
         "tags" : [ "switches" ],
         "summary" : "Get all switches",
-        "operationId" : "getAllSwitches",
+        "operationId" : "filterSwitch",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "limit",
@@ -383,7 +394,8 @@
               }
             }
           }
-        }
+        },
+        "x-swagger-router-controller" : "switch"
       },
       "post" : {
         "tags" : [ "switches" ],
@@ -409,7 +421,8 @@
               }
             }
           }
-        }
+        },
+        "x-swagger-router-controller" : "switch"
       }
     },
     "/switch/{switchID}" : {
@@ -434,7 +447,8 @@
           "404" : {
             "description" : "Not found"
           }
-        }
+        },
+        "x-swagger-router-controller" : "switch"
       },
       "put" : {
         "tags" : [ "switches" ],
@@ -462,7 +476,8 @@
           "404" : {
             "description" : "Not found"
           }
-        }
+        },
+        "x-swagger-router-controller" : "switch"
       },
       "delete" : {
         "tags" : [ "switches" ],
@@ -482,14 +497,15 @@
           "404" : {
             "description" : "Not found"
           }
-        }
+        },
+        "x-swagger-router-controller" : "switch"
       }
     },
     "/ports/" : {
       "get" : {
         "tags" : [ "ports" ],
         "summary" : "Filter ports",
-        "operationId" : "filterPorts",
+        "operationId" : "filterPort",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "limit",
@@ -521,7 +537,8 @@
               }
             }
           }
-        }
+        },
+        "x-swagger-router-controller" : "port"
       }
     },
     "/switch/{switchID}/port/" : {
@@ -554,7 +571,8 @@
               }
             }
           }
-        }
+        },
+        "x-swagger-router-controller" : "port"
       }
     },
     "/switch/{switchID}/port/{portID}" : {
@@ -584,7 +602,8 @@
           "404" : {
             "description" : "Not found"
           }
-        }
+        },
+        "x-swagger-router-controller" : "port"
       },
       "put" : {
         "tags" : [ "ports" ],
@@ -617,7 +636,8 @@
           "404" : {
             "description" : "Not found"
           }
-        }
+        },
+        "x-swagger-router-controller" : "port"
       },
       "delete" : {
         "tags" : [ "ports" ],
@@ -642,7 +662,8 @@
           "404" : {
             "description" : "Not found"
           }
-        }
+        },
+        "x-swagger-router-controller" : "port"
       }
     }
   },
@@ -697,8 +718,18 @@
         "roomNumber" : {
           "type" : "integer",
           "format" : "int32",
-          "example" : 1001
+          "example" : 5012
         }
+      },
+      "example" : {
+        "firstName" : "John",
+        "lastName" : "Doe",
+        "roomNumber" : 5012,
+        "comment" : "comment",
+        "departureDate" : "2000-01-23T04:56:07.000+00:00",
+        "associationMode" : "2000-01-23T04:56:07.000+00:00",
+        "email" : "john.doe@gmail.com",
+        "username" : "doe_john"
       }
     },
     "Device" : {
@@ -724,6 +755,13 @@
           "type" : "string",
           "example" : "doe_john"
         }
+      },
+      "example" : {
+        "ipv6Address" : "ipv6Address",
+        "ipAddress" : "127.0.0.1",
+        "connectionType" : "wired",
+        "mac" : "01:23:45:67:89:AB",
+        "username" : "doe_john"
       }
     },
     "Room" : {
@@ -746,6 +784,12 @@
           "type" : "integer",
           "example" : 45
         }
+      },
+      "example" : {
+        "roomNumber" : 5110,
+        "vlan" : 45,
+        "phone" : 6842,
+        "description" : "Chambre 5110"
       }
     },
     "Port" : {
@@ -764,6 +808,11 @@
           "type" : "integer",
           "example" : 6
         }
+      },
+      "example" : {
+        "roomNumber" : 5110,
+        "switchID" : 6,
+        "portNumber" : "1/0/4"
       }
     },
     "Switch" : {
@@ -783,6 +832,11 @@
           "format" : "password",
           "example" : "ghWgpQvHRkrYuqpMLWYkstS3"
         }
+      },
+      "example" : {
+        "ip" : "192.168.102.211",
+        "description" : "Switch U5",
+        "community" : "ghWgpQvHRkrYuqpMLWYkstS3"
       }
     },
     "body" : {
@@ -808,6 +862,14 @@
           "type" : "integer",
           "example" : 1
         }
+      },
+      "example" : {
+        "switchID" : 1,
+        "switch" : {
+          "ip" : "192.168.102.211",
+          "description" : "Switch U5",
+          "community" : "ghWgpQvHRkrYuqpMLWYkstS3"
+        }
       }
     },
     "inline_response_200_1" : {
@@ -822,6 +884,15 @@
         "switchID" : {
           "type" : "integer",
           "example" : 6
+        }
+      },
+      "example" : {
+        "switchID" : 6,
+        "portID" : 1,
+        "switch" : {
+          "roomNumber" : 5110,
+          "switchID" : 6,
+          "portNumber" : "1/0/4"
         }
       }
     }
