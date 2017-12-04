@@ -1,10 +1,64 @@
 <div *ngIf="(member$ | async) as member">
   <h1>{{ member.firstName }} {{ member.lastName }}</h1>
-  <img src="http://trombi.tem-tsp.eu/photo.php?uid={{ member.username }}"/>
   <ul>
     <li><strong>Identifiant DISI:</strong> {{ member.username }}</li>
-    <li><strong>Numéro de chambre:</strong> {{ member.roomNumber }}</li>
-    <li><strong>Commentaire:</strong> {{ member.comment }}</li>
-    <li><strong>Date de départ:</strong> {{ member.departureDate }}</li>
+    <li>
+      <ul><strong>Date de départ:</strong> {{ member.departureDate }}
+		    <li>Paiements</li>
+		    <li>Cotiser</li>
+      </ul>
+    </li>
+    <li><strong>Numéro de chambre:</strong>
+      <ul>
+        <li>{{ member.rooNumber }}</li>
+        <li>Déménager</li>
+      </ul>
+    </li>
+	  <li>Editer le profil</li>
+  </ul>
+  
+  <h2>Réseau filaire</h2>
+  <ul>
+  	<ul>
+  		<li>Adresse MAC</li>
+  		<li>Adresse IPv4</li>
+  		<li>Adresse IPv6</li>
+  		<li>MAB</li>
+  		<li>Editer</li>
+  		<li>Supprimer</li>
+  	</ul>
+  </ul>
+  <p>Nouvel ordinateur</p>
+  
+  <h2>Réseau Wi-Fi</h2>
+  <ul>
+  	<ul>
+  		<li>Adresse MAC</li>
+  		<li>Editer</li>
+  		<li>Supprimer</li>
+  	</ul>
+  </ul>
+  <p>Nouvel appareil sans fil</p>
+  
+  <h2>Journal</h2>
+  <p>Afficher les logs DHCP</p>
+  
+  <h2>Commentaires</h2>
+  <p>Commentaire en cours de modification</p>
+  <ul>
+  	<li>Envoyer</li>
+  	<li>Supprimer</li>
+  </ul>
+  
+  <p>Sidebar:</p>
+  <ul>
+  	<li>{{ member.comment }}</li>
+    <img src="http://trombi.tem-tsp.eu/photo.php?uid={{ member.username }}"/>
+  	<li>Association des périphériques</li>
+  	<li>Dernières modifications:
+      <ul>
+  		  <li>Modification récente</li>
+  	  </ul>
+    </li>
   </ul>
 </div>
