@@ -1,0 +1,743 @@
+---
+swagger: "2.0"
+info:
+  description: "Adherent api\n"
+  version: "1.0.1"
+  title: "Adherent"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:3000"
+basePath: "/"
+tags:
+- name: "user"
+  description: "Operations on users"
+- name: "devices"
+  description: "Operations on devices"
+- name: "rooms"
+  description: "Operations on rooms"
+- name: "switches"
+  description: "Operations on switches"
+- name: "ports"
+  description: "Operations on ports"
+schemes:
+- "https"
+- "http"
+paths:
+  /user:
+    get:
+      tags:
+      - "user"
+      summary: "Filter users"
+      operationId: "filterUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Limit the number of users returned in the result. Default is\
+          \ 100"
+        required: false
+        type: "integer"
+        default: 100
+      - name: "terms"
+        in: "query"
+        description: "The generic search terms (will search in any field)"
+        required: false
+        type: "string"
+      - name: "roomNumber"
+        in: "query"
+        description: "Filter by room number"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+      x-swagger-router-controller: "user"
+  /user/{username}:
+    get:
+      tags:
+      - "user"
+      summary: "Retrieve an user"
+      operationId: "getUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The username of the user that needs to be fetched."
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Sucess"
+          schema:
+            $ref: "#/definitions/User"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "user"
+    put:
+      tags:
+      - "user"
+      summary: "Update/create an user"
+      description: "This can only be done by the logged in user."
+      operationId: "putUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "username of the user will be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "New values of the user"
+        required: true
+        schema:
+          $ref: "#/definitions/body"
+      responses:
+        201:
+          description: "Created"
+        204:
+          description: "Updated"
+      x-swagger-router-controller: "user"
+    delete:
+      tags:
+      - "user"
+      summary: "Delete an user"
+      description: "This can only be done by the logged in user."
+      operationId: "deleteUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The username of the user that will be deleted"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "Deleted"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "user"
+  /device/:
+    get:
+      tags:
+      - "devices"
+      summary: "Filter devices"
+      operationId: "filterDevice"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Limit the number of devices returned in the result. Default\
+          \ is 100"
+        required: false
+        type: "integer"
+        default: 100
+      - name: "username"
+        in: "query"
+        description: "Filter by owner's username"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Device"
+      x-swagger-router-controller: "device"
+  /device/{macAddress}:
+    get:
+      tags:
+      - "devices"
+      summary: "Retrieve a device"
+      operationId: "getDevice"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "macAddress"
+        in: "path"
+        description: "The mac address of the device that will be fetched"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Device"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "device"
+    put:
+      tags:
+      - "devices"
+      summary: "Update/create a device"
+      operationId: "putDevice"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "macAddress"
+        in: "path"
+        description: "The mac address of the device that will be update"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Device to update"
+        required: true
+        schema:
+          $ref: "#/definitions/Device"
+      responses:
+        201:
+          description: "Created"
+        204:
+          description: "Updated"
+        400:
+          description: "Invalid mac address supplied / already in use"
+      x-swagger-router-controller: "device"
+    delete:
+      tags:
+      - "devices"
+      summary: "Delete a device"
+      operationId: "deleteDevice"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "macAddress"
+        in: "path"
+        description: "The mac address of the device that will be deleted"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "Deleted"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "device"
+  /room/:
+    get:
+      tags:
+      - "rooms"
+      summary: "Filter rooms"
+      operationId: "filterRoom"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Limit the number of rooms returned in the result. Default is\
+          \ 100"
+        required: false
+        type: "integer"
+        default: 100
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Room"
+      x-swagger-router-controller: "room"
+  /room/{roomNumber}:
+    get:
+      tags:
+      - "rooms"
+      summary: "Retrieve a room"
+      operationId: "getRoom"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "roomNumber"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Room"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "room"
+    put:
+      tags:
+      - "rooms"
+      summary: "Update/create a room"
+      operationId: "putRoom"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "roomNumber"
+        in: "path"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        description: "Room to update"
+        required: true
+        schema:
+          $ref: "#/definitions/Room"
+      responses:
+        201:
+          description: "Created"
+        204:
+          description: "Updated"
+      x-swagger-router-controller: "room"
+    delete:
+      tags:
+      - "rooms"
+      summary: "Delete a room"
+      operationId: "deleteRoom"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "roomNumber"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        204:
+          description: "Deleted"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "room"
+  /switch/:
+    get:
+      tags:
+      - "switches"
+      summary: "Get all switches"
+      operationId: "filterSwitch"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Limit the number of switches returned in the result. Default\
+          \ is 100"
+        required: false
+        type: "integer"
+        default: 100
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/inline_response_200"
+      x-swagger-router-controller: "switch"
+    post:
+      tags:
+      - "switches"
+      summary: "Create a switch"
+      operationId: "createSwitch"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Switch to create"
+        required: true
+        schema:
+          $ref: "#/definitions/Switch"
+      responses:
+        200:
+          description: "Created"
+          headers:
+            Location:
+              type: "string"
+              description: "URI to the newly created switch"
+      x-swagger-router-controller: "switch"
+  /switch/{switchID}:
+    get:
+      tags:
+      - "switches"
+      summary: "Retrieve a switch"
+      operationId: "getSwitch"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "switchID"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Switch"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "switch"
+    put:
+      tags:
+      - "switches"
+      summary: "Update a switch"
+      operationId: "updateSwitch"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "switchID"
+        in: "path"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        description: "Switch to update"
+        required: true
+        schema:
+          $ref: "#/definitions/Switch"
+      responses:
+        204:
+          description: "Updated"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "switch"
+    delete:
+      tags:
+      - "switches"
+      summary: "Delete a switch"
+      operationId: "deleteSwitch"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "switchID"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        204:
+          description: "Deleted"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "switch"
+  /ports/:
+    get:
+      tags:
+      - "ports"
+      summary: "Filter ports"
+      operationId: "filterPort"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Limit the number of ports returned in the result. Default is\
+          \ 100"
+        required: false
+        type: "integer"
+        default: 100
+      - name: "switchID"
+        in: "query"
+        description: "Filter only ports that belongs to that switch"
+        required: false
+        type: "integer"
+      - name: "roomNumber"
+        in: "query"
+        description: "Filter only ports that that room"
+        required: false
+        type: "integer"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/inline_response_200_1"
+      x-swagger-router-controller: "port"
+  /switch/{switchID}/port/:
+    post:
+      tags:
+      - "ports"
+      summary: "Create a port"
+      operationId: "createPort"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "switchID"
+        in: "path"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        description: "Port to create"
+        required: true
+        schema:
+          $ref: "#/definitions/Port"
+      responses:
+        200:
+          description: "Created"
+          headers:
+            Location:
+              type: "string"
+              description: "URI to the newly created port"
+      x-swagger-router-controller: "port"
+  /switch/{switchID}/port/{portID}:
+    get:
+      tags:
+      - "ports"
+      summary: "Retrieve a port"
+      operationId: "getPort"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "switchID"
+        in: "path"
+        required: true
+        type: "integer"
+      - name: "portID"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Port"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "port"
+    put:
+      tags:
+      - "ports"
+      summary: "Update a port"
+      operationId: "updatePort"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "switchID"
+        in: "path"
+        required: true
+        type: "integer"
+      - name: "portID"
+        in: "path"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        description: "Port to update"
+        required: true
+        schema:
+          $ref: "#/definitions/Port"
+      responses:
+        204:
+          description: "Updated"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "port"
+    delete:
+      tags:
+      - "ports"
+      summary: "Delete a port"
+      operationId: "deletePort"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "switchID"
+        in: "path"
+        required: true
+        type: "integer"
+      - name: "portID"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        204:
+          description: "Deleted"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "port"
+securityDefinitions:
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  User:
+    type: "object"
+    required:
+    - "email"
+    - "firstName"
+    - "lastName"
+    - "username"
+    properties:
+      email:
+        type: "string"
+        example: "john.doe@gmail.com"
+      firstName:
+        type: "string"
+        example: "John"
+      lastName:
+        type: "string"
+        example: "Doe"
+      username:
+        type: "string"
+        example: "doe_john"
+      departureDate:
+        type: "string"
+        format: "date-time"
+      comment:
+        type: "string"
+      associationMode:
+        type: "string"
+        format: "date-time"
+      roomNumber:
+        type: "integer"
+        format: "int32"
+        example: 5012
+    example:
+      firstName: "John"
+      lastName: "Doe"
+      roomNumber: 5012
+      comment: "comment"
+      departureDate: "2000-01-23T04:56:07.000+00:00"
+      associationMode: "2000-01-23T04:56:07.000+00:00"
+      email: "john.doe@gmail.com"
+      username: "doe_john"
+  Device:
+    type: "object"
+    required:
+    - "connectionType"
+    - "mac"
+    properties:
+      mac:
+        type: "string"
+        example: "01:23:45:67:89:AB"
+      ipAddress:
+        type: "string"
+        example: "127.0.0.1"
+      ipv6Address:
+        type: "string"
+      connectionType:
+        type: "string"
+        enum:
+        - "wired"
+        - "wireless"
+      username:
+        type: "string"
+        example: "doe_john"
+    example:
+      ipv6Address: "ipv6Address"
+      ipAddress: "127.0.0.1"
+      connectionType: "wired"
+      mac: "01:23:45:67:89:AB"
+      username: "doe_john"
+  Room:
+    type: "object"
+    required:
+    - "roomNumber"
+    properties:
+      description:
+        type: "string"
+        example: "Chambre 5110"
+      roomNumber:
+        type: "integer"
+        example: 5110
+      phone:
+        type: "integer"
+        example: 6842
+      vlan:
+        type: "integer"
+        example: 45
+    example:
+      roomNumber: 5110
+      vlan: 45
+      phone: 6842
+      description: "Chambre 5110"
+  Port:
+    type: "object"
+    required:
+    - "portNumber"
+    properties:
+      portNumber:
+        type: "string"
+        example: "1/0/4"
+      roomNumber:
+        type: "integer"
+        example: 5110
+      switchID:
+        type: "integer"
+        example: 6
+    example:
+      roomNumber: 5110
+      switchID: 6
+      portNumber: "1/0/4"
+  Switch:
+    type: "object"
+    required:
+    - "community"
+    - "ip"
+    properties:
+      description:
+        type: "string"
+        example: "Switch U5"
+      ip:
+        type: "string"
+        example: "192.168.102.211"
+      community:
+        type: "string"
+        format: "password"
+        example: "ghWgpQvHRkrYuqpMLWYkstS3"
+    example:
+      ip: "192.168.102.211"
+      description: "Switch U5"
+      community: "ghWgpQvHRkrYuqpMLWYkstS3"
+  body:
+    type: "object"
+    required:
+    - "user"
+    properties:
+      user:
+        $ref: "#/definitions/User"
+      password:
+        type: "string"
+        format: "password"
+        example: "toto123"
+  inline_response_200:
+    properties:
+      switch:
+        $ref: "#/definitions/Switch"
+      switchID:
+        type: "integer"
+        example: 1
+    example:
+      switchID: 1
+      switch:
+        ip: "192.168.102.211"
+        description: "Switch U5"
+        community: "ghWgpQvHRkrYuqpMLWYkstS3"
+  inline_response_200_1:
+    properties:
+      switch:
+        $ref: "#/definitions/Port"
+      portID:
+        type: "integer"
+        example: 1
+      switchID:
+        type: "integer"
+        example: 6
+    example:
+      switchID: 6
+      portID: 1
+      switch:
+        roomNumber: 5110
+        switchID: 6
+        portNumber: "1/0/4"
+externalDocs:
+  description: "Find out more about MiNET"
+  url: "http://minet.net"
