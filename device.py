@@ -6,7 +6,7 @@ DEVICES = {
         'ipAddress'      : '157.159.42.1',
         'ipv6Address'    :	'ff02::1',
         'connectionType' : 'wired',
-        'username'	 : 'bonnet_n'
+        'username'	 : 'coroller'
     },
     "FF:FF:FF:FF:FF:FF": {
         'mac'            : 'FF:FF:FF:FF:FF:FF',
