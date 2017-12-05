@@ -1,5 +1,5 @@
 <ul>
   <li *ngFor="let room of rooms$ | async">
-    {{ room.roomNumber }}
+    <a [routerLink]="['/room', room.roomNumber]">{{ room.roomNumber }}</a>
   </li>
 </ul>

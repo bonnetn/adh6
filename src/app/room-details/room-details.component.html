@@ -1,0 +1,6 @@
+<div *ngIf="(room$ | async) as room">
+  <h1>{{ room.roomNumber }}</h1>
+  {{ room.description }}
+  {{ room.vlan }}
+  {{ room.phone }}
+</div>

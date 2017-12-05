@@ -15,6 +15,7 @@ import { PatchingComponent } from './patching/patching.component';
 
 import { ApiModule } from './api/api.module';
 import { RoomListComponent } from './room-list/room-list.component';
+import { RoomDetailsComponent } from './room-details/room-details.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { RoomListComponent } from './room-list/room-list.component';
     PortsComponent,
     PatchingComponent,
     RoomListComponent,
+    RoomDetailsComponent,
   ],
   imports: [
     BrowserModule,
