@@ -7,6 +7,7 @@ import { MemberDetailsComponent } from './member-details/member-details.componen
 import { RoomListComponent } from './room-list/room-list.component';
 import { RoomDetailsComponent } from './room-details/room-details.component';
 import { PortListComponent } from './port-list/port-list.component';
+import { PortDetailsComponent } from './port-details/port-details.component';
 import { PatchingComponent } from './patching/patching.component';
 import { SwitchLocalComponent } from './switch-local/switch-local.component';
 
@@ -23,7 +24,7 @@ const routes: Routes = [
   { 
     path: 'switch/:switchID',
     children: [
-      { path: 'port/:portNumber', component: PortListComponent },
+      { path: 'port/:portID', component: PortDetailsComponent },
     ]
   }
 

@@ -1,0 +1,3 @@
+<div *ngIf="(port$ | async) as port">
+  <h1>{{ port.portNumber }} - Switch {{ port.switchID }}</h1>
+</div>

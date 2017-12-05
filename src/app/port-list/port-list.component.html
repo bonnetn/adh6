@@ -1,5 +1,5 @@
 <ul>
   <li *ngFor="let portResult of ports$ | async">
-    <a [routerLink]="['/port']">/switch/{{ portResult.port.switchID }}/port/{{ portResult.portID }}</a>
+    <a [routerLink]="['/switch', portResult.port.switchID, 'port', portResult.portID]">/switch/{{ portResult.port.switchID }}/port/{{ portResult.portID }}</a>
   </li>
 </ul>
