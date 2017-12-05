@@ -27,10 +27,10 @@
       <th>Editer</th>
       <th>Supprimer</th>
     </tr>
-    <tr>
-      <td>Adresse MAC</td>
-      <td>Adresse IPv4</td>
-      <td>Adresse IPv6</td>
+    <tr *ngFor="let device of wired_devices$ | async">
+      <td>{{ device.mac }}</td>
+      <td>{{ device.ipAddress }}</td>
+      <td>{{ device.ipv6Address }}</td>
       <td>MAB</td>
       <td>Editer</td>
       <td>Supprimer</td>
@@ -45,8 +45,8 @@
       <th>Editer</th>
       <th>Supprimer</th>
     </tr>
-    <tr>
-      <td>Adresse MAC</td>
+    <tr *ngFor="let device of wireless_devices$ | async">
+      <td>{{ device.mac }}</td>
       <td>Editer</td>
       <td>Supprimer</td>
     </tr>
