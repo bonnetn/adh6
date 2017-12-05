@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Observable } from 'rxjs/Observable';
+
+import { PortService } from '../api/services/port.service';
+import { PortSearchResult } from '../api/models/port-search-result';
+
 @Component({
   selector: 'app-port-list',
   templateUrl: './port-list.component.html',
@@ -7,9 +12,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PortListComponent implements OnInit {
 
-  constructor() { }
+  ports$: Observable<PortSearchResult[]>;
+
+  constructor(public portService: PortService) { }
 
   ngOnInit() {
+    this.ports$ = this.portService.filterPort( {} );
   }
 
 }

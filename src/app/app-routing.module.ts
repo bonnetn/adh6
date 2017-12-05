@@ -17,9 +17,15 @@ const routes: Routes = [
   { path: 'member/:username', component: MemberDetailsComponent },
   { path: 'room', component: RoomListComponent },
   { path: 'room/:roomNumber', component: RoomDetailsComponent },
-  { path: 'ports', component: PortListComponent },
+  { path: 'port', component: PortListComponent },
   { path: 'patching', component: PatchingComponent },
   { path: 'switch_local', component: SwitchLocalComponent },
+  { 
+    path: 'switch/:switchID',
+    children: [
+      { path: 'port/:portNumber', component: PortListComponent },
+    ]
+  }
 
 ];
 

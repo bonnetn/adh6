@@ -1,3 +1,5 @@
-<p>
-  port-list works!
-</p>
+<ul>
+  <li *ngFor="let portResult of ports$ | async">
+    <a [routerLink]="['/port']">/switch/{{ portResult.port.switchID }}/port/{{ portResult.portID }}</a>
+  </li>
+</ul>

@@ -16,6 +16,7 @@ import { ApiModule } from './api/api.module';
 import { RoomListComponent } from './room-list/room-list.component';
 import { RoomDetailsComponent } from './room-details/room-details.component';
 import { PortListComponent } from './port-list/port-list.component';
+import { PortDetailsComponent } from './port-details/port-details.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { PortListComponent } from './port-list/port-list.component';
     RoomListComponent,
     RoomDetailsComponent,
     PortListComponent,
+    PortDetailsComponent,
   ],
   imports: [
     BrowserModule,
