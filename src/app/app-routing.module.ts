@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { MembersComponent } from './members/members.component';
+import { MemberListComponent } from './member-list/member-list.component';
 import { MemberDetailsComponent } from './member-details/member-details.component';
 import { RoomsComponent } from './rooms/rooms.component';
 import { PortsComponent } from './ports/ports.component';
@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { 
     path: 'member', 
-    component: MembersComponent,
+    component: MemberListComponent,
   },
   {
     path: 'member/:username',

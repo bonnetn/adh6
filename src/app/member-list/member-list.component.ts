@@ -7,10 +7,10 @@ import { User } from '../api/models/user'
 
 @Component({
   selector: 'app-members',
-  templateUrl: './members.component.html',
-  styleUrls: ['./members.component.css']
+  templateUrl: './member-list.component.html',
+  styleUrls: ['./member-list.component.css']
 })
-export class MembersComponent implements OnInit {
+export class MemberListComponent implements OnInit {
 
   members$: Observable<User[]>;
   
