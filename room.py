@@ -1,5 +1,18 @@
 from connexion import NoContent
-ROOMS = {}
+ROOMS = {
+    1111 : {
+        'description' : "Chambre 1111",
+        'roomNumber'  : 1111,
+        'phone'       : 0,
+        'vlan'        : 41
+    },
+    1234 : {
+        'description' : "Chambre 1234",
+        'roomNumber'  : 1234,
+        'phone'       : 0,
+        'vlan'        : 41
+    }
+}
 
 def filterRoom( limit=100 ):
   return list(ROOMS.values())[:limit]
