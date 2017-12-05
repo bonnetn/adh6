@@ -1,0 +1,5 @@
+<ul>
+  <li *ngFor="let switchResult of switches$ | async">
+    {{ switchResult.switch.description }}
+  </li>
+</ul>
