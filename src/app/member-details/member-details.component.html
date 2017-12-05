@@ -2,9 +2,8 @@
 <h1>{{ member.firstName }} {{ member.lastName }} <a href="mailto:{{ member.email }}">Envoyer un mail</a></h1>
   <ul>
     <li><strong>Identifiant DISI:</strong> {{ member.username }}</li>
-    <li><a href="mailto:{{ member.email }}">Mail</a>
-    <li>
-      <ul><strong>Date de départ:</strong> {{ member.departureDate }}
+    <li><strong>Date de départ:</strong> {{ member.departureDate }}
+      <ul>
 		    <li>Paiements</li>
 		    <li>Cotiser</li>
       </ul>
