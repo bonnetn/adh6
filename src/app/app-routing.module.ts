@@ -11,6 +11,7 @@ import { PortDetailsComponent } from './port-details/port-details.component';
 import { PatchingComponent } from './patching/patching.component';
 import { SwitchLocalComponent } from './switch-local/switch-local.component';
 import { SwitchListComponent } from './switch-list/switch-list.component';
+import { SwitchDetailsComponent } from './switch-details/switch-details.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -27,7 +28,8 @@ const routes: Routes = [
     path: 'switch/:switchID',
     children: [
       { path: 'port/:portID', component: PortDetailsComponent },
-    ]
+      { path: '', component: SwitchDetailsComponent },
+    ],
   }
 
 ];

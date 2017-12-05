@@ -1,5 +1,5 @@
 <ul>
   <li *ngFor="let switchResult of switches$ | async">
-    {{ switchResult.switch.description }}
+    <a [routerLink]="['/switch',switchResult.switchID]">Switch ID: {{ switchResult.switchID }}</a>
   </li>
 </ul>

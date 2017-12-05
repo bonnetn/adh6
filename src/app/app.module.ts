@@ -18,6 +18,7 @@ import { RoomDetailsComponent } from './room-details/room-details.component';
 import { PortListComponent } from './port-list/port-list.component';
 import { PortDetailsComponent } from './port-details/port-details.component';
 import { SwitchListComponent } from './switch-list/switch-list.component';
+import { SwitchDetailsComponent } from './switch-details/switch-details.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { SwitchListComponent } from './switch-list/switch-list.component';
     PortListComponent,
     PortDetailsComponent,
     SwitchListComponent,
+    SwitchDetailsComponent,
   ],
   imports: [
     BrowserModule,
