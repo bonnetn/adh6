@@ -1,5 +1,13 @@
-<ul>
-  <li *ngFor="let room of rooms$ | async">
-    <a [routerLink]="['/room', room.roomNumber]">{{ room.roomNumber }}</a>
-  </li>
-</ul>
+<h1>Liste des chambres</h1>
+<table>
+  <tr>
+    <th>Numéro</th>
+    <th>Description</th>
+    <th>VLAN</th>
+  </tr>
+  <tr *ngFor="let room of rooms$ | async">
+    <td><a [routerLink]="['/room', room.roomNumber]">{{ room.roomNumber }}</a></td>
+    <td>{{ room.description }}</td>
+    <td>{{ room.vlan }}</td>
+  </tr>
+</table>
