@@ -390,7 +390,7 @@
             "schema" : {
               "type" : "array",
               "items" : {
-                "$ref" : "#/definitions/inline_response_200"
+                "$ref" : "#/definitions/SwitchSearchResult"
               }
             }
           }
@@ -533,7 +533,7 @@
             "schema" : {
               "type" : "array",
               "items" : {
-                "$ref" : "#/definitions/inline_response_200_1"
+                "$ref" : "#/definitions/PortSearchResult"
               }
             }
           }
@@ -815,6 +815,27 @@
         "portNumber" : "1/0/4"
       }
     },
+    "PortSearchResult" : {
+      "type" : "object",
+      "required" : [ "port", "portID" ],
+      "properties" : {
+        "port" : {
+          "$ref" : "#/definitions/Port"
+        },
+        "portID" : {
+          "type" : "integer",
+          "example" : 1
+        }
+      },
+      "example" : {
+        "port" : {
+          "roomNumber" : 5110,
+          "switchID" : 6,
+          "portNumber" : "1/0/4"
+        },
+        "portID" : 1
+      }
+    },
     "Switch" : {
       "type" : "object",
       "required" : [ "community", "ip" ],
@@ -839,21 +860,8 @@
         "community" : "ghWgpQvHRkrYuqpMLWYkstS3"
       }
     },
-    "body" : {
+    "SwitchSearchResult" : {
       "type" : "object",
-      "required" : [ "user" ],
-      "properties" : {
-        "user" : {
-          "$ref" : "#/definitions/User"
-        },
-        "password" : {
-          "type" : "string",
-          "format" : "password",
-          "example" : "toto123"
-        }
-      }
-    },
-    "inline_response_200" : {
       "properties" : {
         "switch" : {
           "$ref" : "#/definitions/Switch"
@@ -872,27 +880,17 @@
         }
       }
     },
-    "inline_response_200_1" : {
+    "body" : {
+      "type" : "object",
+      "required" : [ "user" ],
       "properties" : {
-        "switch" : {
-          "$ref" : "#/definitions/Port"
+        "user" : {
+          "$ref" : "#/definitions/User"
         },
-        "portID" : {
-          "type" : "integer",
-          "example" : 1
-        },
-        "switchID" : {
-          "type" : "integer",
-          "example" : 6
-        }
-      },
-      "example" : {
-        "switchID" : 6,
-        "portID" : 1,
-        "switch" : {
-          "roomNumber" : 5110,
-          "switchID" : 6,
-          "portNumber" : "1/0/4"
+        "password" : {
+          "type" : "string",
+          "format" : "password",
+          "example" : "toto123"
         }
       }
     }
