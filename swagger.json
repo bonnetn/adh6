@@ -15,16 +15,16 @@
     "name" : "user",
     "description" : "Operations on users"
   }, {
-    "name" : "devices",
+    "name" : "device",
     "description" : "Operations on devices"
   }, {
-    "name" : "rooms",
+    "name" : "room",
     "description" : "Operations on rooms"
   }, {
-    "name" : "switches",
+    "name" : "switch",
     "description" : "Operations on switches"
   }, {
-    "name" : "ports",
+    "name" : "port",
     "description" : "Operations on ports"
   } ],
   "schemes" : [ "http" ],
@@ -152,7 +152,7 @@
     },
     "/device/" : {
       "get" : {
-        "tags" : [ "devices" ],
+        "tags" : [ "device" ],
         "summary" : "Filter devices",
         "operationId" : "filterDevice",
         "produces" : [ "application/json" ],
@@ -186,7 +186,7 @@
     },
     "/device/{macAddress}" : {
       "get" : {
-        "tags" : [ "devices" ],
+        "tags" : [ "device" ],
         "summary" : "Retrieve a device",
         "operationId" : "getDevice",
         "produces" : [ "application/json" ],
@@ -211,7 +211,7 @@
         "x-swagger-router-controller" : "device"
       },
       "put" : {
-        "tags" : [ "devices" ],
+        "tags" : [ "device" ],
         "summary" : "Update/create a device",
         "operationId" : "putDevice",
         "produces" : [ "application/json" ],
@@ -244,7 +244,7 @@
         "x-swagger-router-controller" : "device"
       },
       "delete" : {
-        "tags" : [ "devices" ],
+        "tags" : [ "device" ],
         "summary" : "Delete a device",
         "operationId" : "deleteDevice",
         "produces" : [ "application/json" ],
@@ -268,7 +268,7 @@
     },
     "/room/" : {
       "get" : {
-        "tags" : [ "rooms" ],
+        "tags" : [ "room" ],
         "summary" : "Filter rooms",
         "operationId" : "filterRoom",
         "produces" : [ "application/json" ],
@@ -296,7 +296,7 @@
     },
     "/room/{roomNumber}" : {
       "get" : {
-        "tags" : [ "rooms" ],
+        "tags" : [ "room" ],
         "summary" : "Retrieve a room",
         "operationId" : "getRoom",
         "produces" : [ "application/json" ],
@@ -320,7 +320,7 @@
         "x-swagger-router-controller" : "room"
       },
       "put" : {
-        "tags" : [ "rooms" ],
+        "tags" : [ "room" ],
         "summary" : "Update/create a room",
         "operationId" : "putRoom",
         "produces" : [ "application/json" ],
@@ -349,7 +349,7 @@
         "x-swagger-router-controller" : "room"
       },
       "delete" : {
-        "tags" : [ "rooms" ],
+        "tags" : [ "room" ],
         "summary" : "Delete a room",
         "operationId" : "deleteRoom",
         "produces" : [ "application/json" ],
@@ -372,7 +372,7 @@
     },
     "/switch/" : {
       "get" : {
-        "tags" : [ "switches" ],
+        "tags" : [ "switch" ],
         "summary" : "Get all switches",
         "operationId" : "filterSwitch",
         "produces" : [ "application/json" ],
@@ -398,7 +398,7 @@
         "x-swagger-router-controller" : "switch"
       },
       "post" : {
-        "tags" : [ "switches" ],
+        "tags" : [ "switch" ],
         "summary" : "Create a switch",
         "operationId" : "createSwitch",
         "produces" : [ "application/json" ],
@@ -427,7 +427,7 @@
     },
     "/switch/{switchID}" : {
       "get" : {
-        "tags" : [ "switches" ],
+        "tags" : [ "switch" ],
         "summary" : "Retrieve a switch",
         "operationId" : "getSwitch",
         "produces" : [ "application/json" ],
@@ -451,7 +451,7 @@
         "x-swagger-router-controller" : "switch"
       },
       "put" : {
-        "tags" : [ "switches" ],
+        "tags" : [ "switch" ],
         "summary" : "Update a switch",
         "operationId" : "updateSwitch",
         "produces" : [ "application/json" ],
@@ -480,7 +480,7 @@
         "x-swagger-router-controller" : "switch"
       },
       "delete" : {
-        "tags" : [ "switches" ],
+        "tags" : [ "switch" ],
         "summary" : "Delete a switch",
         "operationId" : "deleteSwitch",
         "produces" : [ "application/json" ],
@@ -503,7 +503,7 @@
     },
     "/ports/" : {
       "get" : {
-        "tags" : [ "ports" ],
+        "tags" : [ "port" ],
         "summary" : "Filter ports",
         "operationId" : "filterPort",
         "produces" : [ "application/json" ],
@@ -543,7 +543,7 @@
     },
     "/switch/{switchID}/port/" : {
       "post" : {
-        "tags" : [ "ports" ],
+        "tags" : [ "port" ],
         "summary" : "Create a port",
         "operationId" : "createPort",
         "produces" : [ "application/json" ],
@@ -577,7 +577,7 @@
     },
     "/switch/{switchID}/port/{portID}" : {
       "get" : {
-        "tags" : [ "ports" ],
+        "tags" : [ "port" ],
         "summary" : "Retrieve a port",
         "operationId" : "getPort",
         "produces" : [ "application/json" ],
@@ -606,7 +606,7 @@
         "x-swagger-router-controller" : "port"
       },
       "put" : {
-        "tags" : [ "ports" ],
+        "tags" : [ "port" ],
         "summary" : "Update a port",
         "operationId" : "updatePort",
         "produces" : [ "application/json" ],
@@ -640,7 +640,7 @@
         "x-swagger-router-controller" : "port"
       },
       "delete" : {
-        "tags" : [ "ports" ],
+        "tags" : [ "port" ],
         "summary" : "Delete a port",
         "operationId" : "deletePort",
         "produces" : [ "application/json" ],
