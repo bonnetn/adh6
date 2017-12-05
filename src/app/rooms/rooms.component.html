@@ -1,3 +1,5 @@
-<p>
-  rooms works!
-</p>
+<ul>
+  <li *ngFor="let room of rooms$ | async">
+    {{ room.roomNumber }}
+  </li>
+</ul>

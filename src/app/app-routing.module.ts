@@ -29,7 +29,7 @@ const routes: Routes = [
       { path: 'add/', component: MembersAddComponent },
 ]*/
 
-  { path: 'rooms', component: RoomsComponent },
+  { path: 'room', component: RoomsComponent },
   { path: 'ports', component: PortsComponent },
   { path: 'patching', component: PatchingComponent },
   { path: 'switch_local', component: SwitchLocalComponent },
