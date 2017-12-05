@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PortsComponent } from './ports.component';
+import { PortListComponent } from './port-list.component';
 
-describe('PortsComponent', () => {
-  let component: PortsComponent;
-  let fixture: ComponentFixture<PortsComponent>;
+describe('PortListComponent', () => {
+  let component: PortListComponent;
+  let fixture: ComponentFixture<PortListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PortsComponent ]
+      declarations: [ PortListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PortsComponent);
+    fixture = TestBed.createComponent(PortListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

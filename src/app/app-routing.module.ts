@@ -6,7 +6,7 @@ import { MemberListComponent } from './member-list/member-list.component';
 import { MemberDetailsComponent } from './member-details/member-details.component';
 import { RoomListComponent } from './room-list/room-list.component';
 import { RoomDetailsComponent } from './room-details/room-details.component';
-import { PortsComponent } from './ports/ports.component';
+import { PortListComponent } from './port-list/port-list.component';
 import { PatchingComponent } from './patching/patching.component';
 import { SwitchLocalComponent } from './switch-local/switch-local.component';
 
@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'member/:username', component: MemberDetailsComponent },
   { path: 'room', component: RoomListComponent },
   { path: 'room/:roomNumber', component: RoomDetailsComponent },
-  { path: 'ports', component: PortsComponent },
+  { path: 'ports', component: PortListComponent },
   { path: 'patching', component: PatchingComponent },
   { path: 'switch_local', component: SwitchLocalComponent },
 

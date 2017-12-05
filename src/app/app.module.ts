@@ -10,12 +10,12 @@ import { SwitchLocalComponent } from './switch-local/switch-local.component';
 import { MemberListComponent } from './member-list/member-list.component';
 import { MemberDetailsComponent } from './member-details/member-details.component';
 
-import { PortsComponent } from './ports/ports.component';
 import { PatchingComponent } from './patching/patching.component';
 
 import { ApiModule } from './api/api.module';
 import { RoomListComponent } from './room-list/room-list.component';
 import { RoomDetailsComponent } from './room-details/room-details.component';
+import { PortListComponent } from './port-list/port-list.component';
 
 @NgModule({
   declarations: [
@@ -24,10 +24,10 @@ import { RoomDetailsComponent } from './room-details/room-details.component';
     SwitchLocalComponent,
     MemberListComponent,
     MemberDetailsComponent,
-    PortsComponent,
     PatchingComponent,
     RoomListComponent,
     RoomDetailsComponent,
+    PortListComponent,
   ],
   imports: [
     BrowserModule,
