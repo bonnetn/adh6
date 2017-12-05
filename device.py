@@ -13,7 +13,7 @@ DEVICES = {
         'ipAddress'      : '157.159.42.2',
         'ipv6Address'    :	'ff02::2',
         'connectionType' : 'wireless',
-        'username'	 : 'cazal_ke'
+        'username'	 : 'coroller'
     }
 }
 
