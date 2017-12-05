@@ -1,0 +1,6 @@
+<ul>
+  <li *ngFor="let device of devices$ | async">
+    <a [routerLink]="['/device', device.mac]">{{ device.mac }}</a>
+  </li>
+</ul>
+

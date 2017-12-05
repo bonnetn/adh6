@@ -12,6 +12,7 @@ import { PatchingComponent } from './patching/patching.component';
 import { SwitchLocalComponent } from './switch-local/switch-local.component';
 import { SwitchListComponent } from './switch-list/switch-list.component';
 import { SwitchDetailsComponent } from './switch-details/switch-details.component';
+import { DeviceListComponent } from './device-list/device-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'room', component: RoomListComponent },
   { path: 'room/:roomNumber', component: RoomDetailsComponent },
   { path: 'port', component: PortListComponent },
+  { path: 'device', component: DeviceListComponent },
   { path: 'patching', component: PatchingComponent },
   { path: 'switch_local', component: SwitchLocalComponent },
   { path: 'switch', component: SwitchListComponent },
