@@ -3,12 +3,12 @@ from connexion import NoContent
 PORTS = {
     0: {
         'portNumber': '1/0/4',
-        'roomNumber': 5110,
+        'roomNumber': 1234,
         'switchID': 6,
     },
     1: {
         'portNumber': '1/0/3',
-        'roomNumber': 5111,
+        'roomNumber': 1111,
         'switchID': 6,
     }
 }
@@ -19,7 +19,9 @@ port_id = 42
 def filterPort( limit=100, switchID=None, roomNumber=None ):
   res = []
   for k,v in PORTS.items():
-      res += [ { 'portID':k, 'port':v } ]
+      # ugly: to improve...
+      if (switchID and switchID == v['switchID']) or (roomNumber and roomNumber == v['roomNumber']) or (not roomNumber and not switchID):
+          res += [ { 'portID':k, 'port':v } ]
   return res[:limit]
 
 def createPort( switchID, body ):
