@@ -1,10 +1,25 @@
 from connexion import NoContent
 
-SWITCHES = {}
-switch_id = 0
+SWITCHES = {
+    0: {
+        'description' : "Switch U1",
+        'ip'          : "192.168.102.11",
+        'community'   : "tototo"
+    },
+    1: {
+        'description' : "Switch U2",
+        'ip'          : "192.168.102.12",
+        'community'   : "tututu"
+    }
+        
+}
+switch_id = 42
 
 def filterSwitch( limit=100 ):
-  return list(SWITCHES.values())[:limit]
+  res = []
+  for k,v in SWITCHES.items():
+      res += [{ 'switchID': k, 'switch': v }]
+  return res[:limit]
 
 def createSwitch( body ):
   global switch_id

@@ -18,39 +18,41 @@ class TestSwitch(unittest.TestCase):
     def test(self):
 
       # POST
-      resultString, resultCode, headers = switch.create(d)
+      resultString, resultCode, headers = switch.createSwitch(d)
       self.assertEqual(resultCode,201) # Created
       switchID = int(headers["Location"].split("/")[-1])
 
       # GET
-      result = switch.get( switchID )
-      self.assertEqual(result, d) # get
+      result = switch.getSwitch( switchID )
+      self.assertEqual(result, d) # getSwitch
 
-      resultString, resultCode = switch.get( -42 )
+      resultString, resultCode = switch.getSwitch( -42 )
       self.assertEqual(resultCode,404) 
 
       # DELETE
-      resultString, resultCode = switch.delete( switchID )
+      resultString, resultCode = switch.deleteSwitch( switchID )
       self.assertEqual(resultCode,204) 
-      resultString, resultCode = switch.get(switchID )
-      self.assertEqual(resultCode,404) # already deleted!
+      resultString, resultCode = switch.getSwitch(switchID )
+      self.assertEqual(resultCode,404) # already deleteSwitchd!
 
-      resultString, resultCode = switch.delete( -42 )
+      resultString, resultCode = switch.deleteSwitch( -42 )
       self.assertEqual(resultCode,404) 
 
-      resultString, resultCode, headers = switch.create(d)
+      resultString, resultCode, headers = switch.createSwitch(d)
       switchID = int(headers["Location"].split("/")[-1])
+      switchIDd2 = switchID
 
       #UPDATE
-      switch.update(switchID, d2)
-      result = switch.get( switchID )
+      switch.updateSwitch(switchID, d2)
+      result = switch.getSwitch( switchID )
       self.assertEqual(result, d2) # 
 
-      switch.create(d)
+      resultString, resultCode, headers = switch.createSwitch(d)
+      switchIDd = int(headers["Location"].split("/")[-1])
 
-      result = switch.filter()
-      self.assertIn( d, result )
-      self.assertIn( d2, result )
+      result = switch.filterSwitch()
+      self.assertIn( {'switchID':switchIDd, 'switch':d}, result )
+      self.assertIn( {'switchID':switchIDd2, 'switch':d2}, result )
      
 
 
