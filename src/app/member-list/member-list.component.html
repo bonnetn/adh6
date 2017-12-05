@@ -1,5 +1,17 @@
-<ul class="members-list">
-  <li *ngFor="let member of members$ | async" >
-    <a [routerLink]="['/member', member.username]">{{member.firstName}} {{member.lastName}}</a>
-  </li>
-</ul>
+<h1>Liste des adhérents</h1>
+<table>
+  <tr>
+    <th>Nom</th>
+    <th>Prénom</th>
+    <th>Login</th>
+    <th>Chambre</th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let member of members$ | async" >
+    <td>{{member.firstName}}</td>
+    <td>{{member.lastName}}</td>
+    <td>{{member.username}}</td>
+    <td>{{member.roomNumber}}</td>
+    <td><a [routerLink]="['/member', member.username]">Consulter</a></td>
+  </tr>
+</table>
