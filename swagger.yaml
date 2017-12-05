@@ -12,16 +12,15 @@ basePath: "/"
 tags:
 - name: "user"
   description: "Operations on users"
-- name: "devices"
+- name: "device"
   description: "Operations on devices"
-- name: "rooms"
+- name: "room"
   description: "Operations on rooms"
-- name: "switches"
+- name: "switch"
   description: "Operations on switches"
-- name: "ports"
+- name: "port"
   description: "Operations on ports"
 schemes:
-- "https"
 - "http"
 paths:
   /user:
@@ -129,7 +128,7 @@ paths:
   /device/:
     get:
       tags:
-      - "devices"
+      - "device"
       summary: "Filter devices"
       operationId: "filterDevice"
       produces:
@@ -158,7 +157,7 @@ paths:
   /device/{macAddress}:
     get:
       tags:
-      - "devices"
+      - "device"
       summary: "Retrieve a device"
       operationId: "getDevice"
       produces:
@@ -179,7 +178,7 @@ paths:
       x-swagger-router-controller: "device"
     put:
       tags:
-      - "devices"
+      - "device"
       summary: "Update/create a device"
       operationId: "putDevice"
       produces:
@@ -206,7 +205,7 @@ paths:
       x-swagger-router-controller: "device"
     delete:
       tags:
-      - "devices"
+      - "device"
       summary: "Delete a device"
       operationId: "deleteDevice"
       produces:
@@ -226,7 +225,7 @@ paths:
   /room/:
     get:
       tags:
-      - "rooms"
+      - "room"
       summary: "Filter rooms"
       operationId: "filterRoom"
       produces:
@@ -250,7 +249,7 @@ paths:
   /room/{roomNumber}:
     get:
       tags:
-      - "rooms"
+      - "room"
       summary: "Retrieve a room"
       operationId: "getRoom"
       produces:
@@ -270,7 +269,7 @@ paths:
       x-swagger-router-controller: "room"
     put:
       tags:
-      - "rooms"
+      - "room"
       summary: "Update/create a room"
       operationId: "putRoom"
       produces:
@@ -294,7 +293,7 @@ paths:
       x-swagger-router-controller: "room"
     delete:
       tags:
-      - "rooms"
+      - "room"
       summary: "Delete a room"
       operationId: "deleteRoom"
       produces:
@@ -313,7 +312,7 @@ paths:
   /switch/:
     get:
       tags:
-      - "switches"
+      - "switch"
       summary: "Get all switches"
       operationId: "filterSwitch"
       produces:
@@ -332,11 +331,11 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/inline_response_200"
+              $ref: "#/definitions/SwitchSearchResult"
       x-swagger-router-controller: "switch"
     post:
       tags:
-      - "switches"
+      - "switch"
       summary: "Create a switch"
       operationId: "createSwitch"
       produces:
@@ -359,7 +358,7 @@ paths:
   /switch/{switchID}:
     get:
       tags:
-      - "switches"
+      - "switch"
       summary: "Retrieve a switch"
       operationId: "getSwitch"
       produces:
@@ -379,7 +378,7 @@ paths:
       x-swagger-router-controller: "switch"
     put:
       tags:
-      - "switches"
+      - "switch"
       summary: "Update a switch"
       operationId: "updateSwitch"
       produces:
@@ -403,7 +402,7 @@ paths:
       x-swagger-router-controller: "switch"
     delete:
       tags:
-      - "switches"
+      - "switch"
       summary: "Delete a switch"
       operationId: "deleteSwitch"
       produces:
@@ -422,7 +421,7 @@ paths:
   /ports/:
     get:
       tags:
-      - "ports"
+      - "port"
       summary: "Filter ports"
       operationId: "filterPort"
       produces:
@@ -451,12 +450,12 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/inline_response_200_1"
+              $ref: "#/definitions/PortSearchResult"
       x-swagger-router-controller: "port"
   /switch/{switchID}/port/:
     post:
       tags:
-      - "ports"
+      - "port"
       summary: "Create a port"
       operationId: "createPort"
       produces:
@@ -483,7 +482,7 @@ paths:
   /switch/{switchID}/port/{portID}:
     get:
       tags:
-      - "ports"
+      - "port"
       summary: "Retrieve a port"
       operationId: "getPort"
       produces:
@@ -507,7 +506,7 @@ paths:
       x-swagger-router-controller: "port"
     put:
       tags:
-      - "ports"
+      - "port"
       summary: "Update a port"
       operationId: "updatePort"
       produces:
@@ -535,7 +534,7 @@ paths:
       x-swagger-router-controller: "port"
     delete:
       tags:
-      - "ports"
+      - "port"
       summary: "Delete a port"
       operationId: "deletePort"
       produces:
@@ -677,6 +676,23 @@ definitions:
       roomNumber: 5110
       switchID: 6
       portNumber: "1/0/4"
+  PortSearchResult:
+    type: "object"
+    required:
+    - "port"
+    - "portID"
+    properties:
+      port:
+        $ref: "#/definitions/Port"
+      portID:
+        type: "integer"
+        example: 1
+    example:
+      port:
+        roomNumber: 5110
+        switchID: 6
+        portNumber: "1/0/4"
+      portID: 1
   Switch:
     type: "object"
     required:
@@ -697,18 +713,8 @@ definitions:
       ip: "192.168.102.211"
       description: "Switch U5"
       community: "ghWgpQvHRkrYuqpMLWYkstS3"
-  body:
+  SwitchSearchResult:
     type: "object"
-    required:
-    - "user"
-    properties:
-      user:
-        $ref: "#/definitions/User"
-      password:
-        type: "string"
-        format: "password"
-        example: "toto123"
-  inline_response_200:
     properties:
       switch:
         $ref: "#/definitions/Switch"
@@ -721,23 +727,17 @@ definitions:
         ip: "192.168.102.211"
         description: "Switch U5"
         community: "ghWgpQvHRkrYuqpMLWYkstS3"
-  inline_response_200_1:
+  body:
+    type: "object"
+    required:
+    - "user"
     properties:
-      switch:
-        $ref: "#/definitions/Port"
-      portID:
-        type: "integer"
-        example: 1
-      switchID:
-        type: "integer"
-        example: 6
-    example:
-      switchID: 6
-      portID: 1
-      switch:
-        roomNumber: 5110
-        switchID: 6
-        portNumber: "1/0/4"
+      user:
+        $ref: "#/definitions/User"
+      password:
+        type: "string"
+        format: "password"
+        example: "toto123"
 externalDocs:
   description: "Find out more about MiNET"
   url: "http://minet.net"

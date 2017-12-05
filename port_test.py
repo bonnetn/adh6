@@ -37,17 +37,18 @@ class TestPort(unittest.TestCase):
       self.assertEqual(resultCode,404) 
 
       resultString, resultCode, headers = port.createPort(1, d)
-      portID = int(headers["Location"].split("/")[-1])
+      portIDd2 = int(headers["Location"].split("/")[-1])
       #UPDATE
-      port.updatePort(1,portID, d2)
-      result = port.getPort( 1, portID )
+      port.updatePort(1,portIDd2, d2)
+      result = port.getPort( 1, portIDd2 )
       self.assertEqual(result, d2) # 
 
-      port.createPort(1, d)
+      resultString, resultCode, headers = port.createPort(1, d)
+      portIDd = int(headers["Location"].split("/")[-1])
 
       result = port.filterPort()
-      self.assertIn( d, result )
-      self.assertIn( d2, result )
+      self.assertIn( {'portID':portIDd, 'port':d}, result )
+      self.assertIn( {'portID':portIDd2, 'port':d2}, result )
      
 
 

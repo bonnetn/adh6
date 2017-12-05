@@ -1,10 +1,26 @@
 from connexion import NoContent
 
-PORTS = {}
-port_id = 0
+PORTS = {
+    0: {
+        'portNumber': '1/0/4',
+        'roomNumber': 5110,
+        'switchID': 6,
+    },
+    1: {
+        'portNumber': '1/0/3',
+        'roomNumber': 5111,
+        'switchID': 6,
+    }
+}
+
+
+port_id = 42
 
 def filterPort( limit=100, switchID=None, roomNumber=None ):
-  return list(PORTS.values())[:limit]
+  res = []
+  for k,v in PORTS.items():
+      res += [ { 'portID':k, 'port':v } ]
+  return res[:limit]
 
 def createPort( switchID, body ):
   global port_id
