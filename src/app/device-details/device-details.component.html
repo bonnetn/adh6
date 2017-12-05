@@ -1,0 +1,4 @@
+<div *ngIf="(device$ | async) as device">
+  <h1>{{ device.mac }}</h1>
+  <strong>Owner:</strong> {{ device.username }}
+</div>

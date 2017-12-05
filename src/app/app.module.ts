@@ -20,6 +20,7 @@ import { PortDetailsComponent } from './port-details/port-details.component';
 import { SwitchListComponent } from './switch-list/switch-list.component';
 import { SwitchDetailsComponent } from './switch-details/switch-details.component';
 import { DeviceListComponent } from './device-list/device-list.component';
+import { DeviceDetailsComponent } from './device-details/device-details.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { DeviceListComponent } from './device-list/device-list.component';
     SwitchListComponent,
     SwitchDetailsComponent,
     DeviceListComponent,
+    DeviceDetailsComponent,
   ],
   imports: [
     BrowserModule,
