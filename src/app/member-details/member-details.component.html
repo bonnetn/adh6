@@ -1,5 +1,5 @@
 <div *ngIf="(member$ | async) as member">
-  <h1>{{ member.firstName }} {{ member.lastName }}</h1>
+<h1>{{ member.firstName }} {{ member.lastName }} <a href="mailto:{{ member.email }}">Envoyer un mail</a></h1>
   <ul>
     <li><strong>Identifiant DISI:</strong> {{ member.username }}</li>
     <li><a href="mailto:{{ member.email }}">Mail</a>
@@ -11,11 +11,11 @@
     </li>
     <li><strong>Numéro de chambre:</strong>
       <ul>
-        <li>{{ member.rooNumber }}</li>
+        <li>{{ member.roomNumber }}</li>
         <li>Déménager</li>
       </ul>
     </li>
-	  <li>Editer le profil</li>
+	  <li><strong>Editer le profil</strong></li>
   </ul>
   
   <h2>Réseau filaire</h2>
@@ -51,7 +51,7 @@
   	<li>Supprimer</li>
   </ul>
   
-  <p>Sidebar:</p>
+  <h2>Sidebar:</h2>
   <ul>
   	<li>{{ member.comment }}</li>
     <img src="http://trombi.tem-tsp.eu/photo.php?uid={{ member.username }}"/>
