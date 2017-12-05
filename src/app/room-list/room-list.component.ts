@@ -7,11 +7,11 @@ import { Room } from '../api/models/room';
 
 @Component({
   selector: 'app-rooms',
-  templateUrl: './rooms.component.html',
-  styleUrls: ['./rooms.component.css']
+  templateUrl: './room-list.component.html',
+  styleUrls: ['./room-list.component.css']
 })
 
-export class RoomsComponent implements OnInit {
+export class RoomListComponent implements OnInit {
 
   rooms$: Observable<Room[]>;
 
