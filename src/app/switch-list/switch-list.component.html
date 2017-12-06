@@ -1,12 +1,12 @@
 <h1>Liste des switchs</h1>
 <table>
   <tr>
-    <th>Switch</th>
+    <th>Description</th>
     <th>Adresse IP</th>
-    <th>Configuration</th>
+    <th></th>
   </tr>
   <tr *ngFor="let switchResult of switches$ | async">
-    <td><a [routerLink]="['/switch',switchResult.switchID]">{{ switchResult.switch.description }}</a></td>
+    <td>{{ switchResult.switch.description }}</td>
     <td>{{ switchResult.switch.ip }}</td>
     <td><a [routerLink]="['/switch',switchResult.switchID]">Voir les ports</a></td>
   </tr>
