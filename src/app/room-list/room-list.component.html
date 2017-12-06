@@ -4,10 +4,12 @@
     <th>Numéro</th>
     <th>Description</th>
     <th>VLAN</th>
+    <th></th>
   </tr>
   <tr *ngFor="let room of rooms$ | async">
-    <td><a [routerLink]="['/room', room.roomNumber]">{{ room.roomNumber }}</a></td>
+    <td>{{ room.roomNumber }}</td>
     <td>{{ room.description }}</td>
     <td>{{ room.vlan }}</td>
+    <td><a [routerLink]="['/room', room.roomNumber]">Consulter</a></td>
   </tr>
 </table>
