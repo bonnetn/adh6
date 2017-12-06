@@ -1,13 +1,16 @@
 <div *ngIf="(room$ | async) as room">
   <h1>{{ room.description }}</h1>
   <ul><h2>Adhérent·e·s</h2>
-    <li>Consulter</li>
-    <li>Vider la chambre</li>
+    <li *ngFor="let member of members$ | async">
+      <ul><strong>{{ member.firstName }} {{ member.lastName }}</strong>
+        <li>Consulter</li>
+        <li>Vider la chambre</li>
+      </ul>
   </ul>
   <ul>
     <li *ngFor="let portRes of ports$ | async">
       <ul>
-        <h2>Switch {{ portRes.port.switchID }} port {{ portRes.port.portNumber }}</h2>
+        <strong>Switch {{ portRes.port.switchID }} port {{ portRes.port.portNumber }}</strong>
         <li>Etat</li>
         <li>Authentification</li>
         <li>Configurer</li>
