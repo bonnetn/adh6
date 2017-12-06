@@ -8,9 +8,9 @@
 		    <li>Cotiser</li>
       </ul>
     </li>
-    <li><strong>Numéro de chambre:</strong>
+    <li><strong>Numéro de chambre: </strong>{{ member.roomNumber }}
       <ul>
-        <li>{{ member.roomNumber }}</li>
+        <li><a [routerLink]="['/room', member.roomNumber ]">Consulter</a></li>
         <li>Déménager</li>
       </ul>
     </li>
