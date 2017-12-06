@@ -8,7 +8,7 @@ USERS = {
 			"lastName":"Coroller",
 			"username":"coroller",
 			"comment":"Desauthent pour routeur",
-			"roomNumber": 7601,
+			"roomNumber": 1111,
 			"departureDate": "2017-12-13 00:00:00",
 			"associationMode": "2017-01-01 00:00:00"
 		},
@@ -18,7 +18,7 @@ USERS = {
 			"lastName":"Coutelou",
 			"username":"coutelou",
 			"comment":"Desauthent pour PS4",
-			"roomNumber": 5501,
+			"roomNumber": 1234,
 			"departureDate": "2017-12-13 00:00:00",
 			"associationMode": "2017-01-01 00:00:00"
 		}
