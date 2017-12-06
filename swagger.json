@@ -388,7 +388,10 @@
           "200" : {
             "description" : "Success",
             "schema" : {
-              "$ref" : "#/definitions/SwitchSearchResult"
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/SwitchSearchResult"
+              }
             }
           }
         },
@@ -528,7 +531,10 @@
           "200" : {
             "description" : "Success",
             "schema" : {
-              "$ref" : "#/definitions/PortSearchResult"
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/PortSearchResult"
+              }
             }
           }
         },
