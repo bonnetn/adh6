@@ -53,7 +53,7 @@
           "in" : "query",
           "description" : "Filter by room number",
           "required" : false,
-          "type" : "string"
+          "type" : "integer"
         } ],
         "responses" : {
           "200" : {
@@ -388,10 +388,7 @@
           "200" : {
             "description" : "Success",
             "schema" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/definitions/SwitchSearchResult"
-              }
+              "$ref" : "#/definitions/SwitchSearchResult"
             }
           }
         },
@@ -531,10 +528,7 @@
           "200" : {
             "description" : "Success",
             "schema" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/definitions/PortSearchResult"
-              }
+              "$ref" : "#/definitions/PortSearchResult"
             }
           }
         },
@@ -817,7 +811,7 @@
     },
     "PortSearchResult" : {
       "type" : "object",
-      "required" : [ "port", "portID" ],
+      "required" : [ "port", "portID", "switchID" ],
       "properties" : {
         "port" : {
           "$ref" : "#/definitions/Port"
@@ -825,6 +819,10 @@
         "portID" : {
           "type" : "integer",
           "example" : 1
+        },
+        "switchID" : {
+          "type" : "integer",
+          "example" : 6
         }
       },
       "example" : {
@@ -833,6 +831,7 @@
           "switchID" : 6,
           "portNumber" : "1/0/4"
         },
+        "switchID" : 6,
         "portID" : 1
       }
     },
