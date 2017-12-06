@@ -1,3 +1,14 @@
 <div *ngIf="(port$ | async) as port">
-  <h1>{{ port.portNumber }} - Switch {{ port.switchID }}</h1>
+  <h1>Configuration de port - Chambre {{ port.roomNumber }}</h1>
+  <p>Jolie image pour dire si le port est authentifié ou non</p>
+  <ul><h2>Actions</h2>
+    <li>Fermer le port</li>
+    <li>Désactiver l'authentification</li>
+  </ul>
+  <ul><h2>Informations</h2>
+    <li><strong>Switch: </strong>{{ port.switchID }}</li>
+    <li><strong>Numéro de port: </strong>{{ port.portNumber }}</li>
+    <li><strong>VLAN: </strong></li>
+    <li><strong>Vitesse: </strong></li>
+</ul>
 </div>
