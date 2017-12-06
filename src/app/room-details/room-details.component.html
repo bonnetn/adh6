@@ -4,10 +4,15 @@
     <li>Consulter</li>
     <li>Vider la chambre</li>
   </ul>
-  <ul><h2>Port</h2>
-    <li>Etat</li>
-    <li>Authentification</li>
-    <li>Configurer</li>
+  <ul>
+    <li *ngFor="let portRes of ports$ | async">
+      <ul>
+        <h2>Switch {{ portRes.port.switchID }} port {{ portRes.port.portNumber }}</h2>
+        <li>Etat</li>
+        <li>Authentification</li>
+        <li>Configurer</li>
+      </ul>
+    </li>
   </ul>
   <ul><h2>Informations</h2>
     <li><strong>Numéro de chambre: </strong>{{ room.roomNumber }}</li>
