@@ -1,5 +1,15 @@
-<ul>
-  <li *ngFor="let portResult of ports$ | async">
-    <a [routerLink]="['/switch', portResult.port.switchID, 'port', portResult.portID]">/switch/{{ portResult.port.switchID }}/port/{{ portResult.portID }}</a>
-  </li>
-</ul>
+<h1>Liste des ports</h1>
+<table>
+  <tr>
+    <th>Switch</th>
+    <th>Numéro de port</th>
+    <th>Chambre</th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let portResult of ports$ | async">  
+    <td><a [routerLink]="['/switch', portResult.port.switchID]">{{ portResult.port.switchID }}</a></td>
+    <td>{{ portResult.port.portNumber }}</td>
+    <td><a [routerLink]="['/room', portResult.port.roomNumber]">{{ portResult.port.roomNumber }}</a></td>
+    <td><a [routerLink]="['/switch', portResult.port.switchID, 'port', portResult.portID]">Configurer</a></td>
+  </tr>
+</table>
