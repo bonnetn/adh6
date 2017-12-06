@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { RoomService } from '../api/services/room.service';
 import { PortService } from '../api/services/port.service';
 import { Room } from '../api/models/room';
-import { Port } from '../api/models/port';
+import { PortSearchResult } from '../api/models/port-search-result';
 
 import { ActivatedRoute } from '@angular/router';
 
@@ -17,7 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 export class RoomDetailsComponent implements OnInit, OnDestroy {
 
   room$: Observable<Room>;
-  ports$: Observable<Port[]>;
+  ports$: Observable<PortSearchResult[]>;
   roomNumber: number;
   private sub: any;
 
