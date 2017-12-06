@@ -1,6 +1,17 @@
 <div *ngIf="(room$ | async) as room">
-  <h1>{{ room.roomNumber }}</h1>
-  {{ room.description }}
-  {{ room.vlan }}
-  {{ room.phone }}
+  <h1>{{ room.description }}</h1>
+  <ul><h2>Adhérent·e·s</h2>
+    <li>Consulter</li>
+    <li>Vider la chambre</li>
+  </ul>
+  <ul><h2>Port</h2>
+    <li>Etat</li>
+    <li>Authentification</li>
+    <li>Configurer</li>
+  </ul>
+  <ul><h2>Informations</h2>
+    <li><strong>Numéro de chambre: </strong>{{ room.roomNumber }}</li>
+    <li><strong>VLAN assigné: </strong>{{ room.vlan }}</li>
+    <li><strong>Téléphone: </strong>{{ room.phone }}</li>
+  </ul>
 </div>
