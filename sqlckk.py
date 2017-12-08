@@ -69,14 +69,14 @@ class Port(Base):
     rcom = Column(Integer)
     numero = Column(String)
     oid = Column(String)
-    switch_id = Column(Integer, ForeignKey('switchs.id'))
+    switch_id = Column(Integer, ForeignKey('switches.id'))
     chambre_id = Column(Integer)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
 
 
 class Switch(Base):
-    __tablename__ = "switchs"
+    __tablename__ = "switches"
     id = Column(Integer, primary_key=True)
     description = Column(String)
     ip = Column(String)
@@ -85,8 +85,8 @@ class Switch(Base):
     updated_at = Column(DateTime)
  
 from sqlalchemy import create_engine
-engine = create_engine('sqlite:///sql_c_kk.sqlite')
- 
+engine = create_engine('mysql://adh:tototo@localhost/foo') 
+
 from sqlalchemy.orm import sessionmaker
 session = sessionmaker()
 session.configure(bind=engine)
