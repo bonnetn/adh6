@@ -8,11 +8,11 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = "adherents"
     id = Column(Integer, primary_key=True)
-    nom = Column(String)
-    prenom = Column(String)
-    mail = Column(String)
-    login = Column(String)
-    password = Column(String)
+    nom = Column(String, Nullable=False)
+    prenom = Column(String, Nullable=False)
+    mail = Column(String, Nullable=False)
+    login = Column(String, Nullable=False, unique=True)
+    password = Column(String, Nullable=False)
     chambre_id = Column(Integer, ForeignKey('chambres.id'))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
@@ -24,7 +24,7 @@ class User(Base):
 class Room(Base):
     __tablename__ = "chambres"
     id = Column(Integer, primary_key=True)
-    numero = Column(Integer)
+    numero = Column(Integer, unique=True)
     description = Column(String)
     telephone = Column(String)
     vlan_old = Column(Integer)
@@ -45,7 +45,7 @@ class Vlan(Base):
 class WiredDevice(Base):
     __tablename__ = "ordinateurs"
     id = Column(Integer, primary_key=True)
-    mac = Column(String)
+    mac = Column(String, Nullable=False, unique=True)
     ip = Column(String)
     dns = Column(String)
     adherent_id = Column(Integer, ForeignKey('adherents.id'))
@@ -57,7 +57,7 @@ class WiredDevice(Base):
 class WirelessDevice(Base):
     __tablename__ = "portables"
     id = Column(Integer, primary_key=True)
-    mac = Column(String)
+    mac = Column(String, Nullable=False, unique=True)
     adherent_id = Column(Integer, ForeignKey('adherents.id'))
     last_seen = Column(DateTime)
     created_at = Column(DateTime)
@@ -70,7 +70,7 @@ class Port(Base):
     numero = Column(String)
     oid = Column(String)
     switch_id = Column(Integer, ForeignKey('switches.id'))
-    chambre_id = Column(Integer)
+    chambre_id = Column(Integer, ForeignKey('chambres.id'))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
 
