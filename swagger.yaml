@@ -48,7 +48,7 @@ paths:
         in: "query"
         description: "Filter by room number"
         required: false
-        type: "string"
+        type: "integer"
       responses:
         200:
           description: "Success"
@@ -681,17 +681,22 @@ definitions:
     required:
     - "port"
     - "portID"
+    - "switchID"
     properties:
       port:
         $ref: "#/definitions/Port"
       portID:
         type: "integer"
         example: 1
+      switchID:
+        type: "integer"
+        example: 6
     example:
       port:
         roomNumber: 5110
         switchID: 6
         portNumber: "1/0/4"
+      switchID: 6
       portID: 1
   Switch:
     type: "object"

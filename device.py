@@ -1,6 +1,21 @@
 from connexion import NoContent
 
-DEVICES = {}
+DEVICES = {
+    "01:23:45:67:89:AB": {
+        'mac'            : '01:23:45:67:89:AB',
+        'ipAddress'      : '157.159.42.1',
+        'ipv6Address'    :	'ff02::1',
+        'connectionType' : 'wired',
+        'username'	 : 'coroller'
+    },
+    "FF:FF:FF:FF:FF:FF": {
+        'mac'            : 'FF:FF:FF:FF:FF:FF',
+        'ipAddress'      : '157.159.42.2',
+        'ipv6Address'    :	'ff02::2',
+        'connectionType' : 'wireless',
+        'username'	 : 'coroller'
+    }
+}
 
 def putDevice( macAddress, body ):
   if macAddress in DEVICES:
