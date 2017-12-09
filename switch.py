@@ -11,6 +11,11 @@ SWITCHES = {
         'ip'          : "192.168.102.12",
         'community'   : "tututu"
     }
+    2: {
+        'description' : "Switch-local",
+        'ip'          : "192.168.102.12",
+        'community'   : "tirelinpimpon"
+    },
         
 }
 switch_id = 42
