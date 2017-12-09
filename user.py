@@ -12,6 +12,16 @@ USERS = {
 			"departureDate": "2017-12-13 00:00:00",
 			"associationMode": "2017-01-01 00:00:00"
 		},
+		"cherre_r": {
+			"email":"romain.cherre@telecom-em.eu",
+			"firstName":"Romain",
+			"lastName":"Cherré",
+			"username":"cherre_r",
+			"comment":"Mdr",
+			"roomNumber": 1111,
+			"departureDate": "2017-12-13 00:00:00",
+			"associationMode": "2017-01-01 00:00:00"
+		},
 		"coutelou": {
 			"email":"thomas.coutelou@telecom-sudparis.eu",
 			"firstName":"Thomas",
