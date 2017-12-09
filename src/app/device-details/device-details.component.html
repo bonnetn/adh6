@@ -1,4 +1,15 @@
 <div *ngIf="(device$ | async) as device">
-  <h1>{{ device.mac }}</h1>
-  <strong>Owner:</strong> {{ device.username }}
+  <h1>Détails de l'appareil</h1>
+  <ul>
+    <li><strong>Utilisateur: </strong><a [routerLink]="['/member', device.username]">{{ device.username }}</a></li>
+    <li><strong>Adresse MAC:</strong> {{ device.mac }}</li>
+    <li><strong>Type d'appareil:</strong> {{ device.connectionType }}</li>
+    <div *ngIf="device.connectionType == 'wired'">
+      <li><strong>Adresse IPv4:</strong> {{ device.ipAddress }}</li>
+      <li><strong>Adresse IPv6:</strong> {{ device.ipv6Address }}</li>
+      <li><strong>MAB:</strong> MAB</li>
+    </div>
+    <li><strong>Editer</strong></li>
+    <li><strong>Supprimer</strong></li>
+  </ul>
 </div>
