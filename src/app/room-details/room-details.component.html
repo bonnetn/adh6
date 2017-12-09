@@ -2,18 +2,20 @@
   <h1>{{ room.description }}</h1>
   <ul><h2>Adhérent·e·s</h2>
     <li *ngFor="let member of members$ | async">
-      <ul><strong>{{ member.firstName }} {{ member.lastName }}</strong>
-        <li>Consulter</li>
+      <strong>{{ member.firstName }} {{ member.lastName }}</strong>
+      <ul>
+        <li><a [routerLink]="['/member', member.username]">Consulter</a></li>
         <li>Vider la chambre</li>
       </ul>
+    </li>
   </ul>
-  <ul>
+  <ul><h2>Ports</h2>
     <li *ngFor="let portRes of ports$ | async">
+      <strong>Switch {{ portRes.port.switchID }} port {{ portRes.port.portNumber }}</strong>
       <ul>
-        <strong>Switch {{ portRes.port.switchID }} port {{ portRes.port.portNumber }}</strong>
         <li>Etat</li>
         <li>Authentification</li>
-        <li>Configurer</li>
+        <li><a [routerLink]="['/switch', portRes.port.switchID, 'port', portRes.portID]">Configurer</a></li>
       </ul>
     </li>
   </ul>
