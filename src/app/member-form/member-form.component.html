@@ -1,0 +1,34 @@
+<h2>Nouvelle inscription</h2>
+
+<form *ngIf="!loading" [formGroup]="memberForm" (ngSubmit)="onSubmit()" novalidate>
+  <div class="form-group">
+    <label class="center-block">Last name / Nom:
+      <input class="form-control" formControlName="lastName">
+    </label>
+    <label class="center-block">First name / Prénom:
+      <input class="form-control" formControlName="firstName">
+    </label>
+    <label class="center-block">Login DISI:
+      <input class="form-control" formControlName="username">
+    </label>
+    <label class="center-block">Mail:
+      <input class="form-control" formControlName="email">
+    </label>
+    <label class="center-block">Room number / Numéro de chambre:
+      <input class="form-control" formControlName="roomNumber" type="number">
+    </label>
+    <div formGroupName="passwords">
+      <label class="center-block">Password / Mot de passe:
+        <input class="form-control" formControlName="password" type="password">
+      </label>
+      <label class="center-block">Confirm password / Confirmez le mot de passe:
+        <input class="form-control" formControlName="confirmPassword" type="password">
+      </label>
+    </div>
+  </div>
+  <button type="submit"
+         [disabled]="disabled || memberForm.status == 'INVALID'" class="btn
+         btn-success">Create</button>
+</form>
+
+<p>Form status: {{ memberForm.value | json }}</p>

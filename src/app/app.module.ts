@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { ReactiveFormsModule }   from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
@@ -21,6 +21,7 @@ import { SwitchListComponent } from './switch-list/switch-list.component';
 import { SwitchDetailsComponent } from './switch-details/switch-details.component';
 import { DeviceListComponent } from './device-list/device-list.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
+import { MemberFormComponent } from './member-form/member-form.component';
 
 @NgModule({
   declarations: [
@@ -38,11 +39,13 @@ import { DeviceDetailsComponent } from './device-details/device-details.componen
     SwitchDetailsComponent,
     DeviceListComponent,
     DeviceDetailsComponent,
+    MemberFormComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ApiModule
+    ApiModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

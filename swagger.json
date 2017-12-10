@@ -15,6 +15,9 @@
     "name" : "user",
     "description" : "Operations on users"
   }, {
+    "name" : "membership",
+    "description" : "Manage membership records"
+  }, {
     "name" : "device",
     "description" : "Operations on devices"
   }, {
@@ -84,7 +87,7 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "Sucess",
+            "description" : "Success",
             "schema" : {
               "$ref" : "#/definitions/User"
             }
@@ -148,6 +151,44 @@
           }
         },
         "x-swagger-router-controller" : "user"
+      }
+    },
+    "/user/{username}/membership" : {
+      "post" : {
+        "tags" : [ "membership" ],
+        "summary" : "Add a membership record for an user",
+        "operationId" : "addMembership",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "username",
+          "in" : "path",
+          "description" : "The username of the user",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Membership record",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/MembershipRecord"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "Location" : {
+                "type" : "string",
+                "description" : "URI to the newly created membership record"
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        },
+        "x-swagger-router-controller" : "membership"
       }
     },
     "/device/" : {
@@ -883,6 +924,23 @@
           "description" : "Switch U5",
           "community" : "ghWgpQvHRkrYuqpMLWYkstS3"
         }
+      }
+    },
+    "MembershipRecord" : {
+      "type" : "object",
+      "properties" : {
+        "start" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "end" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      },
+      "example" : {
+        "start" : "2000-01-23T04:56:07.000+00:00",
+        "end" : "2000-01-23T04:56:07.000+00:00"
       }
     },
     "body" : {
