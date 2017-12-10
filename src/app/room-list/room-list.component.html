@@ -10,6 +10,6 @@
     <td>{{ room.roomNumber }}</td>
     <td>{{ room.description }}</td>
     <td>{{ room.vlan }}</td>
-    <td><a [routerLink]="['/room', room.roomNumber]">Consulter</a></td>
+    <td><a [routerLink]="[room.roomNumber]">Consulter</a></td>
   </tr>
 </table>
