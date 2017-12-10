@@ -4,7 +4,7 @@
     <li *ngFor="let member of members$ | async">
       <strong>{{ member.firstName }} {{ member.lastName }}</strong>
       <ul>
-        <li><a [routerLink]="['/member', member.username]">Consulter</a></li>
+        <li><a [routerLink]="['../../member/view', member.username]">Consulter</a></li>
         <li>Vider la chambre</li>
       </ul>
     </li>

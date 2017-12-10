@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MemberListComponent } from './member-list/member-list.component';
+import { MemberFormComponent } from './member-form/member-form.component';
 import { MemberDetailsComponent } from './member-details/member-details.component';
 import { RoomListComponent } from './room-list/room-list.component';
 import { RoomDetailsComponent } from './room-details/room-details.component';
@@ -18,8 +19,14 @@ import { DeviceDetailsComponent } from './device-details/device-details.componen
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'member', component: MemberListComponent },
-  { path: 'member/:username', component: MemberDetailsComponent },
+  { 
+    path: 'member', 
+    children: [
+      { path: 'search', component: MemberListComponent },
+      { path: 'view/:username', component: MemberDetailsComponent },
+      { path: 'add', component: MemberFormComponent },
+    ]
+  },
   { path: 'room', component: RoomListComponent },
   { path: 'room/:roomNumber', component: RoomDetailsComponent },
   { path: 'port', component: PortListComponent },
