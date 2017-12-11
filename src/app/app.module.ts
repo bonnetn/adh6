@@ -22,6 +22,7 @@ import { SwitchDetailsComponent } from './switch-details/switch-details.componen
 import { DeviceListComponent } from './device-list/device-list.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
 import { MemberFormComponent } from './member-form/member-form.component';
+import { DeviceFormComponent } from './device-form/device-form.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { MemberFormComponent } from './member-form/member-form.component';
     DeviceListComponent,
     DeviceDetailsComponent,
     MemberFormComponent,
+    DeviceFormComponent,
   ],
   imports: [
     BrowserModule,
