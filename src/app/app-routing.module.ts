@@ -30,6 +30,7 @@ const routes: Routes = [
       { path: 'edit/:username', component: MemberEditComponent },
       { path: 'add', component: MemberFormComponent },
       { path: 'view/:username/newdevice', component: DeviceFormComponent },
+      { path: 'view/:username/editdevice/:mac', component: DeviceFormComponent },
     ]
   },
   { path: 'room', component: RoomListComponent },
