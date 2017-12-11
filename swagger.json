@@ -168,7 +168,7 @@
         }, {
           "in" : "body",
           "name" : "body",
-          "description" : "Membership record",
+          "description" : "Membership record, if no start is specified, it will use the current date.",
           "required" : true,
           "schema" : {
             "$ref" : "#/definitions/MembershipRecord"
@@ -188,7 +188,7 @@
             "description" : "Not found"
           }
         },
-        "x-swagger-router-controller" : "membership"
+        "x-swagger-router-controller" : "user"
       }
     },
     "/device/" : {
@@ -928,24 +928,25 @@
     },
     "MembershipRecord" : {
       "type" : "object",
+      "required" : [ "duration" ],
       "properties" : {
         "start" : {
           "type" : "string",
           "format" : "date-time"
         },
-        "end" : {
-          "type" : "string",
-          "format" : "date-time"
+        "duration" : {
+          "type" : "integer",
+          "example" : 365,
+          "description" : "Duration in days"
         }
       },
       "example" : {
-        "start" : "2000-01-23T04:56:07.000+00:00",
-        "end" : "2000-01-23T04:56:07.000+00:00"
+        "duration" : 365,
+        "start" : "2000-01-23T04:56:07.000+00:00"
       }
     },
     "body" : {
       "type" : "object",
-      "required" : [ "user" ],
       "properties" : {
         "user" : {
           "$ref" : "#/definitions/User"
