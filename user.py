@@ -1,5 +1,5 @@
 from connexion import NoContent
-
+from datetime import datetime
 
 USERS = {
 		"coroller": {
@@ -76,3 +76,18 @@ def putUser( username, body ):
 	USERS[username] = body["user"]
 	return retVal
 	
+def addMembership( username, body ):
+    if username not in USERS:
+        return "Not found", 404
+
+    if "start" not in body:
+        start = datetime.now().isoformat()
+    else:
+        start = body["start"]
+
+    USERS[username]["departureDate"] = start
+
+    # TODO: return the right header
+    # TODO: return 201 instead of 200
+    return NoContent, 200, { "Location": "test" }
+
