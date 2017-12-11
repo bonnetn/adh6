@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+
+import 'rxjs/add/operator/takeWhile';
 
 import { DeviceService } from '../api/services/device.service';
 import { Device } from '../api/models/device';
@@ -20,11 +22,14 @@ export class DeviceFormComponent implements OnInit, OnDestroy {
   // Variable to destroy all subscriptions
   private alive: boolean = true;
   
-  deviceForm: FormGroup
+  deviceForm: FormGroup;
+  username: string;
+  private sub: any;
   
   constructor(
     public deviceService: DeviceService,
     private fb: FormBuilder,
+    private route: ActivatedRoute,
     private router: Router,
     private location: Location,
   ) { 
@@ -43,7 +48,8 @@ export class DeviceFormComponent implements OnInit, OnDestroy {
     const v = this.deviceForm.value;
     const device: Device = {
       mac: v.mac,
-      connectionType: v.connectionType
+      connectionType: v.connectionType,
+      username: this.route.snapshot.paramMap.get('username')
     }
           
     this.deviceService.putDeviceResponse( { "macAddress": v.mac, body: device })
