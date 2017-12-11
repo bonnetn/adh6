@@ -12,6 +12,8 @@ basePath: "/"
 tags:
 - name: "user"
   description: "Operations on users"
+- name: "membership"
+  description: "Manage membership records"
 - name: "device"
   description: "Operations on devices"
 - name: "room"
@@ -73,7 +75,7 @@ paths:
         type: "string"
       responses:
         200:
-          description: "Sucess"
+          description: "Success"
           schema:
             $ref: "#/definitions/User"
         404:
@@ -122,6 +124,37 @@ paths:
       responses:
         204:
           description: "Deleted"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "user"
+  /user/{username}/membership:
+    post:
+      tags:
+      - "membership"
+      summary: "Add a membership record for an user"
+      operationId: "addMembership"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The username of the user"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Membership record, if no start is specified, it will use the\
+          \ current date."
+        required: true
+        schema:
+          $ref: "#/definitions/MembershipRecord"
+      responses:
+        200:
+          description: "Success"
+          headers:
+            Location:
+              type: "string"
+              description: "URI to the newly created membership record"
         404:
           description: "Not found"
       x-swagger-router-controller: "user"
@@ -732,10 +765,23 @@ definitions:
         ip: "192.168.102.211"
         description: "Switch U5"
         community: "ghWgpQvHRkrYuqpMLWYkstS3"
-  body:
+  MembershipRecord:
     type: "object"
     required:
-    - "user"
+    - "duration"
+    properties:
+      start:
+        type: "string"
+        format: "date-time"
+      duration:
+        type: "integer"
+        example: 365
+        description: "Duration in days"
+    example:
+      duration: 365
+      start: "2000-01-23T04:56:07.000+00:00"
+  body:
+    type: "object"
     properties:
       user:
         $ref: "#/definitions/User"
