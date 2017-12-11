@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
 
 import 'rxjs/add/operator/takeWhile';
 
@@ -23,15 +22,12 @@ export class DeviceFormComponent implements OnInit, OnDestroy {
   private alive: boolean = true;
   
   deviceForm: FormGroup;
-  username: string;
-  private sub: any;
   
   constructor(
     public deviceService: DeviceService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location,
   ) { 
   this.createForm();
   }
