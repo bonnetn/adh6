@@ -46,17 +46,18 @@ export class DeviceFormComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.disabled = true;
     const v = this.deviceForm.value;
+    const user = this.route.snapshot.paramMap.get('username');
     const device: Device = {
       mac: v.mac,
       connectionType: v.connectionType,
-      username: this.route.snapshot.paramMap.get('username')
+      username: user
     }
           
     this.deviceService.putDeviceResponse( { "macAddress": v.mac, body: device })
       .takeWhile( ()=> this.alive )
       .subscribe( (response : HttpResponse<void>) => {
         if( response.status == 204 || response.status == 201 ) {
-          this.location.back()
+          this.router.navigate(["member/view", user ])
         }
       });
   
