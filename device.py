@@ -22,8 +22,11 @@ def putDevice( macAddress, body ):
     retVal = ("Updated", 204)
   else:
     retVal = ("Created", 201)
+
+  if macAddress != body["mac"]:
+    del DEVICES[macAddress]
   
-  DEVICES[macAddress] = body
+  DEVICES[body["mac"]] = body
   return retVal
 
 def getDevice( macAddress ):
