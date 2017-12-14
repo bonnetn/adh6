@@ -5,6 +5,6 @@
   </tr>
   <tr *ngFor="let device of devices$ | async">
     <td><a [routerLink]="['../../member/view' , device.username]">{{ device.username }}</a></td>
-    <td><a [routerLink]="['../' , device.mac]">{{ device.mac }}</a></td>
+    <td><a [routerLink]="['../view' , device.mac]">{{ device.mac }}</a></td>
   </tr>
 </table>

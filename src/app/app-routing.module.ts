@@ -38,7 +38,7 @@ const routes: Routes = [
     path: 'device', 
     children: [
       { path: 'search', component: DeviceListComponent },
-      { path: ':mac', component: DeviceDetailsComponent },
+      { path: 'view/:mac', component: DeviceDetailsComponent },
     ],
   },
   { path: 'patching', component: PatchingComponent },
