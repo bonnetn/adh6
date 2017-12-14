@@ -39,7 +39,6 @@ def findInUser( user, terms ):
   if terms == None:
     return False
   s = ""
-  s += user["email" ] + " "
   s += user["firstName" ] + " "
   s += user["lastName" ] + " "
   s += user["username" ] + " "
