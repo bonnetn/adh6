@@ -32,7 +32,7 @@
       <td>{{ device.ipAddress }}</td>
       <td>{{ device.ipv6Address }}</td>
       <td>MAB</td>
-      <td>Editer</td>
+      <td><a [routerLink]="['../../../device/edit', device.mac]">Editer</a></td>
       <td>Supprimer</td>
     </tr>
   </table>
@@ -47,7 +47,7 @@
     </tr>
     <tr *ngFor="let device of wireless_devices$ | async">
       <td>{{ device.mac }}</td>
-      <td>Editer</td>
+      <td><a [routerLink]="['../../../device/edit', device.mac]">Editer</a></td>
       <td>Supprimer</td>
     </tr>
   </table>
