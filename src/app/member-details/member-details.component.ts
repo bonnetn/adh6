@@ -27,27 +27,35 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
 
   constructor(public userService: UserService, public deviceService: DeviceService, private route: ActivatedRoute) { }
 
+  onDelete(mac: string) {
+    this.deviceService.deleteDevice(mac).subscribe( () => {
+      this.fetch_and_sort_devices();
+    });
+  }
+
+  fetch_and_sort_devices() {
+    // Get all devices of a user and split them into two observables.
+    // One for wireless devices and one for wired
+    this.subDevices = this.deviceService.filterDevice( { 'username': this.username } ).subscribe( (devices: Device[]) => {
+      var w = [];
+      var wl = [];
+      devices.forEach(function(device) {
+        if(device.connectionType == "wired") {
+          w.push( device );
+        } else { 
+          wl.push( device );
+        }
+      });
+      this.wired_devices$ = of( w );
+      this.wireless_devices$ = of( wl );
+    });
+  }
+
   ngOnInit() {
-    
     this.sub = this.route.params.subscribe(params => {
       this.username = params['username']; 
       this.member$ = this.userService.getUser(this.username);
-      
-      // Get all devices of a user and split them into two observables.
-      // One for wireless devices and one for wired
-      this.subDevices = this.deviceService.filterDevice( { 'username': this.username } ).subscribe( (devices: Device[]) => {
-        var w = [];
-        var wl = [];
-        devices.forEach(function(device) {
-          if(device.connectionType == "wired") {
-            w.push( device );
-          } else { 
-            wl.push( device );
-          }
-        });
-        this.wired_devices$ = of( w );
-        this.wireless_devices$ = of( wl );
-      });
+      this.fetch_and_sort_devices();
     });
   }
   ngOnDestroy() {

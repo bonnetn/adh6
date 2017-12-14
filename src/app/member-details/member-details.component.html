@@ -33,7 +33,7 @@
       <td>{{ device.ipv6Address }}</td>
       <td>MAB</td>
       <td><a [routerLink]="['../../../device/edit', device.mac]">Editer</a></td>
-      <td>Supprimer</td>
+      <td><a style="cursor: pointer" (click)="onDelete(device.mac)">Supprimer</a></td>
     </tr>
   </table>
   <p><a [routerLink]="['newdevice']">Nouvel ordinateur</a></p>
@@ -48,7 +48,7 @@
     <tr *ngFor="let device of wireless_devices$ | async">
       <td>{{ device.mac }}</td>
       <td><a [routerLink]="['../../../device/edit', device.mac]">Editer</a></td>
-      <td>Supprimer</td>
+      <td><a style="cursor: pointer" (click)="onDelete(device.mac)">Supprimer</a></td>
     </tr>
   </table>
   <p><a [routerLink]="['newdevice']">Nouvel appareil sans fil</a></p>
