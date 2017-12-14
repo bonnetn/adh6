@@ -1,5 +1,6 @@
 <h1>Liste des adhérent·e·s</h1>
-<a [routerLink]="['../add']">Nouvelle inscription</a>
+<p><a [routerLink]="['../add']">Nouvelle inscription</a></p>
+<p><input #searchBox id="search-box" (keyup)="search(searchBox.value)"/></p>
 <table>
   <tr>
     <th>Nom</th>
