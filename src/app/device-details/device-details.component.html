@@ -11,7 +11,7 @@
       <li><strong>Adresse IPv6:</strong> {{ device.ipv6Address }}</li>
       <li><strong>MAB:</strong> MAB</li>
     </div>
-    <li><strong>Editer</strong></li>
-    <li><strong>Supprimer</strong></li>
+    <li><strong><a [routerLink]='["../../../device/edit", device.mac]'>Editer</a></strong></li>
+    <li><strong><a style="cursor:pointer" (click)="onDelete(device.mac)">Supprimer</a></strong></li>
   </ul>
 </div>
