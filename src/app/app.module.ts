@@ -23,6 +23,7 @@ import { DeviceListComponent } from './device-list/device-list.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
 import { MemberFormComponent } from './member-form/member-form.component';
 import { DeviceFormComponent } from './device-form/device-form.component';
+import { MemberEditComponent } from './member-edit/member-edit.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { DeviceFormComponent } from './device-form/device-form.component';
     DeviceDetailsComponent,
     MemberFormComponent,
     DeviceFormComponent,
+    MemberEditComponent,
   ],
   imports: [
     BrowserModule,

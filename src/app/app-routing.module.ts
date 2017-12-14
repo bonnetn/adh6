@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MemberListComponent } from './member-list/member-list.component';
 import { MemberFormComponent } from './member-form/member-form.component';
+import { MemberEditComponent } from './member-edit/member-edit.component';
 import { MemberDetailsComponent } from './member-details/member-details.component';
 import { RoomListComponent } from './room-list/room-list.component';
 import { RoomDetailsComponent } from './room-details/room-details.component';
@@ -27,6 +28,7 @@ const routes: Routes = [
       { path: 'view/:username', component: MemberDetailsComponent },
       { path: 'add', component: MemberFormComponent },
       { path: 'view/:username/newdevice', component: DeviceFormComponent },
+      { path: 'edit/:username', component: MemberEditComponent },
     ]
   },
   { path: 'room', component: RoomListComponent },

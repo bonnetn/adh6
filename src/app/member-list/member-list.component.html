@@ -14,5 +14,6 @@
     <td>{{member.username}}</td>
     <td>{{member.roomNumber}}</td>
     <td><a [routerLink]="['../view', member.username]">Consulter</a></td>
+    <td><a [routerLink]="['../edit', member.username]">Éditer</a></td>
   </tr>
 </table>

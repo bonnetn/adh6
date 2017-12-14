@@ -1,0 +1,26 @@
+<h2>Édition d'un membre</h2>
+
+<form *ngIf="!loading" [formGroup]="memberEdit" (ngSubmit)="onSubmit()" novalidate>
+  <div class="form-group">
+    <label class="center-block">Last name / Nom:
+      <input class="form-control" formControlName="lastName">
+    </label>
+    <label class="center-block">First name / Prénom:
+      <input class="form-control" formControlName="firstName">
+    </label>
+    <label class="center-block">Login DISI:
+      <input class="form-control" formControlName="username">
+    </label>
+    <label class="center-block">Mail:
+      <input class="form-control" formControlName="email">
+    </label>
+    <label class="center-block">Room number / Numéro de chambre:
+      <input class="form-control" formControlName="roomNumber" type="number">
+    </label>
+  </div>
+  <button type="submit"
+         [disabled]="disabled || memberEdit.status == 'INVALID'" class="btn
+         btn-success">Edit</button>
+</form>
+
+<p>Form status: {{ memberEdit.value | json }}</p>
