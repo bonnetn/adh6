@@ -15,7 +15,7 @@ import { SwitchLocalComponent } from './switch-local/switch-local.component';
 import { SwitchListComponent } from './switch-list/switch-list.component';
 import { SwitchDetailsComponent } from './switch-details/switch-details.component';
 import { DeviceListComponent } from './device-list/device-list.component';
-import { DeviceFormComponent } from './device-form/device-form.component';
+import { DeviceNewComponent } from './device-new/device-new.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
 import { DeviceEditComponent } from './device-edit/device-edit.component';
 
@@ -29,8 +29,8 @@ const routes: Routes = [
       { path: 'view/:username', component: MemberDetailsComponent },
       { path: 'edit/:username', component: MemberEditComponent },
       { path: 'add', component: MemberFormComponent },
-      { path: 'view/:username/newdevice', component: DeviceFormComponent },
-      { path: 'view/:username/editdevice/:mac', component: DeviceFormComponent },
+      { path: 'view/:username/newdevice', component: DeviceNewComponent },
+      { path: 'view/:username/editdevice/:mac', component: DeviceEditComponent },
     ]
   },
   { path: 'room', component: RoomListComponent },

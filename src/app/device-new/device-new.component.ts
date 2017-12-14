@@ -10,12 +10,12 @@ import { DeviceService } from '../api/services/device.service';
 import { Device } from '../api/models/device';
 
 @Component({
-  selector: 'app-device-form',
-  templateUrl: './device-form.component.html',
-  styleUrls: ['./device-form.component.css']
+  selector: 'app-device-new',
+  templateUrl: './device-new.component.html',
+  styleUrls: ['./device-new.component.css']
 })
 
-export class DeviceFormComponent implements OnInit, OnDestroy {
+export class DeviceNewComponent implements OnInit, OnDestroy {
   
   // Disable the button to prevent multiple submit
   private disabled: boolean = false;

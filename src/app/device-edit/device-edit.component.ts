@@ -84,5 +84,4 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.alive=false;
   }
-
 }
