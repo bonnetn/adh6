@@ -26,6 +26,7 @@ import { MemberEditComponent } from './member-edit/member-edit.component';
 import { DeviceNewComponent } from './device-new/device-new.component';
 import { DeviceEditComponent } from './device-edit/device-edit.component';
 import { MemberEditComponent } from './member-edit/member-edit.component';
+import { DeviceEditComponent } from './device-edit/device-edit.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { MemberEditComponent } from './member-edit/member-edit.component';
     DeviceNewComponent,
     DeviceEditComponent,
     MemberEditComponent,
+    DeviceEditComponent,
   ],
   imports: [
     BrowserModule,
