@@ -17,6 +17,7 @@ import { SwitchDetailsComponent } from './switch-details/switch-details.componen
 import { DeviceListComponent } from './device-list/device-list.component';
 import { DeviceFormComponent } from './device-form/device-form.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
+import { DeviceEditComponent } from './device-edit/device-edit.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -26,9 +27,9 @@ const routes: Routes = [
     children: [
       { path: 'search', component: MemberListComponent },
       { path: 'view/:username', component: MemberDetailsComponent },
+      { path: 'edit/:username', component: MemberEditComponent },
       { path: 'add', component: MemberFormComponent },
       { path: 'view/:username/newdevice', component: DeviceFormComponent },
-      { path: 'edit/:username', component: MemberEditComponent },
     ]
   },
   { path: 'room', component: RoomListComponent },
@@ -39,6 +40,7 @@ const routes: Routes = [
     children: [
       { path: 'search', component: DeviceListComponent },
       { path: 'view/:mac', component: DeviceDetailsComponent },
+      { path: 'edit/:mac', component: DeviceEditComponent },
     ],
   },
   { path: 'patching', component: PatchingComponent },
