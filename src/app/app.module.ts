@@ -22,7 +22,6 @@ import { SwitchDetailsComponent } from './switch-details/switch-details.componen
 import { DeviceListComponent } from './device-list/device-list.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
 import { MemberFormComponent } from './member-form/member-form.component';
-import { MemberEditComponent } from './member-edit/member-edit.component';
 import { DeviceNewComponent } from './device-new/device-new.component';
 import { DeviceEditComponent } from './device-edit/device-edit.component';
 import { MemberEditComponent } from './member-edit/member-edit.component';
