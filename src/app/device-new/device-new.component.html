@@ -1,5 +1,5 @@
 <h1>Ajout d'un appareil</h1>
-<form *ngIf="!loading" [formGroup]="deviceNew" (ngSubmit)="onSubmit()" novalidate>
+<form *ngIf="!loading" [formGroup]="deviceForm" (ngSubmit)="onSubmit()" novalidate>
   <label class="center-block">Adresse MAC
     <input class="form-control" formControlName="mac">
   </label>
@@ -9,8 +9,8 @@
     <label class="center-block"><input type="radio" formControlName="connectionType" value="wireless">Wi-Fi</label>
   </div>
   <button type="submit"
-         [disabled]="disabled || deviceNew.status == 'INVALID'" class="btn
+         [disabled]="disabled || deviceForm.status == 'INVALID'" class="btn
          btn-success">Create</button>
 </form>
 
-<p>Form value: {{ deviceNew.value | json }}</p>
+<p>Form value: {{ deviceForm.value | json }}</p>
