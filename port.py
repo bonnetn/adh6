@@ -4,12 +4,22 @@ PORTS = {
     0: {
         'portNumber': '1/0/4',
         'roomNumber': 1234,
-        'switchID': 6,
+        'switchID': 0,
     },
     1: {
         'portNumber': '1/0/3',
         'roomNumber': 1111,
-        'switchID': 6,
+        'switchID': 0,
+    },
+    2: {
+        'portNumber': '1/0/7',
+        'roomNumber': 1111,
+        'switchID': 1,
+    },
+    3: {
+        'portNumber': '1/0/8',
+        'roomNumber': 1234,
+        'switchID': 1,
     }
 }
 
