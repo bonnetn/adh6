@@ -1,7 +1,37 @@
-body {
-  padding-top: 50px;
+.container {
+	margin-top: 50px;
 }
-.adh-content {
-  padding: 40px 15px;
-  text-align: left;
+
+#title-bar div h1 {
+  margin: 0;
+}
+ 
+#nav {
+	/*margin: 13px 0 0 0;*/
+  background-color: #404040;
+}
+
+#nav ul,
+#nav ul li {
+  margin: 0;
+}
+
+#nav ul li {
+	display: inline;
+}
+
+#nav a {
+  display: inline-block;
+  color: white;
+  padding: 1rem;
+	text-decoration: none;
+  text-transform: uppercase;
+}
+ 
+#nav a:hover {
+  background-color: #606060;
+}
+
+.active {
+  font-weight: bold;
 }
