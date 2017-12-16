@@ -1,1 +1,7 @@
-
+body {
+  padding-top: 50px;
+}
+.adh-content {
+  padding: 40px 15px;
+  text-align: left;
+}

@@ -1,19 +1,27 @@
-<header>
-  <h1>{{title}}</h1>
-  <nav>
-    <a [routerLink]="['dashboard']">Accueil</a>
-    <a [routerLink]="['member/search']">Adhérent·e·s</a>
-    <a [routerLink]="['device/search']">Appareils</a>
-    <a [routerLink]="['room']">Chambres</a>
-    <a [routerLink]="['switch']">Switchs</a>
-    <a [routerLink]="['port']">Ports</a>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" [routerLink]="['dashboard']">{{ title }}</a>
+    </div>
+    <div id="navbar" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li [routerLinkActive]="['active']"><a [routerLink]="['dashboard']">Accueil</a></li>
+        <li [routerLinkActive]="['active']"><a [routerLink]="['member/search']">Adhérent·e·s</a></li>
+        <li [routerLinkActive]="['active']"><a [routerLink]="['device/search']">Appareils</a></li>
+        <li [routerLinkActive]="['active']"><a [routerLink]="['room']">Chambres</a></li>
+        <li [routerLinkActive]="['active']"><a [routerLink]="['switch']">Switchs</a></li>
+        <li [routerLinkActive]="['active']"><a [routerLink]="['port']">Ports</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-  </nav>
-</header>
-
-<section>
-<router-outlet></router-outlet>
-</section>
-
-<footer>
-</footer>
+<div class="container adh-content">
+    <router-outlet></router-outlet>
+</div>
