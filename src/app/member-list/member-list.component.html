@@ -1,7 +1,15 @@
-<h1>Liste des adhérent·e·s</h1>
-<p><a [routerLink]="['../add']">Nouvelle inscription</a></p>
-<p><input #searchBox id="search-box" (keyup)="search(searchBox.value)"/></p>
-<table>
+<h2 class="row">Liste des adhérent·e·s</h2>
+<div class="row">
+
+  <div class="nine columns">
+    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="u-full-width" type="text"/>
+  </div>
+  <div class="three columns">
+    <a [routerLink]="['../add']"><button class="button-primary">Nouvelle inscription</button></a>
+  </div>
+</div>
+
+<table class="u-full-width">
   <tr>
     <th>Nom</th>
     <th>Prénom</th>
