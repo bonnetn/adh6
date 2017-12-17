@@ -18,13 +18,24 @@ DEVICES = {
     }
 }
 
-def filterDevice( limit=100, username=None ):
+def findInDevice( user, terms ):
+    txt = ""
+    txt += user["mac"] + " "
+    txt += user["ipAddress"] + " "
+    txt += user["ipv6Address"] + " "
+    return txt.lower().find( terms.lower() ) != -1
+
+
+def filterDevice( limit=100, username=None, terms=None ):
 
   all_devices = list(DEVICES.values())
 
   if username != None:
       all_devices = filter( lambda x: x["username"]==username, all_devices ) 
   
+  if terms != None:
+      all_devices = filter( lambda x: findInDevice(x, terms), all_devices ) 
+
   return list(islice(all_devices,limit))
 
 def putDevice( macAddress, body ):
