@@ -20,11 +20,10 @@
       "prefix": "app",
       "styles": [
         "styles.css",
-        "../node_modules/bootstrap/dist/css/bootstrap.min.css"
+        "../node_modules/skeleton-css/css/normalize.css",
+        "../node_modules/skeleton-css/css/skeleton.css"
       ],
       "scripts": [
-        "../node_modules/jquery/dist/jquery.min.js",
-        "../node_modules/bootstrap/dist/js/bootstrap.min.js"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

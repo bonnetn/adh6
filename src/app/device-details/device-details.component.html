@@ -1,5 +1,5 @@
 <div *ngIf="(device$ | async) as device">
-  <h1>Détails de l'appareil</h1>
+  <h2>Détails de l'appareil</h2>
   <ul>
     <li><strong>Propriétaire:</strong> <a
         [routerLink]="['../../../member/view/',device.username]"> {{ device.username
@@ -11,7 +11,7 @@
       <li><strong>Adresse IPv6:</strong> {{ device.ipv6Address }}</li>
       <li><strong>MAB:</strong> MAB</li>
     </div>
-    <li><strong><a [routerLink]='["../../../device/edit", device.mac]'>Editer</a></strong></li>
-    <li><strong><a style="cursor:pointer" (click)="onDelete(device.mac)">Supprimer</a></strong></li>
+    <a [routerLink]='["../../../device/edit", device.mac]'><button>Editer</button></a>
+    <a style="cursor:pointer" (click)="onDelete(device.mac)"><button>Supprimer</button></a>
   </ul>
 </div>

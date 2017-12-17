@@ -1,27 +1,28 @@
-<nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" [routerLink]="['dashboard']">{{ title }}</a>
+<div class="container" id="title-bar">
+  <div class="row">
+    <div class="twelve columns">
+      <h1>AboXII</h1>
     </div>
-    <div id="navbar" class="collapse navbar-collapse">
-      <ul class="nav navbar-nav">
-        <li [routerLinkActive]="['active']"><a [routerLink]="['dashboard']">Accueil</a></li>
-        <li [routerLinkActive]="['active']"><a [routerLink]="['member/search']">Adhérent·e·s</a></li>
-        <li [routerLinkActive]="['active']"><a [routerLink]="['device/search']">Appareils</a></li>
-        <li [routerLinkActive]="['active']"><a [routerLink]="['room']">Chambres</a></li>
-        <li [routerLinkActive]="['active']"><a [routerLink]="['switch']">Switchs</a></li>
-        <li [routerLinkActive]="['active']"><a [routerLink]="['port']">Ports</a></li>
-      </ul>
+  </div>
+</div>
+<nav [class.responsive]="navBarStatus">
+  <div class="container">
+    <div class="row">
+      <div class="twelve columns">
+        <ul>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['dashboard']">Accueil</a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['member/search']">Adhérent·e·s</a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['device/search']">Appareils</a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['room']">Chambres</a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['switch']">Switchs</a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['port']">Ports</a></li>
+          <li class="icon"><a (click)="navBarStatus=!navBarStatus">&#9776;</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </nav>
 
-<div class="container adh-content">
+<div class="container">
     <router-outlet></router-outlet>
 </div>

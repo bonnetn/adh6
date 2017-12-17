@@ -1,7 +1,12 @@
-<div *ngIf="(member$ | async) as member">
-<h1>{{ member.firstName }} {{ member.lastName }} <a href="mailto:{{ member.email }}">Envoyer un mail</a></h1>
+<div *ngIf="(member$ | async) as member" class="row">
+
+
+  <div class="nine columns">
+  <h2>{{ member.firstName }} {{ member.lastName }}</h2>
   <ul>
     <li><strong>Identifiant DISI:</strong> {{ member.username }}</li>
+    <li><strong>Envoyer un mail:</strong> <a href="mailto:{{ member.email }}">
+        &#9993;</a></li>
     <li><strong>Date de départ:</strong> {{ member.departureDate }}
       <ul>
 		    <li>Paiements</li>
@@ -17,8 +22,9 @@
 	  <li><strong>Editer le profil</strong></li>
   </ul>
   
-  <h2>Réseau filaire</h2>
-  <table>
+  <div class="row">
+  <h3>Réseau filaire</h3>
+  <table class="u-full-width">
     <tr>
       <th>Adresse MAC</th>
       <th>Adresse IPv4</th>
@@ -36,10 +42,11 @@
       <td><a style="cursor: pointer" (click)="onDelete(device.mac)">Supprimer</a></td>
     </tr>
   </table>
-  <p><a [routerLink]="['newdevice']">Nouvel ordinateur</a></p>
+  <p><a [routerLink]="['newdevice']"><button>Nouvel ordinateur</button></a></p>
+  </div>
   
-  <h2>Réseau Wi-Fi</h2>
-  <table>
+  <h3>Réseau Wi-Fi</h3>
+  <table class="u-full-width">
     <tr>
       <th>Adresse MAC</th>
       <th>Editer</th>
@@ -49,30 +56,32 @@
       <td>{{ device.mac }}</td>
       <td><a [routerLink]="['../../../device/edit', device.mac]">Editer</a></td>
       <td><a style="cursor: pointer" (click)="onDelete(device.mac)">Supprimer</a></td>
-      <td><a [routerLink]="['../../../device/edit', device.mac]">Editer</a></td>
     </tr>
   </table>
-  <p><a [routerLink]="['newdevice']">Nouvel appareil sans fil</a></p>
+  <p><a [routerLink]="['newdevice']"><button>Nouvel appareil sans fil</button></a></p>
   
-  <h2>Journal</h2>
+  <h3>Journal</h3>
   <p>Afficher les logs DHCP</p>
   
-  <h2>Commentaires</h2>
+  <h3>Commentaires</h3>
   <p>Commentaire en cours de modification</p>
   <ul>
   	<li>Envoyer</li>
   	<li>Supprimer</li>
   </ul>
   
-  <h2>Sidebar:</h2>
-  <ul>
-  	<li>{{ member.comment }}</li>
-    <img src="http://trombi.tem-tsp.eu/photo.php?uid={{ member.username }}"/>
-  	<li>Association des périphériques</li>
-  	<li>Dernières modifications:
-      <ul>
-  		  <li>Modification récente</li>
-  	  </ul>
-    </li>
-  </ul>
+  </div>
+  <div class="three columns">
+    <h3>Sidebar:</h3>
+    <ul>
+      <li>{{ member.comment }}</li>
+      <img src="http://trombi.tem-tsp.eu/photo.php?uid={{ member.username }}"/>
+      <li>Association des périphériques</li>
+      <li>Dernières modifications:
+        <ul>
+          <li>Modification récente</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 </div>

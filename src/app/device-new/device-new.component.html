@@ -1,16 +1,21 @@
-<h1>Ajout d'un appareil</h1>
+<h2>Ajout d'un appareil</h2>
 <form *ngIf="!loading" [formGroup]="deviceForm" (ngSubmit)="onSubmit()" novalidate>
-  <label class="center-block">Adresse MAC
-    <input class="form-control" formControlName="mac">
-  </label>
+  <label>Adresse MAC</label>
+  <input class="u-full-width" formControlName="mac" type="text">
   <div class="form-group">
-    <h2>Type d'appareil</h2>
-    <label class="center-block"><input type="radio" formControlName="connectionType" value="wired">Filaire</label>
-    <label class="center-block"><input type="radio" formControlName="connectionType" value="wireless">Wi-Fi</label>
+    <label>Type d'appareil</label>
+    <label>
+      <input type="radio" formControlName="connectionType" value="wired">
+      <span class="label-body">Filaire</span>
+    </label>
+    <label>
+      <input type="radio" formControlName="connectionType" value="wireless">
+      <span class="label-body">Wi-Fi</span>
+    </label>
   </div>
   <button type="submit"
-         [disabled]="disabled || deviceForm.status == 'INVALID'" class="btn
-         btn-success">Create</button>
+          [disabled]="disabled || deviceForm.status == 'INVALID'"
+          class="button-primary">Créer</button>
 </form>
 
 <p>Form value: {{ deviceForm.value | json }}</p>
