@@ -1,15 +1,15 @@
 <div *ngIf="(room$ | async) as room">
-  <h1>{{ room.description }}</h1>
-  <ul><h2>Adhérent·e·s</h2>
+  <h2>{{ room.description }}</h2>
+  <ul><h3>Adhérent·e·s</h3>
     <li *ngFor="let member of members$ | async">
       <strong>{{ member.firstName }} {{ member.lastName }}</strong>
       <ul>
         <li><a [routerLink]="['../../member/view', member.username]">Consulter</a></li>
-        <li>Vider la chambre</li>
+        <li>Supprimer de la chambre</li>
       </ul>
     </li>
   </ul>
-  <ul><h2>Ports</h2>
+  <ul><h3>Ports</h3>
     <li *ngFor="let portRes of ports$ | async">
       <strong>Switch {{ portRes.port.switchID }} port {{ portRes.port.portNumber }}</strong>
       <ul>
@@ -19,7 +19,7 @@
       </ul>
     </li>
   </ul>
-  <ul><h2>Informations</h2>
+  <ul><h3>Informations</h3>
     <li><strong>Numéro de chambre: </strong>{{ room.roomNumber }}</li>
     <li><strong>VLAN assigné: </strong>{{ room.vlan }}</li>
     <li><strong>Téléphone: </strong>{{ room.phone }}</li>
