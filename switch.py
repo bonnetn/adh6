@@ -1,17 +1,17 @@
 from connexion import NoContent
 
 SWITCHES = {
-    0: {
+    1: {
         'description' : "Switch U1",
         'ip'          : "192.168.102.11",
         'community'   : "tototo"
     },
-    1: {
+    2: {
         'description' : "Switch U2",
         'ip'          : "192.168.102.12",
         'community'   : "tututu"
     },
-    2: {
+    3: {
         'description' : "Switch-local",
         'ip'          : "192.168.102.12",
         'community'   : "tirelinpimpon"
