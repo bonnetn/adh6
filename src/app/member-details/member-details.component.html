@@ -27,6 +27,7 @@
   <table class="u-full-width">
     <tr>
       <th>Adresse MAC</th>
+      <th>Fabricant</th>
       <th>Adresse IPv4</th>
       <th>Adresse IPv6</th>
       <th>MAB</th>
@@ -35,6 +36,7 @@
     </tr>
     <tr *ngFor="let device of wired_devices$ | async">
       <td>{{ device.mac }}</td>
+      <td><app-mac-vendor mac="{{device.mac}}"></app-mac-vendor></td>
       <td>{{ device.ipAddress }}</td>
       <td>{{ device.ipv6Address }}</td>
       <td>MAB</td>
@@ -49,11 +51,13 @@
   <table class="u-full-width">
     <tr>
       <th>Adresse MAC</th>
+      <th>Fabricant</th>
       <th></th>
       <th></th>
     </tr>
     <tr *ngFor="let device of wireless_devices$ | async">
       <td>{{ device.mac }}</td>
+      <td><app-mac-vendor mac="{{device.mac}}"></app-mac-vendor></td>
       <td><a [routerLink]="['../../../device/edit', device.mac]"><button>Editer</button></a></td>
       <td><a style="cursor: pointer" (click)="onDelete(device.mac)"><button>Supprimer</button></a></td>
     </tr>
