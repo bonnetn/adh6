@@ -1,15 +1,17 @@
 <h2>Liste des chambres</h2>
-<table class="u-full-width">
-  <tr>
-    <th>Numéro</th>
-    <th>Description</th>
-    <th>VLAN</th>
-    <th></th>
-  </tr>
-  <tr *ngFor="let room of rooms$ | async">
-    <td>{{ room.roomNumber }}</td>
-    <td>{{ room.description }}</td>
-    <td>{{ room.vlan }}</td>
-    <td><a [routerLink]="[room.roomNumber]"><button>Consulter</button></a></td>
-  </tr>
-</table>
+<div style="overflow-x:auto;" class="u-max-full-width">
+  <table class="u-full-width">
+    <tr>
+      <th>Numéro</th>
+      <th>Description</th>
+      <th>VLAN</th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let room of rooms$ | async">
+      <td>{{ room.roomNumber }}</td>
+      <td>{{ room.description }}</td>
+      <td>{{ room.vlan }}</td>
+      <td><a [routerLink]="[room.roomNumber]"><button>Consulter</button></a></td>
+    </tr>
+  </table>
+</div>

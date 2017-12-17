@@ -1,16 +1,18 @@
 <h2>Liste des appareils</h2>
-<table class="u-full-width"> 
-  <tr>
-    <th>Utilisateur</th>
-    <th>MAC de l'appareil</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-  <tr *ngFor="let device of devices$ | async">
-    <td>{{ device.username }}</td>
-    <td>{{ device.mac }}</td>
-    <td><a [routerLink]="['../view' , device.mac]"><button>Consulter</button></a></td>
-    <td><a [routerLink]="['../edit' , device.mac]"><button>Editer</button></a></td>
-  </tr>
-</table>
+<div style="overflow-x:auto;" class="u-max-full-width">
+  <table class="u-full-width"> 
+    <tr>
+      <th>Utilisateur</th>
+      <th>MAC de l'appareil</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let device of devices$ | async">
+      <td>{{ device.username }}</td>
+      <td>{{ device.mac }}</td>
+      <td><a [routerLink]="['../view' , device.mac]"><button>Consulter</button></a></td>
+      <td><a [routerLink]="['../edit' , device.mac]"><button>Editer</button></a></td>
+    </tr>
+  </table>
+</div>

@@ -9,21 +9,23 @@
   </div>
 </div>
 
-<table class="u-full-width">
-  <tr>
-    <th>Nom</th>
-    <th>Prénom</th>
-    <th>Login</th>
-    <th>Chambre</th>
-    <th></th>
-    <th></th>
-  </tr>
-  <tr *ngFor="let member of members$ | async" >
-    <td>{{member.firstName}}</td>
-    <td>{{member.lastName}}</td>
-    <td>{{member.username}}</td>
-    <td>{{member.roomNumber}}</td>
-    <td><a [routerLink]="['../view', member.username]"><button>Consulter</button></a></td>
-    <td><a [routerLink]="['../edit', member.username]"><button>Éditer</button></a></td>
-  </tr>
-</table>
+<div style="overflow-x:auto;" class="u-max-full-width">
+  <table class="u-full-width">
+    <tr>
+      <th>Nom</th>
+      <th>Prénom</th>
+      <th>Login</th>
+      <th>Chambre</th>
+      <th></th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let member of members$ | async" >
+      <td>{{member.firstName}}</td>
+      <td>{{member.lastName}}</td>
+      <td>{{member.username}}</td>
+      <td>{{member.roomNumber}}</td>
+      <td><a [routerLink]="['../view', member.username]"><button>Consulter</button></a></td>
+      <td><a [routerLink]="['../edit', member.username]"><button>Éditer</button></a></td>
+    </tr>
+  </table>
+</div>

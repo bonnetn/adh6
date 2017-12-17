@@ -1,13 +1,15 @@
 <h2>Liste des switchs</h2>
-<table class="u-full-width">
-  <tr>
-    <th>Description</th>
-    <th>Adresse IP</th>
-    <th></th>
-  </tr>
-  <tr *ngFor="let switchResult of switches$ | async">
-    <td>{{ switchResult.switch.description }}</td>
-    <td>{{ switchResult.switch.ip }}</td>
-    <td><a [routerLink]="[switchResult.switchID]"><button>Consulter</button></a></td>
-  </tr>
-</table>
+<div style="overflow-x:auto;" class="u-max-full-width">
+  <table class="u-full-width">
+    <tr>
+      <th>Description</th>
+      <th>Adresse IP</th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let switchResult of switches$ | async">
+      <td>{{ switchResult.switch.description }}</td>
+      <td>{{ switchResult.switch.ip }}</td>
+      <td><a [routerLink]="[switchResult.switchID]"><button>Consulter</button></a></td>
+    </tr>
+  </table>
+</div>
