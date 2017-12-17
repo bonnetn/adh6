@@ -17,7 +17,7 @@ export class SwitchListComponent implements OnInit {
   constructor(public switchService: SwitchService) { }
 
   ngOnInit() {
-    this.switches$ = this.switchService.filterSwitch( );
+    this.switches$ = this.switchService.filterSwitch({});
   }
 
 }

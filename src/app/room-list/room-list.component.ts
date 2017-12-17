@@ -18,7 +18,7 @@ export class RoomListComponent implements OnInit {
   constructor(public roomService: RoomService) { }
 
   ngOnInit() {
-    this.rooms$ = this.roomService.filterRoom() ;
+    this.rooms$ = this.roomService.filterRoom({});
   }
 
 }
