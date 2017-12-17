@@ -10,6 +10,6 @@
     <td><a [routerLink]="['../switch', portResult.port.switchID]">{{ portResult.port.switchID }}</a></td>
     <td>{{ portResult.port.portNumber }}</td>
     <td><a [routerLink]="['../room', portResult.port.roomNumber]">{{ portResult.port.roomNumber }}</a></td>
-    <td><a [routerLink]="['../switch', portResult.port.switchID, 'port', portResult.portID]">Configurer</a></td>
+    <td><a [routerLink]="['../switch', portResult.port.switchID, 'port', portResult.portID]"><button>Consulter</button></a></td>
   </tr>
 </table>

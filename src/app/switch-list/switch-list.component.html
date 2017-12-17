@@ -8,6 +8,6 @@
   <tr *ngFor="let switchResult of switches$ | async">
     <td>{{ switchResult.switch.description }}</td>
     <td>{{ switchResult.switch.ip }}</td>
-    <td><a [routerLink]="[switchResult.switchID]">Voir les ports</a></td>
+    <td><a [routerLink]="[switchResult.switchID]"><button>Consulter</button></a></td>
   </tr>
 </table>

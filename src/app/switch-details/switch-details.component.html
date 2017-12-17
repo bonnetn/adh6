@@ -10,7 +10,7 @@
     <tr *ngFor="let portRes of ports$ | async">
       <td>{{ portRes.port.portNumber }}</td>
       <td>{{ portRes.port.roomNumber }}</td>
-      <td><a [routerLink]="['port/', portRes.portID]"><button class=button-primary>Configurer</button></a></td>
+      <td><a [routerLink]="['port/', portRes.portID]"><button>Consulter</button></a></td>
     </tr>
   </table>
 </div>
