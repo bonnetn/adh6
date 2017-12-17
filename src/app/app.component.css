@@ -1,7 +1,11 @@
 .container {
-	margin-top: 50px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
- 
+
+#title-bar div div h1 {
+  margin: 0;
+}
 nav {
 	/*margin: 13px 0 0 0;*/
   background-color: #33c3f0;
