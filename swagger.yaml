@@ -179,6 +179,11 @@ paths:
         description: "Filter by owner's username"
         required: false
         type: "string"
+      - name: "terms"
+        in: "query"
+        description: "Search terms"
+        required: false
+        type: "string"
       responses:
         200:
           description: "Success"
@@ -271,6 +276,11 @@ paths:
         required: false
         type: "integer"
         default: 100
+      - name: "terms"
+        in: "query"
+        description: "Search terms"
+        required: false
+        type: "string"
       responses:
         200:
           description: "Success"
@@ -358,6 +368,11 @@ paths:
         required: false
         type: "integer"
         default: 100
+      - name: "terms"
+        in: "query"
+        description: "Search terms"
+        required: false
+        type: "string"
       responses:
         200:
           description: "Success"
@@ -477,6 +492,11 @@ paths:
         description: "Filter only ports that that room"
         required: false
         type: "integer"
+      - name: "terms"
+        in: "query"
+        description: "Search terms"
+        required: false
+        type: "string"
       responses:
         200:
           description: "Success"
