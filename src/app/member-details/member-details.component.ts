@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { Observable } from 'rxjs/Observable';
 import { of }         from 'rxjs/observable/of';
 
@@ -24,8 +26,48 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   wireless_devices$: Observable<Device[]>;
   username: string;
   private sub: any;
+  private alive: boolean = true;
 
-  constructor(public userService: UserService, public deviceService: DeviceService, private route: ActivatedRoute) { }
+  private commentForm: FormGroup;
+  private commentSubmitDisabled: boolean = false;œ
+
+  constructor(
+    public userService: UserService, 
+    public deviceService: DeviceService, 
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
+  ) { 
+    this.createForm();
+  }
+
+  createForm() {
+    this.commentForm = this.fb.group( {
+      comment: [''],
+    });
+  }
+
+  onSubmitComment() {
+    // TODO: implement PATCH in API to simplify that method
+    const newComment = this.commentForm.value.comment;
+    this.commentSubmitDisabled = true;
+    this.userService.getUser(this.username)
+      .takeWhile( () => this.alive )
+      .subscribe( (user) => {
+        user.comment = newComment;
+        const req = {
+          "user":user,
+        };
+        this.userService.putUser( { 
+          "username": this.username,
+          "body": req,
+        })
+          .takeWhile( () => this.alive )
+          .subscribe( () => {
+            this.commentSubmitDisabled = false 
+            this.refreshInfo();
+          });
+      });
+  }
 
   onDelete(mac: string) {
     this.deviceService.deleteDevice(mac).subscribe( () => {
@@ -51,16 +93,29 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
+  refreshInfo() {
+    this.member$ = this.userService.getUser(this.username);
+    this.fetch_and_sort_devices();
+
+    this.member$
+      .takeWhile( () => this.alive )
+      .subscribe( (user) => {
+      this.commentForm.setValue( {
+        comment: user.comment,
+      });
+    });
+  }
+
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.username = params['username']; 
-      this.member$ = this.userService.getUser(this.username);
-      this.fetch_and_sort_devices();
+      this.refreshInfo();
     });
   }
   ngOnDestroy() {
     this.sub.unsubscribe();
     this.subDevices.unsubscribe();
+    this.alive = false;
   }
 
 }

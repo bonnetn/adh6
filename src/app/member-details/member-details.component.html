@@ -63,12 +63,14 @@
   <h3>Journal</h3>
   <p>Afficher les logs DHCP</p>
   
-  <h3>Commentaires</h3>
-  <p>Commentaire en cours de modification</p>
-  <ul>
-  	<li>Envoyer</li>
-  	<li>Supprimer</li>
-  </ul>
+  <h3>Commentaire</h3>
+  <form [formGroup]="commentForm" (ngSubmit)="onSubmitComment()" novalidate>
+    <textarea class="u-full-width" formControlName="comment"></textarea>
+    <div class="row">
+      <button type="submit" class="button-primary"
+      [disabled]="commentSubmitDisabled">Envoyer</button>
+    </div>
+  </form>
   
   </div>
   <div class="three columns">
@@ -85,3 +87,5 @@
     </ul>
   </div>
 </div>
+
+
