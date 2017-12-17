@@ -1,4 +1,16 @@
 <div *ngIf="(switch$ | async) as switch">
   <h2>{{ switch.description }}</h2>
-  {{ switch.ip }}
+  <p>Adresse IP: {{ switch.ip }}</p>
+  <table>
+    <tr>
+      <th>Numéro de port</th>
+      <th>Numéro de chambre</th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let portRes of ports$ | async">
+      <td>{{ portRes.port.portNumber }}</td>
+      <td>{{ portRes.port.roomNumber }}</td>
+      <td><a [routerLink]="['port/', portRes.portID]">Configurer</a></td>
+    </tr>
+  </table>
 </div>
