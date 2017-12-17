@@ -4,7 +4,7 @@
  
 nav {
 	/*margin: 13px 0 0 0;*/
-  background-color: #404040;
+  background-color: #33c3f0;
 }
 
 nav ul,
@@ -25,7 +25,7 @@ nav a {
 }
  
 nav a:hover {
-  background-color: #606060;
+  background-color: #2fb6df;
 }
 
 .active {
