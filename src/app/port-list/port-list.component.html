@@ -8,9 +8,9 @@
       <th></th>
     </tr>
     <tr *ngFor="let portResult of ports$ | async">  
-      <td><a [routerLink]="['../switch', portResult.port.switchID]">{{ portResult.port.switchID }}</a></td>
+      <td>{{ portResult.port.switchID }}</td>
       <td>{{ portResult.port.portNumber }}</td>
-      <td><a [routerLink]="['../room', portResult.port.roomNumber]">{{ portResult.port.roomNumber }}</a></td>
+      <td>{{ portResult.port.roomNumber }}</td>
       <td><a [routerLink]="['../switch', portResult.port.switchID, 'port', portResult.portID]"><button>Consulter</button></a></td>
     </tr>
   </table>

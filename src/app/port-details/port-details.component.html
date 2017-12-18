@@ -1,14 +1,40 @@
 <div *ngIf="(port$ | async) as port">
-  <h2>Configuration de port - Chambre {{ port.roomNumber }}</h2>
-  <p>Jolie image pour dire si le port est authentifié ou non</p>
-  <ul><h3>Actions</h3>
-    <li>Fermer le port</li>
-    <li>Désactiver l'authentification</li>
-  </ul>
-  <ul><h3>Informations</h3>
-    <li><strong>Switch: </strong>{{ port.switchID }}</li>
-    <li><strong>Numéro de port: </strong>{{ port.portNumber }}</li>
-    <li><strong>VLAN: </strong></li>
-    <li><strong>Vitesse: </strong></li>
-</ul>
+
+<h2>Configuration de port</h2>
+<h3>Informations</h3>
+<div class="row">
+  <div class="three columns">
+    <strong>Chambre: </strong>{{ port.roomNumber }}
+  </div>
+  <div class="three columns">
+    <a [routerLink]="['../../../../room/', port.roomNumber]"><button>Consulter</button></a>
+  </div>
+</div>
+<div class="row">
+  <div class="three columns">
+    <strong>Switch: </strong>{{ port.switchID }}
+  </div>
+  <div class="three columns">
+    <a [routerLink]="['../../../', port.switchID]"><button>Consulter</button></a>
+  </div>
+</div>
+<strong>Numéro de port: </strong>{{ port.portNumber }}
+<p></p>
+<h3>Configuration</h3>
+<div class=row>
+  <div class="three columns"><strong>Port ouvert</strong></div>
+  <div class="three columns"><button> Fermer le port </button></div>
+</div>
+<div class=row>
+  <div class="three columns"><strong>Authentifié</strong></div>
+  <div class="three columns"><button> Désauthentifier</button></div>
+</div>
+<div class=row>
+  <div class="three columns"><strong>VLAN 41</strong></div>
+  <div class="three columns"><button>Changer de VLAN</button></div>
+</div>
+<div class=row>
+  <div class="three columns"><strong>Vitesse 10Mb/s</strong></div>
+  <div class="three columns"><button>Changer le débit</button></div>
+</div>
 </div>
