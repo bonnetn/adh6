@@ -19,7 +19,7 @@ import { User } from '../api/models/user';
 export class MemberEditComponent implements OnInit, OnDestroy {
 
   // Disable the button to prevent multiple submit
-  private disabled: boolean = false;
+  disabled: boolean = false;
   // Variable to destroy all subscriptions
   private alive: boolean = true;
 

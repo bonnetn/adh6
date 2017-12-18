@@ -1,5 +1,5 @@
 <h2>Modification d'un appareil</h2>
-<form *ngIf="!loading" [formGroup]="deviceForm" (ngSubmit)="onSubmit()" novalidate>
+<form [formGroup]="deviceForm" (ngSubmit)="onSubmit()" novalidate>
   <label>Propriétaire</label>
   <input class="u-full-width" formControlName="username" type="text">
 

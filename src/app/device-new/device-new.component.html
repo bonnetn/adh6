@@ -1,5 +1,5 @@
 <h2>Ajout d'un appareil</h2>
-<form *ngIf="!loading" [formGroup]="deviceForm" (ngSubmit)="onSubmit()" novalidate>
+<form [formGroup]="deviceForm" (ngSubmit)="onSubmit()" novalidate>
   <label>Adresse MAC</label>
   <input class="u-full-width" formControlName="mac" type="text">
   <div class="form-group">

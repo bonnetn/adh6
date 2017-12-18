@@ -11,7 +11,7 @@ export class MacVendorComponent implements OnInit, OnDestroy {
 
   @Input() mac: string;
 
-  private vendor: string = "Searching...";
+  vendor: string = "Searching...";
   private alive: boolean = true;
 
   constructor(
