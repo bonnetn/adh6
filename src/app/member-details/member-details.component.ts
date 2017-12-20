@@ -134,7 +134,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
     this.sub.unsubscribe();
-    this.subDevices.unsubscribe();
+    //this.subDevices.unsubscribe();
     this.alive = false;
   }
 
