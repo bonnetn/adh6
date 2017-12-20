@@ -10,7 +10,7 @@ DEVICES = {
         'username'	 : 'coroller'
     },
     "14:2D:27:FA:73:FF": {
-        'mac'            : '14:2D:27:FF:FF:FF',
+        'mac'            : '14:2D:27:FA:73:FF',
         'ipAddress'      : '157.159.42.2',
         'ipv6Address'    :	'ff02::2',
         'connectionType' : 'wireless',
