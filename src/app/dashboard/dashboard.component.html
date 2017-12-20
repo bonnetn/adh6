@@ -1,15 +1,6 @@
-<h1>Dashboard</h1>
-<ul>
-  <li><app-global-search></app-global-search></li>
-  <li><a [routerLink]="['/member/add']">Nouvelle inscription</a></li>
-  <li>Configuration du switch du local</li>
-  <li>Dernières modifications</li>
-  <li>Sidebar:
-    <ul>
-      <li>Déconnexion</li>
-      <li>Nombre IP restantes</li>
-
-    </ul>
-  </li>
-</ul>
-<img class="u-full-width" src="../assets/logoMiNET.png">
+<div class="dashboard">
+  <img class="u-full-width" src="../assets/logoMiNET.png">
+  <br/>
+  <app-global-search></app-global-search>
+  <a [routerLink]="['/member/add']"><button class="button-primary u-full-width">Nouvelle inscription</button></a>
+</div>
