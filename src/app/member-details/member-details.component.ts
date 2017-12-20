@@ -90,7 +90,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
 
   onDelete(mac: string) {
     this.deviceService.deleteDevice(mac).subscribe( () => {
-      this.fetch_and_sort_devices();
+      this.refreshInfo();
     });
   }
 
@@ -114,7 +114,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
 
   refreshInfo() {
     this.member$ = this.userService.getUser(this.username);
-    this.fetch_and_sort_devices();
+    //this.fetch_and_sort_devices();
 
     this.member$
       .takeWhile( () => this.alive )
@@ -123,13 +123,13 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
         comment: user.comment,
       });
     });
+    this.all_devices$ = this.deviceService.filterDevice( { 'username': this.username } );
   }
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.username = params['username']; 
       this.refreshInfo();
-      this.all_devices$ = this.deviceService.filterDevice( { 'username': this.username } );
     });
   }
   ngOnDestroy() {
