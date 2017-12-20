@@ -25,6 +25,7 @@
   vertical-align: middle;
   display: block;
   background-color: white;
+  text-align: left;
 }
 
 .suggestion ul li:hover {
