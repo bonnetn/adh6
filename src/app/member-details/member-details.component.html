@@ -1,6 +1,5 @@
 <div *ngIf="(member$ | async) as member" class="row">
 
-
   <div class="nine columns">
     <h2>{{ member.firstName }} {{ member.lastName }}</h2>
     <ul>
@@ -21,77 +20,73 @@
       </li>
       <a [routerLink]="['../../edit/', member.username ]"><button>Editer le profil</button></a>
     </ul>
-
+    <h3>Appareils</h3>
+    <div style="overflow-x:auto;" class="u-max-full-width">
+      <table class="u-max-full-width">
+        <tr>
+          <th>Adresse MAC</th>
+          <th>Fabricant</th>
+          <th>Type d'appareil</th>
+          <th>Adresse IPv4</th>
+          <th>Adresse IPv6</th>
+          <th>MAB</th>
+          <th></th>
+          <th></th>
+        </tr>
+        <tr *ngFor="let device of all_devices$ | async">
+          <td>{{ device.mac }}</td>
+          <td><app-mac-vendor mac="{{device.mac}}"></app-mac-vendor></td>
+          <td>{{ device.connectionType }}</td>
+          <td>{{ device.ipAddress }}</td>
+          <td>{{ device.ipv6Address }}</td>
+          <td>MAB</td>
+          <td><a [routerLink]="['../../../device/edit', device.mac]"><button>Editer</button></a></td>
+          <td><a style="cursor: pointer" (click)="onDelete(device.mac)"><button>Supprimer</button></a></td>
+        </tr>
+      </table>
+    </div>
     <div class="row">
-      <h3>Appareils</h3>
-      <div style="overflow-x:auto;" class="u-max-full-width">
-        <table class="u-max-full-width">
-          <tr>
-            <th>Adresse MAC</th>
-            <th>Fabricant</th>
-            <th>Type d'appareil</th>
-            <th>Adresse IPv4</th>
-            <th>Adresse IPv6</th>
-            <th>MAB</th>
-            <th></th>
-            <th></th>
-          </tr>
-          <tr *ngFor="let device of all_devices$ | async">
-            <td>{{ device.mac }}</td>
-            <td><app-mac-vendor mac="{{device.mac}}"></app-mac-vendor></td>
-            <td>{{ device.connectionType }}</td>
-            <td>{{ device.ipAddress }}</td>
-            <td>{{ device.ipv6Address }}</td>
-            <td>MAB</td>
-            <td><a [routerLink]="['../../../device/edit', device.mac]"><button>Editer</button></a></td>
-            <td><a style="cursor: pointer" (click)="onDelete(device.mac)"><button>Supprimer</button></a></td>
-          </tr>
-        </table>
-      </div>
-      <div class="row">
-        <form [formGroup]="deviceForm" (ngSubmit)="onSubmitDevice()" novalidate>
-          <div class="six columns">
-            <input class="u-full-width" type="text" formControlName="mac">
-          </div>
-          <div class="two columns">
-            <select class="u-full-width" type="text" formControlName="connectionType">
-              <option value="wired">Filaire</option>
-              <option value="wireless">Wi-Fi</option>
-            </select>
-          </div>
-          <div class="four columns">
-            <button type="submit"
-                    [disabled]="disabled || deviceForm.status == 'INVALID'"
-                    class="button-primary">Ajouter l'appareil</button>
-          </div>
-        </form>
-      </div>
-      <h3>Journal</h3>
-      <p>Afficher les logs DHCP</p>
-
-      <h3>Commentaire</h3>
-      <form [formGroup]="commentForm" (ngSubmit)="onSubmitComment()" novalidate>
-        <textarea class="u-full-width" formControlName="comment"></textarea>
-        <div class="row">
-          <button type="submit" class="button-primary"
-                                [disabled]="commentSubmitDisabled">Envoyer</button>
+      <form [formGroup]="deviceForm" (ngSubmit)="onSubmitDevice()" novalidate>
+        <div class="six columns">
+          <input class="u-full-width" type="text" formControlName="mac">
+        </div>
+        <div class="two columns">
+          <select class="u-full-width" type="text" formControlName="connectionType">
+            <option value="wired">Filaire</option>
+            <option value="wireless">Wi-Fi</option>
+          </select>
+        </div>
+        <div class="four columns">
+          <button type="submit"
+                  [disabled]="disabled || deviceForm.status == 'INVALID'"
+                  class="button-primary">Ajouter l'appareil</button>
         </div>
       </form>
+    </div>
+    <h3>Journal</h3>
+    <p>Afficher les logs DHCP</p>
 
-    </div>
-    <div class="three columns">
-      <h3>Sidebar:</h3>
-      <ul>
-        <li>{{ member.comment }}</li>
-        <img src="http://trombi.tem-tsp.eu/photo.php?uid={{ member.username }}"/>
-        <li>Association des périphériques</li>
-        <li>Dernières modifications:
-          <ul>
-            <li>Modification récente</li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <h3>Commentaire</h3>
+    <form [formGroup]="commentForm" (ngSubmit)="onSubmitComment()" novalidate>
+      <textarea class="u-full-width" formControlName="comment"></textarea>
+      <div class="row">
+        <button type="submit" class="button-primary"
+                              [disabled]="commentSubmitDisabled">Envoyer</button>
+      </div>
+    </form>
+  </div>
+  <div class="three columns">
+    <h3>Sidebar:</h3>
+    <ul>
+      <li>{{ member.comment }}</li>
+      <img src="http://trombi.tem-tsp.eu/photo.php?uid={{ member.username }}"/>
+      <li>Association des périphériques</li>
+      <li>Dernières modifications:
+        <ul>
+          <li>Modification récente</li>
+        </ul>
+      </li>
+    </ul>
   </div>
 
-
+</div>
