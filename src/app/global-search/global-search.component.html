@@ -1,6 +1,8 @@
-<input type="text" #searchBox (keyup)="search(searchBox.value)"/>
-<ul>
-  <li *ngFor="let searchResult of searchResult$ | async">
-    <span [ngStyle]="{ 'background-color': searchResult.color }" class="search_tag">{{ searchResult.objType | uppercase }}</span> {{ searchResult.name }}
-  </li>
-</ul>
+<div class="suggestion">
+  <input type="text" class="u-full-width" #searchBox (keyup)="search(searchBox.value)"/>
+  <ul>
+    <li class="u-full-width" *ngFor="let searchResult of searchResult$ | async">
+      <span [ngStyle]="{ 'background-color': searchResult.color }" class="search_tag">{{ searchResult.objType | uppercase }}</span> {{ searchResult.name }}
+    </li>
+  </ul>
+</div>

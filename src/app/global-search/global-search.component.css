@@ -1,6 +1,35 @@
 .search_tag {
+  font-size: 0.7rem;
   border-radius: 0.25rem;
   padding: 0.3rem;
-  font-size: 0.7rem;
   color: white;
+  border: 1px solid black;
 }
+
+.suggestion input {
+  margin: 0;
+}
+
+.suggestion ul {
+  margin: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.suggestion ul li {
+  margin: 0;
+  list-style-type: none;
+  padding-left: 1rem;
+  border: 1px solid #d1d1d1;
+  border-top: 0;
+  vertical-align: middle;
+  display: block;
+  background-color: white;
+}
+
+.suggestion ul li:hover {
+  background-color: #a9edff;
+}
+
+
+
