@@ -7,7 +7,6 @@ import 'rxjs/add/operator/concat'
 import 'rxjs/add/operator/merge';
 import 'rxjs/add/observable/of';
 
-
 import { UserService } from '../api/services/user.service';
 import { User } from '../api/models/user';
 
@@ -76,6 +75,11 @@ export class GlobalSearchComponent implements OnInit {
       debounceTime(300),
       distinctUntilChanged(),
       switchMap( (terms:string) => {
+
+        if( terms.length < 2 ) {
+          this.searchResults = [];
+          return Observable.of( [ ] );
+        }
 
         let LIMIT = 5;
 
