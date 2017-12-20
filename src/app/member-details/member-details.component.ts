@@ -22,6 +22,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
 
   member$: Observable<User>;
   subDevices: any;
+  all_devices$: Observable<Device[]>;
   wired_devices$: Observable<Device[]>;
   wireless_devices$: Observable<Device[]>;
   username: string;
@@ -110,6 +111,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     this.sub = this.route.params.subscribe(params => {
       this.username = params['username']; 
       this.refreshInfo();
+      this.all_devices$ = this.deviceService.filterDevice( { 'username': this.username } );
     });
   }
   ngOnDestroy() {

@@ -23,21 +23,23 @@
   </ul>
   
   <div class="row">
-  <h3>Réseau filaire</h3>
+  <h3>Appareils</h3>
   <div style="overflow-x:auto;" class="u-max-full-width">
     <table class="u-max-full-width">
       <tr>
         <th>Adresse MAC</th>
         <th>Fabricant</th>
+        <th>Type d'appareil</th>
         <th>Adresse IPv4</th>
         <th>Adresse IPv6</th>
         <th>MAB</th>
         <th></th>
         <th></th>
       </tr>
-      <tr *ngFor="let device of wired_devices$ | async">
+      <tr *ngFor="let device of all_devices$ | async">
         <td>{{ device.mac }}</td>
         <td><app-mac-vendor mac="{{device.mac}}"></app-mac-vendor></td>
+        <td>{{ device.connectionType }}</td>
         <td>{{ device.ipAddress }}</td>
         <td>{{ device.ipv6Address }}</td>
         <td>MAB</td>
@@ -45,29 +47,9 @@
         <td><a style="cursor: pointer" (click)="onDelete(device.mac)"><button>Supprimer</button></a></td>
       </tr>
     </table>
-    </div>
   <p><a [routerLink]="['newdevice']"><button>Nouvel ordinateur</button></a></p>
   </div>
-
-  <h3>Réseau Wi-Fi</h3>
-  <div style="overflow-x:auto;" class="u-max-full-width">
-    <table class="u-max-full-width" style="overflow-x:auto;">
-      <tr>
-        <th>Adresse MAC</th>
-        <th>Fabricant</th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr *ngFor="let device of wireless_devices$ | async">
-        <td>{{ device.mac }}</td>
-        <td><app-mac-vendor mac="{{device.mac}}"></app-mac-vendor></td>
-        <td><a [routerLink]="['../../../device/edit', device.mac]"><button>Editer</button></a></td>
-        <td><a style="cursor: pointer" (click)="onDelete(device.mac)"><button>Supprimer</button></a></td>
-      </tr>
-    </table>
   </div>
-  <p><a [routerLink]="['newdevice']"><button>Nouvel appareil sans fil</button></a></p>
-
   <h3>Journal</h3>
   <p>Afficher les logs DHCP</p>
 
