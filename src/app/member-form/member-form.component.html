@@ -6,31 +6,31 @@
   <div class="row">
     <div class="six columns">
       <label>Last name / Nom:</label>
-      <input class="u-full-width" type="text" formControlName="lastName">
+      <input autocomplete="off" class="u-full-width" type="text" formControlName="lastName">
     </div>
     <div class="six columns">
 
       <label>First name / Prénom:</label>
-      <input class="u-full-width" type="text" formControlName="firstName">
+      <input autocomplete="off" class="u-full-width" type="text" formControlName="firstName">
     </div>
   </div>
 
   <label>Login DISI:</label>
-  <input class="u-full-width" type="text" formControlName="username">
+  <input autocomplete="off" class="u-full-width" type="text" formControlName="username">
 
   <label>Mail:</label>
-  <input class="u-full-width" type="text" formControlName="email">
+  <input autocomplete="off" class="u-full-width" type="text" formControlName="email">
 
 
   <label>Room number / Numéro de chambre:</label>
-  <input class="u-full-width" type="text" formControlName="roomNumber" type="number">
+  <input autocomplete="off" class="u-full-width" type="text" formControlName="roomNumber" type="number">
 
   <div formGroupName="passwords">
     <label>Password / Mot de passe:</label>
-    <input class="u-full-width" formControlName="password" type="password">
+    <input autocomplete="off" class="u-full-width" formControlName="password" type="password">
 
     <label>Confirm password / Confirmez le mot de passe:</label>
-    <input class="u-full-width" formControlName="formControlName" type="password">
+    <input autocomplete="off" class="u-full-width" formControlName="formControlName" type="password">
   </div>
   <button type="submit"
           [disabled]="disabled || memberForm.status == 'INVALID'"
