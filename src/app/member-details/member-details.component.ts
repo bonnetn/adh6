@@ -32,6 +32,8 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   private commentForm: FormGroup;
   private commentSubmitDisabled: boolean = false;
 
+  private deviceForm: FormGroup;
+
   constructor(
     public userService: UserService, 
     public deviceService: DeviceService, 
@@ -44,6 +46,10 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   createForm() {
     this.commentForm = this.fb.group( {
       comment: [''],
+    });
+    this.deviceForm = this.fb.group({
+      mac: ['01:23:45:76:89:AB', [Validators.required, Validators.minLength(17), Validators.maxLength(17)]],
+      connectionType: ['wired', Validators.required ],
     });
   }
 
@@ -68,6 +74,18 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
             this.refreshInfo();
           });
       });
+  }
+  
+  onSubmitDevice() {
+    const v = this.deviceForm.value;
+    const device: Device = {
+      mac: v.mac,
+      connectionType: v.connectionType,
+      username: this.username
+    }
+    this.deviceService.putDeviceResponse( { "macAddress": v.mac, body: device })
+      .takeWhile( ()=> this.alive )
+      .subscribe( ()=> { this.refreshInfo() });
   }
 
   onDelete(mac: string) {
