@@ -30,7 +30,8 @@
     <input autocomplete="off" class="u-full-width" formControlName="password" type="password">
 
     <label>Confirm password / Confirmez le mot de passe:</label>
-    <input autocomplete="off" class="u-full-width" formControlName="formControlName" type="password">
+    <input autocomplete="off" class="u-full-width"
+    formControlName="confirmPassword" type="password">
   </div>
   <button type="submit"
           [disabled]="disabled || memberForm.status == 'INVALID'"
