@@ -26,6 +26,7 @@ import { DeviceNewComponent } from './device-new/device-new.component';
 import { DeviceEditComponent } from './device-edit/device-edit.component';
 import { MemberEditComponent } from './member-edit/member-edit.component';
 import { MacVendorComponent } from './mac-vendor/mac-vendor.component';
+import { GlobalSearchComponent } from './global-search/global-search.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { MacVendorComponent } from './mac-vendor/mac-vendor.component';
     MemberEditComponent,
     DeviceEditComponent,
     MacVendorComponent,
+    GlobalSearchComponent,
   ],
   imports: [
     BrowserModule,

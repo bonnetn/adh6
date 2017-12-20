@@ -1,0 +1,6 @@
+<input type="text" #searchBox (keyup)="search(searchBox.value)"/>
+<ul>
+  <li *ngFor="let searchResult of searchResult$ | async">
+    <span [ngStyle]="{ 'background-color': searchResult.color }" class="search_tag">{{ searchResult.objType | uppercase }}</span> {{ searchResult.name }}
+  </li>
+</ul>
