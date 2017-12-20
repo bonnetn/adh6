@@ -30,7 +30,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   private alive: boolean = true;
 
   private commentForm: FormGroup;
-  private commentSubmitDisabled: boolean = false;œ
+  private commentSubmitDisabled: boolean = false;
 
   constructor(
     public userService: UserService, 
