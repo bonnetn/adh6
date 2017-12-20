@@ -2,15 +2,15 @@ from connexion import NoContent
 from itertools import islice
 
 DEVICES = {
-    "01:23:45:67:89:AB": {
-        'mac'            : '01:23:45:67:89:AB',
+    "6C:C2:17:67:89:AB": {
+        'mac'            : '6C:C2:17:67:89:AB',
         'ipAddress'      : '157.159.42.1',
         'ipv6Address'    :	'ff02::1',
         'connectionType' : 'wired',
         'username'	 : 'coroller'
     },
-    "FF:FF:FF:FF:FF:FF": {
-        'mac'            : 'FF:FF:FF:FF:FF:FF',
+    "14:2D:27:FA:73:FF": {
+        'mac'            : '14:2D:27:FF:FF:FF',
         'ipAddress'      : '157.159.42.2',
         'ipv6Address'    :	'ff02::2',
         'connectionType' : 'wireless',
