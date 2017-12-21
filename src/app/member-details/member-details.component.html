@@ -7,18 +7,24 @@
       <li><strong>Envoyer un mail:</strong> <a href="mailto:{{ member.email }}">
           &#9993;</a></li>
       <li><strong>Date de départ:</strong> {{ member.departureDate }}
-        <ul>
-          <li>Paiements</li>
-          <li>Cotiser</li>
-        </ul>
+        <div class="row">
+          <div class="five columns"><button class="u-full-width">Paiements</button></div>
+        </div>
+        <div class="row">
+          <div class="five columns"><button class="u-full-width">Cotiser</button></div>
+        </div>
       </li>
       <li><strong>Numéro de chambre: </strong>{{ member.roomNumber }}
-        <ul>
-          <li><a [routerLink]="['../../../room', member.roomNumber ]">Consulter</a></li>
-          <li>Déménager</li>
-        </ul>
+        <div class="row">
+          <div class="five columns"><a [routerLink]="['../../../room', member.roomNumber ]"><button class="u-full-width">Consulter</button></a></div>
+        </div>
+        <div class="row">
+          <div class="five columns"><button class="u-full-width">Déménager</button></div>
+        </div>
       </li>
-      <a [routerLink]="['../../edit/', member.username ]"><button>Editer le profil</button></a>
+      <div class="row">
+        <div class="five columns"><a [routerLink]="['../../edit/', member.username ]"><button class="u-full-width button-primary">Editer le profil</button></a></div>
+      </div>
     </ul>
     <h3>Appareils</h3>
     <div style="overflow-x:auto;" class="u-max-full-width">
