@@ -3,10 +3,10 @@
   <ul><h3>Adhérent·e·s</h3>
     <li *ngFor="let member of members$ | async">
       <strong>{{ member.firstName }} {{ member.lastName }}</strong>
-      <ul>
-        <li><a [routerLink]="['../../member/view', member.username]">Consulter</a></li>
-        <li>Supprimer de la chambre</li>
-      </ul>
+      <div class="row">
+        <div class="four columns"><a [routerLink]="['../../member/view', member.username]"><button class="u-full-width">Consulter</button></a></div>
+        <div class="four columns"><button class="u-full-width">Supprimer de la chambre</button></div>
+      </div>
     </li>
   </ul>
   <ul><h3>Ports</h3>
