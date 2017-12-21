@@ -47,6 +47,10 @@ def putDevice( macAddress, body ):
   if macAddress != body["mac"]:
     del DEVICES[macAddress]
   
+  body["ipAddress"] = "127.0.0.1"
+  body["ipv6Address"] = "::1/128"
+
+  
   DEVICES[body["mac"]] = body
   return retVal
 
