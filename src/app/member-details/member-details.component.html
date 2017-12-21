@@ -3,27 +3,41 @@
   <div class="nine columns">
     <h2>{{ member.firstName }} {{ member.lastName }}</h2>
     <ul>
-      <li><strong>Identifiant DISI:</strong> {{ member.username }}</li>
-      <li><strong>Envoyer un mail:</strong> <a href="mailto:{{ member.email }}">
-          &#9993;</a></li>
-      <li><strong>Date de départ:</strong> {{ member.departureDate }}
-        <div class="row">
-          <div class="five columns"><button class="u-full-width">Paiements</button></div>
-        </div>
-        <div class="row">
-          <div class="five columns"><button class="u-full-width">Cotiser</button></div>
-        </div>
-      </li>
-      <li><strong>Numéro de chambre: </strong>{{ member.roomNumber }}
-        <div class="row">
-          <div class="five columns"><a [routerLink]="['../../../room', member.roomNumber ]"><button class="u-full-width">Consulter</button></a></div>
-        </div>
-        <div class="row">
-          <div class="five columns"><button class="u-full-width">Déménager</button></div>
-        </div>
-      </li>
       <div class="row">
-        <div class="five columns"><a [routerLink]="['../../edit/', member.username ]"><button class="u-full-width button-primary">Editer le profil</button></a></div>
+        <div class="eight columns">
+          <li><strong>Identifiant DISI:</strong> {{ member.username }}</li>
+          <li><strong>Envoyer un mail:</strong> <a href="mailto:{{ member.email }}">
+              &#9993;</a></li>
+          <li><strong>Date de départ:</strong> {{ member.departureDate }}</li>
+        </div>
+
+        <div class="four columns">
+          <a [routerLink]="['../../edit/', member.username ]">
+            <button class="u-full-width button-primary">Editer le profil</button>
+          </a>
+          <button class="u-full-width">Paiements</button>
+          <button class="u-full-width">Cotiser</button>
+        </div>
+      </div>
+      <br/>
+      <div class="row">
+        <div class="eight columns">
+          <li>
+            <strong>Numéro de chambre: </strong>{{ member.roomNumber }}
+          </li>
+        </div>
+
+        <div class="four columns">
+          <a [routerLink]="['../../../room', member.roomNumber ]">
+            <button class="u-full-width">Consulter</button>
+          </a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="eight columns"><br/> </div>
+        <div class="four columns">
+          <button class="u-full-width">Déménager</button>
+        </div>
       </div>
     </ul>
     <h3>Appareils</h3>
