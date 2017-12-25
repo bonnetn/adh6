@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MacVendorComponent } from './mac-vendor.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('MacVendorComponent', () => {
   let component: MacVendorComponent;
@@ -8,7 +9,8 @@ describe('MacVendorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MacVendorComponent ]
+      declarations: [ MacVendorComponent ],
+      imports: [ HttpClientModule ],
     })
     .compileComponents();
   }));

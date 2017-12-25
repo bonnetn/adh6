@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SwitchListComponent } from './switch-list.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ApiModule } from '../api/api.module';
 
 describe('SwitchListComponent', () => {
   let component: SwitchListComponent;
@@ -9,6 +11,10 @@ describe('SwitchListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ SwitchListComponent ]
+      imports: [
+        ApiModule,
+        RouterTestingModule,
+      ]
     })
     .compileComponents();
   }));

@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MemberListComponent } from './member-list.component';
+import { ApiModule } from '../api/api.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('MemberListComponent', () => {
   let component: MemberListComponent;
@@ -8,7 +10,11 @@ describe('MemberListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MemberListComponent ]
+      declarations: [ MemberListComponent ],
+      imports: [
+        ApiModule,
+        RouterTestingModule,
+      ]
     })
     .compileComponents();
   }));

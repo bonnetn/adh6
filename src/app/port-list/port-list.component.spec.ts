@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PortListComponent } from './port-list.component';
+import { ApiModule } from '../api/api.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('PortListComponent', () => {
   let component: PortListComponent;
@@ -8,7 +10,11 @@ describe('PortListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PortListComponent ]
+      declarations: [ PortListComponent ],
+      imports: [
+        ApiModule,
+        RouterTestingModule,
+      ]
     })
     .compileComponents();
   }));

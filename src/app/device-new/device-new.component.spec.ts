@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DeviceNewComponent } from './device-new.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ApiModule } from '../api/api.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('DeviceNewComponent', () => {
   let component: DeviceNewComponent;
@@ -8,7 +11,8 @@ describe('DeviceNewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DeviceNewComponent ]
+      declarations: [ DeviceNewComponent ],
+      imports: [ ReactiveFormsModule, ApiModule, RouterTestingModule ],
     })
     .compileComponents();
   }));
