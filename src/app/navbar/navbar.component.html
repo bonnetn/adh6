@@ -1,0 +1,18 @@
+<nav [class.responsive]="navBarStatus">
+  <div class="container">
+    <div class="row">
+      <div class="twelve columns">
+        <ul>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['dashboard']">Accueil</a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['member/search']">Adhérent·e·s</a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['device/search']">Appareils</a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['room']">Chambres</a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['switch']">Switchs</a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['port']">Ports</a></li>
+          <li class="icon"><a (click)="navBarStatus=!navBarStatus">&#9776;</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+

@@ -1,0 +1,66 @@
+.container {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+#title-bar div div h1 {
+  margin: 0;
+}
+nav {
+	/*margin: 13px 0 0 0;*/
+  background-color: #33c3f0;
+}
+
+nav ul,
+nav ul li {
+  margin: 0;
+}
+
+nav ul li {
+	display: inline;
+}
+
+nav a {
+  display: inline-block;
+  color: white;
+  padding: 1rem;
+	text-decoration: none;
+  text-transform: uppercase;
+}
+ 
+nav a:hover {
+  background-color: #2fb6df;
+}
+
+.active {
+  font-weight: bold;
+}
+
+nav div ul .icon {
+  display: none;
+}
+
+/* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the topnav (.icon) */
+@media screen and (max-width: 600px) {
+  nav div ul li:not(:first-child) {display: none;}
+  nav div ul li.icon {
+    float: right;
+    display: block;
+  }
+}
+
+/* The "responsive" class is added to the topnav with JavaScript when the user clicks on the icon. This class makes the topnav look good on small screens (display the links vertically instead of horizontally) */
+@media screen and (max-width: 600px) {
+  nav.responsive {position: relative;}
+  nav.responsive div ul li.icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  nav.responsive div ul li {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+}
+
