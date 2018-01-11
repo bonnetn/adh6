@@ -1,4 +1,4 @@
-import device
+from controller import device
 import unittest
 d = { 
   'macAddress'     : 'FF:FF:FF:FF:FF:FF',
@@ -23,18 +23,18 @@ class TestDevice(unittest.TestCase):
       resultString, resultCode = device.putDevice(d["macAddress"], d)
       self.assertEqual(resultCode,204) # Updated
 
-      result = device.getDevice( d["macAddress"] )
+      result = device.getDevice(d["macAddress"])
       self.assertEqual(result, d) # getDevice
 
-      resultString, resultCode = device.getDevice( "nonExistantID" )
+      resultString, resultCode = device.getDevice("nonExistantID")
       self.assertEqual(resultCode,404) 
 
-      resultString, resultCode = device.deleteDevice( d["macAddress"] )
+      resultString, resultCode = device.deleteDevice(d["macAddress"])
       self.assertEqual(resultCode,204) 
-      resultString, resultCode = device.getDevice( "nonExistantID" )
+      resultString, resultCode = device.getDevice("nonExistantID")
       self.assertEqual(resultCode,404) # deleteDeviced!
 
-      resultString, resultCode = device.deleteDevice( "nonExistantID" )
+      resultString, resultCode = device.deleteDevice("nonExistantID")
       self.assertEqual(resultCode,404) 
 
       device.putDevice(d["macAddress"], d)

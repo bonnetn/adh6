@@ -1,4 +1,4 @@
-import switch
+from controller import switch
 import unittest
 d = { 
   'description'     : 'Switch',
@@ -23,19 +23,19 @@ class TestSwitch(unittest.TestCase):
       switchID = int(headers["Location"].split("/")[-1])
 
       # GET
-      result = switch.getSwitch( switchID )
+      result = switch.getSwitch(switchID)
       self.assertEqual(result, d) # getSwitch
 
-      resultString, resultCode = switch.getSwitch( -42 )
+      resultString, resultCode = switch.getSwitch(-42)
       self.assertEqual(resultCode,404) 
 
       # DELETE
-      resultString, resultCode = switch.deleteSwitch( switchID )
+      resultString, resultCode = switch.deleteSwitch(switchID)
       self.assertEqual(resultCode,204) 
-      resultString, resultCode = switch.getSwitch(switchID )
+      resultString, resultCode = switch.getSwitch(switchID)
       self.assertEqual(resultCode,404) # already deleteSwitchd!
 
-      resultString, resultCode = switch.deleteSwitch( -42 )
+      resultString, resultCode = switch.deleteSwitch(-42)
       self.assertEqual(resultCode,404) 
 
       resultString, resultCode, headers = switch.createSwitch(d)
@@ -44,7 +44,7 @@ class TestSwitch(unittest.TestCase):
 
       #UPDATE
       switch.updateSwitch(switchID, d2)
-      result = switch.getSwitch( switchID )
+      result = switch.getSwitch(switchID)
       self.assertEqual(result, d2) # 
 
       resultString, resultCode, headers = switch.createSwitch(d)

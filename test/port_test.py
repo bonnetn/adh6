@@ -1,4 +1,4 @@
-import port
+from controller import port
 import unittest
 d = { 
   'portNumber'     : '1/0/4',
@@ -16,31 +16,31 @@ class TestPort(unittest.TestCase):
     def test(self):
 
       # POST
-      resultString, resultCode, headers = port.createPort(1,d)
+      resultString, resultCode, headers = port.createPort(1, d)
       self.assertEqual(resultCode,201) # Created
       portID = int(headers["Location"].split("/")[-1])
 
       # GET
-      result = port.getPort( 1, portID )
+      result = port.getPort(1, portID)
       self.assertEqual(result, d) # getPort
 
-      resultString, resultCode = port.getPort( 1, -42 )
+      resultString, resultCode = port.getPort(1, -42)
       self.assertEqual(resultCode,404) 
 
       # DELETE
-      resultString, resultCode = port.deletePort( 1, portID )
+      resultString, resultCode = port.deletePort(1, portID)
       self.assertEqual(resultCode,204) 
-      resultString, resultCode = port.getPort( 1, portID )
+      resultString, resultCode = port.getPort(1, portID)
       self.assertEqual(resultCode,404) # already deletePortd!
 
-      resultString, resultCode = port.deletePort( 1,-42 )
+      resultString, resultCode = port.deletePort(1, -42)
       self.assertEqual(resultCode,404) 
 
       resultString, resultCode, headers = port.createPort(1, d)
       portIDd2 = int(headers["Location"].split("/")[-1])
       #UPDATE
-      port.updatePort(1,portIDd2, d2)
-      result = port.getPort( 1, portIDd2 )
+      port.updatePort(1, portIDd2, d2)
+      result = port.getPort(1, portIDd2)
       self.assertEqual(result, d2) # 
 
       resultString, resultCode, headers = port.createPort(1, d)

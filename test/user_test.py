@@ -1,4 +1,4 @@
-import user
+from controller import user
 import unittest
 
 u = {
@@ -43,18 +43,18 @@ class TestUser(unittest.TestCase):
       resultString, resultCode = user.put(u["username"], user_req)
       self.assertEqual(resultCode,204) # Updated
 
-      result = user.get( u["username"] )
+      result = user.get(u["username"])
       self.assertEqual(result, u) # get
 
-      resultString, resultCode = user.get( "nonExistantID" )
+      resultString, resultCode = user.get("nonExistantID")
       self.assertEqual(resultCode,404) 
 
-      resultString, resultCode = user.delete( u["username"] )
+      resultString, resultCode = user.delete(u["username"])
       self.assertEqual(resultCode,204) 
-      resultString, resultCode = user.get( "nonExistantID" )
+      resultString, resultCode = user.get("nonExistantID")
       self.assertEqual(resultCode,404) # deleted!
 
-      resultString, resultCode = user.delete( "nonExistantID" )
+      resultString, resultCode = user.delete("nonExistantID")
       self.assertEqual(resultCode,404) 
 
       user.put(u["username"], user_req)

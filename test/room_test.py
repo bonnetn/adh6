@@ -1,4 +1,4 @@
-import room
+from controller import room
 import unittest
 
 d = { 
@@ -23,18 +23,18 @@ class TestRoom(unittest.TestCase):
       resultString, resultCode = room.putRoom(d["roomNumber"], d)
       self.assertEqual(resultCode,204) # Updated
 
-      result = room.getRoom( d["roomNumber"] )
+      result = room.getRoom(d["roomNumber"])
       self.assertEqual(result, d) # getRoom
 
-      resultString, resultCode = room.getRoom( "nonExistantID" )
+      resultString, resultCode = room.getRoom("nonExistantID")
       self.assertEqual(resultCode,404) 
 
-      resultString, resultCode = room.deleteRoom( d["roomNumber"] )
+      resultString, resultCode = room.deleteRoom(d["roomNumber"])
       self.assertEqual(resultCode,204) 
-      resultString, resultCode = room.getRoom( "nonExistantID" )
+      resultString, resultCode = room.getRoom("nonExistantID")
       self.assertEqual(resultCode,404) # deleteRoomd!
 
-      resultString, resultCode = room.deleteRoom( "nonExistantID" )
+      resultString, resultCode = room.deleteRoom("nonExistantID")
       self.assertEqual(resultCode,404) 
 
       room.putRoom(d["roomNumber"], d)
