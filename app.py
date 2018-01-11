@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 import connexion
-import datetime
 import logging
 from flask_cors import CORS
-
-from connexion import NoContent
 
 logging.basicConfig(level=logging.INFO)
 #app = connexion.App(__name__)

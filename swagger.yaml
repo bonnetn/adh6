@@ -58,7 +58,7 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/User"
-      x-swagger-router-controller: "user"
+      x-swagger-router-controller: "controller.user"
   /user/{username}:
     get:
       tags:
@@ -80,7 +80,7 @@ paths:
             $ref: "#/definitions/User"
         404:
           description: "Not found"
-      x-swagger-router-controller: "user"
+      x-swagger-router-controller: "controller.user"
     put:
       tags:
       - "user"
@@ -106,7 +106,7 @@ paths:
           description: "Created"
         204:
           description: "Updated"
-      x-swagger-router-controller: "user"
+      x-swagger-router-controller: "controller.user"
     delete:
       tags:
       - "user"
@@ -126,7 +126,7 @@ paths:
           description: "Deleted"
         404:
           description: "Not found"
-      x-swagger-router-controller: "user"
+      x-swagger-router-controller: "controller.user"
   /user/{username}/membership:
     post:
       tags:
@@ -157,7 +157,7 @@ paths:
               description: "URI to the newly created membership record"
         404:
           description: "Not found"
-      x-swagger-router-controller: "user"
+      x-swagger-router-controller: "controller.user"
   /device/:
     get:
       tags:
@@ -191,7 +191,7 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Device"
-      x-swagger-router-controller: "device"
+      x-swagger-router-controller: "controller.device"
   /device/{macAddress}:
     get:
       tags:
@@ -213,7 +213,7 @@ paths:
             $ref: "#/definitions/Device"
         404:
           description: "Not found"
-      x-swagger-router-controller: "device"
+      x-swagger-router-controller: "controller.device"
     put:
       tags:
       - "device"
@@ -240,7 +240,7 @@ paths:
           description: "Updated"
         400:
           description: "Invalid mac address supplied / already in use"
-      x-swagger-router-controller: "device"
+      x-swagger-router-controller: "controller.device"
     delete:
       tags:
       - "device"
@@ -259,7 +259,7 @@ paths:
           description: "Deleted"
         404:
           description: "Not found"
-      x-swagger-router-controller: "device"
+      x-swagger-router-controller: "controller.device"
   /room/:
     get:
       tags:
@@ -288,7 +288,7 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Room"
-      x-swagger-router-controller: "room"
+      x-swagger-router-controller: "controller.room"
   /room/{roomNumber}:
     get:
       tags:
@@ -309,7 +309,7 @@ paths:
             $ref: "#/definitions/Room"
         404:
           description: "Not found"
-      x-swagger-router-controller: "room"
+      x-swagger-router-controller: "controller.room"
     put:
       tags:
       - "room"
@@ -333,7 +333,7 @@ paths:
           description: "Created"
         204:
           description: "Updated"
-      x-swagger-router-controller: "room"
+      x-swagger-router-controller: "controller.room"
     delete:
       tags:
       - "room"
@@ -351,7 +351,7 @@ paths:
           description: "Deleted"
         404:
           description: "Not found"
-      x-swagger-router-controller: "room"
+      x-swagger-router-controller: "controller.room"
   /switch/:
     get:
       tags:
@@ -380,7 +380,7 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/SwitchSearchResult"
-      x-swagger-router-controller: "switch"
+      x-swagger-router-controller: "controller.switch"
     post:
       tags:
       - "switch"
@@ -402,7 +402,7 @@ paths:
             Location:
               type: "string"
               description: "URI to the newly created switch"
-      x-swagger-router-controller: "switch"
+      x-swagger-router-controller: "controller.switch"
   /switch/{switchID}:
     get:
       tags:
@@ -423,7 +423,7 @@ paths:
             $ref: "#/definitions/Switch"
         404:
           description: "Not found"
-      x-swagger-router-controller: "switch"
+      x-swagger-router-controller: "controller.switch"
     put:
       tags:
       - "switch"
@@ -447,7 +447,7 @@ paths:
           description: "Updated"
         404:
           description: "Not found"
-      x-swagger-router-controller: "switch"
+      x-swagger-router-controller: "controller.switch"
     delete:
       tags:
       - "switch"
@@ -465,7 +465,7 @@ paths:
           description: "Deleted"
         404:
           description: "Not found"
-      x-swagger-router-controller: "switch"
+      x-swagger-router-controller: "controller.switch"
   /ports/:
     get:
       tags:
@@ -504,7 +504,7 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/PortSearchResult"
-      x-swagger-router-controller: "port"
+      x-swagger-router-controller: "controller.port"
   /switch/{switchID}/port/:
     post:
       tags:
@@ -531,7 +531,7 @@ paths:
             Location:
               type: "string"
               description: "URI to the newly created port"
-      x-swagger-router-controller: "port"
+      x-swagger-router-controller: "controller.port"
   /switch/{switchID}/port/{portID}:
     get:
       tags:
@@ -556,7 +556,7 @@ paths:
             $ref: "#/definitions/Port"
         404:
           description: "Not found"
-      x-swagger-router-controller: "port"
+      x-swagger-router-controller: "controller.port"
     put:
       tags:
       - "port"
@@ -584,7 +584,7 @@ paths:
           description: "Updated"
         404:
           description: "Not found"
-      x-swagger-router-controller: "port"
+      x-swagger-router-controller: "controller.port"
     delete:
       tags:
       - "port"
@@ -606,7 +606,7 @@ paths:
           description: "Deleted"
         404:
           description: "Not found"
-      x-swagger-router-controller: "port"
+      x-swagger-router-controller: "controller.port"
 securityDefinitions:
   petstore_auth:
     type: "oauth2"

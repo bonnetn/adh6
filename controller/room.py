@@ -25,29 +25,29 @@ def findInRoom( room, terms ):
     return txt.lower().find( terms.lower() ) != -1
 
 def filterRoom( limit=100, terms=None ):
-  all_rooms = list(ROOMS.values())
+    all_rooms = list(ROOMS.values())
 
-  if terms != None:
-      all_rooms = filter( lambda x: findInRoom(x, terms), all_rooms)
+    if terms != None:
+        all_rooms = filter( lambda x: findInRoom(x, terms), all_rooms)
 
-  return list(islice(all_rooms,limit))
+    return list(islice(all_rooms,limit))
 
 def putRoom( roomNumber, body ):
-        if roomNumber in ROOMS:
-                retVal = 'Updated', 204
-        else:
-                retVal = 'Created', 201
-        ROOMS[roomNumber] = body
-        return retVal
+    if roomNumber in ROOMS:
+        retVal = 'Updated', 204
+    else:
+        retVal = 'Created', 201
+    ROOMS[roomNumber] = body
+    return retVal
 
 def getRoom( roomNumber ):
-        if roomNumber not in ROOMS:
-                return "Room not found", 404
-        return ROOMS[roomNumber]
+    if roomNumber not in ROOMS:
+        return "Room not found", 404
+    return ROOMS[roomNumber]
 
 def deleteRoom( roomNumber ):
-        if roomNumber in ROOMS:
-                del ROOMS[roomNumber]
-                return NoContent, 204
-        else:
-                return 'Not found', 404
+    if roomNumber in ROOMS:
+        del ROOMS[roomNumber]
+        return NoContent, 204
+    else:
+        return 'Not found', 404
