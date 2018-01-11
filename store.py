@@ -17,11 +17,41 @@ DEVICES = {
     }
 }
 
+PORTS = {
+    0: {
+        'portNumber': '1/0/4',
+        'roomNumber': 1234,
+        'switchID': 1,
+    },
+    1: {
+        'portNumber': '1/0/3',
+        'roomNumber': 1111,
+        'switchID': 2,
+    },
+    2: {
+        'portNumber': '1/0/7',
+        'roomNumber': 1111,
+        'switchID': 3,
+    },
+    3: {
+        'portNumber': '1/0/8',
+        'roomNumber': 1234,
+        'switchID': 1,
+    }
+}
+
+for k,v in PORTS.items():
+    v["_id"] = k
+
+port_id = 42
+
 
 def get_db():
     if not hasattr(g, "db_session"):
         g.db_session = {
             "DEVICES": DEVICES,
+            "PORTS": PORTS,
+            "port_id": port_id
         }
     return g.db_session
 
