@@ -60,6 +60,29 @@ ROOMS = {
     }
 }
 
+SWITCHES = {
+    1: {
+        'description' : "Switch U1",
+        'ip'          : "192.168.102.11",
+        'community'   : "tototo"
+    },
+    2: {
+        'description' : "Switch U2",
+        'ip'          : "192.168.102.12",
+        'community'   : "tututu"
+    },
+    3: {
+        'description' : "Switch-local",
+        'ip'          : "192.168.102.12",
+        'community'   : "tirelinpimpon"
+    },
+}
+
+for k,v in SWITCHES.items():
+    v["_id"] = k
+
+switch_id = 42
+
 
 def get_db():
     if not hasattr(g, "db_session"):
@@ -68,6 +91,8 @@ def get_db():
             "PORTS": PORTS,
             "port_id": port_id,
             "ROOMS": ROOMS,
+            "SWITCHES": SWITCHES,
+            "switch_id": switch_id,
         }
     return g.db_session
 
