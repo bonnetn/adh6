@@ -45,13 +45,29 @@ for k,v in PORTS.items():
 
 port_id = 42
 
+ROOMS = {
+    1111 : {
+        'description' : "Chambre 1111",
+        'roomNumber'  : 1111,
+        'phone'       : 0,
+        'vlan'        : 41
+    },
+    1234 : {
+        'description' : "Chambre 1234",
+        'roomNumber'  : 1234,
+        'phone'       : 0,
+        'vlan'        : 41
+    }
+}
+
 
 def get_db():
     if not hasattr(g, "db_session"):
         g.db_session = {
             "DEVICES": DEVICES,
             "PORTS": PORTS,
-            "port_id": port_id
+            "port_id": port_id,
+            "ROOMS": ROOMS,
         }
     return g.db_session
 
