@@ -1,82 +1,59 @@
 from connexion import NoContent
 from datetime import datetime
 from itertools import islice
-
-USERS = {
-        "coroller": {
-            "email":"stevan.coroller@telecom-em.eu",
-            "firstName":"Stevan",
-            "lastName":"Coroller",
-            "username":"coroller",
-            "comment":"Desauthent pour routeur",
-            "roomNumber": 1111,
-            "departureDate": "2017-12-13 00:00:00",
-            "associationMode": "2017-01-01 00:00:00"
-            },
-        "cherre_r": {
-            "email":"romain.cherre@telecom-em.eu",
-            "firstName":"Romain",
-            "lastName":"Cherré",
-            "username":"cherre_r",
-            "comment":"Mdr",
-            "roomNumber": 1111,
-            "departureDate": "2017-12-13 00:00:00",
-            "associationMode": "2017-01-01 00:00:00"
-            },
-        "coutelou": {
-            "email":"thomas.coutelou@telecom-sudparis.eu",
-            "firstName":"Thomas",
-            "lastName":"Coutelou",
-            "username":"coutelou",
-            "comment":"Desauthent pour PS4",
-            "roomNumber": 1234,
-            "departureDate": "2017-12-13 00:00:00",
-            "associationMode": "2017-01-01 00:00:00"
-            }
-
-}
-
-def findInUser( user, terms ):
-  s = ""
-  s += user["firstName" ] + " "
-  s += user["lastName" ] + " "
-  s += user["username" ] + " "
-  s += str(user["roomNumber" ])
-  return s.lower().find(terms.lower()) != -1
+from store import get_db
 
 
-def filterUser( limit=100, terms=None, roomNumber=None ):
-  all_users = list(USERS.values())
+def findInUser(user, terms):
+    s = ""
+    s += user["firstName"] + " "
+    s += user["lastName"] + " "
+    s += user["username"] + " "
+    s += str(user["roomNumber"])
+    return s.lower().find(terms.lower()) != -1
 
-  if terms != None :
-      all_users = filter( lambda x: findInUser(x, terms), all_users )
 
-  if roomNumber != None :
-      all_users = filter( lambda x: x["roomNumber"]==roomNumber, all_users )
+def filterUser(limit=100, terms=None, roomNumber=None):
+    USERS = get_db()['USERS']
+    all_users = list(USERS.values())
 
-  return list(islice(all_users, limit))
-  
-def getUser( username ):
-	if username not in USERS:
-		return "User not found", 404
-	return USERS[ username ]
+    if terms != None:
+        all_users = filter(lambda x: findInUser(x, terms), all_users)
 
-def deleteUser( username ):
-	if username in USERS:
-		del USERS[username]
-		return NoContent, 204
-	else:
-		return 'Not found', 404
+    if roomNumber != None:
+        all_users = filter(lambda x: x["roomNumber"] == roomNumber, all_users)
 
-def putUser( username, body ):
-	if username in USERS:
-		retVal = ("Updated", 204)
-	else:
-		retVal = ("Created", 201)
-	USERS[username] = body["user"]
-	return retVal
-	
-def addMembership( username, body ):
+    return list(islice(all_users, limit))
+
+
+def getUser(username):
+    USERS = get_db()['USERS']
+    if username not in USERS:
+        return "User not found", 404
+    return USERS[username]
+
+
+def deleteUser(username):
+    USERS = get_db()['USERS']
+    if username in USERS:
+        del USERS[username]
+        return NoContent, 204
+    else:
+        return 'Not found', 404
+
+
+def putUser(username, body):
+    USERS = get_db()['USERS']
+    if username in USERS:
+        retVal = ("Updated", 204)
+    else:
+        retVal = ("Created", 201)
+    USERS[username] = body["user"]
+    return retVal
+
+
+def addMembership(username, body):
+    USERS = get_db()['USERS']
     if username not in USERS:
         return "Not found", 404
 
@@ -89,5 +66,4 @@ def addMembership( username, body ):
 
     # TODO: return the right header
     # TODO: return 201 instead of 200
-    return NoContent, 200, { "Location": "test" }
-
+    return NoContent, 200, {"Location": "test"}
