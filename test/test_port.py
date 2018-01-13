@@ -51,5 +51,3 @@ class TestPort(unittest.TestCase):
       self.assertIn( {'portID':portIDd2, 'port':d2}, result )
      
 
-
-unittest.main()

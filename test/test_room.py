@@ -45,4 +45,3 @@ class TestRoom(unittest.TestCase):
       self.assertIn( d2, result )
 
 
-unittest.main()

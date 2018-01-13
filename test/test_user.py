@@ -78,6 +78,3 @@ class TestUser(unittest.TestCase):
 
 
 
-
-
-unittest.main()

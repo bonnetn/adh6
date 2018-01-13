@@ -56,4 +56,3 @@ class TestSwitch(unittest.TestCase):
      
 
 
-unittest.main()
