@@ -50,16 +50,19 @@ def filterSwitch(limit=100, terms=None):
         return NoContent, 500
 
 
-
-
 def createSwitch(body):
-    SWITCHES = get_db()["SWITCHES"]
-    switch_id = get_db()["switch_id"]
-    i = switch_id
-    switch_id += 1
-    SWITCHES[i] = body
-    SWITCHES[i]["_id"] = i
-    return NoContent, 201, {'Location': '/switch/{}'.format(i)}
+    try:
+        switch = fromDict(body)
+        session = db.get_session()
+        session.add(switch)
+        session.commit()
+
+        return NoContent, 201, {'Location': '/switch/{}'.format(switch.id)}
+
+    except Exception as e:
+        logging.error('Could not createSwitch(...). Exception: {}'
+                      .format(e))
+        return NoContent, 500
 
 
 def getSwitch(switchID):
