@@ -1,5 +1,4 @@
 from connexion import NoContent
-from store import get_db
 from sqlalchemy import or_
 import sqlalchemy.orm.exc
 from model.database import db
