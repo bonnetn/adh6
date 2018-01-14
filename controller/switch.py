@@ -84,12 +84,27 @@ def getSwitch(switchID):
 
 
 def updateSwitch(switchID, body):
-    SWITCHES = get_db()["SWITCHES"]
-    if switchID not in SWITCHES:
-        return "Not found", 404
-    SWITCHES[switchID] = body
-    SWITCHES[switchID]["_id"] = switchID
-    return NoContent, 204
+
+    try:
+        session = db.get_session()
+
+        # Don't update if the Switch does not exists
+        q = session.query(Switch).filter(Switch.id == switchID)
+        if not session.query(q.exists()).scalar():
+            return NoContent, 404
+
+        switch = fromDict(body)
+        switch.id = switchID
+        session.merge(switch)
+
+        session.commit()
+
+        return NoContent, 204
+
+    except Exception as e:
+        logging.error('Could not updateSwitch({}). Exception: {}'
+                      .format(switchID, e))
+        return NoContent, 500
 
 
 def deleteSwitch(switchID):
