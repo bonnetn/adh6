@@ -66,10 +66,21 @@ def createSwitch(body):
 
 
 def getSwitch(switchID):
-    SWITCHES = get_db()["SWITCHES"]
-    if switchID not in SWITCHES:
-        return "Not found", 404
-    return SWITCHES[switchID]
+    try:
+        result = db.get_session().query(Switch)
+        result = result.filter(Switch.id == switchID)
+        result = result.one()
+        result = toDict(result)
+
+        return result
+
+    except sqlalchemy.orm.exc.NoResultFound:
+        return NoContent, 404
+
+    except Exception as e:
+        logging.error('Could not getSwitch({}). Exception: {}'
+                      .format(switchID, e))
+        return NoContent, 500
 
 
 def updateSwitch(switchID, body):
