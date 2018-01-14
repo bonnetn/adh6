@@ -1,29 +1,55 @@
 from connexion import NoContent
-from itertools import islice
 from store import get_db
+from sqlalchemy import or_
+import sqlalchemy.orm.exc
+from model.database import db
+from model.models import Switch
+import logging
 
 
-def findInSwitch(switch, terms):
-    txt = ""
-    txt += switch["description"] + " "
-    txt += switch["ip"] + " "
-    txt += switch["community"] + " "  #  lol search on community :D
-    return txt.lower().find(terms.lower()) != -1
+def toDict(s):
+    """ Transforms a Switch object to dictionary """
+    return {
+        'description': s.description,
+        'ip': s.ip,
+        'community': s.communaute
+    }
+
+
+def fromDict(body):
+    """ Transforms a dictionary to Switch object """
+    return Switch(
+        description=body['description'],
+        ip=body['ip'],
+        communaute=body['community']
+    )
 
 
 def filterSwitch(limit=100, terms=None):
-    SWITCHES = get_db()["SWITCHES"]
-    all_switches = list(SWITCHES.values())
+    try:
+        result = db.get_session().query(Switch)
+        # Filter by terms
+        if terms:
+            result = result.filter(or_(
+                Switch.description.contains(terms),
+                Switch.ip.contains(terms),
+                Switch.communaute.contains(terms),
+            ))
+        result = result.limit(limit)  # Limit the number of matches
+        result = result.all()
 
-    if terms != None:
-        all_switches = filter(lambda x: findInSwitch(x, terms), all_switches)
+        # Convert the results into data suited for the API
+        result = map(lambda x: {'switchID': x.id, 'switch': toDict(x)}, result)
+        result = list(result)  # Cast generator as list
 
-    all_switches = islice(all_switches, limit)
+        return result
 
-    all_switches = map(lambda x: {"switchID": x["_id"], "switch": x},
-                       all_switches)
+    except Exception as e:
+        logging.error('Could not filterSwitch(...). Exception: {}'
+                      .format(e))
+        return NoContent, 500
 
-    return list(all_switches)
+
 
 
 def createSwitch(body):
