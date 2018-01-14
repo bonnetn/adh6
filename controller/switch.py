@@ -108,9 +108,20 @@ def updateSwitch(switchID, body):
 
 
 def deleteSwitch(switchID):
-    SWITCHES = get_db()["SWITCHES"]
-    if switchID in SWITCHES:
-        del SWITCHES[switchID]
+    try:
+        session = db.get_session()
+        # Get the switch to delete
+        switch = session.query(Switch).filter(Switch.id == switchID).one()
+        session.delete(switch)
+
+        session.commit()
+
         return NoContent, 204
-    else:
-        return 'Switch not found', 404
+
+    except sqlalchemy.orm.exc.NoResultFound:
+        return NoContent, 404
+
+    except Exception as e:
+        logging.error('Could not deleteSwitch({}). Exception: {}'
+                      .format(switchID, e))
+        return NoContent, 500
