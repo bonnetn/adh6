@@ -1,12 +1,29 @@
 import pytest
 import json
 from .resource import base_url
+from unit_test_settings import DATABASE as db_settings
+from model.models import Switch
+from model.database import Database as db
+
+
+def prep_db(session):
+    """ Insert the test objects in the db """
+    sample_switch = Switch(
+        id=1,
+        description='Switch',
+        ip='192.168.102.2',
+        communaute='communaute',
+    )
+    session.add(sample_switch)
+    session.commit()  # TODO: remove?
 
 
 @pytest.fixture
 def api_client():
     from .context import app
     with app.app.test_client() as c:
+        db.init_db(db_settings)
+        prep_db(db.get_db().get_session())
         yield c
 
 

@@ -1,7 +1,7 @@
 from connexion import NoContent
 from sqlalchemy import or_
 import sqlalchemy.orm.exc
-from model.database import db
+from model.database import Database as db
 from model.models import Switch
 import logging
 
@@ -26,7 +26,7 @@ def fromDict(body):
 
 def filterSwitch(limit=100, terms=None):
     try:
-        result = db.get_session().query(Switch)
+        result = db.get_db().get_session().query(Switch)
         # Filter by terms
         if terms:
             result = result.filter(or_(
@@ -52,7 +52,7 @@ def filterSwitch(limit=100, terms=None):
 def createSwitch(body):
     try:
         switch = fromDict(body)
-        session = db.get_session()
+        session = db.get_db().get_session()
         session.add(switch)
         session.commit()
 
@@ -66,7 +66,7 @@ def createSwitch(body):
 
 def getSwitch(switchID):
     try:
-        result = db.get_session().query(Switch)
+        result = db.get_db().get_session().query(Switch)
         result = result.filter(Switch.id == switchID)
         result = result.one()
         result = toDict(result)
@@ -85,7 +85,7 @@ def getSwitch(switchID):
 def updateSwitch(switchID, body):
 
     try:
-        session = db.get_session()
+        session = db.get_db().get_session()
 
         # Don't update if the Switch does not exists
         q = session.query(Switch).filter(Switch.id == switchID)
@@ -108,7 +108,7 @@ def updateSwitch(switchID, body):
 
 def deleteSwitch(switchID):
     try:
-        session = db.get_session()
+        session = db.get_db().get_session()
         # Get the switch to delete
         switch = session.query(Switch).filter(Switch.id == switchID).one()
         session.delete(switch)

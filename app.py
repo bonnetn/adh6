@@ -2,9 +2,11 @@
 import connexion
 import logging
 from flask_cors import CORS
+from model.database import Database
+from settings import DATABASE
+
 
 logging.basicConfig(level=logging.INFO)
-#app = connexion.App(__name__)
 app = connexion.FlaskApp(__name__)
 app.add_api('swagger.yaml')
 CORS(app.app)
@@ -12,8 +14,13 @@ CORS(app.app)
 # uwsgi --http :8080 -w app
 application = app.app
 
+
+@application.teardown_appcontext
+def shutdown_session(exception=None):
+    Database.get_db().remove_session()
+
+
 if __name__ == '__main__':
+    Database.init_db(DATABASE)
     # run our standalone gevent server
     app.run(port=3000, server='gevent')
-
-
