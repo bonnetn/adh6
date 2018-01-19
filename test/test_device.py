@@ -19,12 +19,12 @@ SAMPLE_WIRED_DEVICE = Ordinateur(
     mac='12:34:56:78:9A:BC',
     ip='157.159.42.42',
     dns='bonnet_n4651',
-    adherent_id=1,  # TODO transform this attribute into a foreign keyword
+    adherent_id=1,
     ipv6='e91f:e45a:0db3:15df:a4a7:6316:d8d7:1d4a'
 )
 SAMPLE_WIRELESS_DEVICE = Portable(
     mac='12:34:56:78:9A:FF',
-    adherent_id=1,  # TODO transform this attribute into a foreign keyword
+    adherent_id=1,
 )
 
 '''
