@@ -1,6 +1,8 @@
 # coding: utf-8
 from sqlalchemy import Column, Date, DateTime, Integer, \
-        Numeric, String, Text, text
+        Numeric, String, Text, text, ForeignKey
+from sqlalchemy.orm import relationship
+
 from model.database import Base
 
 
@@ -118,7 +120,8 @@ class Ordinateur(Base):
     mac = Column(String(255))
     ip = Column(String(255))
     dns = Column(String(255))
-    adherent_id = Column(Integer, index=True)
+    adherent_id = Column(Integer, ForeignKey(Adherent.id), nullable=False)
+    adherent = relationship("Adherent")
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
     last_seen = Column(DateTime)
@@ -130,7 +133,8 @@ class Portable(Base):
 
     id = Column(Integer, primary_key=True)
     mac = Column(String(255))
-    adherent_id = Column(Integer, index=True)
+    adherent_id = Column(Integer, ForeignKey(Adherent.id), nullable=False)
+    adherent = relationship("Adherent")
     last_seen = Column(DateTime)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
