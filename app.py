@@ -17,7 +17,8 @@ application = app.app
 
 @application.teardown_appcontext
 def shutdown_session(exception=None):
-    Database.get_db().remove_session()
+    if Database.get_db():
+        Database.get_db().remove_session()
 
 
 if __name__ == '__main__':
