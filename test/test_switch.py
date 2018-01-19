@@ -39,7 +39,7 @@ def api_client():
 
 
 @pytest.mark.parametrize("test_ip", INVALID_IP)
-def test_invalid_ip_switch_insert(api_client, test_ip):
+def test_switch_insert_invalid_ip(api_client, test_ip):
     sample_switch = {
       "description": "Test Switch",
       "ip": test_ip,
@@ -51,7 +51,7 @@ def test_invalid_ip_switch_insert(api_client, test_ip):
     assert r.status_code == 400
 
 
-def test_valid_switch_insert(api_client):
+def test_switch_insert_valid(api_client):
 
     sample_switch = {
       "description": "Test Switch",
