@@ -2,14 +2,35 @@ import json
 import urllib.parse
 
 import pytest
+from model.database import Database as db
+from unit_test_settings import DATABASE as db_settings
+from model.models import Ordinateur, Portable
 
 from .resource import base_url, device_bonnet, device_cazal
+
+
+def prep_db(session):
+    sample_wired_device = Ordinateur(
+        mac="12:34:56:78:9A:BC",
+        ip="157.159.42.42",
+        dns='bonnet_n4651',
+        adherent_id=12,  # TODO transform this attribute into a foreign keyword
+        ipv6='e91f:e45a:0db3:15df:a4a7:6316:d8d7:1d4a'
+    )
+    sample_wireless_device = Portable(
+        mac="12:34:56:78:9A:FF",
+        adherent_id=12,  # TODO transform this attribute into a foreign keyword
+    )
+    session.add_all([sample_wired_device, sample_wireless_device])
+    session.commit()
 
 
 @pytest.fixture
 def api_client():
     from .context import app
     with app.app.test_client() as c:
+        db.init_db(db_settings)
+        prep_db(db.get_db().get_session())
         yield c
 
 
