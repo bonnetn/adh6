@@ -90,9 +90,59 @@ def test_device_insert(api_client):
     assert r.status_code == 201
 
 
-def test_device_update(api_client):
+def test_device_update_wired_and_wireless_to_wireless(api_client,
+                                                      sample_wired_device):
+    # Add a wireless device that has the same mac as SAMPLE_WIRED_DEVICE
+    dev_with_same_mac = Portable(
+        mac=sample_wired_device.mac,
+        adherent_id=1,
+    )
+    session = db.get_db().get_session()
+    session.add(dev_with_same_mac)
+    session.commit()
+
+    dev = dict(TEST_DEVICE)
+    dev["connectionType"] = "wireless"
+    # Then try to update it...
     r = api_client.put(
-        '{}/device/{}'.format(base_url, SAMPLE_WIRED_DEVICE['mac']),
+        '{}/device/{}'.format(base_url, sample_wired_device.mac),
+        data=json.dumps(dev),
+        content_type='application/json')
+    assert r.status_code == 204
+
+
+def test_device_update_wired_and_wireless_to_wired(api_client,
+                                                   sample_wireless_device):
+    # Add a wired device that has the same mac as SAMPLE_WIRELESS_DEVICE
+    dev_with_same_mac = Ordinateur(
+        mac=sample_wireless_device.mac,
+        adherent_id=1,
+    )
+    session = db.get_db().get_session()
+    session.add(dev_with_same_mac)
+    session.commit()
+
+    dev = dict(TEST_DEVICE)
+    dev["connectionType"] = "wired"
+    # Then try to update it...
+    r = api_client.put(
+        '{}/device/{}'.format(base_url, sample_wireless_device.mac),
+        data=json.dumps(dev),
+        content_type='application/json')
+    assert r.status_code == 204
+
+
+def test_device_update_wired(api_client, sample_wired_device):
+    r = api_client.put(
+        '{}/device/{}'.format(base_url, sample_wired_device.mac),
+        data=json.dumps(TEST_DEVICE),
+        content_type='application/json')
+    assert r.status_code == 204
+
+
+def test_device_update_wireless(api_client, sample_wireless_device):
+    r = api_client.put(
+        '{}/device/{}'.format(base_url, sample_wireless_device.mac),
         data=json.dumps(TEST_DEVICE),
         content_type='application/json')
     assert r.status_code == 204
