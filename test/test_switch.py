@@ -89,6 +89,20 @@ def test_switch_get_non_existant_switch(api_client):
     assert r.status_code == 404
 
 
+@pytest.mark.parametrize("test_ip", INVALID_IP)
+def test_switch_update_switch_invalid_ip(api_client, test_ip):
+    sample_switch = {
+      "description": "Modified switch",
+      "ip": test_ip,
+      "community": "communityModified"
+    }
+
+    r = api_client.put("{}/switch/{}".format(base_url, 1),
+                       data=json.dumps(sample_switch),
+                       content_type='application/json')
+    assert r.status_code == 400
+
+
 def test_switch_update_existant_switch(api_client):
     sample_switch = {
       "description": "Modified switch",
