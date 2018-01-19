@@ -23,6 +23,8 @@ class Database():
     def remove_session(self):
         return self.db_session.remove()
 
+    db = None
+
     def init_db(settings):
         Database.db = Database(settings)
 
