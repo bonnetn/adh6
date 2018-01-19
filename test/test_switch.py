@@ -6,6 +6,17 @@ from model.models import Switch
 from model.database import Database as db
 
 
+INVALID_IP = [
+    "192.168",
+    "testString",
+    "....",
+    "200.256.200.200",
+    "-1.200.200.200",
+    "192.168.0.0/24",
+    42,
+]
+
+
 def prep_db(session):
     """ Insert the test objects in the db """
     sample_switch = Switch(
@@ -27,15 +38,7 @@ def api_client():
         yield c
 
 
-@pytest.mark.parametrize("test_ip", [
-    "192.168",
-    "testString",
-    "....",
-    "200.256.200.200",
-    "-1.200.200.200",
-    "192.168.0.0/24",
-    42,
-])
+@pytest.mark.parametrize("test_ip", INVALID_IP)
 def test_invalid_ip_switch_insert(api_client, test_ip):
     sample_switch = {
       "description": "Test Switch",
