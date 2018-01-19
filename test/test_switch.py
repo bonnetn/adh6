@@ -4,17 +4,7 @@ from .resource import base_url
 from unit_test_settings import DATABASE as db_settings
 from model.models import Switch
 from model.database import Database as db
-
-
-INVALID_IP = [
-    "192.168",
-    "testString",
-    "....",
-    "200.256.200.200",
-    "-1.200.200.200",
-    "192.168.0.0/24",
-    42,
-]
+from .resource import INVALID_IP
 
 
 def prep_db(session):
