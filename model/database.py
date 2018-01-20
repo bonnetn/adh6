@@ -12,6 +12,8 @@ class Database():
     def __init__(self, db_settings, testing=False):
         self.engine = create_engine(URL(**db_settings), pool_recycle=3600)
         self.db_session = scoped_session(sessionmaker(bind=self.engine))
+        if testing:
+            Base.metadata.drop_all(self.engine)
         Base.metadata.create_all(self.engine)
         self.testing = testing
 
@@ -25,8 +27,8 @@ class Database():
 
     db = None
 
-    def init_db(settings):
-        Database.db = Database(settings)
+    def init_db(settings, testing=False):
+        Database.db = Database(settings, testing=testing)
 
     def get_db():
         return Database.db
