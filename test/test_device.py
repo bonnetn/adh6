@@ -216,8 +216,8 @@ def test_device_put_update_wired_and_wireless_to_wired(api_client,
 
 
 def test_device_get_unknown_mac(api_client):
-    mac = urllib.parse.quote_plus('00:00:00:00:00:00')
-    r = api_client.get(''.join([base_url, '/device/', mac]))
+    mac = '00:00:00:00:00:00'
+    r = api_client.get('{}/device/{}'.format(base_url, mac))
     assert r.status_code == 404
 
 
