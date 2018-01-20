@@ -23,7 +23,7 @@ def prep_db(session):
 def api_client():
     from .context import app
     with app.app.test_client() as c:
-        db.init_db(db_settings)
+        db.init_db(db_settings, testing=True)
         prep_db(db.get_db().get_session())
         yield c
 

@@ -68,7 +68,7 @@ def prep_db(session,
 def api_client(sample_member, sample_wired_device, sample_wireless_device):
     from .context import app
     with app.app.test_client() as c:
-        db.init_db(db_settings)
+        db.init_db(db_settings, testing=True)
         prep_db(db.get_db().get_session(),
                 sample_member,
                 sample_wired_device,
