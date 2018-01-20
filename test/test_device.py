@@ -21,21 +21,21 @@ def sample_member():
 
 
 @pytest.fixture
-def sample_wired_device():
+def sample_wired_device(sample_member):
     return Ordinateur(
         mac='12:34:56:78:9A:BC',
         ip='157.159.42.42',
         dns='bonnet_n4651',
-        adherent_id=1,
+        adherent=sample_member,
         ipv6='e91f:e45a:0db3:15df:a4a7:6316:d8d7:1d4a'
     )
 
 
 @pytest.fixture
-def sample_wireless_device():
+def sample_wireless_device(sample_member):
     return Portable(
         mac='12:34:56:78:9A:FF',
-        adherent_id=1,
+        adherent=sample_member,
     )
 
 
@@ -48,7 +48,7 @@ TEST_DEVICE = {
   'ipAddress': '127.0.0.1',
   'ipv6Address': 'string',
   'connectionType': 'wired',
-  'username': 'doe_john'
+  'username': 'dubois_j'
 }
 
 
