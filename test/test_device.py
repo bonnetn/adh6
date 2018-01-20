@@ -215,10 +215,17 @@ def test_device_put_update_wired_and_wireless_to_wired(api_client,
     assert r.status_code == 204
 
 
-def test_device_get(api_client):
-    mac = urllib.parse.quote_plus('non_existent_MAC')
+def test_device_get_unknown_mac(api_client):
+    mac = urllib.parse.quote_plus('00:00:00:00:00:00')
     r = api_client.get(''.join([base_url, '/device/', mac]))
     assert r.status_code == 404
+
+
+def test_device_get_valid(api_client, sample_wired_device):
+    mac = sample_wired_device.mac
+    r = api_client.get('{}/device/{}'.format(base_url, mac))
+    assert r.status_code == 200
+    assert json.loads(r.data)
 
 
 def test_device_delete(api_client, sample_wired_device):
