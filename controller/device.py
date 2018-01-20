@@ -5,7 +5,7 @@ from model.database import Database as db
 from model import models
 
 
-def isWired(macAddress):
+def is_wired(macAddress):
     """ Return true if the mac address corresponds to a wired device """
     session = db.get_db().get_session()
     queryWired = session.query(models.Ordinateur)
@@ -14,7 +14,7 @@ def isWired(macAddress):
     return session.query(queryWired.exists()).scalar()
 
 
-def isWireless(macAddress):
+def is_wireless(macAddress):
     """ Return true if the mac address corresponds to a wireless device """
     session = db.get_db().get_session()
     queryWireless = session.query(models.Portable)
@@ -95,8 +95,8 @@ def filterDevice(limit=100, username=None, terms=None):
 
 
 def putDevice(macAddress, body):
-    wired = isWired(macAddress)
-    wireless = isWireless(macAddress)
+    wired = is_wired(macAddress)
+    wireless = is_wireless(macAddress)
     wanted_type = body["connectionType"]
 
     if wired and wireless:
