@@ -3,6 +3,7 @@ from itertools import islice
 from store import get_db
 from model.database import Database as db
 from model import models
+import sqlalchemy
 
 
 def is_wired(macAddress):
@@ -107,36 +108,40 @@ def filterDevice(limit=100, username=None, terms=None):
 
 
 def putDevice(macAddress, body):
-    wired = is_wired(macAddress)
-    wireless = is_wireless(macAddress)
-    wanted_type = body["connectionType"]
+    try:
+        wired = is_wired(macAddress)
+        wireless = is_wireless(macAddress)
+        wanted_type = body["connectionType"]
 
-    if wired and wireless:
-        if wanted_type == "wired":
-            delete_wireless_device(macAddress)
-            update_wired_device(macAddress, body)
-        else:
-            delete_wired_device(macAddress)
-            update_wireless_device(macAddress, body)
-    elif wired:
-        if wanted_type == "wireless":
-            delete_wired_device(macAddress)
-            create_wireless_device(body)
-        else:
-            update_wired_device(macAddress, body)
-    elif wireless:
-        if wanted_type == "wired":
-            delete_wireless_device(macAddress)
-            create_wired_device(body)
-        else:
-            update_wireless_device(macAddress, body)
-    else:  # Create device
-        if wanted_type == "wired":
-            create_wired_device(body)
-        else:
-            create_wireless_device(body)
-        return NoContent, 201
-    return NoContent, 204
+        if wired and wireless:
+            if wanted_type == "wired":
+                delete_wireless_device(macAddress)
+                update_wired_device(macAddress, body)
+            else:
+                delete_wired_device(macAddress)
+                update_wireless_device(macAddress, body)
+        elif wired:
+            if wanted_type == "wireless":
+                delete_wired_device(macAddress)
+                create_wireless_device(body)
+            else:
+                update_wired_device(macAddress, body)
+        elif wireless:
+            if wanted_type == "wired":
+                delete_wireless_device(macAddress)
+                create_wired_device(body)
+            else:
+                update_wireless_device(macAddress, body)
+        else:  # Create device
+            if wanted_type == "wired":
+                create_wired_device(body)
+            else:
+                create_wireless_device(body)
+            return NoContent, 201
+        return NoContent, 204
+
+    except sqlalchemy.orm.exc.NoResultFound:
+        return 'Invalid username', 400
 
 
 def getDevice(macAddress):
