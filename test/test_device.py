@@ -6,7 +6,7 @@ from model.database import Database as db
 from unit_test_settings import DATABASE as db_settings
 from model.models import Ordinateur, Portable, Adherent
 
-from .resource import base_url
+from .resource import base_url, INVALID_MAC
 
 
 @pytest.fixture
@@ -43,8 +43,16 @@ def sample_wireless_device(sample_member):
 Device that will be inserted/updated when tests are run.
 It is not present in the api_client by default
 '''
-TEST_DEVICE = {
-  'mac': '01:23:45:67:89:AB',
+TEST_WIRELESS_DEVICE = {
+  'mac': '01:23:45:67:89:AC',
+  'ipAddress': '127.0.0.1',
+  'ipv6Address': 'string',
+  'connectionType': 'wireless',
+  'username': 'dubois_j'
+}
+
+TEST_WIRED_DEVICE = {
+  'mac': '01:23:45:67:89:AD',
   'ipAddress': '127.0.0.1',
   'ipv6Address': 'string',
   'connectionType': 'wired',
@@ -84,14 +92,88 @@ def test_device_list(api_client):
 
 
 def test_device_put_create_wireless(api_client):
-    r = api_client.put('{}/device/{}'.format(base_url, TEST_DEVICE['mac']),
-                       data=json.dumps(TEST_DEVICE),
+    ''' Can create a valid wireless device ? '''
+    r = api_client.put('{}/device/{}'.format(base_url,
+                                             TEST_WIRED_DEVICE['mac']),
+                       data=json.dumps(TEST_WIRED_DEVICE),
                        content_type='application/json')
     assert r.status_code == 201
 
 
+def test_device_put_create_wired(api_client):
+    ''' Can create a valid wired device ? '''
+    r = api_client.put('{}/device/{}'.format(base_url,
+                                             TEST_WIRED_DEVICE['mac']),
+                       data=json.dumps(TEST_WIRED_DEVICE),
+                       content_type='application/json')
+    assert r.status_code == 201
+
+
+@pytest.mark.parametrize('test_mac', INVALID_MAC)
+def test_device_put_create_invalid_mac_address(api_client, test_mac):
+    ''' Create with invalid mac address '''
+    dev = dict(TEST_WIRED_DEVICE)
+    dev['macAddress'] = test_mac
+    r = api_client.put('{}/device/{}'.format(base_url, dev['mac']),
+                       data=json.dumps(dev),
+                       content_type='application/json')
+    assert r.status_code == 400
+
+
+def test_device_put_create_invalid_username(api_client):
+    ''' Create with invalid mac address '''
+    dev = dict(TEST_WIRED_DEVICE)
+    dev['username'] = 'abcdefgh'
+    r = api_client.put('{}/device/{}'.format(base_url, dev['mac']),
+                       data=json.dumps(dev),
+                       content_type='application/json')
+    assert r.status_code == 400
+
+
+def test_device_put_update_wireless(api_client, sample_wireless_device):
+    ''' Can update a valid wireless device ? '''
+    r = api_client.put(
+        '{}/device/{}'.format(base_url, sample_wireless_device.mac),
+        data=json.dumps(TEST_WIRELESS_DEVICE),
+        content_type='application/json')
+    assert r.status_code == 204
+
+
+def test_device_put_update_wired(api_client, sample_wired_device):
+    ''' Can update a valid wired device ? '''
+    r = api_client.put(
+        '{}/device/{}'.format(base_url, sample_wired_device.mac),
+        data=json.dumps(TEST_WIRED_DEVICE),
+        content_type='application/json')
+    assert r.status_code == 204
+
+
+def test_device_put_update_wired_to_wireless(api_client, sample_wired_device):
+    ''' Can update a valid wired device and cast it into a wireless d ? '''
+    r = api_client.put(
+        '{}/device/{}'.format(base_url, sample_wired_device.mac),
+        data=json.dumps(TEST_WIRED_DEVICE),
+        content_type='application/json')
+    assert r.status_code == 204
+
+
+def test_device_put_update_wireless_to_wired(api_client,
+                                             sample_wireless_device):
+    ''' Can update a valid wireless device and cast it into a wired d ? '''
+    r = api_client.put(
+        '{}/device/{}'.format(base_url, sample_wireless_device.mac),
+        data=json.dumps(TEST_WIRED_DEVICE),
+        content_type='application/json')
+    assert r.status_code == 204
+
+
 def test_device_put_update_wired_and_wireless_to_wireless(api_client,
                                                           sample_wired_device):
+    '''
+    Test if the controller is able to handle the case where the MAC address is
+    in the Wireless table _AND_ the Wired table
+    Tests the case where we want to move the mac to the wireless table
+    '''
     # Add a wireless device that has the same mac as SAMPLE_WIRED_DEVICE
     dev_with_same_mac = Portable(
         mac=sample_wired_device.mac,
@@ -101,18 +183,21 @@ def test_device_put_update_wired_and_wireless_to_wireless(api_client,
     session.add(dev_with_same_mac)
     session.commit()
 
-    dev = dict(TEST_DEVICE)
-    dev["connectionType"] = "wireless"
     # Then try to update it...
     r = api_client.put(
         '{}/device/{}'.format(base_url, sample_wired_device.mac),
-        data=json.dumps(dev),
+        data=json.dumps(TEST_WIRELESS_DEVICE),
         content_type='application/json')
     assert r.status_code == 204
 
 
 def test_device_put_update_wired_and_wireless_to_wired(api_client,
                                                        sample_wireless_device):
+    '''
+    Test if the controller is able to handle the case where the MAC address is
+    in the Wireless table _AND_ the Wired table
+    Tests the case where we want to move the mac to the wired table
+    '''
     # Add a wired device that has the same mac as SAMPLE_WIRELESS_DEVICE
     dev_with_same_mac = Ordinateur(
         mac=sample_wireless_device.mac,
@@ -122,28 +207,10 @@ def test_device_put_update_wired_and_wireless_to_wired(api_client,
     session.add(dev_with_same_mac)
     session.commit()
 
-    dev = dict(TEST_DEVICE)
-    dev["connectionType"] = "wired"
     # Then try to update it...
     r = api_client.put(
         '{}/device/{}'.format(base_url, sample_wireless_device.mac),
-        data=json.dumps(dev),
-        content_type='application/json')
-    assert r.status_code == 204
-
-
-def test_device_put_update_wired(api_client, sample_wired_device):
-    r = api_client.put(
-        '{}/device/{}'.format(base_url, sample_wired_device.mac),
-        data=json.dumps(TEST_DEVICE),
-        content_type='application/json')
-    assert r.status_code == 204
-
-
-def test_device_put_update_wireless(api_client, sample_wireless_device):
-    r = api_client.put(
-        '{}/device/{}'.format(base_url, sample_wireless_device.mac),
-        data=json.dumps(TEST_DEVICE),
+        data=json.dumps(TEST_WIRED_DEVICE),
         content_type='application/json')
     assert r.status_code == 204
 
