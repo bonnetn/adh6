@@ -137,6 +137,7 @@ def filterDevice(limit=100, username=None, terms=None):
         )
     r = q.all()
     results += list(map(wired_to_dict, r))
+    results = results[:limit]
 
     return results, 200
 

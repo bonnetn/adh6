@@ -148,6 +148,27 @@ def test_device_filter_wired_by_terms(
     assert len(response) == expected
 
 
+def test_device_filter_hit_limit(api_client, sample_member):
+    s = db.get_db().get_session()
+    LIMIT = 10
+
+    # Create a lot of devices
+    for i in range(LIMIT*2):
+        suffix = "{0:04X}".format(i)
+        dev = Portable(
+            adherent=sample_member,
+            mac='00:00:00:00:'+suffix[:2]+":"+suffix[2:]
+        )
+        s.add(dev)
+    s.commit()
+
+    r = api_client.get('{}/device/?limit={}'.format(base_url, LIMIT))
+    assert r.status_code == 200
+
+    response = json.loads(r.data)
+    assert len(response) == LIMIT
+
+
 def test_device_put_create_wireless(api_client):
     ''' Can create a valid wireless device ? '''
     r = api_client.put('{}/device/{}'.format(base_url,
