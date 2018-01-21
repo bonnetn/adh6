@@ -1,5 +1,4 @@
 import json
-import urllib.parse
 
 import pytest
 from model.database import Database as db
@@ -235,15 +234,31 @@ def test_device_get_valid_wireless(api_client, sample_wireless_device):
     assert json.loads(r.data)
 
 
-def test_device_delete(api_client, sample_wired_device):
-    parsed_mac = urllib.parse.quote_plus(sample_wired_device['mac'])
-    r = api_client.delete(base_url + '/device/' + parsed_mac)
+def test_device_delete_wired(api_client, sample_wired_device):
+    mac = sample_wired_device.mac
+    r = api_client.delete('{}/device/{}'.format(base_url, mac))
     assert r.status_code == 204
 
+    s = db.get_db().get_session()
+    q = s.query(Ordinateur)
+    q = q.filter(Ordinateur.mac == mac)
+    assert not s.query(q.exists()).scalar(), "Object not actually deleted"
 
-def test_device_unexistant_delete(api_client):
-    mac = urllib.parse.quote_plus('non_existent_MAC')
-    r = api_client.delete(base_url + '/device/' + mac)
+
+def test_device_delete_wireless(api_client, sample_wireless_device):
+    mac = sample_wireless_device.mac
+    r = api_client.delete('{}/device/{}'.format(base_url, mac))
+    assert r.status_code == 204
+
+    s = db.get_db().get_session()
+    q = s.query(Portable)
+    q = q.filter(Portable.mac == mac)
+    assert not s.query(q.exists()).scalar(), "Object not actually deleted"
+
+
+def test_device_delete_unexistant(api_client):
+    mac = '00:00:00:00:00:00'
+    r = api_client.delete('{}/device/{}'.format(base_url, mac))
     assert r.status_code == 404
 
 

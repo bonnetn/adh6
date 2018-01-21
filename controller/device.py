@@ -168,9 +168,22 @@ def getDevice(macAddress):
 
 
 def deleteDevice(macAddress):
-    DEVICES = get_db()["DEVICES"]
-    if macAddress in DEVICES:
-        del DEVICES[macAddress]
+    s = db.get_db().get_session()
+    if is_wireless(macAddress):
+        q = s.query(models.Portable)
+        q = q.filter(models.Portable.mac == macAddress)
+        r = q.one()
+        s.delete(r)
+        s.commit()
         return NoContent, 204
+
+    elif is_wired(macAddress):
+        q = s.query(models.Ordinateur)
+        q = q.filter(models.Ordinateur.mac == macAddress)
+        r = q.one()
+        s.delete(r)
+        s.commit()
+        return NoContent, 204
+
     else:
-        return 'Not found', 404
+        return NoContent, 404
