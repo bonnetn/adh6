@@ -221,8 +221,15 @@ def test_device_get_unknown_mac(api_client):
     assert r.status_code == 404
 
 
-def test_device_get_valid(api_client, sample_wired_device):
+def test_device_get_valid_wired(api_client, sample_wired_device):
     mac = sample_wired_device.mac
+    r = api_client.get('{}/device/{}'.format(base_url, mac))
+    assert r.status_code == 200
+    assert json.loads(r.data)
+
+
+def test_device_get_valid_wireless(api_client, sample_wireless_device):
+    mac = sample_wireless_device.mac
     r = api_client.get('{}/device/{}'.format(base_url, mac))
     assert r.status_code == 200
     assert json.loads(r.data)
