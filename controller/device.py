@@ -61,6 +61,8 @@ def create_wired_device(body):
     s = db.get_db().get_session()
     dev = models.Ordinateur(
         mac=body['mac'],
+        ip=body['ipAddress'],
+        ipv6=body['ipv6Address'],
         adherent=get_adherent(body['username']),
     )
     s.add(dev)
@@ -82,6 +84,8 @@ def update_wired_device(macAddress, body):
     dev = q.one()
 
     dev.mac = body['mac']
+    dev.ip = body['ipAddress']
+    dev.ipv6 = body['ipv6Address']
     dev.adherent = get_adherent(body['username'])
     s.commit()
 
