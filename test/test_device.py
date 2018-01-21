@@ -20,9 +20,20 @@ def sample_member():
 
 
 @pytest.fixture
+def sample_member2():
+    yield Adherent(
+        nom='Reignier',
+        prenom='Edouard',
+        mail='bgdu78@hotmail.fr',
+        login='reignier',
+        password='',
+    )
+
+
+@pytest.fixture
 def sample_wired_device(sample_member):
     return Ordinateur(
-        mac='12:34:56:78:9A:BC',
+        mac='96:24:F6:D0:48:A7',
         ip='157.159.42.42',
         dns='bonnet_n4651',
         adherent=sample_member,
@@ -31,10 +42,10 @@ def sample_wired_device(sample_member):
 
 
 @pytest.fixture
-def sample_wireless_device(sample_member):
+def sample_wireless_device(sample_member2):
     return Portable(
-        mac='12:34:56:78:9A:FF',
-        adherent=sample_member,
+        mac='80:65:F3:FC:44:A9',
+        adherent=sample_member2,
     )
 
 
@@ -61,10 +72,12 @@ TEST_WIRED_DEVICE = {
 
 def prep_db(session,
             sample_member,
+            sample_member2,
             sample_wired_device,
             sample_wireless_device):
     session.add_all([
         sample_member,
+        sample_member2,
         sample_wired_device,
         sample_wireless_device
     ])
@@ -72,22 +85,67 @@ def prep_db(session,
 
 
 @pytest.fixture
-def api_client(sample_member, sample_wired_device, sample_wireless_device):
+def api_client(sample_member,
+               sample_member2,
+               sample_wired_device,
+               sample_wireless_device):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
         prep_db(db.get_db().get_session(),
                 sample_member,
+                sample_member2,
                 sample_wired_device,
                 sample_wireless_device)
         yield c
 
 
-def test_device_list(api_client):
-    r = api_client.get(base_url + '/device/')
+def test_device_filter_all_devices(api_client):
+    r = api_client.get('{}/device/'.format(base_url))
     assert r.status_code == 200
+
     response = json.loads(r.data)
     assert len(response) == 2
+
+
+@pytest.mark.parametrize('user,expected', [
+    ('reignier', 1),
+    ('dubois_j', 1),
+    ('gates_bi', 0),  # Non existant user
+    ('dubois', 0),    # Exact match
+])
+def test_device_filter_wired_by_username(
+        api_client, user, expected):
+    r = api_client.get('{}/device/?username={}'.format(
+        base_url,
+        user
+    ))
+    assert r.status_code == 200
+
+    response = json.loads(r.data)
+    assert len(response) == expected
+
+
+@pytest.mark.parametrize('terms,expected', [
+    ('96:24:F6:D0:48:A7', 1),   # Should find sample wired device
+    ('96:', 1),
+    ('e91f', 1),
+    ('157.159', 1),
+    ('80:65:F3:FC:44:A9', 1),  # Should find sample wireless device
+    ('F3:FC', 1),
+    (':', 2),                  # Should find everything
+    ('00:', 0),                # Should find nothing
+])
+def test_device_filter_wired_by_terms(
+        api_client, sample_wired_device, terms, expected):
+    r = api_client.get('{}/device/?terms={}'.format(
+        base_url,
+        terms,
+    ))
+    assert r.status_code == 200
+
+    response = json.loads(r.data)
+    assert len(response) == expected
 
 
 def test_device_put_create_wireless(api_client):
@@ -260,11 +318,3 @@ def test_device_delete_unexistant(api_client):
     mac = '00:00:00:00:00:00'
     r = api_client.delete('{}/device/{}'.format(base_url, mac))
     assert r.status_code == 404
-
-
-def test_device_filter(api_client, sample_wired_device):
-    r = api_client.get(
-        base_url+'/device/?username='+sample_wired_device.adherent.login)
-    assert r.status_code == 200
-    response = json.loads(r.data)
-    assert len(response) == 1

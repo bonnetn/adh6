@@ -1,9 +1,25 @@
 from connexion import NoContent
-from itertools import islice
-from store import get_db
 from model.database import Database as db
 from model import models
 import sqlalchemy
+
+
+def wired_to_dict(d):
+    return {
+        'connectionType': 'wired',
+        'ipAddress': d.ip,
+        'ipv6Address': d.ipv6,
+        'username': d.adherent.login,
+        'mac': d.mac,
+    }
+
+
+def wireless_to_dict(d):
+    return {
+        'connectionType': 'wireless',
+        'mac': d.mac,
+        'username': d.adherent.login,
+    }
 
 
 def is_wired(macAddress):
@@ -86,25 +102,43 @@ def delete_wired_device(macAddress):
     s.commit()
 
 
-def findInDevice(user, terms):
-    txt = ""
-    txt += user["mac"] + " "
-    txt += user["ipAddress"] + " "
-    txt += user["ipv6Address"] + " "
-    return txt.lower().find(terms.lower()) != -1
-
-
 def filterDevice(limit=100, username=None, terms=None):
-    DEVICES = get_db()["DEVICES"]
-    all_devices = list(DEVICES.values())
+    s = db.get_db().get_session()
+    results = []
 
-    if username is not None:
-        all_devices = filter(lambda x: x["username"] == username, all_devices)
+    if username:
+        try:
+            target = s.query(models.Adherent)
+            target = target.filter(models.Adherent.login == username)
+            target = target.one()
+        except sqlalchemy.orm.exc.NoResultFound:
+            return [], 200
 
-    if terms is not None:
-        all_devices = filter(lambda x: findInDevice(x, terms), all_devices)
+    q = s.query(models.Portable)
+    if username:
+        q = q.filter(models.Portable.adherent == target)
+    if terms:
+        q = q.filter(
+            (models.Portable.mac.contains(terms)) |
+            False  # TODO: compare on username ?
+        )
+    r = q.all()
+    results += list(map(wireless_to_dict, r))
 
-    return list(islice(all_devices, limit))
+    q = s.query(models.Ordinateur)
+    if username:
+        q = q.filter(models.Ordinateur.adherent == target)
+    if terms:
+        q = q.filter(
+            (models.Ordinateur.mac.contains(terms)) |
+            (models.Ordinateur.ip.contains(terms)) |
+            (models.Ordinateur.ipv6.contains(terms))
+            # TODO: compare on username ?
+        )
+    r = q.all()
+    results += list(map(wired_to_dict, r))
+
+    return results, 200
 
 
 def putDevice(macAddress, body):
