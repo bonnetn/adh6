@@ -136,7 +136,7 @@ def test_device_filter_wired_by_username(
     (':', 2),                  # Should find everything
     ('00:', 0),                # Should find nothing
 ])
-def test_device_filter_wired_by_terms(
+def test_device_filter_by_terms(
         api_client, sample_wired_device, terms, expected):
     r = api_client.get('{}/device/?terms={}'.format(
         base_url,
