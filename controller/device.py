@@ -40,10 +40,10 @@ def is_wireless(macAddress):
     return session.query(queryWireless.exists()).scalar()
 
 
-def get_adherent(body):
+def get_adherent(username):
     s = db.get_db().get_session()
     q = s.query(models.Adherent)
-    q = q.filter(models.Adherent.login == body['username'])
+    q = q.filter(models.Adherent.login == username)
     return q.one()
 
 
@@ -51,7 +51,7 @@ def create_wireless_device(body):
     s = db.get_db().get_session()
     dev = models.Portable(
         mac=body['mac'],
-        adherent=get_adherent(body),
+        adherent=get_adherent(body['username']),
     )
     s.add(dev)
     s.commit()
@@ -61,7 +61,7 @@ def create_wired_device(body):
     s = db.get_db().get_session()
     dev = models.Ordinateur(
         mac=body['mac'],
-        adherent=get_adherent(body),
+        adherent=get_adherent(body['username']),
     )
     s.add(dev)
     s.commit()
@@ -72,7 +72,7 @@ def update_wireless_device(macAddress, body):
     q = s.query(models.Portable).filter(models.Portable.mac == macAddress)
     dev = q.one()
     dev.mac = body['mac']
-    dev.adherent = get_adherent(body)
+    dev.adherent = get_adherent(body['username'])
     s.commit()
 
 
@@ -82,7 +82,7 @@ def update_wired_device(macAddress, body):
     dev = q.one()
 
     dev.mac = body['mac']
-    dev.adherent = get_adherent(body)
+    dev.adherent = get_adherent(body['username'])
     s.commit()
 
 
@@ -108,9 +108,7 @@ def filterDevice(limit=100, username=None, terms=None):
 
     if username:
         try:
-            target = s.query(models.Adherent)
-            target = target.filter(models.Adherent.login == username)
-            target = target.one()
+            target = get_adherent(username)
         except sqlalchemy.orm.exc.NoResultFound:
             return [], 200
 
