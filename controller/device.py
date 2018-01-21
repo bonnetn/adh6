@@ -153,7 +153,6 @@ def getDevice(macAddress):
         return {
             'username': r.adherent.login,
             'mac': r.mac,
-            'ipAddress': r.ip,
         }, 200
     elif is_wired(macAddress):
         q = s.query(models.Ordinateur)
