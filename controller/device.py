@@ -185,19 +185,12 @@ def getDevice(macAddress):
         q = s.query(models.Portable)
         q = q.filter(models.Portable.mac == macAddress)
         r = q.one()
-        return {
-            'username': r.adherent.login,
-            'mac': r.mac,
-        }, 200
+        return wireless_to_dict(r), 200
     elif is_wired(macAddress):
         q = s.query(models.Ordinateur)
         q = q.filter(models.Ordinateur.mac == macAddress)
         r = q.one()
-        return {
-            'username': r.adherent.login,
-            'mac': r.mac,
-            'ipAddress': r.ip,
-        }, 200
+        return wired_to_dict(r), 200
     else:
         return NoContent, 404
 
