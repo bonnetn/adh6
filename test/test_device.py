@@ -191,11 +191,11 @@ def test_device_put_create_wired(api_client):
 def test_device_put_create_invalid_mac_address(api_client, test_mac):
     ''' Create with invalid mac address '''
     dev = dict(TEST_WIRED_DEVICE)
-    dev['macAddress'] = test_mac
+    dev['mac'] = test_mac
     r = api_client.put('{}/device/{}'.format(base_url, dev['mac']),
                        data=json.dumps(dev),
                        content_type='application/json')
-    assert r.status_code == 400
+    assert r.status_code == 400 or r.status_code == 405
 
 
 def test_device_put_create_invalid_username(api_client):
