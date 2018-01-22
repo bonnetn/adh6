@@ -4,3 +4,4 @@ connexion>=1.0.31
 gevent>=1.1b1
 flask_cors>=3.0.3
 SQLAlchemy==1.2.0
+mysqlclient
