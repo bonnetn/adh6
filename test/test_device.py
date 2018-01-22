@@ -104,7 +104,7 @@ def test_device_filter_all_devices(api_client):
     r = api_client.get('{}/device/'.format(base_url))
     assert r.status_code == 200
 
-    response = json.loads(r.data)
+    response = json.loads(r.data.decode('utf-8'))
     assert len(response) == 2
 
 
@@ -122,7 +122,7 @@ def test_device_filter_wired_by_username(
     ))
     assert r.status_code == 200
 
-    response = json.loads(r.data)
+    response = json.loads(r.data.decode('utf-8'))
     assert len(response) == expected
 
 
@@ -144,7 +144,7 @@ def test_device_filter_by_terms(
     ))
     assert r.status_code == 200
 
-    response = json.loads(r.data)
+    response = json.loads(r.data.decode('utf-8'))
     assert len(response) == expected
 
 
@@ -165,7 +165,7 @@ def test_device_filter_hit_limit(api_client, sample_member):
     r = api_client.get('{}/device/?limit={}'.format(base_url, LIMIT))
     assert r.status_code == 200
 
-    response = json.loads(r.data)
+    response = json.loads(r.data.decode('utf-8'))
     assert len(response) == LIMIT
 
 
@@ -303,14 +303,14 @@ def test_device_get_valid_wired(api_client, sample_wired_device):
     mac = sample_wired_device.mac
     r = api_client.get('{}/device/{}'.format(base_url, mac))
     assert r.status_code == 200
-    assert json.loads(r.data)
+    assert json.loads(r.data.decode('utf-8'))
 
 
 def test_device_get_valid_wireless(api_client, sample_wireless_device):
     mac = sample_wireless_device.mac
     r = api_client.get('{}/device/{}'.format(base_url, mac))
     assert r.status_code == 200
-    assert json.loads(r.data)
+    assert json.loads(r.data.decode('utf-8'))
 
 
 def test_device_delete_wired(api_client, sample_wired_device):

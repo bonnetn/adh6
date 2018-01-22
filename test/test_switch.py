@@ -59,19 +59,19 @@ def test_switch_insert_valid(api_client):
     # Make sure the data is now fetchable
     r = api_client.get(r.headers["Location"])
     assert r.status_code == 200, "Couldn't fetch the newly created switch"
-    assert json.loads(r.data)
+    assert json.loads(r.data.decode('utf-8'))
 
 
 def test_switch_get_all(api_client):
     r = api_client.get("{}/switch/".format(base_url))
     assert r.status_code == 200
-    assert json.loads(r.data)
+    assert json.loads(r.data.decode('utf-8'))
 
 
 def test_switch_get_existant_switch(api_client):
     r = api_client.get("{}/switch/{}".format(base_url, 1))
     assert r.status_code == 200
-    assert json.loads(r.data)
+    assert json.loads(r.data.decode('utf-8'))
 
 
 def test_switch_get_non_existant_switch(api_client):
@@ -107,7 +107,8 @@ def test_switch_update_existant_switch(api_client):
 
     r = api_client.get("{}/switch/{}".format(base_url, 1))
     assert r.status_code == 200
-    assert json.loads(r.data) == sample_switch, "The switch wasn't modified"
+    tbl = json.loads(r.data.decode('utf-8'))
+    assert tbl == sample_switch, "The switch wasn't modified"
 
 
 def test_switch_update_non_existant_switch(api_client):
