@@ -4,6 +4,7 @@ import sqlalchemy.orm.exc
 from model.database import Database as db
 from model.models import Switch
 import logging
+from controller import checks
 
 
 def toDict(s):
@@ -50,6 +51,8 @@ def filterSwitch(limit=100, terms=None):
 
 
 def createSwitch(body):
+    if not checks.isIPv4(body['ip']):
+        return NoContent, 400
     try:
         switch = fromDict(body)
         session = db.get_db().get_session()
@@ -83,7 +86,8 @@ def getSwitch(switchID):
 
 
 def updateSwitch(switchID, body):
-
+    if not checks.isIPv4(body['ip']):
+        return NoContent, 400
     try:
         session = db.get_db().get_session()
 
