@@ -2,6 +2,7 @@ from connexion import NoContent
 from model.database import Database as db
 from model import models
 import sqlalchemy
+from controller import checks
 
 
 def wired_to_dict(d):
@@ -145,6 +146,8 @@ def filterDevice(limit=100, username=None, terms=None):
 
 
 def putDevice(macAddress, body):
+    if not checks.isMac(macAddress) or not checks.isMac(body['mac']):
+        return NoContent, 400
     try:
         wired = is_wired(macAddress)
         wireless = is_wireless(macAddress)
