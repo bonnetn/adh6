@@ -1,19 +1,14 @@
-from string import hexdigits
 from datetime import datetime
 from ipaddress import IPv4Address, IPv6Address, AddressValueError
+import re
 
-def isMac ( macAddress ):
+MAC_REGEX = re.compile('^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$')
+
+
+def isMac(macAddress):
     """ Allowed MAC address format: DE:AD:BE:EF:01:23 """
-    splittedMac = macAddress.split(':')
-    if len(splittedMac) != 6:
-        return False
-    for byte in splittedMac:
-        if len(byte) != 2:
-            return False
-    for c in macAddress:
-        if c not in hexdigits+':':
-            return False
-    return True
+    macAddress = str(macAddress).upper()
+    return bool(MAC_REGEX.match(macAddress))
 
 def checkDate( dateString ):
     """ Allowed date format: YYYY-MM-DD """
