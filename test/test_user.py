@@ -151,3 +151,14 @@ def test_user_filter_terms_test_upper_case(api_client):
 
     response = json.loads(r.data.decode('utf-8'))
     assert len(response) == 1
+
+
+def test_user_get_existant(api_client):
+    r = api_client.get('{}/user/{}'.format(base_url, "dubois_j"))
+    assert r.status_code == 200
+    assert json.loads(r.data.decode('utf-8'))
+
+
+def test_user_get_nonexistant(api_client):
+    r = api_client.get('{}/user/{}'.format(base_url, "bond_jam"))
+    assert r.status_code == 404

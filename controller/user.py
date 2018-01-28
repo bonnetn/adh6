@@ -44,7 +44,13 @@ def filterUser(limit=100, terms=None, roomNumber=None):
 
 
 def getUser(username):
-    return ''
+    s = db.get_db().get_session()
+    q = s.query(models.Adherent)
+    q = q.filter(models.Adherent.login == username)
+    try:
+        return user_to_dict(q.one())
+    except sqlalchemy.orm.exc.NoResultFound:
+        return [], 404
 
 
 def deleteUser(username):
