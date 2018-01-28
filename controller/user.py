@@ -54,7 +54,14 @@ def getUser(username):
 
 
 def deleteUser(username):
-    return NoContent, 204
+    s = db.get_db().get_session()
+    q = s.query(models.Adherent)
+    q = q.filter(models.Adherent.login == username)
+    try:
+        s.delete(q.one())
+        return NoContent, 204
+    except sqlalchemy.orm.exc.NoResultFound:
+        return NoContent, 404
 
 
 def putUser(username, body):

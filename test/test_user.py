@@ -162,3 +162,18 @@ def test_user_get_existant(api_client):
 def test_user_get_nonexistant(api_client):
     r = api_client.get('{}/user/{}'.format(base_url, "bond_jam"))
     assert r.status_code == 404
+
+
+def test_user_delete_existant(api_client):
+    r = api_client.delete('{}/user/{}'.format(base_url, "dubois_j"))
+    assert r.status_code == 204
+
+    s = db.get_db().get_session()
+    q = s.query(Adherent)
+    q = q.filter(Adherent.login == "dubois_j")
+    assert not s.query(q.exists()).scalar()
+
+
+def test_user_delete_non_existant(api_client):
+    r = api_client.delete('{}/user/{}'.format(base_url, "azerty"))
+    assert r.status_code == 404
