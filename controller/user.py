@@ -1,6 +1,7 @@
 from connexion import NoContent
 from model.database import Database as db
 from model import models
+import sqlalchemy
 
 
 def user_to_dict(adh):
@@ -12,7 +13,7 @@ def user_to_dict(adh):
         'departureDate': adh.date_de_depart,
         'comment': adh.commentaires,
         'associationMode': adh.mode_association,
-        'roomNumber': adh.chambre_id
+        'roomNumber': adh.chambre.numero
     }
 
 
@@ -20,13 +21,23 @@ def filterUser(limit=100, terms=None, roomNumber=None):
     s = db.get_db().get_session()
 
     q = s.query(models.Adherent)
-    # if username:
-    #     q = q.filter(models.Portable.adherent == target)
-    # if terms:
-    #     q = q.filter(
-    #         (models.Portable.mac.contains(terms)) |
-    #         False  # TODO: compare on username ?
-    #     )
+    if roomNumber:
+        try:
+            q2 = s.query(models.Chambre)
+            q2 = q2.filter(models.Chambre.numero == roomNumber)
+            result = q2.one()
+        except sqlalchemy.orm.exc.NoResultFound:
+            return [], 200
+
+        q = q.filter(models.Adherent.chambre == result)
+    if terms:
+        q = q.filter(
+            (models.Adherent.nom.contains(terms)) |
+            (models.Adherent.prenom.contains(terms)) |
+            (models.Adherent.mail.contains(terms)) |
+            (models.Adherent.login.contains(terms)) |
+            (models.Adherent.commentaires.contains(terms))
+        )
     q = q.limit(limit)
     r = q.all()
     return list(map(user_to_dict, r)), 200
