@@ -6,6 +6,20 @@ from sqlalchemy.orm import relationship
 from model.database import Base
 
 
+class Chambre(Base):
+    __tablename__ = 'chambres'
+
+    id = Column(Integer, primary_key=True)
+    numero = Column(Integer)
+    description = Column(String(255))
+    telephone = Column(String(255))
+    vlan_old = Column(Integer)
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
+    dernier_adherent = Column(Integer)
+    vlan_id = Column(Integer, index=True)
+
+
 class Adherent(Base):
     __tablename__ = 'adherents'
 
@@ -15,7 +29,8 @@ class Adherent(Base):
     mail = Column(String(255))
     login = Column(String(255))
     password = Column(String(255))
-    chambre_id = Column(Integer, index=True)
+    chambre_id = Column(Integer, ForeignKey(Chambre.id), nullable=False)
+    chambre = relationship(Chambre)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
     date_de_depart = Column(Date)
@@ -36,20 +51,6 @@ class Caisse(Base):
     date = Column(DateTime)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
-
-
-class Chambre(Base):
-    __tablename__ = 'chambres'
-
-    id = Column(Integer, primary_key=True)
-    numero = Column(Integer)
-    description = Column(String(255))
-    telephone = Column(String(255))
-    vlan_old = Column(Integer)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
-    dernier_adherent = Column(Integer)
-    vlan_id = Column(Integer, index=True)
 
 
 class Compte(Base):
