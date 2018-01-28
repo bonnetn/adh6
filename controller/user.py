@@ -1,69 +1,48 @@
 from connexion import NoContent
-from datetime import datetime
-from itertools import islice
-from store import get_db
+from model.database import Database as db
+from model import models
 
 
-def findInUser(user, terms):
-    s = ""
-    s += user["firstName"] + " "
-    s += user["lastName"] + " "
-    s += user["username"] + " "
-    s += str(user["roomNumber"])
-    return s.lower().find(terms.lower()) != -1
+def user_to_dict(adh):
+    return {
+        'email': adh.mail,
+        'firstName': adh.prenom,
+        'lastName': adh.nom,
+        'username': adh.login,
+        'departureDate': adh.date_de_depart,
+        'comment': adh.commentaires,
+        'associationMode': adh.mode_association,
+        'roomNumber': adh.chambre_id
+    }
 
 
 def filterUser(limit=100, terms=None, roomNumber=None):
-    USERS = get_db()['USERS']
-    all_users = list(USERS.values())
+    s = db.get_db().get_session()
 
-    if terms != None:
-        all_users = filter(lambda x: findInUser(x, terms), all_users)
-
-    if roomNumber != None:
-        all_users = filter(lambda x: x["roomNumber"] == roomNumber, all_users)
-
-    return list(islice(all_users, limit))
+    q = s.query(models.Adherent)
+    # if username:
+    #     q = q.filter(models.Portable.adherent == target)
+    # if terms:
+    #     q = q.filter(
+    #         (models.Portable.mac.contains(terms)) |
+    #         False  # TODO: compare on username ?
+    #     )
+    q = q.limit(limit)
+    r = q.all()
+    return list(map(user_to_dict, r)), 200
 
 
 def getUser(username):
-    USERS = get_db()['USERS']
-    if username not in USERS:
-        return "User not found", 404
-    return USERS[username]
+    return ''
 
 
 def deleteUser(username):
-    USERS = get_db()['USERS']
-    if username in USERS:
-        del USERS[username]
-        return NoContent, 204
-    else:
-        return 'Not found', 404
+    return NoContent, 204
 
 
 def putUser(username, body):
-    USERS = get_db()['USERS']
-    if username in USERS:
-        retVal = ("Updated", 204)
-    else:
-        retVal = ("Created", 201)
-    USERS[username] = body["user"]
-    return retVal
+    return 'Created', 201
 
 
 def addMembership(username, body):
-    USERS = get_db()['USERS']
-    if username not in USERS:
-        return "Not found", 404
-
-    if "start" not in body:
-        start = datetime.now().isoformat()
-    else:
-        start = body["start"]
-
-    USERS[username]["departureDate"] = start
-
-    # TODO: return the right header
-    # TODO: return 201 instead of 200
-    return NoContent, 200, {"Location": "test"}
+    return NoContent, 200, {'Location': 'test'}
