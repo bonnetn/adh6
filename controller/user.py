@@ -50,7 +50,7 @@ def getUser(username):
     try:
         return user_to_dict(q.one())
     except sqlalchemy.orm.exc.NoResultFound:
-        return [], 404
+        return NoContent, 404
 
 
 def deleteUser(username):
