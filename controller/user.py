@@ -7,7 +7,7 @@ import sqlalchemy
 
 
 def user_to_dict(adh):
-    return {
+    d = {
         'email': adh.mail,
         'firstName': adh.prenom,
         'lastName': adh.nom,
@@ -15,8 +15,10 @@ def user_to_dict(adh):
         'departureDate': adh.date_de_depart,
         'comment': adh.commentaires,
         'associationMode': adh.mode_association,
-        'roomNumber': adh.chambre.numero
     }
+    if adh.chambre:
+        d['roomNumber'] = adh.chambre.numero
+    return d
 
 
 def dict_to_user(d):

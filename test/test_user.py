@@ -47,19 +47,38 @@ def sample_member2(sample_room2):
     )
 
 
-def prep_db(session, sample_member, sample_member2, sample_room, sample_room2):
-    session.add_all([sample_room, sample_room2, sample_member, sample_member2])
+@pytest.fixture
+def sample_member3(sample_room2):
+    """ Membre sans chambre """
+    yield Adherent(
+        nom='Robert',
+        prenom='Dupond',
+        mail='robi@hotmail.fr',
+        login='dupond_r',
+        commentaires='a',
+        password='',
+    )
+
+
+def prep_db(session,
+            sample_member, sample_member2, sample_member3,
+            sample_room, sample_room2):
+    session.add_all([
+        sample_room, sample_room2,
+        sample_member, sample_member2, sample_member3])
     session.commit()
 
 
 @pytest.fixture
-def api_client(sample_member, sample_member2, sample_room, sample_room2):
+def api_client(sample_member, sample_member2, sample_member3,
+               sample_room, sample_room2):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
         prep_db(db.get_db().get_session(),
                 sample_member,
                 sample_member2,
+                sample_member3,
                 sample_room,
                 sample_room2)
         yield c
@@ -70,7 +89,7 @@ def test_user_filter_all(api_client):
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
-    assert len(response) == 2
+    assert len(response) == 3
 
 
 def test_user_filter_all_with_limit(api_client):
