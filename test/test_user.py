@@ -179,11 +179,67 @@ def test_user_delete_non_existant(api_client):
     assert r.status_code == 404
 
 
-def test_user_put_user(api_client):
-    api_client.post('{}/user/{}'.format(base_url, "azerty"))
-    assert False, "Not implemented"
+def test_user_put_user_create(api_client):
+    body = {
+      "user": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "roomNumber": 5012,
+        "comment": "comment",
+        "departureDate": "2000-01-23T04:56:07.000+00:00",
+        "associationMode": "2000-01-23T04:56:07.000+00:00",
+        "email": "john.doe@gmail.com",
+        "username": "doe_john"
+      },
+      "password": "toto123"
+    }
+    res = api_client.put(
+        '{}/user/{}'.format(base_url, body["user"]["username"]),
+        data=json.dumps(body),
+        content_type='application/json')
+    assert res.status_code == 201
 
 
-def test_user_post_add_membership(api_client):
-    api_client.post('{}/user/{}/membership'.format(base_url, "azerty"))
-    assert False, "Not implemented"
+def test_user_put_user_update(api_client):
+    body = {
+      "user": {
+        "firstName": "Jean-Louis",
+        "lastName": "Dubois",
+        "roomNumber": 5012,
+        "comment": "comment",
+        "departureDate": "2000-01-23T04:56:07.000+00:00",
+        "associationMode": "2000-01-23T04:56:07.000+00:00",
+        "email": "john.doe@gmail.com",
+        "username": "dubois_j"
+      },
+      "password": "toto123"
+    }
+    res = api_client.put(
+        '{}/user/{}'.format(base_url, body["user"]["username"]),
+        data=json.dumps(body),
+        content_type='application/json')
+    assert res.status_code == 204
+
+
+def test_user_post_add_membership_not_found(api_client):
+    body = {
+      "duration": 365,
+      "start": "2000-01-23T04:56:07.000+00:00"
+    }
+    result = api_client.post(
+        '{}/user/{}/membership'.format(base_url, "charlie"),
+        data=json.dumps(body),
+        content_type='application/json')
+    assert result.status_code == 404
+
+
+def test_user_post_add_membership_ok(api_client):
+    body = {
+      "duration": 365,
+      "start": "2000-01-23T04:56:07.000+00:00"
+    }
+    result = api_client.post(
+        '{}/user/{}/membership'.format(base_url, "dubois_j"),
+        data=json.dumps(body),
+        content_type='application/json')
+    assert result.status_code == 200
