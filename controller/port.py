@@ -16,6 +16,14 @@ def toDict(port):
     }
 
 
+def fromDict(d):
+    return Port(
+        chambre_id=d["roomNumber"],
+        switch_id=d["switchID"],
+        numero=d["portNumber"]
+    )
+
+
 def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
 
     q = db.get_db().get_session().query(Port)
@@ -37,7 +45,14 @@ def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
 
 
 def createPort(switchID, body):
-    return NoContent, 500
+    port = fromDict(body)
+    session = db.get_db().get_session()
+    session.add(port)
+    session.commit()
+    headers = {
+        'Location': '/switch/{}/port/{}'.format(port.switch_id, port.id)
+    }
+    return NoContent, 200, headers
 
 
 def getPort(switchID, portID):
