@@ -5,3 +5,4 @@ gevent
 flask_cors
 SQLAlchemy
 mysqlclient
+pip
