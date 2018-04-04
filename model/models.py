@@ -188,3 +188,13 @@ class Vlan(Base):
     adressesv6 = Column(String(255))
     created_at = Column(DateTime, nullable=False)
     updated_at = Column(DateTime, nullable=False)
+
+
+class Adhesion(Base):
+    __tablename__ = 'adhesion'
+
+    id = Column(Integer, primary_key=True)
+    adherent_id = Column(Integer, ForeignKey(Adherent.id), nullable=False)
+    adherent = relationship(Adherent)
+    depart = Column(DateTime, nullable=False)
+    fin = Column(DateTime, nullable=False)

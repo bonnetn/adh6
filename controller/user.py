@@ -2,6 +2,7 @@ from connexion import NoContent
 from model.database import Database as db
 from model import models
 from dateutil import parser
+import datetime
 import sqlalchemy
 
 
@@ -123,4 +124,24 @@ def putUser(username, body):
 
 
 def addMembership(username, body):
+    s = db.get_db().get_session()
+
+    try:
+        q = s.query(models.Adherent)
+        q = q.filter(models.Adherent.login == username)
+        a = q.one()
+    except sqlalchemy.orm.exc.NoResultFound:
+        return "Not found", 404
+
+    start = parser.parse(body["start"])
+    duration = body["duration"]
+    end = start + datetime.timedelta(days=duration)
+
+    s.add(models.Adhesion(
+        adherent=a,
+        depart=start,
+        fin=end
+    ))
+
+    s.commit()
     return NoContent, 200, {'Location': 'test'}
