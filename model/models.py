@@ -141,19 +141,6 @@ class Portable(Base):
     updated_at = Column(DateTime)
 
 
-class Port(Base):
-    __tablename__ = 'ports'
-
-    id = Column(Integer, primary_key=True)
-    rcom = Column(Integer)
-    numero = Column(String(255))
-    oid = Column(String(255))
-    switch_id = Column(Integer, index=True)
-    chambre_id = Column(Integer, index=True)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
-
-
 class Switch(Base):
     __tablename__ = 'switches'
 
@@ -161,6 +148,21 @@ class Switch(Base):
     description = Column(String(255))
     ip = Column(String(255))
     communaute = Column(String(255))
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
+
+
+class Port(Base):
+    __tablename__ = 'ports'
+
+    id = Column(Integer, primary_key=True)
+    rcom = Column(Integer)
+    numero = Column(String(255))
+    oid = Column(String(255))
+    switch_id = Column(Integer, ForeignKey(Switch.id), nullable=False)
+    switch = relationship(Switch)
+    chambre_id = Column(Integer, ForeignKey(Chambre.id), nullable=False)
+    chambre = relationship(Chambre)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
 
