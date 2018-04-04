@@ -2,6 +2,7 @@ from connexion import NoContent
 from model.database import Database as db
 from sqlalchemy import or_
 from model.models import Port
+import sqlalchemy.orm.exc
 
 
 def toDict(port):
@@ -56,7 +57,16 @@ def createPort(switchID, body):
 
 
 def getPort(switchID, portID):
-    return NoContent, 500
+    q = db.get_db().get_session().query(Port)
+    q = q.filter(Port.id == portID)
+    try:
+        result = q.one()
+    except sqlalchemy.orm.exc.NoResultFound:
+        return NoContent, 404
+
+    result = toDict(result)
+    result = list(result)
+    return result, 200
 
 
 def updatePort(switchID, portID, body):
