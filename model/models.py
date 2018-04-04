@@ -29,7 +29,7 @@ class Adherent(Base):
     mail = Column(String(255))
     login = Column(String(255))
     password = Column(String(255))
-    chambre_id = Column(Integer, ForeignKey(Chambre.id), nullable=False)
+    chambre_id = Column(Integer, ForeignKey(Chambre.id))
     chambre = relationship(Chambre)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
