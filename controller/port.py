@@ -70,7 +70,20 @@ def getPort(switchID, portID):
 
 
 def updatePort(switchID, portID, body):
-    return NoContent, 500
+    s = db.get_db().get_session()
+    q = s.query(Port)
+    q = q.filter(Port.id == portID)
+    try:
+        port = q.one()
+    except sqlalchemy.orm.exc.NoResultFound:
+        return NoContent, 404
+
+    port.chambre_id = body["roomNumber"]
+    port.switch_id = body["switchID"]
+    port.numero = body["portNumber"]
+    s.commit()
+
+    return NoContent, 204
 
 
 def deletePort(switchID, portID):

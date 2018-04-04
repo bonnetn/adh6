@@ -187,7 +187,7 @@ def test_port_put_update_port(api_client, sample_switch1, sample_port1):
         data=json.dumps(body),
         content_type='application/json')
     assert r.status_code == 204
-    assert sample_port1.portNumber == portNumber
+    assert sample_port1.numero == portNumber
 
 
 def test_port_put_update_non_existant_port(api_client,
