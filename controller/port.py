@@ -87,4 +87,14 @@ def updatePort(switchID, portID, body):
 
 
 def deletePort(switchID, portID):
-    return NoContent, 500
+    try:
+        session = db.get_db().get_session()
+        port = session.query(Port).filter(Port.id == portID).one()
+        session.delete(port)
+
+        session.commit()
+
+        return NoContent, 204
+
+    except sqlalchemy.orm.exc.NoResultFound:
+        return NoContent, 404
