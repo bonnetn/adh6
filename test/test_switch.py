@@ -79,6 +79,32 @@ def test_switch_get_non_existant_switch(api_client):
     assert r.status_code == 404
 
 
+def test_switch_filter_by_term_ip(api_client):
+    terms = "102.2"
+    r = api_client.get("{}/switch/?terms={}".format(base_url, terms))
+    assert r.status_code == 200
+    result = json.loads(r.data.decode('utf-8'))
+    assert result
+    assert len(result) == 1
+
+
+def test_switch_filter_by_term_desc(api_client):
+    terms = "Switch"
+    r = api_client.get("{}/switch/?terms={}".format(base_url, terms))
+    assert r.status_code == 200
+    result = json.loads(r.data.decode('utf-8'))
+    assert result
+    assert len(result) == 1
+
+
+def test_switch_filter_by_term_nonexistant(api_client):
+    terms = "HEYO"
+    r = api_client.get("{}/switch/?terms={}".format(base_url, terms))
+    assert r.status_code == 200
+    result = json.loads(r.data.decode('utf-8'))
+    assert not result
+
+
 @pytest.mark.parametrize("test_ip", INVALID_IP)
 def test_switch_update_switch_invalid_ip(api_client, test_ip):
     sample_switch = {
