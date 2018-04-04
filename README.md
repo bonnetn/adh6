@@ -4,6 +4,10 @@
 # To run the tests
 Simply run ```pytest```.
 
+## With code coverage report generation:
+> pytest --cov=controller --cov-report html
+
+
 
 # On committing...
 Your commit must pass all the tests
