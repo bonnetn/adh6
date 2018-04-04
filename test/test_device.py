@@ -172,8 +172,8 @@ def test_device_filter_hit_limit(api_client, sample_member):
 def test_device_put_create_wireless(api_client):
     ''' Can create a valid wireless device ? '''
     r = api_client.put('{}/device/{}'.format(base_url,
-                                             TEST_WIRED_DEVICE['mac']),
-                       data=json.dumps(TEST_WIRED_DEVICE),
+                                             TEST_WIRELESS_DEVICE['mac']),
+                       data=json.dumps(TEST_WIRELESS_DEVICE),
                        content_type='application/json')
     assert r.status_code == 201
 
@@ -230,7 +230,7 @@ def test_device_put_update_wired_to_wireless(api_client, sample_wired_device):
     ''' Can update a valid wired device and cast it into a wireless d ? '''
     r = api_client.put(
         '{}/device/{}'.format(base_url, sample_wired_device.mac),
-        data=json.dumps(TEST_WIRED_DEVICE),
+        data=json.dumps(TEST_WIRELESS_DEVICE),
         content_type='application/json')
     assert r.status_code == 204
 
