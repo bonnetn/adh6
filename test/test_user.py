@@ -177,3 +177,13 @@ def test_user_delete_existant(api_client):
 def test_user_delete_non_existant(api_client):
     r = api_client.delete('{}/user/{}'.format(base_url, "azerty"))
     assert r.status_code == 404
+
+
+def test_user_put_user(api_client):
+    api_client.post('{}/user/{}'.format(base_url, "azerty"))
+    assert False, "Not implemented"
+
+
+def test_user_post_add_membership(api_client):
+    api_client.post('{}/user/{}/membership'.format(base_url, "azerty"))
+    assert False, "Not implemented"
