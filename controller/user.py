@@ -1,6 +1,7 @@
 from connexion import NoContent
 from model.database import Database as db
 from model import models
+from dateutil import parser
 import sqlalchemy
 
 
@@ -15,6 +16,22 @@ def user_to_dict(adh):
         'associationMode': adh.mode_association,
         'roomNumber': adh.chambre.numero
     }
+
+
+def dict_to_user(d):
+    adh = models.Adherent(
+        nom=d['lastName'],
+        prenom=d['firstName'],
+        mail=d['email'],
+        login=d['username'],
+    )
+    if "departureDate" in d:
+        adh.date_de_depart = parser.parse(d["departureDate"])
+    if "associationMode" in d:
+        adh.mode_association = parser.parse(d["associationMode"])
+    if "comment" in d:
+        adh.commentaires = d["comment"]
+    return adh
 
 
 def filterUser(limit=100, terms=None, roomNumber=None):
@@ -65,8 +82,44 @@ def deleteUser(username):
         return NoContent, 404
 
 
+def adherentExists(username):
+    """ Returns true if the user exists """
+    session = db.get_db().get_session()
+    q = session.query(models.Adherent)
+    q = q.filter(models.Adherent.login == username)
+
+    return session.query(q.exists()).scalar()
+
+
 def putUser(username, body):
-    return 'Created', 201
+    if adherentExists(username):
+        s = db.get_db().get_session()
+        q = s.query(models.Adherent)
+        q = q.filter(models.Adherent.login == username)
+
+        userDict = body["user"]
+
+        a = q.one()
+        a.nom = userDict['lastName']
+        a.prenom = userDict['firstName']
+        a.mail = userDict['email']
+        a.login = userDict['username']
+
+        if "departureDate" in userDict:
+            a.date_de_depart = parser.parse(userDict["departureDate"])
+        if "associationMode" in userDict:
+            a.mode_association = parser.parse(userDict["associationMode"])
+        if "comment" in userDict:
+            a.commentaires = userDict["comment"]
+
+        s.commit()
+        return 'Updated', 204
+    else:
+        s = db.get_db().get_session()
+        a = dict_to_user(body["user"])
+        s.add(a)
+        s.commit()
+        return 'Created', 201
 
 
 def addMembership(username, body):
