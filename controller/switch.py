@@ -3,7 +3,6 @@ from sqlalchemy import or_
 import sqlalchemy.orm.exc
 from model.database import Database as db
 from model.models import Switch
-import logging
 from controller import checks
 
 
@@ -26,45 +25,33 @@ def fromDict(body):
 
 
 def filterSwitch(limit=100, terms=None):
-    try:
-        result = db.get_db().get_session().query(Switch)
-        # Filter by terms
-        if terms:
-            result = result.filter(or_(
-                Switch.description.contains(terms),
-                Switch.ip.contains(terms),
-                Switch.communaute.contains(terms),
-            ))
-        result = result.limit(limit)  # Limit the number of matches
-        result = result.all()
+    result = db.get_db().get_session().query(Switch)
+    # Filter by terms
+    if terms:
+        result = result.filter(or_(
+            Switch.description.contains(terms),
+            Switch.ip.contains(terms),
+            Switch.communaute.contains(terms),
+        ))
+    result = result.limit(limit)  # Limit the number of matches
+    result = result.all()
 
-        # Convert the results into data suited for the API
-        result = map(lambda x: {'switchID': x.id, 'switch': toDict(x)}, result)
-        result = list(result)  # Cast generator as list
+    # Convert the results into data suited for the API
+    result = map(lambda x: {'switchID': x.id, 'switch': toDict(x)}, result)
+    result = list(result)  # Cast generator as list
 
-        return result
-
-    except Exception as e:
-        logging.error('Could not filterSwitch(...). Exception: {}'
-                      .format(e))
-        return NoContent, 500
+    return result
 
 
 def createSwitch(body):
     if not checks.isIPv4(body['ip']):
         return NoContent, 400
-    try:
-        switch = fromDict(body)
-        session = db.get_db().get_session()
-        session.add(switch)
-        session.commit()
+    switch = fromDict(body)
+    session = db.get_db().get_session()
+    session.add(switch)
+    session.commit()
 
-        return NoContent, 201, {'Location': '/switch/{}'.format(switch.id)}
-
-    except Exception as e:
-        logging.error('Could not createSwitch(...). Exception: {}'
-                      .format(e))
-        return NoContent, 500
+    return NoContent, 201, {'Location': '/switch/{}'.format(switch.id)}
 
 
 def getSwitch(switchID):
@@ -79,35 +66,25 @@ def getSwitch(switchID):
     except sqlalchemy.orm.exc.NoResultFound:
         return NoContent, 404
 
-    except Exception as e:
-        logging.error('Could not getSwitch({}). Exception: {}'
-                      .format(switchID, e))
-        return NoContent, 500
-
 
 def updateSwitch(switchID, body):
     if not checks.isIPv4(body['ip']):
         return NoContent, 400
-    try:
-        session = db.get_db().get_session()
 
-        # Don't update if the Switch does not exists
-        q = session.query(Switch).filter(Switch.id == switchID)
-        if not session.query(q.exists()).scalar():
-            return NoContent, 404
+    session = db.get_db().get_session()
 
-        switch = fromDict(body)
-        switch.id = switchID
-        session.merge(switch)
+    # Don't update if the Switch does not exists
+    q = session.query(Switch).filter(Switch.id == switchID)
+    if not session.query(q.exists()).scalar():
+        return NoContent, 404
 
-        session.commit()
+    switch = fromDict(body)
+    switch.id = switchID
+    session.merge(switch)
 
-        return NoContent, 204
+    session.commit()
 
-    except Exception as e:
-        logging.error('Could not updateSwitch({}). Exception: {}'
-                      .format(switchID, e))
-        return NoContent, 500
+    return NoContent, 204
 
 
 def deleteSwitch(switchID):
@@ -123,8 +100,3 @@ def deleteSwitch(switchID):
 
     except sqlalchemy.orm.exc.NoResultFound:
         return NoContent, 404
-
-    except Exception as e:
-        logging.error('Could not deleteSwitch({}). Exception: {}'
-                      .format(switchID, e))
-        return NoContent, 500
