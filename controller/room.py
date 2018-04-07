@@ -85,4 +85,12 @@ def getRoom(roomNumber):
 
 
 def deleteRoom(roomNumber):
-    return NoContent, 500
+    s = db.get_db().get_session()
+    q = s.query(Chambre)
+    q = q.filter(Chambre.numero == roomNumber)
+    try:
+        s.delete(q.one())
+        s.commit()
+        return NoContent, 204
+    except sqlalchemy.orm.exc.NoResultFound:
+        return NoContent, 404
