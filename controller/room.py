@@ -28,6 +28,9 @@ def filterRoom(limit=100, terms=None):
 
 
 def putRoom(roomNumber, body):
+    s = db.get_db().get_session()
+    q = s.query(Chambre)
+    q = q.filter(Chambre.numero == roomNumber)
     return NoContent, 500
 
 

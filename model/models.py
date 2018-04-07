@@ -28,7 +28,7 @@ class Chambre(Base):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
     dernier_adherent = Column(Integer)
-    vlan_id = Column(Integer, ForeignKey(Vlan.id), nullable=False)
+    vlan_id = Column(Integer, ForeignKey(Vlan.id))
     vlan = relationship(Vlan)
 
 
