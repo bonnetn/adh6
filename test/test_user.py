@@ -3,22 +3,33 @@ import pytest
 from model.database import Database as db
 from unit_test_settings import DATABASE as db_settings
 from test.resource import base_url
-from model.models import Adherent, Chambre
+from model.models import Adherent, Chambre, Vlan
 
 
 @pytest.fixture
-def sample_room():
-    yield Chambre(
-        numero=1234,
-        description='chambre 1'
+def sample_vlan():
+    yield Vlan(
+        numero=42,
+        adresses="192.168.42.1",
+        adressesv6="fe80::1",
     )
 
 
 @pytest.fixture
-def sample_room2():
+def sample_room(sample_vlan):
+    yield Chambre(
+        numero=1234,
+        description='chambre 1',
+        vlan=sample_vlan,
+    )
+
+
+@pytest.fixture
+def sample_room2(sample_vlan):
     yield Chambre(
         numero=1111,
-        description='chambre 2'
+        description='chambre 2',
+        vlan=sample_vlan,
     )
 
 
@@ -62,7 +73,7 @@ def sample_member3(sample_room2):
 
 def prep_db(session,
             sample_member, sample_member2, sample_member3,
-            sample_room, sample_room2):
+            sample_room, sample_room2, sample_vlan):
     session.add_all([
         sample_room, sample_room2,
         sample_member, sample_member2, sample_member3])
@@ -71,7 +82,7 @@ def prep_db(session,
 
 @pytest.fixture
 def api_client(sample_member, sample_member2, sample_member3,
-               sample_room, sample_room2):
+               sample_room, sample_room2, sample_vlan):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
@@ -80,7 +91,8 @@ def api_client(sample_member, sample_member2, sample_member3,
                 sample_member2,
                 sample_member3,
                 sample_room,
-                sample_room2)
+                sample_room2,
+                sample_vlan)
         yield c
 
 

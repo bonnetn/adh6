@@ -1,47 +1,39 @@
 from connexion import NoContent
-from itertools import islice
-from store import get_db
+from sqlalchemy import or_
+from model.database import Database as db
+from model.models import Chambre
 
 
-def findInRoom(room, terms):
-    txt = ""
-    txt += room["description"] + " "
-    txt += str(room["roomNumber"]) + " "
-    txt += str(room["phone"]) + " "
-
-    return txt.lower().find(terms.lower()) != -1
+def toDict(r):
+    return {
+        "roomNumber": r.numero,
+        "vlan": r.vlan.numero,
+        "phone": r.telephone,
+        "description": r.description,
+    }
 
 
 def filterRoom(limit=100, terms=None):
-    all_rooms = list(get_db()["ROOMS"].values())
-
-    if terms != None:
-        all_rooms = filter(lambda x: findInRoom(x, terms), all_rooms)
-
-    return list(islice(all_rooms, limit))
+    s = db.get_db().get_session()
+    q = s.query(Chambre)
+    if terms:
+        q = q.filter(or_(
+            Chambre.telephone.contains(terms),
+            Chambre.description.contains(terms),
+        ))
+    q.limit(limit)
+    result = q.all()
+    result = map(toDict, result)
+    return result, 200
 
 
 def putRoom(roomNumber, body):
-    ROOMS = get_db()["ROOMS"]
-    if roomNumber in ROOMS:
-        retVal = 'Updated', 204
-    else:
-        retVal = 'Created', 201
-    ROOMS[roomNumber] = body
-    return retVal
+    return NoContent, 500
 
 
 def getRoom(roomNumber):
-    ROOMS = get_db()["ROOMS"]
-    if roomNumber not in ROOMS:
-        return "Room not found", 404
-    return ROOMS[roomNumber]
+    return NoContent, 500
 
 
 def deleteRoom(roomNumber):
-    ROOMS = get_db()["ROOMS"]
-    if roomNumber in ROOMS:
-        del ROOMS[roomNumber]
-        return NoContent, 204
-    else:
-        return 'Not found', 404
+    return NoContent, 500

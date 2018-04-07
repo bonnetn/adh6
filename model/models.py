@@ -6,6 +6,17 @@ from sqlalchemy.orm import relationship
 from model.database import Base
 
 
+class Vlan(Base):
+    __tablename__ = 'vlans'
+
+    id = Column(Integer, primary_key=True)
+    numero = Column(Integer)
+    adresses = Column(String(255))
+    adressesv6 = Column(String(255))
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
+
+
 class Chambre(Base):
     __tablename__ = 'chambres'
 
@@ -17,7 +28,8 @@ class Chambre(Base):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
     dernier_adherent = Column(Integer)
-    vlan_id = Column(Integer, index=True)
+    vlan_id = Column(Integer, ForeignKey(Vlan.id), nullable=False)
+    vlan = relationship(Vlan)
 
 
 class Adherent(Base):
@@ -179,17 +191,6 @@ class Utilisateur(Base):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
     access_token = Column(String(255))
-
-
-class Vlan(Base):
-    __tablename__ = 'vlans'
-
-    id = Column(Integer, primary_key=True)
-    numero = Column(Integer)
-    adresses = Column(String(255))
-    adressesv6 = Column(String(255))
-    created_at = Column(DateTime, nullable=False)
-    updated_at = Column(DateTime, nullable=False)
 
 
 class Adhesion(Base):
