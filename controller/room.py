@@ -24,6 +24,7 @@ def filterRoom(limit=100, terms=None):
     q.limit(limit)
     result = q.all()
     result = map(toDict, result)
+    result = list(result)
     return result, 200
 
 
