@@ -97,7 +97,7 @@ def delete_wired_device(macAddress):
 
 
 def filterDevice(limit=100, username=None, terms=None):
-    """ Filter the list of the devices according to some criterias """
+    """ [API] Filter the list of the devices according to some criterias """
     s = db.get_db().get_session()
     results = []
 
@@ -136,7 +136,7 @@ def filterDevice(limit=100, username=None, terms=None):
 
 
 def putDevice(macAddress, body):
-    """ Put (update or create) a new device in the database """
+    """ [API] Put (update or create) a new device in the database """
     try:
         wired = is_wired(macAddress)
         wireless = is_wireless(macAddress)
@@ -177,7 +177,7 @@ def putDevice(macAddress, body):
 
 
 def getDevice(macAddress):
-    """ Return the device specified by the macAddress """
+    """ [API] Return the device specified by the macAddress """
     s = db.get_db().get_session()
     if is_wireless(macAddress):
         q = s.query(models.Portable)
@@ -194,7 +194,7 @@ def getDevice(macAddress):
 
 
 def deleteDevice(macAddress):
-    """ Delete the specified device from the database """
+    """ [API] Delete the specified device from the database """
     s = db.get_db().get_session()
     if is_wireless(macAddress):
         q = s.query(models.Portable)
