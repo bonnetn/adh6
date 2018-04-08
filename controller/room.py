@@ -35,7 +35,7 @@ def filterRoom(limit=100, terms=None):
             Chambre.telephone.contains(terms),
             Chambre.description.contains(terms),
         ))
-    q.limit(limit)
+    q = q.limit(limit)
     result = q.all()
     result = map(toDict, result)
     result = list(result)
