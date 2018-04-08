@@ -6,15 +6,6 @@ from model.models import Switch
 from controller import checks
 
 
-def toDict(s):
-    """ Transforms a Switch object to dictionary """
-    return {
-        'description': s.description,
-        'ip': s.ip,
-        'community': s.communaute
-    }
-
-
 def fromDict(body):
     """ Transforms a dictionary to Switch object """
     return Switch(
@@ -37,7 +28,7 @@ def filterSwitch(limit=100, terms=None):
     result = result.all()
 
     # Convert the results into data suited for the API
-    result = map(lambda x: {'switchID': x.id, 'switch': toDict(x)}, result)
+    result = map(lambda x: {'switchID': x.id, 'switch': dict(x)}, result)
     result = list(result)  # Cast generator as list
 
     return result
@@ -59,7 +50,7 @@ def getSwitch(switchID):
         result = db.get_db().get_session().query(Switch)
         result = result.filter(Switch.id == switchID)
         result = result.one()
-        result = toDict(result)
+        result = dict(result)
 
         return result
 
