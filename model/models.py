@@ -75,7 +75,7 @@ class Adherent(Base):
     )
     access_token = Column(String(255))
 
-    @validates('nom', 'prenom', 'mail')
+    @validates('nom', 'prenom')
     def not_empty(self, key, s):
         if not s:
             raise ValueError("String must not be empty")
@@ -83,7 +83,7 @@ class Adherent(Base):
 
     @validates('mail')
     def valid_email(self, key, mail):
-        if not checks.isMail(mail):
+        if not checks.isEmail(mail):
             raise ValueError("Email is not valid")
         return mail
 
