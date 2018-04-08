@@ -16,6 +16,7 @@ def fromDict(body):
 
 
 def filterSwitch(limit=100, terms=None):
+    """ [API] Filter the switch list """
     result = db.get_db().get_session().query(Switch)
     # Filter by terms
     if terms:
@@ -35,6 +36,7 @@ def filterSwitch(limit=100, terms=None):
 
 
 def createSwitch(body):
+    """ [API] Create a switch in the database """
     try:
         switch = fromDict(body)
     except InvalidIPv4:
@@ -47,6 +49,7 @@ def createSwitch(body):
 
 
 def getSwitch(switchID):
+    """ [API] Get the specified switch from the database """
     try:
         result = db.get_db().get_session().query(Switch)
         result = result.filter(Switch.id == switchID)
@@ -60,6 +63,7 @@ def getSwitch(switchID):
 
 
 def updateSwitch(switchID, body):
+    """ [API] Update the specified switch from the database """
     session = db.get_db().get_session()
 
     # Don't update if the Switch does not exists
@@ -79,6 +83,7 @@ def updateSwitch(switchID, body):
 
 
 def deleteSwitch(switchID):
+    """ [API] Delete the specified switch from the database """
     try:
         session = db.get_db().get_session()
         # Get the switch to delete
