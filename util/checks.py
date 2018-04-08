@@ -1,5 +1,6 @@
 # from datetime import datetime
-from ipaddress import IPv4Address, IPv4Network, IPv6Network, AddressValueError
+from ipaddress import IPv4Address, IPv4Network
+from ipaddress import IPv6Address, IPv6Network, AddressValueError
 import re
 
 MAC_REGEX = re.compile('^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$')
@@ -60,10 +61,13 @@ def isIPv4(ipAddress):
     return True
 
 
-# def isIPv6(ipAddress):
-#     """ Allowed format: fe80:0000:0000:0000:62eb:69ff:feec:c643 """
-#     try:
-#         IPv6Address(ipAddress)
-#     except AddressValueError:
-#         return False
-#     return True
+def isIPv6(ipAddress):
+    """ Allowed format: fe80:0000:0000:0000:62eb:69ff:feec:c643 """
+    print(ipAddress)
+    try:
+        IPv6Address(ipAddress)
+        print("yes")
+    except AddressValueError:
+        print('no')
+        return False
+    return True

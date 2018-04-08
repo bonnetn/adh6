@@ -37,7 +37,7 @@ def sample_wired_device(sample_member):
         ip='157.159.42.42',
         dns='bonnet_n4651',
         adherent=sample_member,
-        ipv6='e91f:e45a:0db3:15df:a4a7:6316:d8d7:1d4a'
+        ipv6='e91f:bd71:56d9:13f3:5499:25b:cc84:f7e4'
     )
 
 
@@ -56,7 +56,7 @@ It is not present in the api_client by default
 TEST_WIRELESS_DEVICE = {
   'mac': '01:23:45:67:89:AC',
   'ipAddress': '127.0.0.1',
-  'ipv6Address': 'string',
+  'ipv6Address': 'c69f:6c5:754c:d301:df05:ba81:76a8:ddc4',
   'connectionType': 'wireless',
   'username': 'dubois_j'
 }
@@ -64,7 +64,7 @@ TEST_WIRELESS_DEVICE = {
 TEST_WIRED_DEVICE = {
   'mac': '01:23:45:67:89:AD',
   'ipAddress': '127.0.0.1',
-  'ipv6Address': 'string',
+  'ipv6Address': 'dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166',
   'connectionType': 'wired',
   'username': 'dubois_j'
 }

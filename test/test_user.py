@@ -53,7 +53,7 @@ def sample_member2(sample_room2):
         mail='bgdu78@hotmail.fr',
         login='reignier',
         commentaires='Desauthent pour routeur',
-        password='',
+        password='a',
         chambre=sample_room2,
     )
 

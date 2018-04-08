@@ -2,7 +2,7 @@ base_url = ""
 device_cazal = {
     'mac': 'FF:FF:FF:FF:FF:FF',
     'ipAddress': '127.0.0.1',
-    'ipv6Address': '12',
+    'ipv6Address': 'fe80::0',
     'connectionType': 'wired',
     'username': 'cazal_k'
 }
@@ -10,7 +10,7 @@ device_cazal = {
 device_bonnet = {
     'mac': '00:00:00:00:00:00',
     'ipAddress': '127.0.0.2',
-    'ipv6Address': '13',
+    'ipv6Address': 'fe80::1',
     'connectionType': 'wireless',
     'username': 'bonnet_n'
 }

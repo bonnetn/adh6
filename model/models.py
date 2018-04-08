@@ -4,7 +4,7 @@ from sqlalchemy import Column, Date, DateTime, Integer, \
 from sqlalchemy.orm import relationship, validates
 from util import checks
 from model.database import Base
-from exceptions.invalid_ip import InvalidIPv4
+from exceptions.invalid_ip import InvalidIPv4, InvalidIPv6
 from exceptions.invalid_email import InvalidEmail
 
 
@@ -197,6 +197,18 @@ class Ordinateur(Base):
         if not mac or not checks.isMac(mac):
             raise InvalidEmail()
         return mac
+
+    @validates('ip')
+    def valid_ip(self, key, addr):
+        if not addr or not checks.isIPv4(addr):
+            raise InvalidIPv4()
+        return addr
+
+    @validates('ipv6')
+    def valid_ipv6(self, key, addr):
+        if not addr or not checks.isIPv6(addr):
+            raise InvalidIPv6()
+        return addr
 
     def __iter__(self):
         yield "mac", self.mac
