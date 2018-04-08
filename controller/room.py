@@ -5,15 +5,6 @@ from model.models import Chambre
 import sqlalchemy
 
 
-def toDict(r):
-    return {
-        "roomNumber": r.numero,
-        "vlan": 42,
-        "phone": r.telephone,
-        "description": r.description,
-    }
-
-
 def fromDict(d):
     adh = Chambre(
         numero=d['roomNumber'],
@@ -37,7 +28,7 @@ def filterRoom(limit=100, terms=None):
         ))
     q = q.limit(limit)
     result = q.all()
-    result = map(toDict, result)
+    result = map(dict, result)
     result = list(result)
     return result, 200
 
@@ -85,7 +76,7 @@ def getRoom(roomNumber):
     q = s.query(Chambre)
     q = q.filter(Chambre.numero == roomNumber)
     try:
-        return toDict(q.one()), 200
+        return dict(q.one()), 200
     except sqlalchemy.orm.exc.NoResultFound:
         return NoContent, 404
 
