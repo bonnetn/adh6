@@ -3,7 +3,7 @@ from sqlalchemy import or_
 import sqlalchemy.orm.exc
 from model.database import Database as db
 from model.models import Switch
-from util import checks
+from exceptions.invalid_ip import InvalidIPv4
 
 
 def fromDict(body):
@@ -35,9 +35,10 @@ def filterSwitch(limit=100, terms=None):
 
 
 def createSwitch(body):
-    if not checks.isIPv4(body['ip']):
-        return NoContent, 400
-    switch = fromDict(body)
+    try:
+        switch = fromDict(body)
+    except InvalidIPv4:
+        return "Invalid IPv4", 400
     session = db.get_db().get_session()
     session.add(switch)
     session.commit()
@@ -59,17 +60,16 @@ def getSwitch(switchID):
 
 
 def updateSwitch(switchID, body):
-    if not checks.isIPv4(body['ip']):
-        return NoContent, 400
-
     session = db.get_db().get_session()
 
     # Don't update if the Switch does not exists
     q = session.query(Switch).filter(Switch.id == switchID)
     if not session.query(q.exists()).scalar():
         return NoContent, 404
-
-    switch = fromDict(body)
+    try:
+        switch = fromDict(body)
+    except InvalidIPv4:
+        return "Invalid IPv4", 400
     switch.id = switchID
     session.merge(switch)
 
