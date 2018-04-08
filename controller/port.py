@@ -7,11 +7,7 @@ import sqlalchemy.orm.exc
 
 def toDict(port):
     return {
-        "port": {
-            "roomNumber": port.chambre_id,
-            "switchID": port.switch.id,
-            "portNumber": port.numero,
-        },
+        "port": dict(port),
         "switchID": port.switch.id,
         "portID": port.id
     }
