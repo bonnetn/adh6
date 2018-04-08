@@ -6,6 +6,7 @@ import sqlalchemy.orm.exc
 
 
 def toDict(port):
+    """ Create a "PortSearchResult" returned by the API """
     return {
         "port": dict(port),
         "switchID": port.switch.id,
@@ -14,6 +15,7 @@ def toDict(port):
 
 
 def fromDict(d):
+    """ Creates a Port object from a request """
     return Port(
         chambre_id=d["roomNumber"],
         switch_id=d["switchID"],
@@ -22,6 +24,7 @@ def fromDict(d):
 
 
 def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
+    """ [API] Filter the port list according to some criteria """
 
     q = db.get_db().get_session().query(Port)
     if switchID:
@@ -42,6 +45,7 @@ def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
 
 
 def createPort(switchID, body):
+    """ [API] Create a port in the database """
     port = fromDict(body)
     session = db.get_db().get_session()
     session.add(port)
@@ -53,6 +57,7 @@ def createPort(switchID, body):
 
 
 def getPort(switchID, portID):
+    """ [API] Get a port from the database """
     q = db.get_db().get_session().query(Port)
     q = q.filter(Port.id == portID)
     try:
@@ -66,6 +71,7 @@ def getPort(switchID, portID):
 
 
 def updatePort(switchID, portID, body):
+    """ [API] Update a port in the database """
     s = db.get_db().get_session()
     q = s.query(Port)
     q = q.filter(Port.id == portID)
@@ -83,6 +89,7 @@ def updatePort(switchID, portID, body):
 
 
 def deletePort(switchID, portID):
+    """ [API] Delete a port from the database """
     try:
         session = db.get_db().get_session()
         port = session.query(Port).filter(Port.id == portID).one()
