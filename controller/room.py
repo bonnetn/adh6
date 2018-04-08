@@ -6,6 +6,7 @@ import sqlalchemy
 
 
 def fromDict(d):
+    """ Converts a dictionnary into an actual Port object """
     adh = Chambre(
         numero=d['roomNumber'],
     )
@@ -19,6 +20,7 @@ def fromDict(d):
 
 
 def filterRoom(limit=100, terms=None):
+    """ [API] Filter the list of the rooms """
     s = db.get_db().get_session()
     q = s.query(Chambre)
     if terms:
@@ -34,6 +36,7 @@ def filterRoom(limit=100, terms=None):
 
 
 def roomExists(roomNumber):
+    """ Returns true if the room exists in the database """
     s = db.get_db().get_session()
     q = s.query(Chambre)
     q = q.filter(Chambre.numero == roomNumber)
@@ -42,6 +45,7 @@ def roomExists(roomNumber):
 
 
 def putRoom(roomNumber, body):
+    """ [API] Update/create a room in the database """
     roomDict = body
 
     if roomExists(roomNumber):
@@ -72,6 +76,7 @@ def putRoom(roomNumber, body):
 
 
 def getRoom(roomNumber):
+    """ [API] Get the room specified """
     s = db.get_db().get_session()
     q = s.query(Chambre)
     q = q.filter(Chambre.numero == roomNumber)
@@ -82,6 +87,7 @@ def getRoom(roomNumber):
 
 
 def deleteRoom(roomNumber):
+    """ [API] Delete room from the database """
     s = db.get_db().get_session()
     q = s.query(Chambre)
     q = q.filter(Chambre.numero == roomNumber)
