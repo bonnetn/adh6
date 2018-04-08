@@ -2,7 +2,7 @@ from connexion import NoContent
 from model.database import Database as db
 from model import models
 import sqlalchemy
-from util import checks
+from exceptions.invalid_email import InvalidEmail
 
 
 def is_wired(macAddress):
@@ -128,8 +128,6 @@ def filterDevice(limit=100, username=None, terms=None):
 
 
 def putDevice(macAddress, body):
-    if not checks.isMac(macAddress) or not checks.isMac(body['mac']):
-        return NoContent, 400
     try:
         wired = is_wired(macAddress)
         wireless = is_wireless(macAddress)
@@ -164,6 +162,9 @@ def putDevice(macAddress, body):
 
     except sqlalchemy.orm.exc.NoResultFound:
         return 'Invalid username', 400
+
+    except InvalidEmail:
+        return 'Invalid email', 400
 
 
 def getDevice(macAddress):
