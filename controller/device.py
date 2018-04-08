@@ -2,7 +2,7 @@ from connexion import NoContent
 from model.database import Database as db
 from model import models
 import sqlalchemy
-from controller import checks
+from util import checks
 
 
 def is_wired(macAddress):

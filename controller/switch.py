@@ -3,7 +3,7 @@ from sqlalchemy import or_
 import sqlalchemy.orm.exc
 from model.database import Database as db
 from model.models import Switch
-from controller import checks
+from util import checks
 
 
 def fromDict(body):

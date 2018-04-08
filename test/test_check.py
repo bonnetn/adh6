@@ -1,6 +1,6 @@
 import pytest
 
-from controller import checks
+from util import checks
 from test import resource
 
 
