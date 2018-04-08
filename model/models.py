@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship, validates
 from util import checks
 from model.database import Base
 from exceptions.invalid_ip import InvalidIPv4
+from exceptions.invalid_email import InvalidEmail
 
 
 class Vlan(Base):
@@ -75,7 +76,7 @@ class Adherent(Base):
     )
     access_token = Column(String(255))
 
-    @validates('nom', 'prenom')
+    @validates('nom', 'prenom', 'login', 'password')
     def not_empty(self, key, s):
         if not s:
             raise ValueError("String must not be empty")
@@ -190,6 +191,12 @@ class Ordinateur(Base):
     updated_at = Column(DateTime)
     last_seen = Column(DateTime)
     ipv6 = Column(String(255))
+
+    @validates('mac')
+    def mac_valid(self, key, mac):
+        if not mac or not checks.isMac(mac):
+            raise InvalidEmail()
+        return mac
 
     def __iter__(self):
         yield "mac", self.mac

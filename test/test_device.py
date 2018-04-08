@@ -15,7 +15,7 @@ def sample_member():
         prenom='Jean-Louis',
         mail='j.dubois@free.fr',
         login='dubois_j',
-        password='',
+        password='a',
     )
 
 
@@ -26,7 +26,7 @@ def sample_member2():
         prenom='Edouard',
         mail='bgdu78@hotmail.fr',
         login='reignier',
-        password='',
+        password='b',
     )
 
 

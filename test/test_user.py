@@ -40,7 +40,7 @@ def sample_member(sample_room):
         prenom='Jean-Louis',
         mail='j.dubois@free.fr',
         login='dubois_j',
-        password='',
+        password='a',
         chambre=sample_room,
     )
 
@@ -67,7 +67,7 @@ def sample_member3(sample_room2):
         mail='robi@hotmail.fr',
         login='dupond_r',
         commentaires='a',
-        password='',
+        password='a',
     )
 
 
