@@ -1,9 +1,10 @@
 # coding: utf-8
 from sqlalchemy import Column, Date, DateTime, Integer, \
         Numeric, String, Text, text, ForeignKey
-from sqlalchemy.orm import relationship
-
+from sqlalchemy.orm import relationship, validates
+from util import checks
 from model.database import Base
+from exceptions.invalid_ip import InvalidIPv4
 
 
 class Vlan(Base):
@@ -15,6 +16,18 @@ class Vlan(Base):
     adressesv6 = Column(String(255))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
+
+    @validates('adresses')
+    def valid_ipv4(self, key, addr):
+        if not checks.isIPv4Network(addr):
+            raise InvalidIPv4()
+        return addr
+
+    @validates('adressesv6')
+    def valid_ipv6(self, key, addr):
+        if not checks.isIPv6Network(addr):
+            raise InvalidIPv4()
+        return addr
 
 
 class Chambre(Base):
@@ -61,6 +74,18 @@ class Adherent(Base):
         server_default=text("'2011-04-30 17:50:17'")
     )
     access_token = Column(String(255))
+
+    @validates('nom', 'prenom', 'mail')
+    def not_empty(self, key, s):
+        if not s:
+            raise ValueError("String must not be empty")
+        return s
+
+    @validates('mail')
+    def valid_email(self, key, mail):
+        if not checks.isMail(mail):
+            raise ValueError("Email is not valid")
+        return mail
 
     def __iter__(self):
         yield "email", self.mail
