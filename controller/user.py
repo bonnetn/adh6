@@ -7,6 +7,7 @@ import sqlalchemy
 
 
 def dict_to_user(d):
+    """ Converts a dictionnary to an User object """
     adh = models.Adherent(
         nom=d['lastName'],
         prenom=d['firstName'],
@@ -23,6 +24,7 @@ def dict_to_user(d):
 
 
 def filterUser(limit=100, terms=None, roomNumber=None):
+    """ [API] Filter the list of users from the the database """
     s = db.get_db().get_session()
 
     q = s.query(models.Adherent)
@@ -49,6 +51,7 @@ def filterUser(limit=100, terms=None, roomNumber=None):
 
 
 def getUser(username):
+    """ [API] Get the specified user from the database """
     s = db.get_db().get_session()
     q = s.query(models.Adherent)
     q = q.filter(models.Adherent.login == username)
@@ -59,6 +62,7 @@ def getUser(username):
 
 
 def deleteUser(username):
+    """ [API] Delete the specified User from the database """
     s = db.get_db().get_session()
     q = s.query(models.Adherent)
     q = q.filter(models.Adherent.login == username)
@@ -80,6 +84,7 @@ def adherentExists(username):
 
 
 def putUser(username, body):
+    """ [API] Create/Update user from the database """
     if adherentExists(username):
         s = db.get_db().get_session()
         q = s.query(models.Adherent)
@@ -111,6 +116,8 @@ def putUser(username, body):
 
 
 def addMembership(username, body):
+    """ [API] Add a membership record in the database """
+
     s = db.get_db().get_session()
 
     try:
