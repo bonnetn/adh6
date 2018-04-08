@@ -76,6 +76,10 @@ def api_client(sample_port1, sample_port2, sample_switch1, sample_switch2):
         yield c
 
 
+def test_port_to_dict(sample_port1):
+    dict(sample_port1)
+
+
 def test_port_get_filter_all(api_client):
     r = api_client.get("{}/ports/".format(base_url))
     assert r.status_code == 200

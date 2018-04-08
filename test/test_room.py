@@ -57,6 +57,10 @@ def api_client(sample_room1, sample_room2, sample_vlan):
         yield c
 
 
+def test_room_to_dict(sample_room1):
+    dict(sample_room1)
+
+
 def test_room_filter_all_rooms(api_client):
     r = api_client.get("{}/room/".format(base_url))
     assert r.status_code == 200

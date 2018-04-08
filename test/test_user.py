@@ -96,6 +96,10 @@ def api_client(sample_member, sample_member2, sample_member3,
         yield c
 
 
+def test_user_to_dict(sample_member):
+    dict(sample_member)
+
+
 def test_user_filter_all(api_client):
     r = api_client.get('{}/user/'.format(base_url))
     assert r.status_code == 200

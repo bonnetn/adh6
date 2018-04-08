@@ -100,6 +100,10 @@ def api_client(sample_member,
         yield c
 
 
+def test_device_to_dict(sample_wired_device):
+    dict(sample_wired_device)
+
+
 def test_device_filter_all_devices(api_client):
     r = api_client.get('{}/device/'.format(base_url))
     assert r.status_code == 200

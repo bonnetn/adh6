@@ -7,25 +7,33 @@ from model.database import Database as db
 from .resource import INVALID_IP
 
 
-def prep_db(session):
-    """ Insert the test objects in the db """
-    sample_switch = Switch(
+@pytest.fixture
+def sample_switch():
+    yield Switch(
         id=1,
         description='Switch',
         ip='192.168.102.2',
         communaute='communaute',
     )
+
+
+def prep_db(session, sample_switch):
+    """ Insert the test objects in the db """
     session.add(sample_switch)
     session.commit()  # TODO: remove?
 
 
 @pytest.fixture
-def api_client():
+def api_client(sample_switch):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
-        prep_db(db.get_db().get_session())
+        prep_db(db.get_db().get_session(), sample_switch)
         yield c
+
+
+def test_switch_to_dict(sample_switch):
+    dict(sample_switch)
 
 
 @pytest.mark.parametrize("test_ip", INVALID_IP)

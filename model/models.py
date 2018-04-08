@@ -31,6 +31,15 @@ class Chambre(Base):
     vlan_id = Column(Integer, ForeignKey(Vlan.id))
     vlan = relationship(Vlan)
 
+    def __iter__(self):
+        yield "roomNumber", self.numero
+        if self.description:
+            yield "description", self.description
+        if self.telephone:
+            yield "phone", self.telephone
+        if self.vlan:
+            yield "vlan", self.vlan.numero
+
 
 class Adherent(Base):
     __tablename__ = 'adherents'
@@ -52,6 +61,23 @@ class Adherent(Base):
         server_default=text("'2011-04-30 17:50:17'")
     )
     access_token = Column(String(255))
+
+    def __iter__(self):
+        yield "email", self.mail
+        yield "firstName", self.prenom
+        yield "lastName", self.nom
+        yield "username", self.login
+        if self.commentaires:
+            yield "comment", self.commentaires
+
+        if self.chambre:
+            yield "roomNumber", self.chambre.numero
+
+        if self.date_de_depart:
+            yield "departureDate", self.date_de_depart
+
+        if self.mode_association:
+            yield "associationMode", self.mode_association
 
 
 class Caisse(Base):
@@ -140,6 +166,16 @@ class Ordinateur(Base):
     last_seen = Column(DateTime)
     ipv6 = Column(String(255))
 
+    def __iter__(self):
+        yield "mac", self.mac
+        yield "connectionType", "wired"
+        if self.ip:
+            yield "ipAddress", self.ip
+        if self.ipv6:
+            yield "ipv6Address", self.ipv6
+        if self.adherent:
+            yield "username", self.adherent.login
+
 
 class Portable(Base):
     __tablename__ = 'portables'
@@ -152,6 +188,12 @@ class Portable(Base):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
 
+    def __iter__(self):
+        yield "mac", self.mac
+        yield "connectionType", "wireless"
+        if self.adherent:
+            yield "username", self.adherent.login
+
 
 class Switch(Base):
     __tablename__ = 'switches'
@@ -162,6 +204,12 @@ class Switch(Base):
     communaute = Column(String(255))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
+
+    def __iter__(self):
+        yield "ip", self.ip
+        yield "community", self.communaute
+        if self.description:
+            yield "description", self.description
 
 
 class Port(Base):
@@ -177,6 +225,13 @@ class Port(Base):
     chambre = relationship(Chambre)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
+
+    def __iter__(self):
+        yield "portNumber", self.numero
+        if self.chambre:
+            yield "roomNumber", self.chambre.numero
+        if self.switch_id:
+            yield "switchID", self.switch_id
 
 
 class Utilisateur(Base):
