@@ -6,21 +6,6 @@ import datetime
 import sqlalchemy
 
 
-def user_to_dict(adh):
-    d = {
-        'email': adh.mail,
-        'firstName': adh.prenom,
-        'lastName': adh.nom,
-        'username': adh.login,
-        'departureDate': adh.date_de_depart,
-        'comment': adh.commentaires,
-        'associationMode': adh.mode_association,
-    }
-    if adh.chambre:
-        d['roomNumber'] = adh.chambre.numero
-    return d
-
-
 def dict_to_user(d):
     adh = models.Adherent(
         nom=d['lastName'],
@@ -60,7 +45,7 @@ def filterUser(limit=100, terms=None, roomNumber=None):
         )
     q = q.limit(limit)
     r = q.all()
-    return list(map(user_to_dict, r)), 200
+    return list(map(dict, r)), 200
 
 
 def getUser(username):
@@ -68,7 +53,7 @@ def getUser(username):
     q = s.query(models.Adherent)
     q = q.filter(models.Adherent.login == username)
     try:
-        return user_to_dict(q.one())
+        return dict(q.one())
     except sqlalchemy.orm.exc.NoResultFound:
         return NoContent, 404
 
