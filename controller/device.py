@@ -5,24 +5,6 @@ import sqlalchemy
 from controller import checks
 
 
-def wired_to_dict(d):
-    return {
-        'connectionType': 'wired',
-        'ipAddress': d.ip,
-        'ipv6Address': d.ipv6,
-        'username': d.adherent.login,
-        'mac': d.mac,
-    }
-
-
-def wireless_to_dict(d):
-    return {
-        'connectionType': 'wireless',
-        'mac': d.mac,
-        'username': d.adherent.login,
-    }
-
-
 def is_wired(macAddress):
     """ Return true if the mac address corresponds to a wired device """
     session = db.get_db().get_session()
@@ -126,7 +108,7 @@ def filterDevice(limit=100, username=None, terms=None):
             False  # TODO: compare on username ?
         )
     r = q.all()
-    results += list(map(wireless_to_dict, r))
+    results += list(map(dict, r))
 
     q = s.query(models.Ordinateur)
     if username:
@@ -139,7 +121,7 @@ def filterDevice(limit=100, username=None, terms=None):
             # TODO: compare on username ?
         )
     r = q.all()
-    results += list(map(wired_to_dict, r))
+    results += list(map(dict, r))
     results = results[:limit]
 
     return results, 200
@@ -190,12 +172,12 @@ def getDevice(macAddress):
         q = s.query(models.Portable)
         q = q.filter(models.Portable.mac == macAddress)
         r = q.one()
-        return wireless_to_dict(r), 200
+        return dict(r), 200
     elif is_wired(macAddress):
         q = s.query(models.Ordinateur)
         q = q.filter(models.Ordinateur.mac == macAddress)
         r = q.one()
-        return wired_to_dict(r), 200
+        return dict(r), 200
     else:
         return NoContent, 404
 
