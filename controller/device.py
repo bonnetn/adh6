@@ -24,6 +24,7 @@ def is_wireless(macAddress):
 
 
 def get_adherent(username):
+    """ Return the adherent associated with the given username """
     s = db.get_db().get_session()
     q = s.query(models.Adherent)
     q = q.filter(models.Adherent.login == username)
@@ -31,6 +32,7 @@ def get_adherent(username):
 
 
 def create_wireless_device(body):
+    """ Create a wireless device in the database """
     s = db.get_db().get_session()
     dev = models.Portable(
         mac=body['mac'],
@@ -41,6 +43,7 @@ def create_wireless_device(body):
 
 
 def create_wired_device(body):
+    """ Create a wired device in the database """
     s = db.get_db().get_session()
     dev = models.Ordinateur(
         mac=body['mac'],
@@ -53,6 +56,7 @@ def create_wired_device(body):
 
 
 def update_wireless_device(macAddress, body):
+    """ Update a wireless device in the database """
     s = db.get_db().get_session()
     q = s.query(models.Portable).filter(models.Portable.mac == macAddress)
     dev = q.one()
@@ -62,6 +66,7 @@ def update_wireless_device(macAddress, body):
 
 
 def update_wired_device(macAddress, body):
+    """ Update a wired device in the database """
     s = db.get_db().get_session()
     q = s.query(models.Ordinateur).filter(models.Ordinateur.mac == macAddress)
     dev = q.one()
@@ -74,6 +79,7 @@ def update_wired_device(macAddress, body):
 
 
 def delete_wireless_device(macAddress):
+    """ Delete a wireless device from the database """
     s = db.get_db().get_session()
     q = s.query(models.Portable).filter(models.Portable.mac == macAddress)
     dev = q.one()
@@ -82,6 +88,7 @@ def delete_wireless_device(macAddress):
 
 
 def delete_wired_device(macAddress):
+    """ Delete a wired device from the databse """
     s = db.get_db().get_session()
     q = s.query(models.Ordinateur).filter(models.Ordinateur.mac == macAddress)
     dev = q.one()
@@ -90,6 +97,7 @@ def delete_wired_device(macAddress):
 
 
 def filterDevice(limit=100, username=None, terms=None):
+    """ Filter the list of the devices according to some criterias """
     s = db.get_db().get_session()
     results = []
 
@@ -128,6 +136,7 @@ def filterDevice(limit=100, username=None, terms=None):
 
 
 def putDevice(macAddress, body):
+    """ Put (update or create) a new device in the database """
     try:
         wired = is_wired(macAddress)
         wireless = is_wireless(macAddress)
@@ -168,6 +177,7 @@ def putDevice(macAddress, body):
 
 
 def getDevice(macAddress):
+    """ Return the device specified by the macAddress """
     s = db.get_db().get_session()
     if is_wireless(macAddress):
         q = s.query(models.Portable)
@@ -184,6 +194,7 @@ def getDevice(macAddress):
 
 
 def deleteDevice(macAddress):
+    """ Delete the specified device from the database """
     s = db.get_db().get_session()
     if is_wireless(macAddress):
         q = s.query(models.Portable)
