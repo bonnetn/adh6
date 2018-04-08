@@ -45,6 +45,12 @@ class Chambre(Base):
     vlan_id = Column(Integer, ForeignKey(Vlan.id))
     vlan = relationship(Vlan)
 
+    @validates('numero')
+    def not_empty(self, key, s):
+        if not s:
+            raise ValueError("String must not be empty")
+        return s
+
     def __iter__(self):
         yield "roomNumber", self.numero
         if self.description:
@@ -232,6 +238,12 @@ class Portable(Base):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
 
+    @validates('mac')
+    def mac_valid(self, key, mac):
+        if not mac or not checks.isMac(mac):
+            raise InvalidEmail()
+        return mac
+
     def __iter__(self):
         yield "mac", self.mac
         yield "connectionType", "wireless"
@@ -248,6 +260,12 @@ class Switch(Base):
     communaute = Column(String(255))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
+
+    @validates('ip')
+    def valid_ip(self, key, addr):
+        if not addr or not checks.isIPv4(addr):
+            raise InvalidIPv4()
+        return addr
 
     def __iter__(self):
         yield "ip", self.ip
@@ -269,6 +287,12 @@ class Port(Base):
     chambre = relationship(Chambre)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
+
+    @validates('numero')
+    def not_empty(self, key, s):
+        if not s:
+            raise ValueError("String must not be empty")
+        return s
 
     def __iter__(self):
         yield "portNumber", self.numero
