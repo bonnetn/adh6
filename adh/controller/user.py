@@ -83,8 +83,22 @@ def adherentExists(username):
     return session.query(q.exists()).scalar()
 
 
+def roomExists(roomNumber):
+    """ Returns true if the user exists """
+    session = db.get_db().get_session()
+    q = session.query(models.Chambre)
+    q = q.filter(models.Chambre.numero == roomNumber)
+
+    return session.query(q.exists()).scalar()
+
+
 def putUser(username, body):
     """ [API] Create/Update user from the database """
+
+    roomNumber = body["user"]["roomNumber"]
+    if roomNumber and not roomExists(roomNumber):
+        return "Room not found", 400
+
     if adherentExists(username):
         s = db.get_db().get_session()
         q = s.query(models.Adherent)
@@ -98,6 +112,12 @@ def putUser(username, body):
         a.mail = userDict['email']
         a.login = userDict['username']
 
+        if roomNumber:
+            q2 = s.query(models.Chambre)
+            q2 = q2.filter(models.Chambre.numero == roomNumber)
+            c = q2.one()
+            a.chambre = c
+
         if "departureDate" in userDict:
             a.date_de_depart = parser.parse(userDict["departureDate"])
         if "associationMode" in userDict:
@@ -110,6 +130,11 @@ def putUser(username, body):
     else:
         s = db.get_db().get_session()
         a = dict_to_user(body["user"])
+        if roomNumber:
+            q2 = s.query(models.Chambre)
+            q2 = q2.filter(models.Chambre.numero == roomNumber)
+            c = q2.one()
+            a.chambre = c
         s.add(a)
         s.commit()
         return 'Created', 201
