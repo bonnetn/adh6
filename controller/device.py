@@ -2,7 +2,7 @@ from connexion import NoContent
 from model.database import Database as db
 from model import models
 import sqlalchemy
-from exceptions.invalid_email import InvalidEmail
+from adh.exceptions.invalid_email import InvalidEmail
 
 
 def is_wired(macAddress):
