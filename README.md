@@ -1,7 +1,7 @@
 # ADH 2000
 
 ## How to setup the project
-- Create a virtualenv ```virtualenv./```
+- Create a virtualenv ```virtualenv ./```
 - Enter the virtualenv ```source bin/activate```
 - Install the requirements ```pip3 install -r requirements.txt```
 - Fill the settings files (there are some examples provided) ``` vim settings.py ``` & ``` vim unit_test_settings.py```
