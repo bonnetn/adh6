@@ -28,3 +28,9 @@
           [disabled]="disabled || memberEdit.status == 'INVALID'"
           class="button-primary">Edit</button>
 </form>
+
+<form [formGroup]="memberDelete" (ngSubmit)="onDelete()" novalidate>
+  <button type="submit"
+          [disabled]="enabled"
+          class="button btn-danger">Delete</button>
+</form>
