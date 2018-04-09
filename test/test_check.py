@@ -1,6 +1,6 @@
 import pytest
 
-from util import checks
+from adh.util import checks
 from test import resource
 
 

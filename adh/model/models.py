@@ -2,7 +2,7 @@
 from sqlalchemy import Column, Date, DateTime, Integer, \
         Numeric, String, Text, text, ForeignKey
 from sqlalchemy.orm import relationship, validates
-from util import checks
+from adh.util import checks
 from adh.model.database import Base
 from adh.exceptions.invalid_ip import InvalidIPv4, InvalidIPv6
 from adh.exceptions.invalid_email import InvalidEmail
