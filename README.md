@@ -19,6 +19,9 @@ Pour que python se comporte en serveur   Web on utilise *Flask*, et pour pas
 avoir à faire de trucs compliqués on utilise *connexion* qui fait le binding 
 entre *Flask* et les fonctions en python qui sont appelées presque magiquement.
 
+La spécification de l'API est stockée dans swagger.yaml à la racine du projet,
+ce fichier est automatiquement exporté de swaggerhub.
+
 *En gros*, les fonctions importantes sont juste celles dans *adh/controller/*,
 qui sont appelées quand on fait des requêtes vers le serveur web.
 
