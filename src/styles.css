@@ -1,3 +1,28 @@
 a {
   text-decoration: none
 }
+
+h1,h2{
+  text-align: center;
+}
+
+h1{
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+button.button-primary{
+    background: #65B5EA;
+}
+
+button[disabled] {
+    background:#ccc;
+    border-color: #ccc;
+    text-shadow:none;
+}
+
+button.btn-danger{
+    background:#d60b0b;
+    border-color: #000000;
+    color: #000000;
+}
