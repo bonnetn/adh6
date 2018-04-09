@@ -2,8 +2,8 @@ import pytest
 import json
 from .resource import base_url
 from adh.settings.unit_test_settings import DATABASE as db_settings
-from model.models import Switch
-from model.database import Database as db
+from adh.model.models import Switch
+from adh.model.database import Database as db
 from .resource import INVALID_IP
 
 

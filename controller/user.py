@@ -1,6 +1,6 @@
 from connexion import NoContent
-from model.database import Database as db
-from model import models
+from adh.model.database import Database as db
+from adh.model import models
 from dateutil import parser
 import datetime
 import sqlalchemy

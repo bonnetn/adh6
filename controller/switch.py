@@ -1,8 +1,8 @@
 from connexion import NoContent
 from sqlalchemy import or_
 import sqlalchemy.orm.exc
-from model.database import Database as db
-from model.models import Switch
+from adh.model.database import Database as db
+from adh.model.models import Switch
 from adh.exceptions.invalid_ip import InvalidIPv4
 
 

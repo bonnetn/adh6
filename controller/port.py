@@ -1,7 +1,7 @@
 from connexion import NoContent
-from model.database import Database as db
+from adh.model.database import Database as db
 from sqlalchemy import or_
-from model.models import Port
+from adh.model.models import Port
 import sqlalchemy.orm.exc
 
 

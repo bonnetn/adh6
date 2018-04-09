@@ -1,8 +1,8 @@
 import json
 import pytest
-from model.database import Database as db
+from adh.model.database import Database as db
 from adh.settings.unit_test_settings import DATABASE as db_settings
-from model.models import Port, Switch
+from adh.model.models import Port, Switch
 
 from .resource import base_url
 

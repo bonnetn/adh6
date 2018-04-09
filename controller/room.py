@@ -1,7 +1,7 @@
 from connexion import NoContent
 from sqlalchemy import or_
-from model.database import Database as db
-from model.models import Chambre
+from adh.model.database import Database as db
+from adh.model.models import Chambre
 import sqlalchemy
 
 
