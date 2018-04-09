@@ -1,7 +1,7 @@
 import pytest
 import json
 from .resource import base_url
-from settings.unit_test_settings import DATABASE as db_settings
+from adh.settings.unit_test_settings import DATABASE as db_settings
 from model.models import Switch
 from model.database import Database as db
 from .resource import INVALID_IP

@@ -3,7 +3,7 @@ import connexion
 import logging
 from flask_cors import CORS
 from model.database import Database
-from settings.settings import DATABASE
+from adh.settings.settings import DATABASE
 from connexion.resolver import RestyResolver
 
 
