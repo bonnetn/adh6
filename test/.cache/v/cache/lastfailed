@@ -1,0 +1,11 @@
+{
+  "test_check.py::test_check_mac[00:00:0:00:00:00-False]": true,
+  "test_check.py::test_check_mac[00:00::00:00:00-False]": true,
+  "test_check.py::test_check_mac[12-34-56-78-9A-BC-False]": true,
+  "test_check.py::test_check_mac[1234.5678.9ABC-False]": true,
+  "test_check.py::test_check_mac[12:34:56:78:9A:BC-True]": true,
+  "test_check.py::test_check_mac[12:34:56:78:9a:bc-True]": true,
+  "test_check.py::test_check_mac[34:56:78:9A:BC-False]": true,
+  "test_check.py::test_check_mac[DE:F0:00:00:00:00-True]": true,
+  "test_check.py::test_check_mac[G0:00:00:00:00:00-False]": true
+}

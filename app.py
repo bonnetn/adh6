@@ -3,12 +3,13 @@ import connexion
 import logging
 from flask_cors import CORS
 from model.database import Database
-from settings import DATABASE
+from settings.settings import DATABASE
+from connexion.resolver import RestyResolver
 
 
 logging.basicConfig(level=logging.INFO)
 app = connexion.FlaskApp(__name__)
-app.add_api('swagger.yaml')
+app.add_api('swagger.yaml', resolver=RestyResolver('adh'))
 CORS(app.app)
 # set the WSGI application callable to allow using uWSGI:
 # uwsgi --http :8080 -w app
