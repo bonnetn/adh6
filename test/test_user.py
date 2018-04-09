@@ -240,7 +240,7 @@ def test_user_put_user_create(api_client):
       "user": {
         "firstName": "John",
         "lastName": "Doe",
-        "roomNumber": 5012,
+        "roomNumber": 1111,
         "comment": "comment",
         "departureDate": "2000-01-23T04:56:07.000+00:00",
         "associationMode": "2000-01-23T04:56:07.000+00:00",
@@ -261,7 +261,7 @@ def test_user_put_user_update(api_client):
       "user": {
         "firstName": "Jean-Louis",
         "lastName": "Dubois",
-        "roomNumber": 5012,
+        "roomNumber": 1111,
         "comment": "comment",
         "departureDate": "2000-01-23T04:56:07.000+00:00",
         "associationMode": "2000-01-23T04:56:07.000+00:00",
