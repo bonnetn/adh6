@@ -1,814 +1,805 @@
 ---
-swagger: "2.0"
+swagger: '2.0'
 info:
-  description: "Adherent api\n"
-  version: "1.0.1"
-  title: "Adherent"
+  description: |
+    Adherent api
+  version: 1.0.2
+  title: Adherent
   license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "localhost:3000"
-basePath: "/"
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: localhost:3000
+basePath: /
 tags:
-- name: "user"
-  description: "Operations on users"
-- name: "membership"
-  description: "Manage membership records"
-- name: "device"
-  description: "Operations on devices"
-- name: "room"
-  description: "Operations on rooms"
-- name: "switch"
-  description: "Operations on switches"
-- name: "port"
-  description: "Operations on ports"
+- name: user
+  description: Operations on users
+- name: membership
+  description: Manage membership records
+- name: device
+  description: Operations on devices
+- name: room
+  description: Operations on rooms
+- name: switch
+  description: Operations on switches
+- name: port
+  description: Operations on ports
 schemes:
-- "http"
+- http
 paths:
   /user/:
     get:
       tags:
-      - "user"
-      summary: "Filter users"
-      operationId: "filterUser"
+      - user
+      summary: Filter users
+      operationId: filterUser
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Limit the number of users returned in the result. Default is\
-          \ 100"
+      - name: limit
+        in: query
+        description: Limit the number of users returned in the result. Default is 100
         required: false
-        type: "integer"
+        type: integer
         default: 100
-      - name: "terms"
-        in: "query"
-        description: "The generic search terms (will search in any field)"
+      - name: terms
+        in: query
+        description: The generic search terms (will search in any field)
         required: false
-        type: "string"
-      - name: "roomNumber"
-        in: "query"
-        description: "Filter by room number"
+        type: string
+      - name: roomNumber
+        in: query
+        description: Filter by room number
         required: false
-        type: "integer"
+        type: integer
       responses:
         200:
-          description: "Success"
+          description: Success
           schema:
-            type: "array"
+            type: array
             items:
-              $ref: "#/definitions/User"
-      x-swagger-router-controller: "controller.user"
+              $ref: '#/definitions/User'
+      x-swagger-router-controller: adh.controller.user
   /user/{username}:
     get:
       tags:
-      - "user"
-      summary: "Retrieve an user"
-      operationId: "getUser"
+      - user
+      summary: Retrieve an user
+      operationId: getUser
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "username"
-        in: "path"
-        description: "The username of the user that needs to be fetched."
+      - name: username
+        in: path
+        description: The username of the user that needs to be fetched.
         required: true
-        type: "string"
+        type: string
       responses:
         200:
-          description: "Success"
+          description: Success
           schema:
-            $ref: "#/definitions/User"
+            $ref: '#/definitions/User'
         404:
-          description: "Not found"
-      x-swagger-router-controller: "controller.user"
+          description: Not found
+      x-swagger-router-controller: adh.controller.user
     put:
       tags:
-      - "user"
-      summary: "Update/create an user"
-      description: "This can only be done by the logged in user."
-      operationId: "putUser"
+      - user
+      summary: Update/create an user
+      description: This can only be done by the logged in user.
+      operationId: putUser
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "username"
-        in: "path"
-        description: "username of the user will be updated"
+      - name: username
+        in: path
+        description: username of the user will be updated
         required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "New values of the user"
+        type: string
+      - in: body
+        name: body
+        description: New values of the user
         required: true
         schema:
-          $ref: "#/definitions/body"
+          $ref: '#/definitions/body'
       responses:
         201:
-          description: "Created"
+          description: Created
         204:
-          description: "Updated"
-      x-swagger-router-controller: "controller.user"
+          description: Updated
+      x-swagger-router-controller: adh.controller.user
     delete:
       tags:
-      - "user"
-      summary: "Delete an user"
-      description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
+      - user
+      summary: Delete an user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "username"
-        in: "path"
-        description: "The username of the user that will be deleted"
+      - name: username
+        in: path
+        description: The username of the user that will be deleted
         required: true
-        type: "string"
+        type: string
       responses:
         204:
-          description: "Deleted"
+          description: Deleted
         404:
-          description: "Not found"
-      x-swagger-router-controller: "controller.user"
+          description: Not found
+      x-swagger-router-controller: adh.controller.user
   /user/{username}/membership:
     post:
       tags:
-      - "membership"
-      summary: "Add a membership record for an user"
-      operationId: "addMembership"
+      - membership
+      summary: Add a membership record for an user
+      operationId: addMembership
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "username"
-        in: "path"
-        description: "The username of the user"
+      - name: username
+        in: path
+        description: The username of the user
         required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "Membership record, if no start is specified, it will use the\
-          \ current date."
+        type: string
+      - in: body
+        name: body
+        description: Membership record, if no start is specified, it will use the current date. Duration is expressed in days.
         required: true
         schema:
-          $ref: "#/definitions/MembershipRecord"
+          $ref: '#/definitions/MembershipRecord'
       responses:
         200:
-          description: "Success"
-          headers:
-            Location:
-              type: "string"
-              description: "URI to the newly created membership record"
+          description: Success
         404:
-          description: "Not found"
-      x-swagger-router-controller: "controller.user"
+          description: Not found
+      x-swagger-router-controller: adh.controller.user
   /device/:
     get:
       tags:
-      - "device"
-      summary: "Filter devices"
-      operationId: "filterDevice"
+      - device
+      summary: Filter devices
+      operationId: filterDevice
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Limit the number of devices returned in the result. Default\
-          \ is 100"
+      - name: limit
+        in: query
+        description: Limit the number of devices returned in the result. Default is 100
         required: false
-        type: "integer"
+        type: integer
         default: 100
-      - name: "username"
-        in: "query"
-        description: "Filter by owner's username"
+      - name: username
+        in: query
+        description: Filter by owner's username
         required: false
-        type: "string"
-      - name: "terms"
-        in: "query"
-        description: "Search terms"
+        type: string
+      - name: terms
+        in: query
+        description: Search terms
         required: false
-        type: "string"
+        type: string
       responses:
         200:
-          description: "Success"
+          description: Success
           schema:
-            type: "array"
+            type: array
             items:
-              $ref: "#/definitions/Device"
-      x-swagger-router-controller: "controller.device"
+              $ref: '#/definitions/Device'
+      x-swagger-router-controller: adh.controller.device
   /device/{macAddress}:
     get:
       tags:
-      - "device"
-      summary: "Retrieve a device"
-      operationId: "getDevice"
+      - device
+      summary: Retrieve a device
+      operationId: getDevice
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "macAddress"
-        in: "path"
-        description: "The mac address of the device that will be fetched"
+      - name: macAddress
+        in: path
+        description: The mac address of the device that will be fetched
         required: true
-        type: "string"
+        type: string
       responses:
         200:
-          description: "Success"
+          description: Success
           schema:
-            $ref: "#/definitions/Device"
+            $ref: '#/definitions/Device'
         404:
-          description: "Not found"
-      x-swagger-router-controller: "controller.device"
+          description: Not found
+      x-swagger-router-controller: adh.controller.device
     put:
       tags:
-      - "device"
-      summary: "Update/create a device"
-      operationId: "putDevice"
+      - device
+      summary: Update/create a device
+      operationId: putDevice
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "macAddress"
-        in: "path"
-        description: "The mac address of the device that will be update"
+      - name: macAddress
+        in: path
+        description: The mac address of the device that will be update
         required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "Device to update"
+        type: string
+      - in: body
+        name: body
+        description: Device to update
         required: true
         schema:
-          $ref: "#/definitions/Device"
+          $ref: '#/definitions/Device'
       responses:
         201:
-          description: "Created"
+          description: Created
         204:
-          description: "Updated"
+          description: Updated
         400:
-          description: "Invalid mac address supplied / already in use"
-      x-swagger-router-controller: "controller.device"
+          description: Invalid mac address supplied / already in use
+      x-swagger-router-controller: adh.controller.device
     delete:
       tags:
-      - "device"
-      summary: "Delete a device"
-      operationId: "deleteDevice"
+      - device
+      summary: Delete a device
+      operationId: deleteDevice
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "macAddress"
-        in: "path"
-        description: "The mac address of the device that will be deleted"
+      - name: macAddress
+        in: path
+        description: The mac address of the device that will be deleted
         required: true
-        type: "string"
+        type: string
       responses:
         204:
-          description: "Deleted"
+          description: Deleted
         404:
-          description: "Not found"
-      x-swagger-router-controller: "controller.device"
+          description: Not found
+      x-swagger-router-controller: adh.controller.device
   /room/:
     get:
       tags:
-      - "room"
-      summary: "Filter rooms"
-      operationId: "filterRoom"
+      - room
+      summary: Filter rooms
+      operationId: filterRoom
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Limit the number of rooms returned in the result. Default is\
-          \ 100"
+      - name: limit
+        in: query
+        description: Limit the number of rooms returned in the result. Default is 100
         required: false
-        type: "integer"
+        type: integer
         default: 100
-      - name: "terms"
-        in: "query"
-        description: "Search terms"
+      - name: terms
+        in: query
+        description: Search terms
         required: false
-        type: "string"
+        type: string
       responses:
         200:
-          description: "Success"
+          description: Success
           schema:
-            type: "array"
+            type: array
             items:
-              $ref: "#/definitions/Room"
-      x-swagger-router-controller: "controller.room"
+              $ref: '#/definitions/Room'
+      x-swagger-router-controller: adh.controller.room
   /room/{roomNumber}:
     get:
       tags:
-      - "room"
-      summary: "Retrieve a room"
-      operationId: "getRoom"
+      - room
+      summary: Retrieve a room
+      operationId: getRoom
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "roomNumber"
-        in: "path"
+      - name: roomNumber
+        in: path
         required: true
-        type: "integer"
+        type: integer
       responses:
         200:
-          description: "Success"
+          description: Success
           schema:
-            $ref: "#/definitions/Room"
+            $ref: '#/definitions/Room'
         404:
-          description: "Not found"
-      x-swagger-router-controller: "controller.room"
+          description: Not found
+      x-swagger-router-controller: adh.controller.room
     put:
       tags:
-      - "room"
-      summary: "Update/create a room"
-      operationId: "putRoom"
+      - room
+      summary: Update/create a room
+      operationId: putRoom
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "roomNumber"
-        in: "path"
+      - name: roomNumber
+        in: path
         required: true
-        type: "integer"
-      - in: "body"
-        name: "body"
-        description: "Room to update"
+        type: integer
+      - in: body
+        name: body
+        description: Room to update
         required: true
         schema:
-          $ref: "#/definitions/Room"
+          $ref: '#/definitions/Room'
       responses:
         201:
-          description: "Created"
+          description: Created
         204:
-          description: "Updated"
-      x-swagger-router-controller: "controller.room"
+          description: Updated
+      x-swagger-router-controller: adh.controller.room
     delete:
       tags:
-      - "room"
-      summary: "Delete a room"
-      operationId: "deleteRoom"
+      - room
+      summary: Delete a room
+      operationId: deleteRoom
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "roomNumber"
-        in: "path"
+      - name: roomNumber
+        in: path
         required: true
-        type: "integer"
+        type: integer
       responses:
         204:
-          description: "Deleted"
+          description: Deleted
         404:
-          description: "Not found"
-      x-swagger-router-controller: "controller.room"
+          description: Not found
+      x-swagger-router-controller: adh.controller.room
   /switch/:
     get:
       tags:
-      - "switch"
-      summary: "Get all switches"
-      operationId: "filterSwitch"
+      - switch
+      summary: Get all switches
+      operationId: filterSwitch
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Limit the number of switches returned in the result. Default\
-          \ is 100"
+      - name: limit
+        in: query
+        description: Limit the number of switches returned in the result. Default is 100
         required: false
-        type: "integer"
+        type: integer
         default: 100
-      - name: "terms"
-        in: "query"
-        description: "Search terms"
+      - name: terms
+        in: query
+        description: Search terms
         required: false
-        type: "string"
+        type: string
       responses:
         200:
-          description: "Success"
+          description: Success
           schema:
-            type: "array"
+            type: array
             items:
-              $ref: "#/definitions/SwitchSearchResult"
-      x-swagger-router-controller: "controller.switch"
+              $ref: '#/definitions/SwitchSearchResult'
+      x-swagger-router-controller: adh.controller.switch
     post:
       tags:
-      - "switch"
-      summary: "Create a switch"
-      operationId: "createSwitch"
+      - switch
+      summary: Create a switch
+      operationId: createSwitch
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Switch to create"
+      - in: body
+        name: body
+        description: Switch to create
         required: true
         schema:
-          $ref: "#/definitions/Switch"
+          $ref: '#/definitions/Switch'
       responses:
         200:
-          description: "Created"
+          description: Created
           headers:
             Location:
-              type: "string"
-              description: "URI to the newly created switch"
-      x-swagger-router-controller: "controller.switch"
+              type: string
+              description: URI to the newly created switch
+      x-swagger-router-controller: adh.controller.switch
   /switch/{switchID}:
     get:
       tags:
-      - "switch"
-      summary: "Retrieve a switch"
-      operationId: "getSwitch"
+      - switch
+      summary: Retrieve a switch
+      operationId: getSwitch
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "switchID"
-        in: "path"
+      - name: switchID
+        in: path
         required: true
-        type: "integer"
+        type: integer
       responses:
         200:
-          description: "Success"
+          description: Success
           schema:
-            $ref: "#/definitions/Switch"
+            $ref: '#/definitions/Switch'
         404:
-          description: "Not found"
-      x-swagger-router-controller: "controller.switch"
+          description: Not found
+      x-swagger-router-controller: adh.controller.switch
     put:
       tags:
-      - "switch"
-      summary: "Update a switch"
-      operationId: "updateSwitch"
+      - switch
+      summary: Update a switch
+      operationId: updateSwitch
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "switchID"
-        in: "path"
+      - name: switchID
+        in: path
         required: true
-        type: "integer"
-      - in: "body"
-        name: "body"
-        description: "Switch to update"
+        type: integer
+      - in: body
+        name: body
+        description: Switch to update
         required: true
         schema:
-          $ref: "#/definitions/Switch"
+          $ref: '#/definitions/Switch'
       responses:
         204:
-          description: "Updated"
+          description: Updated
         404:
-          description: "Not found"
-      x-swagger-router-controller: "controller.switch"
+          description: Not found
+      x-swagger-router-controller: adh.controller.switch
     delete:
       tags:
-      - "switch"
-      summary: "Delete a switch"
-      operationId: "deleteSwitch"
+      - switch
+      summary: Delete a switch
+      operationId: deleteSwitch
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "switchID"
-        in: "path"
+      - name: switchID
+        in: path
         required: true
-        type: "integer"
+        type: integer
       responses:
         204:
-          description: "Deleted"
+          description: Deleted
         404:
-          description: "Not found"
-      x-swagger-router-controller: "controller.switch"
+          description: Not found
+      x-swagger-router-controller: adh.controller.switch
   /ports/:
     get:
       tags:
-      - "port"
-      summary: "Filter ports"
-      operationId: "filterPort"
+      - port
+      summary: Filter ports
+      operationId: filterPort
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Limit the number of ports returned in the result. Default is\
-          \ 100"
+      - name: limit
+        in: query
+        description: Limit the number of ports returned in the result. Default is 100
         required: false
-        type: "integer"
+        type: integer
         default: 100
-      - name: "switchID"
-        in: "query"
-        description: "Filter only ports that belongs to that switch"
+      - name: switchID
+        in: query
+        description: Filter only ports that belongs to that switch
         required: false
-        type: "integer"
-      - name: "roomNumber"
-        in: "query"
-        description: "Filter only ports that that room"
+        type: integer
+      - name: roomNumber
+        in: query
+        description: Filter only ports that that room
         required: false
-        type: "integer"
-      - name: "terms"
-        in: "query"
-        description: "Search terms"
+        type: integer
+      - name: terms
+        in: query
+        description: Search terms
         required: false
-        type: "string"
+        type: string
       responses:
         200:
-          description: "Success"
+          description: Success
           schema:
-            type: "array"
+            type: array
             items:
-              $ref: "#/definitions/PortSearchResult"
-      x-swagger-router-controller: "controller.port"
+              $ref: '#/definitions/PortSearchResult'
+      x-swagger-router-controller: adh.controller.port
   /switch/{switchID}/port/:
     post:
       tags:
-      - "port"
-      summary: "Create a port"
-      operationId: "createPort"
+      - port
+      summary: Create a port
+      operationId: createPort
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "switchID"
-        in: "path"
+      - name: switchID
+        in: path
         required: true
-        type: "integer"
-      - in: "body"
-        name: "body"
-        description: "Port to create"
+        type: integer
+      - in: body
+        name: body
+        description: Port to create
         required: true
         schema:
-          $ref: "#/definitions/Port"
+          $ref: '#/definitions/Port'
       responses:
         200:
-          description: "Created"
+          description: Created
           headers:
             Location:
-              type: "string"
-              description: "URI to the newly created port"
-      x-swagger-router-controller: "controller.port"
+              type: string
+              description: URI to the newly created port
+      x-swagger-router-controller: adh.controller.port
   /switch/{switchID}/port/{portID}:
     get:
       tags:
-      - "port"
-      summary: "Retrieve a port"
-      operationId: "getPort"
+      - port
+      summary: Retrieve a port
+      operationId: getPort
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "switchID"
-        in: "path"
+      - name: switchID
+        in: path
         required: true
-        type: "integer"
-      - name: "portID"
-        in: "path"
+        type: integer
+      - name: portID
+        in: path
         required: true
-        type: "integer"
+        type: integer
       responses:
         200:
-          description: "Success"
+          description: Success
           schema:
-            $ref: "#/definitions/Port"
+            $ref: '#/definitions/Port'
         404:
-          description: "Not found"
-      x-swagger-router-controller: "controller.port"
+          description: Not found
+      x-swagger-router-controller: adh.controller.port
     put:
       tags:
-      - "port"
-      summary: "Update a port"
-      operationId: "updatePort"
+      - port
+      summary: Update a port
+      operationId: updatePort
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "switchID"
-        in: "path"
+      - name: switchID
+        in: path
         required: true
-        type: "integer"
-      - name: "portID"
-        in: "path"
+        type: integer
+      - name: portID
+        in: path
         required: true
-        type: "integer"
-      - in: "body"
-        name: "body"
-        description: "Port to update"
+        type: integer
+      - in: body
+        name: body
+        description: Port to update
         required: true
         schema:
-          $ref: "#/definitions/Port"
+          $ref: '#/definitions/Port'
       responses:
         204:
-          description: "Updated"
+          description: Updated
         404:
-          description: "Not found"
-      x-swagger-router-controller: "controller.port"
+          description: Not found
+      x-swagger-router-controller: adh.controller.port
     delete:
       tags:
-      - "port"
-      summary: "Delete a port"
-      operationId: "deletePort"
+      - port
+      summary: Delete a port
+      operationId: deletePort
       produces:
-      - "application/json"
+      - application/json
       parameters:
-      - name: "switchID"
-        in: "path"
+      - name: switchID
+        in: path
         required: true
-        type: "integer"
-      - name: "portID"
-        in: "path"
+        type: integer
+      - name: portID
+        in: path
         required: true
-        type: "integer"
+        type: integer
       responses:
         204:
-          description: "Deleted"
+          description: Deleted
         404:
-          description: "Not found"
-      x-swagger-router-controller: "controller.port"
+          description: Not found
+      x-swagger-router-controller: adh.controller.port
 securityDefinitions:
   petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
-    flow: "implicit"
+    type: oauth2
+    authorizationUrl: http://petstore.swagger.io/oauth/dialog
+    flow: implicit
     scopes:
-      write:pets: "modify pets in your account"
-      read:pets: "read your pets"
+      write:pets: modify pets in your account
+      read:pets: read your pets
   api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header"
+    type: apiKey
+    name: api_key
+    in: header
 definitions:
   User:
-    type: "object"
+    type: object
     required:
-    - "email"
-    - "firstName"
-    - "lastName"
-    - "username"
+    - email
+    - firstName
+    - lastName
+    - username
     properties:
       email:
-        type: "string"
-        example: "john.doe@gmail.com"
+        type: string
+        example: john.doe@gmail.com
       firstName:
-        type: "string"
-        example: "John"
+        type: string
+        example: John
       lastName:
-        type: "string"
-        example: "Doe"
+        type: string
+        example: Doe
       username:
-        type: "string"
-        example: "doe_john"
+        type: string
+        example: doe_john
       departureDate:
-        type: "string"
-        format: "date-time"
+        type: string
+        format: date-time
       comment:
-        type: "string"
+        type: string
       associationMode:
-        type: "string"
-        format: "date-time"
+        type: string
+        format: date-time
       roomNumber:
-        type: "integer"
-        format: "int32"
+        type: integer
+        format: int32
         example: 5012
     example:
-      firstName: "John"
-      lastName: "Doe"
+      firstName: John
+      lastName: Doe
       roomNumber: 5012
-      comment: "comment"
-      departureDate: "2000-01-23T04:56:07.000+00:00"
-      associationMode: "2000-01-23T04:56:07.000+00:00"
-      email: "john.doe@gmail.com"
-      username: "doe_john"
+      comment: comment
+      departureDate: 2000-01-23T04:56:07.000+00:00
+      associationMode: 2000-01-23T04:56:07.000+00:00
+      email: john.doe@gmail.com
+      username: doe_john
   Device:
-    type: "object"
+    type: object
     required:
-    - "connectionType"
-    - "mac"
+    - connectionType
+    - mac
     properties:
       mac:
-        type: "string"
-        example: "01:23:45:67:89:AB"
+        type: string
+        example: 01:23:45:67:89:AB
       ipAddress:
-        type: "string"
-        example: "127.0.0.1"
+        type: string
+        example: 127.0.0.1
       ipv6Address:
-        type: "string"
+        type: string
       connectionType:
-        type: "string"
+        type: string
         enum:
-        - "wired"
-        - "wireless"
+        - wired
+        - wireless
       username:
-        type: "string"
-        example: "doe_john"
+        type: string
+        example: doe_john
     example:
-      ipv6Address: "ipv6Address"
-      ipAddress: "127.0.0.1"
-      connectionType: "wired"
-      mac: "01:23:45:67:89:AB"
-      username: "doe_john"
+      ipv6Address: ipv6Address
+      ipAddress: 127.0.0.1
+      connectionType: wired
+      mac: 01:23:45:67:89:AB
+      username: doe_john
   Room:
-    type: "object"
+    type: object
     required:
-    - "roomNumber"
+    - roomNumber
     properties:
       description:
-        type: "string"
-        example: "Chambre 5110"
+        type: string
+        example: Chambre 5110
       roomNumber:
-        type: "integer"
+        type: integer
         example: 5110
       phone:
-        type: "integer"
+        type: integer
         example: 6842
       vlan:
-        type: "integer"
+        type: integer
         example: 45
     example:
       roomNumber: 5110
       vlan: 45
       phone: 6842
-      description: "Chambre 5110"
+      description: Chambre 5110
   Port:
-    type: "object"
+    type: object
     required:
-    - "portNumber"
+    - portNumber
     properties:
       portNumber:
-        type: "string"
-        example: "1/0/4"
+        type: string
+        example: 1/0/4
       roomNumber:
-        type: "integer"
+        type: integer
         example: 5110
       switchID:
-        type: "integer"
+        type: integer
         example: 6
     example:
       roomNumber: 5110
       switchID: 6
-      portNumber: "1/0/4"
+      portNumber: 1/0/4
   PortSearchResult:
-    type: "object"
+    type: object
     required:
-    - "port"
-    - "portID"
-    - "switchID"
+    - port
+    - portID
+    - switchID
     properties:
       port:
-        $ref: "#/definitions/Port"
+        $ref: '#/definitions/Port'
       portID:
-        type: "integer"
+        type: integer
         example: 1
       switchID:
-        type: "integer"
+        type: integer
         example: 6
     example:
       port:
         roomNumber: 5110
         switchID: 6
-        portNumber: "1/0/4"
+        portNumber: 1/0/4
       switchID: 6
       portID: 1
   Switch:
-    type: "object"
+    type: object
     required:
-    - "community"
-    - "ip"
+    - community
+    - ip
     properties:
       description:
-        type: "string"
-        example: "Switch U5"
+        type: string
+        example: Switch U5
       ip:
-        type: "string"
-        example: "192.168.102.211"
+        type: string
+        example: 192.168.102.211
       community:
-        type: "string"
-        format: "password"
-        example: "ghWgpQvHRkrYuqpMLWYkstS3"
+        type: string
+        format: password
+        example: ghWgpQvHRkrYuqpMLWYkstS3
     example:
-      ip: "192.168.102.211"
-      description: "Switch U5"
-      community: "ghWgpQvHRkrYuqpMLWYkstS3"
+      ip: 192.168.102.211
+      description: Switch U5
+      community: ghWgpQvHRkrYuqpMLWYkstS3
   SwitchSearchResult:
-    type: "object"
+    type: object
     properties:
       switch:
-        $ref: "#/definitions/Switch"
+        $ref: '#/definitions/Switch'
       switchID:
-        type: "integer"
+        type: integer
         example: 1
     example:
       switchID: 1
       switch:
-        ip: "192.168.102.211"
-        description: "Switch U5"
-        community: "ghWgpQvHRkrYuqpMLWYkstS3"
+        ip: 192.168.102.211
+        description: Switch U5
+        community: ghWgpQvHRkrYuqpMLWYkstS3
   MembershipRecord:
-    type: "object"
+    type: object
     required:
-    - "duration"
+    - duration
     properties:
       start:
-        type: "string"
-        format: "date-time"
+        type: string
+        format: date-time
       duration:
-        type: "integer"
+        type: integer
         example: 365
-        description: "Duration in days"
+        description: Duration in days
     example:
       duration: 365
-      start: "2000-01-23T04:56:07.000+00:00"
+      start: 2000-01-23T04:56:07.000+00:00
   body:
-    type: "object"
+    type: object
     properties:
       user:
-        $ref: "#/definitions/User"
+        $ref: '#/definitions/User'
       password:
-        type: "string"
-        format: "password"
-        example: "toto123"
+        type: string
+        format: password
+        example: toto123
 externalDocs:
-  description: "Find out more about MiNET"
-  url: "http://minet.net"
+  description: Find out more about MiNET
+  url: http://minet.net
