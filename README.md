@@ -49,7 +49,7 @@ lorsque on lance pytest.
 
 
 ## Code coverage report generation:
-> pytest --cov=controller --cov-report html
+> pytest --cov=adh --cov-report html
 
 ## On committing...
 Your commit must pass all the tests
