@@ -3,6 +3,7 @@ from adh.model.database import Database as db
 from adh.model import models
 import sqlalchemy
 from adh.exceptions.invalid_email import InvalidEmail
+from adh.exceptions.invalid_ip import InvalidIPv4, InvalidIPv6
 
 
 def is_wired(macAddress):
@@ -174,6 +175,12 @@ def putDevice(macAddress, body):
 
     except InvalidEmail:
         return 'Invalid email', 400
+
+    except InvalidIPv6:
+        return 'Invalid IPv6', 400
+
+    except InvalidIPv4:
+        return 'Invalid IPv4', 400
 
 
 def getDevice(macAddress):
