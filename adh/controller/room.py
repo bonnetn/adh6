@@ -1,7 +1,7 @@
 from connexion import NoContent
 from sqlalchemy import or_
 from adh.model.database import Database as db
-from adh.model.models import Chambre
+from adh.model.models import Chambre, Vlan
 import sqlalchemy
 
 
@@ -59,18 +59,28 @@ def putRoom(roomNumber, body):
             a.description = roomDict["description"]
         if "phone" in roomDict:
             a.telephone = roomDict["phone"]
-        """
-        TODO
         if "vlan" in roomDict:
-            a.vlan = roomDict["vlan"]
-        """
+            q2 = s.query(Vlan)
+            q2 = q2.filter(Vlan.numero == roomDict["vlan"])
+            try:
+                a.vlan = q2.one()
+            except sqlalchemy.orm.exc.NoResultFound:
+                s.rollback()
+                return 'Vlan does not exist', 400
+
         s.commit()
         return 'Updated', 204
     else:
         s = db.get_db().get_session()
         a = fromDict(body)
         s.add(a)
-        print(a)
+        q2 = s.query(Vlan)
+        q2 = q2.filter(Vlan.numero == roomDict["vlan"])
+        try:
+            a.vlan = q2.one()
+        except sqlalchemy.orm.exc.NoResultFound:
+            s.rollback()
+            return 'Vlan does not exist', 400
         s.commit()
         return "Created", 201
 
