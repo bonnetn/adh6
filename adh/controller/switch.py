@@ -17,6 +17,8 @@ def fromDict(body):
 
 def filterSwitch(limit=100, terms=None):
     """ [API] Filter the switch list """
+    if limit < 0:
+        return "Limit must be positive", 400
     result = db.get_db().get_session().query(Switch)
     # Filter by terms
     if terms:
