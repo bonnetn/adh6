@@ -1,5 +1,5 @@
 ---
-swagger: '2.0'
+swagger: 2.0
 info:
   description: |
     Adherent api
@@ -58,6 +58,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/User'
+        400:
+          description: Invalid input
       x-swagger-router-controller: adh.controller.user
   /user/{username}:
     get:
@@ -106,6 +108,8 @@ paths:
           description: Created
         204:
           description: Updated
+        400:
+          description: Invalid input
       x-swagger-router-controller: adh.controller.user
     delete:
       tags:
@@ -150,8 +154,8 @@ paths:
       responses:
         200:
           description: Success
-        404:
-          description: Not found
+        400:
+          description: Invalid input
       x-swagger-router-controller: adh.controller.user
   /device/:
     get:
@@ -185,6 +189,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Device'
+        400:
+          description: Invalid input
       x-swagger-router-controller: adh.controller.device
   /device/{macAddress}:
     get:
@@ -233,7 +239,7 @@ paths:
         204:
           description: Updated
         400:
-          description: Invalid mac address supplied / already in use
+          description: Invalid input
       x-swagger-router-controller: adh.controller.device
     delete:
       tags:
@@ -281,6 +287,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Room'
+        400:
+          description: Invalid input
       x-swagger-router-controller: adh.controller.room
   /room/{roomNumber}:
     get:
@@ -326,6 +334,8 @@ paths:
           description: Created
         204:
           description: Updated
+        400:
+          description: Invalid input
       x-swagger-router-controller: adh.controller.room
     delete:
       tags:
@@ -372,6 +382,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/SwitchSearchResult'
+        400:
+          description: Invalid input
       x-swagger-router-controller: adh.controller.switch
     post:
       tags:
@@ -394,6 +406,8 @@ paths:
             Location:
               type: string
               description: URI to the newly created switch
+        400:
+          description: Invalid input
       x-swagger-router-controller: adh.controller.switch
   /switch/{switchID}:
     get:
@@ -437,6 +451,8 @@ paths:
       responses:
         204:
           description: Updated
+        400:
+          description: Invalid input
         404:
           description: Not found
       x-swagger-router-controller: adh.controller.switch
@@ -495,6 +511,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PortSearchResult'
+        400:
+          description: Invalid input
       x-swagger-router-controller: adh.controller.port
   /switch/{switchID}/port/:
     post:
@@ -522,6 +540,8 @@ paths:
             Location:
               type: string
               description: URI to the newly created port
+        400:
+          description: Invalid input
       x-swagger-router-controller: adh.controller.port
   /switch/{switchID}/port/{portID}:
     get:
@@ -573,6 +593,8 @@ paths:
       responses:
         204:
           description: Updated
+        400:
+          description: Invalid input
         404:
           description: Not found
       x-swagger-router-controller: adh.controller.port
