@@ -178,11 +178,33 @@ def test_device_filter_hit_limit(api_client, sample_member):
     assert len(response) == LIMIT
 
 
+def test_device_put_create_wireless_without_ip(api_client):
+    ''' Can create a valid wireless device ? '''
+    w = dict(TEST_WIRELESS_DEVICE)
+    del w['ipAddress']
+    r = api_client.put('{}/device/{}'.format(base_url,
+                                             w['mac']),
+                       data=json.dumps(w),
+                       content_type='application/json')
+    assert r.status_code == 201
+
+
 def test_device_put_create_wireless(api_client):
     ''' Can create a valid wireless device ? '''
     r = api_client.put('{}/device/{}'.format(base_url,
                                              TEST_WIRELESS_DEVICE['mac']),
                        data=json.dumps(TEST_WIRELESS_DEVICE),
+                       content_type='application/json')
+    assert r.status_code == 201
+
+
+def test_device_put_create_wired_without_ip(api_client):
+    ''' Can create a valid wired device ? '''
+    w = dict(TEST_WIRED_DEVICE)
+    del w['ipAddress']
+    r = api_client.put('{}/device/{}'.format(base_url,
+                                             w['mac']),
+                       data=json.dumps(w),
                        content_type='application/json')
     assert r.status_code == 201
 
