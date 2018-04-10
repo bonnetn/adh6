@@ -99,6 +99,8 @@ def delete_wired_device(macAddress):
 
 def filterDevice(limit=100, username=None, terms=None):
     """ [API] Filter the list of the devices according to some criterias """
+    if limit < 0:
+        return 'Limit must be a positive number', 400
     s = db.get_db().get_session()
     results = []
 
