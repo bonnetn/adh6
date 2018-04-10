@@ -21,6 +21,8 @@ def fromDict(d):
 
 def filterRoom(limit=100, terms=None):
     """ [API] Filter the list of the rooms """
+    if limit < 0:
+        return "Limit must be a positive integer", 400
     s = db.get_db().get_session()
     q = s.query(Chambre)
     if terms:
