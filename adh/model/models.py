@@ -91,7 +91,7 @@ class Adherent(Base):
     @validates('mail')
     def valid_email(self, key, mail):
         if not checks.isEmail(mail):
-            raise ValueError("Email is not valid")
+            raise InvalidEmail()
         return mail
 
     def __iter__(self):
