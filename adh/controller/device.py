@@ -168,6 +168,7 @@ def putDevice(macAddress, body):
             if body["mac"] != macAddress:
                 return 'The MAC address in the query ' + \
                        'and in the body don\'t match', 400
+
             if wanted_type == "wired":
                 create_wired_device(body)
             else:
@@ -190,38 +191,32 @@ def putDevice(macAddress, body):
 
 def getDevice(macAddress):
     """ [API] Return the device specified by the macAddress """
-    s = db.get_db().get_session()
     if is_wireless(macAddress):
+        s = db.get_db().get_session()
         q = s.query(models.Portable)
         q = q.filter(models.Portable.mac == macAddress)
         r = q.one()
         return dict(r), 200
+
     elif is_wired(macAddress):
+        s = db.get_db().get_session()
         q = s.query(models.Ordinateur)
         q = q.filter(models.Ordinateur.mac == macAddress)
         r = q.one()
         return dict(r), 200
+
     else:
         return NoContent, 404
 
 
 def deleteDevice(macAddress):
     """ [API] Delete the specified device from the database """
-    s = db.get_db().get_session()
     if is_wireless(macAddress):
-        q = s.query(models.Portable)
-        q = q.filter(models.Portable.mac == macAddress)
-        r = q.one()
-        s.delete(r)
-        s.commit()
+        delete_wireless_device(macAddress)
         return NoContent, 204
 
     elif is_wired(macAddress):
-        q = s.query(models.Ordinateur)
-        q = q.filter(models.Ordinateur.mac == macAddress)
-        r = q.one()
-        s.delete(r)
-        s.commit()
+        delete_wired_device(macAddress)
         return NoContent, 204
 
     else:
