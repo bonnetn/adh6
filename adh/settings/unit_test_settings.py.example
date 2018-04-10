@@ -1,8 +1,4 @@
 DATABASE = {
-    'drivername': 'mysql+mysqldb',  # if using MySQL: 'mysql+mysqldb'
-    'host': 'localhost',
-    'port': '3306',
-    'username': 'root',
-    'password': '/:SAa/[9@Q_~N3bFNbbUW.pRE,>Zf:b-G&#8`22~``',
-    'database': 'adh'
+    'drivername': 'sqlite',  # if using MySQL: 'mysql+mysqldb'
+    'database': ':memory:',
 }
