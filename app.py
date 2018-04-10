@@ -9,7 +9,9 @@ from connexion.resolver import RestyResolver
 
 logging.basicConfig(level=logging.INFO)
 app = connexion.FlaskApp(__name__)
-app.add_api('swagger.yaml', resolver=RestyResolver('adh.controller'))
+app.add_api('swagger.yaml',
+            resolver=RestyResolver('adh.controller'),
+            strict_validation=True)
 CORS(app.app)
 # set the WSGI application callable to allow using uWSGI:
 # uwsgi --http :8080 -w app
