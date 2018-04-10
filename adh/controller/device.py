@@ -165,6 +165,9 @@ def putDevice(macAddress, body):
             else:
                 update_wireless_device(macAddress, body)
         else:  # Create device
+            if body["mac"] != macAddress:
+                return 'The MAC address in the query ' + \
+                       'and in the body don\'t match', 400
             if wanted_type == "wired":
                 create_wired_device(body)
             else:
