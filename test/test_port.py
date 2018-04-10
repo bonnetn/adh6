@@ -88,8 +88,13 @@ def test_port_get_filter_all(api_client):
     assert len(switches) == 2
 
 
+def test_port_get_filter_all_with_invalid_limit(api_client):
+    r = api_client.get("{}/ports/?limit={}".format(base_url, -1))
+    assert r.status_code == 400
+
+
 def test_port_get_filter_all_with_limit(api_client):
-    r = api_client.get("{}/ports/?limit=1".format(base_url))
+    r = api_client.get("{}/ports/?limit={}".format(base_url, 1))
     assert r.status_code == 200
     switches = json.loads(r.data.decode())
     assert switches
@@ -141,6 +146,20 @@ def test_port_get_filter_by_term_numero(api_client):
     assert len(switches) == 1
 
 
+def test_port_post_create_port_invalid_switch_id(api_client, sample_switch1):
+    body = {
+      "roomNumber": 5110,
+      "switchID": 999,
+      "portNumber": "1/0/4"
+    }
+
+    r = api_client.post(
+        "{}/switch/{}/port/".format(base_url, sample_switch1.id),
+        data=json.dumps(body),
+        content_type='application/json')
+    assert r.status_code == 400
+
+
 def test_port_post_create_port(api_client, sample_switch1):
     body = {
       "roomNumber": 5110,
@@ -172,6 +191,26 @@ def test_port_get_non_existant_port(api_client, sample_switch1, sample_port1):
                                       sample_switch1.id,
                                       4242))
     assert r.status_code == 404
+
+
+def test_port_put_update_port_invalid_switch(api_client,
+                                             sample_switch1,
+                                             sample_port1):
+
+    portNumber = "1/2/3"
+    body = {
+      "roomNumber": 5110,
+      "switchID": 999,
+      "portNumber": portNumber
+    }
+
+    r = api_client.put(
+        "{}/switch/{}/port/{}".format(base_url,
+                                      sample_switch1.id,
+                                      sample_port1.id),
+        data=json.dumps(body),
+        content_type='application/json')
+    assert r.status_code == 400
 
 
 def test_port_put_update_port(api_client, sample_switch1, sample_port1):

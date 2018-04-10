@@ -5,7 +5,7 @@ from adh.model.database import Database as db
 from adh.settings.unit_test_settings import DATABASE as db_settings
 from adh.model.models import Ordinateur, Portable, Adherent
 
-from .resource import base_url, INVALID_MAC
+from .resource import base_url, INVALID_MAC, INVALID_IP, INVALID_IPv6
 
 
 @pytest.fixture
@@ -152,6 +152,11 @@ def test_device_filter_by_terms(
     assert len(response) == expected
 
 
+def test_device_filter_invalid_limit(api_client, sample_member):
+    r = api_client.get('{}/device/?limit={}'.format(base_url, -1))
+    assert r.status_code == 400
+
+
 def test_device_filter_hit_limit(api_client, sample_member):
     s = db.get_db().get_session()
     LIMIT = 10
@@ -191,6 +196,16 @@ def test_device_put_create_wired(api_client):
     assert r.status_code == 201
 
 
+def test_device_put_create_different_mac_addresses(api_client):
+    ''' Create with invalid mac address '''
+    dev = dict(TEST_WIRED_DEVICE)
+    dev['mac'] = "11:11:11:11:11:11"
+    r = api_client.put('{}/device/{}'.format(base_url, "22:22:22:22:22:22"),
+                       data=json.dumps(dev),
+                       content_type='application/json')
+    assert r.status_code == 400
+
+
 @pytest.mark.parametrize('test_mac', INVALID_MAC)
 def test_device_put_create_invalid_mac_address(api_client, test_mac):
     ''' Create with invalid mac address '''
@@ -200,6 +215,28 @@ def test_device_put_create_invalid_mac_address(api_client, test_mac):
                        data=json.dumps(dev),
                        content_type='application/json')
     assert r.status_code == 400 or r.status_code == 405
+
+
+@pytest.mark.parametrize('test_ip', INVALID_IPv6)
+def test_device_put_create_invalid_ipv6(api_client, test_ip):
+    ''' Create with invalid ip address '''
+    dev = dict(TEST_WIRED_DEVICE)
+    dev['ipv6Address'] = test_ip
+    r = api_client.put('{}/device/{}'.format(base_url, dev['mac']),
+                       data=json.dumps(dev),
+                       content_type='application/json')
+    assert r.status_code == 400
+
+
+@pytest.mark.parametrize('test_ip', INVALID_IP)
+def test_device_put_create_invalid_ipv4(api_client, test_ip):
+    ''' Create with invalid ip address '''
+    dev = dict(TEST_WIRED_DEVICE)
+    dev['ipAddress'] = test_ip
+    r = api_client.put('{}/device/{}'.format(base_url, dev['mac']),
+                       data=json.dumps(dev),
+                       content_type='application/json')
+    assert r.status_code == 400
 
 
 def test_device_put_create_invalid_username(api_client):

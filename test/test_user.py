@@ -108,6 +108,11 @@ def test_user_filter_all(api_client):
     assert len(response) == 3
 
 
+def test_user_filter_all_with_invalid_limit(api_client):
+    r = api_client.get('{}/user/?limit={}'.format(base_url, -1))
+    assert r.status_code == 400
+
+
 def test_user_filter_all_with_limit(api_client):
     r = api_client.get('{}/user/?limit={}'.format(base_url, 1))
     assert r.status_code == 200
@@ -212,6 +217,27 @@ def test_user_delete_existant(api_client):
 def test_user_delete_non_existant(api_client):
     r = api_client.delete('{}/user/{}'.format(base_url, "azerty"))
     assert r.status_code == 404
+
+
+def test_user_put_user_create_invalid_email(api_client):
+    body = {
+      "user": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "roomNumber": 1111,
+        "comment": "comment",
+        "departureDate": "2000-01-23T04:56:07.000+00:00",
+        "associationMode": "2000-01-23T04:56:07.000+00:00",
+        "email": "INVALID_EMAIL",
+        "username": "doe_john"
+      },
+      "password": "toto123"
+    }
+    res = api_client.put(
+        '{}/user/{}'.format(base_url, body["user"]["username"]),
+        data=json.dumps(body),
+        content_type='application/json')
+    assert res.status_code == 400
 
 
 def test_user_put_user_create_unknown_room(api_client):

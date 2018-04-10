@@ -37,7 +37,7 @@ def test_switch_to_dict(sample_switch):
 
 
 @pytest.mark.parametrize("test_ip", INVALID_IP)
-def test_switch_insert_invalid_ip(api_client, test_ip):
+def test_switch_post_invalid_ip(api_client, test_ip):
     sample_switch = {
       "description": "Test Switch",
       "ip": test_ip,
@@ -49,7 +49,7 @@ def test_switch_insert_invalid_ip(api_client, test_ip):
     assert r.status_code == 400
 
 
-def test_switch_insert_valid(api_client):
+def test_switch_post_valid(api_client):
 
     sample_switch = {
       "description": "Test Switch",
@@ -70,10 +70,24 @@ def test_switch_insert_valid(api_client):
     assert json.loads(r.data.decode('utf-8'))
 
 
+def test_switch_get_all_invalid_limit(api_client):
+    r = api_client.get("{}/switch/?limit={}".format(base_url, -1))
+    assert r.status_code == 400
+
+
+def test_switch_get_all_limit(api_client):
+    r = api_client.get("{}/switch/?limit={}".format(base_url, 0))
+    assert r.status_code == 200
+    t = json.loads(r.data.decode('utf-8'))
+    assert len(t) == 0
+
+
 def test_switch_get_all(api_client):
     r = api_client.get("{}/switch/".format(base_url))
     assert r.status_code == 200
-    assert json.loads(r.data.decode('utf-8'))
+    t = json.loads(r.data.decode('utf-8'))
+    assert t
+    assert len(t) == 1
 
 
 def test_switch_get_existant_switch(api_client):

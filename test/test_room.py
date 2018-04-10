@@ -68,6 +68,11 @@ def test_room_filter_all_rooms(api_client):
     assert len(response) == 2
 
 
+def test_room_filter_all_rooms_limit_invalid(api_client):
+    r = api_client.get("{}/room/?limit={}".format(base_url, -1))
+    assert r.status_code == 400
+
+
 def test_room_filter_all_rooms_limit(api_client):
     r = api_client.get("{}/room/?limit={}".format(base_url, 1))
     assert r.status_code == 200
@@ -94,10 +99,23 @@ def test_room_get_invalid_room(api_client):
     assert r.status_code == 404
 
 
-def test_room_put_new_room(api_client):
+def test_room_put_new_room_invalid_vlan(api_client):
     room = {
       "roomNumber": 5110,
       "vlan": 45,
+      "phone": 6842,
+      "description": "Chambre 5110"
+    }
+    r = api_client.put("{}/room/{}".format(base_url, 5110),
+                       data=json.dumps(room),
+                       content_type='application/json')
+    assert r.status_code == 400
+
+
+def test_room_put_new_room(api_client):
+    room = {
+      "roomNumber": 5110,
+      "vlan": 42,
       "phone": 6842,
       "description": "Chambre 5110"
     }
@@ -110,7 +128,7 @@ def test_room_put_new_room(api_client):
 def test_room_put_update_room(api_client):
     room = {
       "roomNumber": 5110,
-      "vlan": 45,
+      "vlan": 42,
       "phone": 6842,
       "description": "Chambre 5110"
     }
