@@ -145,6 +145,13 @@ def putDevice(macAddress, body):
         wireless = is_wireless(macAddress)
         wanted_type = body["connectionType"]
 
+        # TODO: Make proper IP assignement system
+        if wanted_type == "wired":
+            if 'ipAddress' not in body:
+                body['ipAddress'] = '192.168.0.1'
+            if 'ipv6Address' not in body:
+                body['ipv6Address'] = 'fe80::1'
+
         if wired and wireless:
             if wanted_type == "wired":
                 delete_wireless_device(macAddress)
