@@ -134,7 +134,7 @@ def putUser(username, body):
             a.commentaires = userDict["comment"]
 
         s.commit()
-        return 'Updated', 204
+        return NoContent, 204
     else:
         s = db.get_db().get_session()
         try:
@@ -149,7 +149,7 @@ def putUser(username, body):
             a.chambre = c
         s.add(a)
         s.commit()
-        return 'Created', 201
+        return NoContent, 201
 
 
 def addMembership(username, body):

@@ -71,7 +71,7 @@ def putRoom(roomNumber, body):
                 return 'Vlan does not exist', 400
 
         s.commit()
-        return 'Updated', 204
+        return NoContent, 204
     else:
         s = db.get_db().get_session()
         a = fromDict(body)
@@ -84,7 +84,7 @@ def putRoom(roomNumber, body):
             s.rollback()
             return 'Vlan does not exist', 400
         s.commit()
-        return "Created", 201
+        return NoContent, 201
 
 
 def getRoom(roomNumber):
