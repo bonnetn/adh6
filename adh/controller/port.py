@@ -23,8 +23,9 @@ def fromDict(d):
     )
 
 
-def findSwitch(s, switchID):
+def findSwitch(switchID):
     """ Returns a switch if it exists, None otherwise """
+    s = db.get_db().get_session()
     q2 = s.query(Switch)
     q2 = q2.filter(Switch.id == switchID)
     try:
@@ -59,13 +60,12 @@ def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
 def createPort(switchID, body):
     """ [API] Create a port in the database """
 
-    session = db.get_db().get_session()
-
     port = fromDict(body)
-    switch = findSwitch(session, body["switchID"])
+    switch = findSwitch(body["switchID"])
     if not switch:
         return 'Switch does not exist', 400
     port.switch = switch
+    session = db.get_db().get_session()
     session.add(port)
     session.commit()
     headers = {
@@ -90,6 +90,11 @@ def getPort(switchID, portID):
 
 def updatePort(switchID, portID, body):
     """ [API] Update a port in the database """
+
+    switch = findSwitch(body["switchID"])
+    if not switch:
+        return 'Switch does not exist', 400
+
     s = db.get_db().get_session()
     q = s.query(Port)
     q = q.filter(Port.id == portID)
@@ -99,11 +104,7 @@ def updatePort(switchID, portID, body):
         return NoContent, 404
 
     port.chambre_id = body["roomNumber"]
-    switch = findSwitch(s, body["switchID"])
-    if not switch:
-        return 'Switch does not exist', 400
     port.switch = switch
-
     port.numero = body["portNumber"]
     s.commit()
 
