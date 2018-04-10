@@ -4,6 +4,7 @@ from adh.model import models
 from dateutil import parser
 import datetime
 import sqlalchemy
+from adh.exceptions.invalid_email import InvalidEmail
 
 
 def dict_to_user(d):
@@ -25,6 +26,9 @@ def dict_to_user(d):
 
 def filterUser(limit=100, terms=None, roomNumber=None):
     """ [API] Filter the list of users from the the database """
+    if limit < 0:
+        return "Limit must be positive", 400
+
     s = db.get_db().get_session()
 
     q = s.query(models.Adherent)
@@ -109,7 +113,11 @@ def putUser(username, body):
         a = q.one()
         a.nom = userDict['lastName']
         a.prenom = userDict['firstName']
-        a.mail = userDict['email']
+        try:
+            a.mail = userDict['email']
+        except InvalidEmail:
+            s.rollback()
+            return "Invalid email", 400
         a.login = userDict['username']
 
         if roomNumber:
@@ -129,7 +137,11 @@ def putUser(username, body):
         return 'Updated', 204
     else:
         s = db.get_db().get_session()
-        a = dict_to_user(body["user"])
+        try:
+            a = dict_to_user(body["user"])
+        except InvalidEmail:
+            s.rollback()
+            return "Invalid email", 400
         if roomNumber:
             q2 = s.query(models.Chambre)
             q2 = q2.filter(models.Chambre.numero == roomNumber)
