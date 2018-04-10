@@ -1,7 +1,7 @@
 from connexion import NoContent
 from adh.model.database import Database as db
 from sqlalchemy import or_
-from adh.model.models import Port
+from adh.model.models import Port, Switch
 import sqlalchemy.orm.exc
 
 
@@ -21,6 +21,16 @@ def fromDict(d):
         switch_id=d["switchID"],
         numero=d["portNumber"]
     )
+
+
+def findSwitch(s, switchID):
+    """ Returns a switch if it exists, None otherwise """
+    q2 = s.query(Switch)
+    q2 = q2.filter(Switch.id == switchID)
+    try:
+        return q2.one()
+    except sqlalchemy.orm.exc.NoResultFound:
+        return None
 
 
 def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
@@ -48,8 +58,14 @@ def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
 
 def createPort(switchID, body):
     """ [API] Create a port in the database """
-    port = fromDict(body)
+
     session = db.get_db().get_session()
+
+    port = fromDict(body)
+    switch = findSwitch(session, body["switchID"])
+    if not switch:
+        return 'Switch does not exist', 400
+    port.switch = switch
     session.add(port)
     session.commit()
     headers = {
@@ -83,7 +99,11 @@ def updatePort(switchID, portID, body):
         return NoContent, 404
 
     port.chambre_id = body["roomNumber"]
-    port.switch_id = body["switchID"]
+    switch = findSwitch(s, body["switchID"])
+    if not switch:
+        return 'Switch does not exist', 400
+    port.switch = switch
+
     port.numero = body["portNumber"]
     s.commit()
 
