@@ -25,6 +25,8 @@ def fromDict(d):
 
 def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
     """ [API] Filter the port list according to some criteria """
+    if limit < 0:
+        return 'Limit must be a positive number', 400
 
     q = db.get_db().get_session().query(Port)
     if switchID:
