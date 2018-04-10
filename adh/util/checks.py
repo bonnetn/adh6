@@ -63,11 +63,8 @@ def isIPv4(ipAddress):
 
 def isIPv6(ipAddress):
     """ Allowed format: fe80:0000:0000:0000:62eb:69ff:feec:c643 """
-    print(ipAddress)
     try:
         IPv6Address(ipAddress)
-        print("yes")
     except AddressValueError:
-        print('no')
         return False
     return True
