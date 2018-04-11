@@ -4,6 +4,7 @@ a {
 
 h1,h2{
   text-align: center;
+  color: #141414;
 }
 
 h1{
@@ -11,9 +12,11 @@ h1{
   font-weight: bold;
 }
 
-button.button-primary{
-    background: #65B5EA;
-}
+input[type="button"].button-primary, button.button-primary, button {  
+  color: #FFF;
+  background-color: #65B5EA;          
+  border-color: #ccc;
+}   
 
 button[disabled] {
     background:#ccc;
@@ -23,6 +26,45 @@ button[disabled] {
 
 button.btn-danger{
     background:#d60b0b;
-    border-color: #000000;
-    color: #000000;
+    border-color: #ccc;
+    color: #ffffff;
 }
+
+
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+.button:focus,
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+input[type="button"]:focus {
+  color: #FFF;
+  border-color: #888;
+  outline: 0; }
+.button.button-primary,
+button.button-primary,
+input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary {
+  color: #FFF;
+  background-color: #65B5EA;          
+  border-color: #ccc;
+}
+.button.button-primary:hover,
+button.button-primary:hover,
+input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover,
+.button.button-primary:focus,
+button.button-primary:focus,
+input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus {
+  color: #FFF;
+  background-color: #65B5EA;          
+  border-color: #888;
+}
+
