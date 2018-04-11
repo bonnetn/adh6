@@ -4,7 +4,9 @@ a {
 
 h1,h2{
   text-align: center;
+  /*
   color: #141414;
+  */
 }
 
 h1{
@@ -26,6 +28,7 @@ button[disabled] {
     background:#ccc;
     border-color: #ccc;
     text-shadow:none;
+    cursor: no-drop;
 }
 
 button.btn-danger{
