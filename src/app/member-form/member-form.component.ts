@@ -72,9 +72,16 @@ export class MemberFormComponent implements OnInit, OnDestroy {
     this.userService.putUserResponse( { "username": v.username, body: req } )
       .takeWhile( () => this.alive )
       .subscribe( (response : HttpResponse<void>) => {
-        if( response.status == 204 || response.status == 201 ) {
+        if ( response.status == 400) {
+          alert("Incorrect Input") 
+        }
+        else if( response.status == 204 || response.status == 201 ) {
           this.router.navigate(["member/view", user.username ])
         }
+        else {
+          alert ("Unknown Error") 
+        }
+        this.disabled = true;
       });
 
   }
