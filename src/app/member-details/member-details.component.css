@@ -1,5 +1,12 @@
-button[disabled] {
-    background:#ccc;
-    border-color: #ccc;
-    text-shadow:none;
+img {
+    width: 90%;
+    height: 90%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto 
+}
+
+.bigbutton{
+    height: 76px;
+    line-height: 30px;
 }

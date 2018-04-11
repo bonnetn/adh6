@@ -2,7 +2,7 @@ a {
   text-decoration: none
 }
 
-h1,h2{
+h1,h2,h3{
   text-align: center;
   /*
   color: #141414;
@@ -16,8 +16,15 @@ h1{
 }
 
 h2 {
+  margin-top: 0.5em;
   margin-bottom: 1em;
 }
+
+h3{
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
 input[type="button"].button-primary, button.button-primary, button {  
   color: #FFF;
   background-color: #65B5EA;          
@@ -72,5 +79,13 @@ button[disabled]:hover{
 button.button-danger{
     color: #FFF;
     background-color:#d60b0b;
+}
+
+textarea{
+  resize: none;
+}
+
+ul,li { 
+  list-style-type: none; 
 }
 

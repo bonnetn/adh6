@@ -25,18 +25,16 @@
           <li>
             <strong>Numéro de chambre: </strong>{{ member.roomNumber }}
           </li>
+          <li>
+            <strong>Occupée par: </strong>
+          </li>
         </div>
 
         <div class="four columns">
           <a [routerLink]="['../../../room', member.roomNumber ]">
             <button class="u-full-width">Consulter</button>
           </a>
-        </div>
-      </div>
-      <div class="row">
-        <div class="eight columns"><br/> </div>
-        <div class="four columns">
-          <button class="u-full-width">Déménager</button>
+             <button class="u-full-width">Déménager</button>
         </div>
       </div>
     </ul>
@@ -67,10 +65,10 @@
     </div>
     <div class="row">
       <form [formGroup]="deviceForm" (ngSubmit)="onSubmitDevice()" novalidate>
-        <div class="six columns">
+        <div class="four columns">
           <input class="u-full-width" type="text" formControlName="mac">
         </div>
-        <div class="two columns">
+        <div class="four columns">
           <select class="u-full-width" type="text" formControlName="connectionType">
             <option value="wired">Filaire</option>
             <option value="wireless">Wi-Fi</option>
@@ -79,7 +77,7 @@
         <div class="four columns">
           <button type="submit"
                   [disabled]="disabled || deviceForm.status == 'INVALID'"
-                  class="button-primary">Ajouter l'appareil</button>
+                  class="u-full-width button-primary">Ajouter l'appareil</button>
         </div>
       </form>
     </div>
@@ -90,22 +88,26 @@
     <form [formGroup]="commentForm" (ngSubmit)="onSubmitComment()" novalidate>
       <textarea class="u-full-width" formControlName="comment"></textarea>
       <div class="row">
-        <button type="submit" class="button-primary"
+        <button type="submit" class="u-full-width button-primary"
                               [disabled]="commentSubmitDisabled">Envoyer</button>
       </div>
     </form>
   </div>
   <div class="three columns">
-    <h3>Sidebar:</h3>
+    <h3>Sidebar</h3>
     <ul>
       <li>{{ member.comment }}</li>
-      <img src="http://trombi.tem-tsp.eu/photo.php?uid={{ member.username }}&h=40&w=240"/>
-      <li>Association des périphériques</li>
-      <li>Dernières modifications:
-        <ul>
-          <li>Modification récente</li>
-        </ul>
+      <img src="http://trombi.tem-tsp.eu/photo.php?uid={{ member.username
+      }}&h=320&w=240"/>
+      <br />
+      <li>
+        <button class="u-full-width button-primary bigbutton">
+          Association des <br/>périphériques</button>
       </li>
+      <li>Dernières modifications:</li>
+      <!-->
+      <li>Modification récente</li>
+      -->
     </ul>
   </div>
 
