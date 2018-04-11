@@ -24,13 +24,6 @@ input[type="button"].button-primary, button.button-primary, button {
   border-color: #ccc;
 }   
 
-button[disabled] {
-    background:#ccc;
-    border-color: #ccc;
-    text-shadow:none;
-    cursor: no-drop;
-}
-
 button.btn-danger{
     background:#d60b0b;
     border-color: #ccc;
@@ -75,3 +68,10 @@ input[type="button"].button-primary:focus {
   border-color: #888;
 }
 
+
+button[disabled], 
+button[disabled]:hover{
+    background:#ccc;
+    border-color: #ccc;
+    text-shadow:none;
+    cursor: no-drop}
