@@ -68,13 +68,13 @@
         <div class="four columns">
           <input class="u-full-width" type="text" formControlName="mac">
         </div>
-        <div class="four columns">
+        <div class="three columns">
           <select class="u-full-width" type="text" formControlName="connectionType">
             <option value="wired">Filaire</option>
             <option value="wireless">Wi-Fi</option>
           </select>
         </div>
-        <div class="four columns">
+        <div class="five columns">
           <button type="submit"
                   [disabled]="disabled || deviceForm.status == 'INVALID'"
                   class="u-full-width button-primary">Ajouter l'appareil</button>
