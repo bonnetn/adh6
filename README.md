@@ -21,6 +21,7 @@ entre *Flask* et les fonctions en python qui sont appelées presque magiquement.
 
 La spécification de l'API est stockée dans swagger.yaml à la racine du projet,
 ce fichier est automatiquement exporté de swaggerhub.
+https://app.swaggerhub.com/apis/insolentbacon/adherents/
 
 *En gros*, les fonctions importantes sont juste celles dans *adh/controller/*,
 qui sont appelées quand on fait des requêtes vers le serveur web.
