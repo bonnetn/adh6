@@ -24,13 +24,20 @@
   <label>Room number / Numéro de chambre:</label>
   <input class="u-full-width" type="text" formControlName="roomNumber" type="number">
 
-  <button type="submit"
+  <br /><br />
+  <div class="row">
+    <div class="six columns">
+       <button type="submit"
           [disabled]="disabled || memberEdit.status == 'INVALID'"
-          class="button-primary">Edit</button>
+          class="u-full-width button-primary"
+          >Edit</button>
+    </div>
+    <div class="six columns">
+      <button type="submit"
+              [disabled]="enabled"
+              class="u-full-width button-danger"
+              >Delete</button>
+    </div>
+  </div>
 </form>
 
-<form [formGroup]="memberDelete" (ngSubmit)="onDelete()" novalidate>
-  <button type="submit"
-          [disabled]="enabled"
-          class="button btn-danger">Delete</button>
-</form>
