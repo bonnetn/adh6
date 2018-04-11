@@ -14,8 +14,6 @@
       <td>{{ device.mac }}</td>
       <td>{{ device.connectionType }}</td>
       <td><a [routerLink]="['../view' , device.mac]"><button>Consulter</button></a></td>
-      <td><a [routerLink]="['../edit' , device.mac]"><button>Editer</button></a></td>
-      <td><a style="cursor:pointer" (click)="onDelete(device.mac)"><button>Supprimer</button></a></td>
     </tr>
   </table>
 </div>
