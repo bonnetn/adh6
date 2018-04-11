@@ -72,6 +72,36 @@ export class MemberEditComponent implements OnInit, OnDestroy {
 
   }
 
+  onDelete() {
+    const v = this.memberEdit.value;
+    const user: User = {
+      email: v.email,
+      firstName: v.firstName,
+      lastName: v.lastName,
+      username: v.username,
+      roomNumber: v.roomNumber
+    }
+
+    var req = {
+      "user" : user,
+    };
+
+    this.userService.deleteUserResponse( v.username )
+      .takeWhile( () => this.alive )
+      .subscribe( (response : HttpResponse<void>) => {
+        if( response.status == 204 ) {
+          this.router.navigate(["member/search"])
+        }
+        else if (response.status == 404 ){
+          alert("Error Delete User")
+        }
+        else {
+          alert("Unknown Error")
+        }
+      });
+
+  }
+
   ngOnInit() {
     this.route.paramMap
       .switchMap((params: ParamMap) => 

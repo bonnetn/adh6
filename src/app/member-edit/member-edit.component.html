@@ -27,17 +27,16 @@
   <br /><br />
   <div class="row">
     <div class="six columns">
-       <button type="submit"
-          [disabled]="disabled || memberEdit.status == 'INVALID'"
-          class="u-full-width button-primary"
-          >Edit</button>
+     <button type="submit"
+        [disabled]="disabled || memberEdit.status == 'INVALID'"
+        class="u-full-width button-primary"
+        >Éditer</button>
     </div>
     <div class="six columns">
-      <button type="submit"
-              [disabled]="enabled"
-              class="u-full-width button-danger"
-              >Delete</button>
+     <a (click)="onDelete()"><button
+        [disabled]="enabled"
+        class="u-full-width button-danger">
+        Supprimer</button></a>
     </div>
   </div>
 </form>
-
