@@ -10,8 +10,12 @@ h1,h2{
 h1{
   text-decoration: underline;
   font-weight: bold;
+  margin-top: 0.5em;
 }
 
+h2 {
+  margin-bottom: 1em;
+}
 input[type="button"].button-primary, button.button-primary, button {  
   color: #FFF;
   background-color: #65B5EA;          
