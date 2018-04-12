@@ -156,6 +156,7 @@ def test_switch_update_existant_switch(api_client):
     r = api_client.get("{}/switch/{}".format(base_url, 1))
     assert r.status_code == 200
     tbl = json.loads(r.data.decode('utf-8'))
+    del tbl["id"]
     assert tbl == sample_switch, "The switch wasn't modified"
 
 
