@@ -11,7 +11,6 @@ import { Room } from '../api/models/room';
 import { PortSearchResult } from '../api/models/port-search-result';
 import { User } from '../api/models/user';
 import { UserService } from '../api/services/user.service';
-import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-room-details',
@@ -32,7 +31,6 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   memberEdit: FormGroup;
 
   constructor(
-    private appcomponent: AppComponent,
     private router: Router,
     public roomService: RoomService, 
     public portService: PortService, 
@@ -72,20 +70,11 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
       .subscribe( (response : HttpResponse<void>) => {
         if(response.status == 204) {
           this.router.navigate(["member/view", user.username ])
-          this.appcomponent.alert_type = "info"
-          this.appcomponent.alert_message_type = "Succès"
-          this.appcomponent.alert_message_display = v.firstName+" "+v.lastName+" a bien été supprimé de la chambre "+String(v.RoomNumber)
         }
         else if (response.status == 400) {
           this.router.navigate(["member/view", user.username ])
-          this.appcomponent.alert_type = "warning"
-          this.appcomponent.alert_message_type = "Attention"
-          this.appcomponent.alert_message_display = "Informations invalides"
         }
         else {
-          this.appcomponent.alert_type = "danger"
-          this.appcomponent.alert_message_type = "Danger "
-          this.appcomponent.alert_message_display = "Erreur Inconnue"
         }
       });
 
@@ -98,19 +87,10 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
       .subscribe( (response : HttpResponse<void>) => {
         if( response.status == 204 ) {
           this.router.navigate(["room"])
-          this.appcomponent.alert_type = "success"
-          this.appcomponent.alert_message_type = "Succès"
-          this.appcomponent.alert_message_display = "Chambre Supprimée"
         }
         else if (response.status == 404 ){
-          this.appcomponent.alert_type = "warning"
-          this.appcomponent.alert_message_type = "Attention"
-          this.appcomponent.alert_message_display = "Chambre Inconnue"
         }
         else {
-          this.appcomponent.alert_type = "danger"
-          this.appcomponent.alert_message_type = "Danger"
-          this.appcomponent.alert_message_display = "Erreur Inconnue"
         }
       });
   

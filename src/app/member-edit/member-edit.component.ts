@@ -10,8 +10,6 @@ import 'rxjs/add/operator/takeWhile';
 import { UserService } from '../api/services/user.service';
 import { User } from '../api/models/user';
 
-import { AppComponent } from '../app.component'; 
-
 @Component({
   selector: 'app-member-edit',
   templateUrl: './member-edit.component.html',
@@ -19,9 +17,7 @@ import { AppComponent } from '../app.component';
 })
 export class MemberEditComponent implements OnInit, OnDestroy {
 
-  // Disable the button to prevent multiple submit
   disabled: boolean = false;
-  // Variable to destroy all subscriptions
   private alive: boolean = true;
 
   private member$: Observable<User>;
@@ -29,7 +25,6 @@ export class MemberEditComponent implements OnInit, OnDestroy {
   memberEdit: FormGroup;
 
   constructor(
-    private appcomponent: AppComponent,
     public userService: UserService, 
     private route: ActivatedRoute,
     private fb: FormBuilder, 
@@ -69,26 +64,13 @@ export class MemberEditComponent implements OnInit, OnDestroy {
       .subscribe( (response : HttpResponse<void>) => {
         if (response.status == 201){
           this.router.navigate(["member/view", user.username ])
-          this.appcomponent.alert_type = "success"
-          this.appcomponent.alert_message_type = "Succès"
-          this.appcomponent.alert_message_display = "Utilisateur Créé"
         }
         else if(response.status == 204) {
           this.router.navigate(["member/view", user.username ])
-          this.appcomponent.alert_type = "success"
-          this.appcomponent.alert_message_type = "Succès"
-          this.appcomponent.alert_message_display = "Utilisateur Modifié"
         }
         else if (response.status == 400) {
-          this.router.navigate(["member/view", user.username ])
-          this.appcomponent.alert_type = "warning"
-          this.appcomponent.alert_message_type = "Attention"
-          this.appcomponent.alert_message_display = "Informations invalides"
         }
         else {
-          this.appcomponent.alert_type = "danger"
-          this.appcomponent.alert_message_type = "Danger "
-          this.appcomponent.alert_message_display = "Erreur Inconnue"
         }
       });
 
@@ -113,20 +95,10 @@ export class MemberEditComponent implements OnInit, OnDestroy {
       .subscribe( (response : HttpResponse<void>) => {
         if( response.status == 204 ) {
           this.router.navigate(["member/search"])
-          this.appcomponent.alert_type = "success"
-          this.appcomponent.alert_message_type = "Succès"
-          this.appcomponent.alert_message_display = "Utilisateur Supprimé"
         }
         else if (response.status == 404 ){
-          this.appcomponent.alert_type = "warning"
-          this.appcomponent.alert_message_type = "Attention"
-          this.appcomponent.alert_message_display = "Utilisateur Inconnue"
         }
         else {
-          this.appcomponent.alert_type = "danger"
-          this.appcomponent.alert_message_type = "Danger"
-          this.appcomponent.alert_message_display = "Erreur Inconnue"
-
         }
       });
 
