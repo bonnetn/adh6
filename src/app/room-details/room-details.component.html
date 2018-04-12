@@ -5,7 +5,13 @@
       <strong>{{ member.firstName }} {{ member.lastName }}</strong><br /><br />
       <div class="row">
         <div class="six columns"><a [routerLink]="['../../member/view', member.username]"><button class="u-full-width">Consulter</button></a></div>
-        <div class="six columns"><button class="button-danger u-full-width">Supprimer de la chambre</button></div>
+        <div class="six columns">
+        <a (click)="onKick()"><button
+            class="button-danger u-full-width"
+            [disabled]="enabled">
+            Supprimer de la chambre</button>
+        </a>
+        </div>
       </div>
     </li>
   </ul>
