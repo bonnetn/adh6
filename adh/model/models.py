@@ -100,7 +100,7 @@ class Adherent(Base):
         if not username:
             return None
         q = session.query(Adherent)
-        q = q.filter(Adherent.numero == username)
+        q = q.filter(Adherent.login == username)
         try:
             return q.one()
         except NoResultFound:
