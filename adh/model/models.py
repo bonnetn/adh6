@@ -6,6 +6,7 @@ from adh.util import checks
 from adh.model.database import Base
 from adh.exceptions.invalid_ip import InvalidIPv4, InvalidIPv6
 from adh.exceptions.invalid_email import InvalidEmail
+from adh.exceptions.invalid_mac import InvalidMac
 
 
 class Vlan(Base):
@@ -201,7 +202,7 @@ class Ordinateur(Base):
     @validates('mac')
     def mac_valid(self, key, mac):
         if not mac or not checks.isMac(mac):
-            raise InvalidEmail()
+            raise InvalidMac()
         return mac
 
     @validates('ip')

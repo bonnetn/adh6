@@ -2,7 +2,7 @@ from connexion import NoContent
 from adh.model.database import Database as db
 from adh.model import models
 import sqlalchemy
-from adh.exceptions.invalid_email import InvalidEmail
+from adh.exceptions.invalid_mac import InvalidMac
 from adh.exceptions.invalid_ip import InvalidIPv4, InvalidIPv6
 
 
@@ -186,8 +186,8 @@ def putDevice(macAddress, body):
     except sqlalchemy.orm.exc.NoResultFound:
         return 'Invalid username', 400
 
-    except InvalidEmail:
-        return 'Invalid email', 400
+    except InvalidMac:
+        return 'Invalid mac', 400
 
     except InvalidIPv6:
         return 'Invalid IPv6', 400
