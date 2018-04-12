@@ -7,7 +7,7 @@ from adh.util import checks
 from adh.model.database import Base
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
 from adh.exceptions import UserNotFound, RoomNotFound, SwitchNotFound
-from adh.exceptions import VlanNotFound
+from adh.exceptions import VlanNotFound, PortNotFound
 from adh.util.date import string_to_date
 
 
@@ -364,6 +364,16 @@ class Port(Base):
     chambre = relationship(Chambre)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
+
+    @staticmethod
+    def find(session, portID):
+        """ [API] Get the specified Port from the database """
+        try:
+            q = session.query(Port)
+            q = q.filter(Port.id == portID)
+            return q.one()
+        except NoResultFound:
+            raise PortNotFound
 
     @staticmethod
     def from_dict(session, d):

@@ -22,6 +22,10 @@ class SwitchNotFound(ValueError):
     pass
 
 
+class PortNotFound(ValueError):
+    pass
+
+
 class VlanNotFound(ValueError):
     pass
 

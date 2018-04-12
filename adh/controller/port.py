@@ -1,20 +1,8 @@
 from connexion import NoContent
 from adh.model.database import Database as db
 from sqlalchemy import or_
-from adh.model.models import Port, Switch
-from adh.exceptions import RoomNotFound, SwitchNotFound
-import sqlalchemy.orm.exc
-
-
-def findSwitch(switchID):
-    """ Returns a switch if it exists, None otherwise """
-    s = db.get_db().get_session()
-    q2 = s.query(Switch)
-    q2 = q2.filter(Switch.id == switchID)
-    try:
-        return q2.one()
-    except sqlalchemy.orm.exc.NoResultFound:
-        return None
+from adh.exceptions import RoomNotFound, SwitchNotFound, PortNotFound
+from adh.model.models import Port
 
 
 def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
@@ -50,10 +38,7 @@ def createPort(switchID, body):
         return "Switch not found", 400
     except RoomNotFound:
         return "Room not found", 400
-    switch = findSwitch(body["switchID"])
-    if not switch:
-        return 'Switch does not exist', 400
-    port.switch = switch
+
     session.add(port)
     session.commit()
     headers = {
@@ -64,36 +49,32 @@ def createPort(switchID, body):
 
 def getPort(switchID, portID):
     """ [API] Get a port from the database """
-    q = db.get_db().get_session().query(Port)
-    q = q.filter(Port.id == portID)
+    s = db.get_db().get_session()
     try:
-        result = q.one()
-    except sqlalchemy.orm.exc.NoResultFound:
+        result = Port.find(s, portID)
+    except PortNotFound:
         return NoContent, 404
 
     result = dict(result)
-    result = list(result)
     return result, 200
 
 
 def updatePort(switchID, portID, body):
     """ [API] Update a port in the database """
 
-    switch = findSwitch(body["switchID"])
-    if not switch:
-        return 'Switch does not exist', 400
-
     s = db.get_db().get_session()
-    q = s.query(Port)
-    q = q.filter(Port.id == portID)
-    try:
-        port = q.one()
-    except sqlalchemy.orm.exc.NoResultFound:
-        return NoContent, 404
 
-    port.chambre_id = body["roomNumber"]
-    port.switch = switch
-    port.numero = body["portNumber"]
+    try:
+        new_port = Port.from_dict(s, body)
+    except SwitchNotFound:
+        return "Switch not found", 400
+
+    try:
+        new_port.id = Port.find(s, portID).id
+    except PortNotFound:
+        return "Port not found", 404
+
+    s.merge(new_port)
     s.commit()
 
     return NoContent, 204
@@ -101,14 +82,10 @@ def updatePort(switchID, portID, body):
 
 def deletePort(switchID, portID):
     """ [API] Delete a port from the database """
+    session = db.get_db().get_session()
     try:
-        session = db.get_db().get_session()
-        port = session.query(Port).filter(Port.id == portID).one()
-        session.delete(port)
-
-        session.commit()
-
-        return NoContent, 204
-
-    except sqlalchemy.orm.exc.NoResultFound:
+        session.delete(Port.find(session, portID))
+    except PortNotFound:
         return NoContent, 404
+    session.commit()
+    return NoContent, 204
