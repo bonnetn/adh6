@@ -299,7 +299,7 @@ class Switch(Base):
     updated_at = Column(DateTime)
 
     @staticmethod
-    def from_dict(body):
+    def from_dict(session, body):
         """ Transforms a dictionary to Switch object """
         return Switch(
             description=body.get('description'),
