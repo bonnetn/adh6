@@ -22,5 +22,9 @@ class SwitchNotFound(ValueError):
     pass
 
 
+class VlanNotFound(ValueError):
+    pass
+
+
 class RoomNotFound(ValueError):
     pass

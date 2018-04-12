@@ -7,6 +7,7 @@ from adh.util import checks
 from adh.model.database import Base
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
 from adh.exceptions import UserNotFound, RoomNotFound, SwitchNotFound
+from adh.exceptions import VlanNotFound
 from adh.util.date import string_to_date
 
 
@@ -19,6 +20,16 @@ class Vlan(Base):
     adressesv6 = Column(String(255))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
+
+    @staticmethod
+    def find(session, num):
+        """ [API] Get the specified Vlan from the database """
+        try:
+            q = session.query(Vlan)
+            q = q.filter(Vlan.numero == num)
+            return q.one()
+        except NoResultFound:
+            raise VlanNotFound
 
     @validates('adresses')
     def valid_ipv4(self, key, addr):
@@ -53,7 +64,7 @@ class Chambre(Base):
             numero=d.get("roomNumber"),
             description=d.get("description"),
             telephone=d.get("phone"),
-            # vlan=TODO
+            vlan=Vlan.find(session, d.get("vlan")),
         )
 
     @staticmethod
