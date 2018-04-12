@@ -9,29 +9,13 @@ import sqlalchemy
 # FAIRE FONCTION STATIQUE POUR FIND ROOMS
 
 
-def findRoom(roomNumber):
-    if not roomNumber:
-        return None
-    s = db.get_db().get_session()
-    q = s.query(models.Chambre)
-    q = q.filter(models.Chambre.numero == roomNumber)
-    try:
-        return q.one()
-    except sqlalchemy.orm.exc.NoResultFound:
-        raise RoomNotFound()
+def adherentExists(username):
+    """ Returns true if the user exists """
+    session = db.get_db().get_session()
+    q = session.query(models.Adherent)
+    q = q.filter(models.Adherent.login == username)
 
-
-def fromDict(d):
-    return models.Adherent(
-        mail=d.get("email"),
-        prenom=d.get("firstName"),
-        nom=d.get("lastName"),
-        login=d.get("username"),
-        date_de_depart=string_to_date(d.get('departureDate')),
-        commentaires=d.get('comment'),
-        mode_association=string_to_date(d.get('associationMode')),
-        chambre=findRoom(d.get("roomNumber")),
-    )
+    return session.query(q.exists()).scalar()
 
 
 def filterUser(limit=100, terms=None, roomNumber=None):
@@ -88,31 +72,13 @@ def deleteUser(username):
         return NoContent, 404
 
 
-def adherentExists(username):
-    """ Returns true if the user exists """
-    session = db.get_db().get_session()
-    q = session.query(models.Adherent)
-    q = q.filter(models.Adherent.login == username)
-
-    return session.query(q.exists()).scalar()
-
-
-def roomExists(roomNumber):
-    """ Returns true if the user exists """
-    session = db.get_db().get_session()
-    q = session.query(models.Chambre)
-    q = q.filter(models.Chambre.numero == roomNumber)
-
-    return session.query(q.exists()).scalar()
-
-
 def putUser(username, body):
     """ [API] Create/Update user from the database """
 
     s = db.get_db().get_session()
     update = adherentExists(username)
     try:
-        s.merge(fromDict(body))
+        s.merge(models.Adherent.from_dict(s, body))
     except ValueError:
         return "String must not be empty", 400
     except InvalidEmail:

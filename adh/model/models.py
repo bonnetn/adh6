@@ -7,6 +7,7 @@ from adh.util import checks
 from adh.model.database import Base
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
 from adh.exceptions import UserNotFound, RoomNotFound
+from adh.util.date import string_to_date
 
 
 class Vlan(Base):
@@ -104,6 +105,19 @@ class Adherent(Base):
             return q.one()
         except NoResultFound:
             raise UserNotFound()
+
+    @staticmethod
+    def from_dict(session, d):
+        return Adherent(
+            mail=d.get("email"),
+            prenom=d.get("firstName"),
+            nom=d.get("lastName"),
+            login=d.get("username"),
+            date_de_depart=string_to_date(d.get('departureDate')),
+            commentaires=d.get('comment'),
+            mode_association=string_to_date(d.get('associationMode')),
+            chambre=Chambre.find(session, d.get("roomNumber")),
+        )
 
     @validates('nom', 'prenom', 'login', 'password')
     def not_empty(self, key, s):
