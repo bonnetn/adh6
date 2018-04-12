@@ -1,0 +1,2 @@
+class InvalidMac(ValueError):
+    pass
