@@ -4,10 +4,23 @@
     <li *ngFor="let member of members$ | async">
       <strong>{{ member.firstName }} {{ member.lastName }}</strong><br /><br />
       <div class="row">
-        <div class="six columns"><a [routerLink]="['../../member/view', member.username]"><button class="u-full-width">Consulter</button></a></div>
-        <div class="six columns">
+        <div class="four columns">
+          <a [routerLink]="['../../member/view', member.username]"><button 
+              class="u-full-width button-primary"
+              [disabled]="enabled">
+              Consulter</button>
+          </a>
+        </div>
+        <div class="four columns">
+          <a [routerLink]="['../../member/edit/', member.username]"><button 
+              class="u-full-width button-primary"
+              [disabled]="enabled">
+              Déménager</button>
+          </a>
+        </div>
+        <div class="four columns">
         <a (click)="onKick()"><button
-            class="button-danger u-full-width"
+            class="u-full-width button-danger"
             [disabled]="enabled">
             Supprimer de la chambre</button>
         </a>
