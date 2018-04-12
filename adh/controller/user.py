@@ -68,16 +68,10 @@ def deleteUser(username):
 
 def putUser(username, body):
     """ [API] Create/Update user from the database """
-
     s = db.get_db().get_session()
 
-    new_user = Adherent.from_dict(s, body)
-    update = adherentExists(s, username)
-    if update:
-        new_user.id = Adherent.find(s, username).id
-
     try:
-        s.merge(new_user)
+        new_user = Adherent.from_dict(s, body)
     except ValueError:
         return "String must not be empty", 400
     except InvalidEmail:
@@ -85,6 +79,11 @@ def putUser(username, body):
     except RoomNotFound:
         return "No room found", 400
 
+    update = adherentExists(s, username)
+    if update:
+        new_user.id = Adherent.find(s, username).id
+
+    s.merge(new_user)
     s.commit()
     if update:
         return NoContent, 204
