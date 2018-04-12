@@ -1,6 +1,6 @@
 from connexion import NoContent
 from adh.model.database import Database as db
-from adh.model import models
+from adh.model.models import Adherent, Chambre, Adhesion
 from adh.util.date import string_to_date
 from adh.exceptions import InvalidEmail, RoomNotFound
 import datetime
@@ -12,8 +12,8 @@ import sqlalchemy
 def adherentExists(username):
     """ Returns true if the user exists """
     session = db.get_db().get_session()
-    q = session.query(models.Adherent)
-    q = q.filter(models.Adherent.login == username)
+    q = session.query(Adherent)
+    q = q.filter(Adherent.login == username)
 
     return session.query(q.exists()).scalar()
 
@@ -25,23 +25,23 @@ def filterUser(limit=100, terms=None, roomNumber=None):
 
     s = db.get_db().get_session()
 
-    q = s.query(models.Adherent)
+    q = s.query(Adherent)
     if roomNumber:
         try:
-            q2 = s.query(models.Chambre)
-            q2 = q2.filter(models.Chambre.numero == roomNumber)
+            q2 = s.query(Chambre)
+            q2 = q2.filter(Chambre.numero == roomNumber)
             result = q2.one()
         except sqlalchemy.orm.exc.NoResultFound:
             return [], 200
 
-        q = q.filter(models.Adherent.chambre == result)
+        q = q.filter(Adherent.chambre == result)
     if terms:
         q = q.filter(
-            (models.Adherent.nom.contains(terms)) |
-            (models.Adherent.prenom.contains(terms)) |
-            (models.Adherent.mail.contains(terms)) |
-            (models.Adherent.login.contains(terms)) |
-            (models.Adherent.commentaires.contains(terms))
+            (Adherent.nom.contains(terms)) |
+            (Adherent.prenom.contains(terms)) |
+            (Adherent.mail.contains(terms)) |
+            (Adherent.login.contains(terms)) |
+            (Adherent.commentaires.contains(terms))
         )
     q = q.limit(limit)
     r = q.all()
@@ -51,8 +51,8 @@ def filterUser(limit=100, terms=None, roomNumber=None):
 def getUser(username):
     """ [API] Get the specified user from the database """
     s = db.get_db().get_session()
-    q = s.query(models.Adherent)
-    q = q.filter(models.Adherent.login == username)
+    q = s.query(Adherent)
+    q = q.filter(Adherent.login == username)
     try:
         return dict(q.one())
     except sqlalchemy.orm.exc.NoResultFound:
@@ -62,8 +62,8 @@ def getUser(username):
 def deleteUser(username):
     """ [API] Delete the specified User from the database """
     s = db.get_db().get_session()
-    q = s.query(models.Adherent)
-    q = q.filter(models.Adherent.login == username)
+    q = s.query(Adherent)
+    q = q.filter(Adherent.login == username)
     try:
         s.delete(q.one())
         s.commit()
@@ -78,7 +78,7 @@ def putUser(username, body):
     s = db.get_db().get_session()
     update = adherentExists(username)
     try:
-        s.merge(models.Adherent.from_dict(s, body))
+        s.merge(Adherent.from_dict(s, body))
     except ValueError:
         return "String must not be empty", 400
     except InvalidEmail:
@@ -99,8 +99,8 @@ def addMembership(username, body):
     s = db.get_db().get_session()
 
     try:
-        q = s.query(models.Adherent)
-        q = q.filter(models.Adherent.login == username)
+        q = s.query(Adherent)
+        q = q.filter(Adherent.login == username)
         a = q.one()
     except sqlalchemy.orm.exc.NoResultFound:
         return "Not found", 404
@@ -109,7 +109,7 @@ def addMembership(username, body):
     duration = body["duration"]
     end = start + datetime.timedelta(days=duration)
 
-    s.add(models.Adhesion(
+    s.add(Adhesion(
         adherent=a,
         depart=start,
         fin=end
