@@ -24,6 +24,7 @@
     "@angular/router": "^5.0.0",
     "core-js": "^2.4.1",
     "jquery": "^3.2.1",
+    "ng-notify": "^0.7.1",
     "rxjs": "5.5.2",
     "skeleton-css": "^2.0.4",
     "zone.js": "^0.8.14"
