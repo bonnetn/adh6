@@ -48,6 +48,12 @@ chacune des lignes de code des fichiers .py (on vise un *code coverage* de 100%)
 Les cas normaux et extrêmes doivent être testés. C'est ce qui est executé
 lorsque on lance pytest.
 
+Remarque:
+Quand vous implémentez une fonction de l'API dans controller, ne faites qu'UNE
+session SQLAlchemy, créée DANS votre fonction de controller. Ca evite les nested
+transactions qui sont pas toujours supportées. (et c'est plus propre, moins
+error-prone)
+
 
 ## Code coverage report generation:
 > pytest --cov=adh --cov-report html
