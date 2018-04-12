@@ -8,7 +8,7 @@ import 'rxjs/add/operator/takeWhile';
 import { UserService } from '../api/services/user.service';
 import { User } from '../api/models/user';
 
-
+import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-member-form',
@@ -25,6 +25,7 @@ export class MemberFormComponent implements OnInit, OnDestroy {
   memberForm: FormGroup;
 
   constructor(
+    private appcomponent: AppComponent,
     public userService: UserService, 
     private fb: FormBuilder, 
     private router: Router,
@@ -72,18 +73,30 @@ export class MemberFormComponent implements OnInit, OnDestroy {
     this.userService.putUserResponse( { "username": v.username, body: req } )
       .takeWhile( () => this.alive )
       .subscribe( (response : HttpResponse<void>) => {
-        if ( response.status == 400) {
-          alert("Incorrect Input") 
-        }
-        else if( response.status == 204 || response.status == 201 ) {
+        if (response.status == 201){
           this.router.navigate(["member/view", user.username ])
+          this.appcomponent.alert_type = "success"
+          this.appcomponent.alert_message_type = "Succès"
+          this.appcomponent.alert_message_display = "Utilisateur Créé"
+        }
+        else if(response.status == 204) {
+          this.router.navigate(["member/view", user.username ])
+          this.appcomponent.alert_type = "info"
+          this.appcomponent.alert_message_type = "Succès"
+          this.appcomponent.alert_message_display = "Utilisateur Modifié"
+        }
+        else if (response.status == 400) {
+          this.appcomponent.alert_type = "warning"
+          this.appcomponent.alert_message_type = "Attention"
+          this.appcomponent.alert_message_display = "Informations invalides"
         }
         else {
-          alert ("Unknown Error") 
+          this.appcomponent.alert_type = "danger"
+          this.appcomponent.alert_message_type = "Danger "
+          this.appcomponent.alert_message_display = "Erreur Inconnue"
         }
-        this.disabled = true;
       });
-
+        this.disabled = true;
   }
 
   ngOnInit() {
