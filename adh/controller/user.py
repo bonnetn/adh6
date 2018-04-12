@@ -6,8 +6,6 @@ from adh.exceptions import InvalidEmail, RoomNotFound, UserNotFound
 import datetime
 import sqlalchemy
 
-# FAIRE FONCTION STATIQUE POUR FIND ROOMS
-
 
 def adherentExists(session, username):
     """ Returns true if the user exists """
@@ -93,22 +91,20 @@ def addMembership(username, body):
 
     s = db.get_db().get_session()
 
-    try:
-        q = s.query(Adherent)
-        q = q.filter(Adherent.login == username)
-        a = q.one()
-    except sqlalchemy.orm.exc.NoResultFound:
-        return "Not found", 404
-
     start = string_to_date(body["start"])
-    duration = body["duration"]
-    end = start + datetime.timedelta(days=duration)
+    end = None
+    if start and "duration" in body:
+        duration = body["duration"]
+        end = start + datetime.timedelta(days=duration)
 
-    s.add(Adhesion(
-        adherent=a,
-        depart=start,
-        fin=end
-    ))
+    try:
+        s.add(Adhesion(
+            adherent=Adherent.find(s, username),
+            depart=start,
+            fin=end
+        ))
+    except UserNotFound:
+        return NoContent, 404
 
     s.commit()
-    return NoContent, 200, {'Location': 'test'}
+    return NoContent, 200, {'Location': 'test'}  # TODO: finish that!
