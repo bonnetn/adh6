@@ -2,25 +2,8 @@ from connexion import NoContent
 from adh.model.database import Database as db
 from sqlalchemy import or_
 from adh.model.models import Port, Switch
+from adh.exceptions import RoomNotFound, SwitchNotFound
 import sqlalchemy.orm.exc
-
-
-def toDict(port):
-    """ Create a "PortSearchResult" returned by the API """
-    return {
-        "port": dict(port),
-        "switchID": port.switch.id,
-        "portID": port.id
-    }
-
-
-def fromDict(d):
-    """ Creates a Port object from a request """
-    return Port(
-        chambre_id=d["roomNumber"],
-        switch_id=d["switchID"],
-        numero=d["portNumber"]
-    )
 
 
 def findSwitch(switchID):
@@ -52,7 +35,7 @@ def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
     q = q.limit(limit)
     result = q.all()
 
-    result = map(toDict, result)
+    result = map(dict, result)
     result = list(result)
     return result, 200
 
@@ -60,12 +43,17 @@ def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
 def createPort(switchID, body):
     """ [API] Create a port in the database """
 
-    port = fromDict(body)
+    session = db.get_db().get_session()
+    try:
+        port = Port.from_dict(session, body)
+    except SwitchNotFound:
+        return "Switch not found", 400
+    except RoomNotFound:
+        return "Room not found", 400
     switch = findSwitch(body["switchID"])
     if not switch:
         return 'Switch does not exist', 400
     port.switch = switch
-    session = db.get_db().get_session()
     session.add(port)
     session.commit()
     headers = {
@@ -83,7 +71,7 @@ def getPort(switchID, portID):
     except sqlalchemy.orm.exc.NoResultFound:
         return NoContent, 404
 
-    result = toDict(result)
+    result = dict(result)
     result = list(result)
     return result, 200
 

@@ -365,6 +365,15 @@ class Port(Base):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
 
+    @staticmethod
+    def from_dict(session, d):
+        """ Creates a Port object from a request """
+        return Port(
+            chambre=Chambre.find(session, d.get("roomNumber")),
+            switch=Switch.find(session, d.get("switchID")),
+            numero=d.get("portNumber"),
+        )
+
     @validates('numero')
     def not_empty(self, key, s):
         if not s:
