@@ -242,7 +242,7 @@ class Portable(Base):
     @validates('mac')
     def mac_valid(self, key, mac):
         if not mac or not checks.isMac(mac):
-            raise InvalidEmail()
+            raise InvalidMac()
         return mac
 
     def __iter__(self):
