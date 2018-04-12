@@ -1,27 +1,36 @@
 from connexion import NoContent
 from adh.model.database import Database as db
 from adh.model import models
-from dateutil import parser
+from adh.util.date import string_to_date
 import datetime
 import sqlalchemy
 from adh.exceptions.invalid_email import InvalidEmail
 
 
-def dict_to_user(d):
-    """ Converts a dictionnary to an User object """
-    adh = models.Adherent(
-        nom=d['lastName'],
-        prenom=d['firstName'],
-        mail=d['email'],
-        login=d['username'],
+# MERGE
+# FAIRE FONCTION STATIQUE POUR FIND ROOMS
+
+
+def findRoom(roomNumber):
+    if not roomNumber:
+        return None
+    s = db.get_db().get_session()
+    q = s.query(models.Chambre)
+    q = q.filter(models.Chambre.numero == roomNumber)
+    return q.one()
+
+
+def fromDict(d):
+    return models.Adherent(
+        mail=d.get("email"),
+        prenom=d.get("firstName"),
+        nom=d.get("lastName"),
+        login=d.get("username"),
+        date_de_depart=string_to_date(d.get('departureDate')),
+        commentaires=d.get('comment'),
+        mode_association=string_to_date(d.get('associationMode')),
+        chambre=findRoom(d.get("roomNumber")),
     )
-    if "departureDate" in d:
-        adh.date_de_depart = parser.parse(d["departureDate"])
-    if "associationMode" in d:
-        adh.mode_association = parser.parse(d["associationMode"])
-    if "comment" in d:
-        adh.commentaires = d["comment"]
-    return adh
 
 
 def filterUser(limit=100, terms=None, roomNumber=None):
@@ -99,7 +108,7 @@ def roomExists(roomNumber):
 def putUser(username, body):
     """ [API] Create/Update user from the database """
 
-    roomNumber = body["user"]["roomNumber"]
+    roomNumber = body["roomNumber"]
     if roomNumber and not roomExists(roomNumber):
         return "Room not found", 400
 
@@ -108,17 +117,15 @@ def putUser(username, body):
         q = s.query(models.Adherent)
         q = q.filter(models.Adherent.login == username)
 
-        userDict = body["user"]
-
         a = q.one()
-        a.nom = userDict['lastName']
-        a.prenom = userDict['firstName']
+        a.nom = body['lastName']
+        a.prenom = body['firstName']
         try:
-            a.mail = userDict['email']
+            a.mail = body['email']
         except InvalidEmail:
             s.rollback()
             return "Invalid email", 400
-        a.login = userDict['username']
+        a.login = body['username']
 
         if roomNumber:
             q2 = s.query(models.Chambre)
@@ -126,19 +133,19 @@ def putUser(username, body):
             c = q2.one()
             a.chambre = c
 
-        if "departureDate" in userDict:
-            a.date_de_depart = parser.parse(userDict["departureDate"])
-        if "associationMode" in userDict:
-            a.mode_association = parser.parse(userDict["associationMode"])
-        if "comment" in userDict:
-            a.commentaires = userDict["comment"]
+        if "departureDate" in body:
+            a.date_de_depart = string_to_date(body["departureDate"])
+        if "associationMode" in body:
+            a.mode_association = string_to_date(body["associationMode"])
+        if "comment" in body:
+            a.commentaires = body["comment"]
 
         s.commit()
         return NoContent, 204
     else:
         s = db.get_db().get_session()
         try:
-            a = dict_to_user(body["user"])
+            a = fromDict(body)
         except InvalidEmail:
             s.rollback()
             return "Invalid email", 400
@@ -164,7 +171,7 @@ def addMembership(username, body):
     except sqlalchemy.orm.exc.NoResultFound:
         return "Not found", 404
 
-    start = parser.parse(body["start"])
+    start = string_to_date(body["start"])
     duration = body["duration"]
     end = start + datetime.timedelta(days=duration)
 

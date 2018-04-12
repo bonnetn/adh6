@@ -3,7 +3,7 @@ swagger: '2.0'
 info:
   description: |
     Adherent api
-  version: 1.0.2
+  version: 1.0.3
   title: Adherent
   license:
     name: Apache 2.0
@@ -102,7 +102,7 @@ paths:
         description: New values of the user
         required: true
         schema:
-          $ref: '#/definitions/body'
+          $ref: '#/definitions/User'
       responses:
         201:
           description: Created
@@ -381,7 +381,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/SwitchSearchResult'
+              $ref: '#/definitions/Switch'
         400:
           description: Invalid input
       x-swagger-router-controller: adh.controller.switch
@@ -510,7 +510,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/PortSearchResult'
+              $ref: '#/definitions/Port'
         400:
           description: Invalid input
       x-swagger-router-controller: adh.controller.port
@@ -729,6 +729,9 @@ definitions:
     required:
     - portNumber
     properties:
+      id:
+        type: integer
+        example: 1
       portNumber:
         type: string
         example: 1/0/4
@@ -742,34 +745,15 @@ definitions:
       roomNumber: 5110
       switchID: 6
       portNumber: 1/0/4
-  PortSearchResult:
-    type: object
-    required:
-    - port
-    - portID
-    - switchID
-    properties:
-      port:
-        $ref: '#/definitions/Port'
-      portID:
-        type: integer
-        example: 1
-      switchID:
-        type: integer
-        example: 6
-    example:
-      port:
-        roomNumber: 5110
-        switchID: 6
-        portNumber: 1/0/4
-      switchID: 6
-      portID: 1
   Switch:
     type: object
     required:
     - community
     - ip
     properties:
+      id:
+        type: integer
+        example: 1
       description:
         type: string
         example: Switch U5
@@ -784,20 +768,6 @@ definitions:
       ip: 192.168.102.211
       description: Switch U5
       community: ghWgpQvHRkrYuqpMLWYkstS3
-  SwitchSearchResult:
-    type: object
-    properties:
-      switch:
-        $ref: '#/definitions/Switch'
-      switchID:
-        type: integer
-        example: 1
-    example:
-      switchID: 1
-      switch:
-        ip: 192.168.102.211
-        description: Switch U5
-        community: ghWgpQvHRkrYuqpMLWYkstS3
   MembershipRecord:
     type: object
     required:
@@ -813,15 +783,6 @@ definitions:
     example:
       duration: 365
       start: 2000-01-23T04:56:07.000+00:00
-  body:
-    type: object
-    properties:
-      user:
-        $ref: '#/definitions/User'
-      password:
-        type: string
-        format: password
-        example: toto123
 externalDocs:
   description: Find out more about MiNET
   url: http://minet.net

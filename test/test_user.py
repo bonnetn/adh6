@@ -221,7 +221,6 @@ def test_user_delete_non_existant(api_client):
 
 def test_user_put_user_create_invalid_email(api_client):
     body = {
-      "user": {
         "firstName": "John",
         "lastName": "Doe",
         "roomNumber": 1111,
@@ -230,11 +229,9 @@ def test_user_put_user_create_invalid_email(api_client):
         "associationMode": "2000-01-23T04:56:07.000+00:00",
         "email": "INVALID_EMAIL",
         "username": "doe_john"
-      },
-      "password": "toto123"
     }
     res = api_client.put(
-        '{}/user/{}'.format(base_url, body["user"]["username"]),
+        '{}/user/{}'.format(base_url, body["username"]),
         data=json.dumps(body),
         content_type='application/json')
     assert res.status_code == 400
@@ -242,7 +239,6 @@ def test_user_put_user_create_invalid_email(api_client):
 
 def test_user_put_user_create_unknown_room(api_client):
     body = {
-      "user": {
         "firstName": "John",
         "lastName": "Doe",
         "roomNumber": 9999,
@@ -251,11 +247,9 @@ def test_user_put_user_create_unknown_room(api_client):
         "associationMode": "2000-01-23T04:56:07.000+00:00",
         "email": "john.doe@gmail.com",
         "username": "doe_john"
-      },
-      "password": "toto123"
     }
     res = api_client.put(
-        '{}/user/{}'.format(base_url, body["user"]["username"]),
+        '{}/user/{}'.format(base_url, body["username"]),
         data=json.dumps(body),
         content_type='application/json')
     assert res.status_code == 400
@@ -263,7 +257,6 @@ def test_user_put_user_create_unknown_room(api_client):
 
 def test_user_put_user_create(api_client):
     body = {
-      "user": {
         "firstName": "John",
         "lastName": "Doe",
         "roomNumber": 1111,
@@ -272,11 +265,9 @@ def test_user_put_user_create(api_client):
         "associationMode": "2000-01-23T04:56:07.000+00:00",
         "email": "john.doe@gmail.com",
         "username": "doe_john"
-      },
-      "password": "toto123"
     }
     res = api_client.put(
-        '{}/user/{}'.format(base_url, body["user"]["username"]),
+        '{}/user/{}'.format(base_url, ["username"]),
         data=json.dumps(body),
         content_type='application/json')
     assert res.status_code == 201
@@ -284,7 +275,6 @@ def test_user_put_user_create(api_client):
 
 def test_user_put_user_update(api_client):
     body = {
-      "user": {
         "firstName": "Jean-Louis",
         "lastName": "Dubois",
         "roomNumber": 1111,
@@ -293,11 +283,9 @@ def test_user_put_user_update(api_client):
         "associationMode": "2000-01-23T04:56:07.000+00:00",
         "email": "john.doe@gmail.com",
         "username": "dubois_j"
-      },
-      "password": "toto123"
     }
     res = api_client.put(
-        '{}/user/{}'.format(base_url, body["user"]["username"]),
+        '{}/user/{}'.format(base_url, body["username"]),
         data=json.dumps(body),
         content_type='application/json')
     assert res.status_code == 204
