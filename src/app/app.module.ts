@@ -28,6 +28,7 @@ import { MemberEditComponent } from './member-edit/member-edit.component';
 import { MacVendorComponent } from './mac-vendor/mac-vendor.component';
 import { GlobalSearchComponent } from './global-search/global-search.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { NavbarComponent } from './navbar/navbar.component';
     BrowserModule,
     AppRoutingModule,
     ApiModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SimpleNotificationsModule.forRoot()
   ],
   providers: [ AppComponent ],
   bootstrap: [ AppComponent ]
