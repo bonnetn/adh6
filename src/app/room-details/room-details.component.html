@@ -2,10 +2,10 @@
   <h2>{{ room.description }}</h2>
   <ul><h3>Adhérent·e·s</h3>
     <li *ngFor="let member of members$ | async">
-      <strong>{{ member.firstName }} {{ member.lastName }}</strong>
+      <strong>{{ member.firstName }} {{ member.lastName }}</strong><br /><br />
       <div class="row">
-        <div class="four columns"><a [routerLink]="['../../member/view', member.username]"><button class="u-full-width">Consulter</button></a></div>
-        <div class="four columns"><button class="u-full-width">Supprimer de la chambre</button></div>
+        <div class="six columns"><a [routerLink]="['../../member/view', member.username]"><button class="u-full-width">Consulter</button></a></div>
+        <div class="six columns"><button class="button-danger u-full-width">Supprimer de la chambre</button></div>
       </div>
     </li>
   </ul>
@@ -24,4 +24,11 @@
     <li><strong>VLAN assigné: </strong>{{ room.vlan }}</li>
     <li><strong>Téléphone: </strong>{{ room.phone }}</li>
   </ul>
+  <div class="twelve columns">
+    <a (click)="onDelete()"><button
+        class="button-danger u-full-width"
+        [disabled]="enabled">
+        Supprimer la chambre</button>
+    </a>
+  </div>
 </div>
