@@ -9,9 +9,9 @@ from adh.exceptions import InvalidIPv4
 def fromDict(body):
     """ Transforms a dictionary to Switch object """
     return Switch(
-        description=body['description'],
-        ip=body['ip'],
-        communaute=body['community']
+        description=body.get('description'),
+        ip=body.get('ip'),
+        communaute=body.get('community'),
     )
 
 
