@@ -60,13 +60,11 @@ def getUser(username):
 def deleteUser(username):
     """ [API] Delete the specified User from the database """
     s = db.get_db().get_session()
-    q = s.query(Adherent)
-    q = q.filter(Adherent.login == username)
     try:
-        s.delete(q.one())
+        s.delete(Adherent.find(s, username))
         s.commit()
         return NoContent, 204
-    except sqlalchemy.orm.exc.NoResultFound:
+    except UserNotFound:
         return NoContent, 404
 
 
