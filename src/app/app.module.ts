@@ -62,7 +62,14 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     AppRoutingModule,
     ApiModule,
     ReactiveFormsModule,
-    SimpleNotificationsModule.forRoot()
+    SimpleNotificationsModule.forRoot({
+      timeOut: 3000,
+      clickToClose: false,
+      clickIconToClose: true,
+      animate: "fade",
+      showProgressBar: false,
+    
+    }),
     BrowserAnimationsModule,
   ],
   providers: [ AppComponent ],

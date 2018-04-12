@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpResponse } from '@angular/common/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
@@ -9,6 +9,8 @@ import 'rxjs/add/operator/takeWhile';
 
 import { UserService } from '../api/services/user.service';
 import { User } from '../api/models/user';
+import { NotificationsService } from 'angular2-notifications';
+
 
 @Component({
   selector: 'app-member-edit',
@@ -29,6 +31,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private fb: FormBuilder, 
     private router: Router,
+    private notif: NotificationsService,
   ) {
     this.createForm();
   }
@@ -61,17 +64,11 @@ export class MemberEditComponent implements OnInit, OnDestroy {
 
     this.userService.putUserResponse( { "username": v.username, body: req } )
       .takeWhile( () => this.alive )
-      .subscribe( (response : HttpResponse<void>) => {
-        if (response.status == 201){
-          this.router.navigate(["member/view", user.username ])
-        }
-        else if(response.status == 204) {
-          this.router.navigate(["member/view", user.username ])
-        }
-        else if (response.status == 400) {
-        }
-        else {
-        }
+      .subscribe( (response) => {
+        this.router.navigate(["member/view", user.username ])
+        this.notif.success(response.status + ": Success")
+      }, (response) => {
+        this.notif.error(response.status + ": " + response.error);
       });
 
   }
@@ -92,16 +89,12 @@ export class MemberEditComponent implements OnInit, OnDestroy {
 
     this.userService.deleteUserResponse( v.username )
       .takeWhile( () => this.alive )
-      .subscribe( (response : HttpResponse<void>) => {
-        if( response.status == 204 ) {
-          this.router.navigate(["member/search"])
-        }
-        else if (response.status == 404 ){
-        }
-        else {
-        }
+      .subscribe( (response) => {
+        this.router.navigate(["member/search"])
+        this.notif.success(response.status + ": Success")
+      }, (response) => {
+        this.notif.error(response.status + ": " + response.error);
       });
-
   }
 
   ngOnInit() {
