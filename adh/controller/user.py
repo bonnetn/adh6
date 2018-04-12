@@ -2,13 +2,11 @@ from connexion import NoContent
 from adh.model.database import Database as db
 from adh.model import models
 from adh.util.date import string_to_date
-from adh.exceptions import InvalidEmail
+from adh.exceptions import InvalidEmail, RoomNotFound
 import datetime
 import sqlalchemy
 
-# MERGE
 # FAIRE FONCTION STATIQUE POUR FIND ROOMS
-# merge totues les exceptions dans 1 fichier
 
 
 def findRoom(roomNumber):
@@ -17,7 +15,10 @@ def findRoom(roomNumber):
     s = db.get_db().get_session()
     q = s.query(models.Chambre)
     q = q.filter(models.Chambre.numero == roomNumber)
-    return q.one()
+    try:
+        return q.one()
+    except sqlalchemy.orm.exc.NoResultFound:
+        raise RoomNotFound()
 
 
 def fromDict(d):
@@ -116,7 +117,7 @@ def putUser(username, body):
         return "String must not be empty", 400
     except InvalidEmail:
         return "Invalid email", 400
-    except sqlalchemy.orm.exc.NoResultFound:
+    except RoomNotFound:
         return "No room found", 400
 
     s.commit()

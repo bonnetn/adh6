@@ -12,3 +12,7 @@ class InvalidIPv4(ValueError):
 
 class InvalidMac(ValueError):
     pass
+
+
+class RoomNotFound(ValueError):
+    pass
