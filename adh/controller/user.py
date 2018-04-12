@@ -9,9 +9,8 @@ import sqlalchemy
 # FAIRE FONCTION STATIQUE POUR FIND ROOMS
 
 
-def adherentExists(username):
+def adherentExists(session, username):
     """ Returns true if the user exists """
-    session = db.get_db().get_session()
     q = session.query(Adherent)
     q = q.filter(Adherent.login == username)
 
@@ -72,7 +71,7 @@ def putUser(username, body):
     """ [API] Create/Update user from the database """
 
     s = db.get_db().get_session()
-    update = adherentExists(username)
+    update = adherentExists(s, username)
     try:
         s.merge(Adherent.from_dict(s, body))
     except ValueError:
