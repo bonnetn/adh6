@@ -69,6 +69,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
         this.notif.success(response.status + ": Success")
       }, (response) => {
         this.notif.error(response.status + ": " + response.error);
+        this.disabled = false;
       });
 
   }
