@@ -7,6 +7,7 @@ import 'rxjs/add/operator/takeWhile';
 
 import { UserService } from '../api/services/user.service';
 import { User } from '../api/models/user';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-member-form',
@@ -26,6 +27,7 @@ export class MemberFormComponent implements OnInit, OnDestroy {
     public userService: UserService, 
     private fb: FormBuilder, 
     private router: Router,
+    private notif: NotificationsService,
   ) {
     this.createForm();
   }
@@ -70,16 +72,10 @@ export class MemberFormComponent implements OnInit, OnDestroy {
     this.userService.putUserResponse( { "username": v.username, body: req } )
       .takeWhile( () => this.alive )
       .subscribe( (response : HttpResponse<void>) => {
-        if (response.status == 201){
-          this.router.navigate(["member/view", user.username ])
-        }
-        else if(response.status == 204) {
-          this.router.navigate(["member/view", user.username ])
-        }
-        else if (response.status == 400) {
-        }
-        else {
-        }
+        this.router.navigate(["member/view", user.username ])
+        this.notif.success(response.status + ": Success")
+      }, (response) => {
+        this.notif.error(response.status + ": " + response.error)
       });
         this.disabled = true;
   }

@@ -11,6 +11,7 @@ import { User } from '../api/models/user';
 import { Device } from '../api/models/device';
 
 import { ActivatedRoute } from '@angular/router';
+import { NotificationsService } from 'angular2-notifications';
 
 
 @Component({
@@ -38,6 +39,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     public deviceService: DeviceService, 
     private route: ActivatedRoute,
     private fb: FormBuilder,
+    private notif: NotificationsService,
   ) { 
     this.createForm();
   }
@@ -67,14 +69,17 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
         const req = {
           "user":user,
         };
-        this.userService.putUser( { 
+        this.userService.putUserResponse( { 
           "username": this.username,
           "body": req,
         })
           .takeWhile( () => this.alive )
-          .subscribe( () => {
+          .subscribe( (response) => {
             this.commentSubmitDisabled = false 
             this.refreshInfo();
+            this.notif.success(response.status + ": success")
+          }, (response) => {
+            this.notif.error(response.status + ": " + response.error);
           });
       });
   }
@@ -88,7 +93,12 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     }
     this.deviceService.putDeviceResponse( { "macAddress": v.mac, body: device })
       .takeWhile( ()=> this.alive )
-      .subscribe( ()=> { this.refreshInfo() });
+      .subscribe( (response)=> { 
+        this.refreshInfo() 
+        this.notif.success(response.status + ": Success")
+      }, (response) => {
+        this.notif.error(response.status + ": " + response.error);
+      });
   }
 
   onDelete(mac: string) {

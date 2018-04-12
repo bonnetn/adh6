@@ -8,6 +8,7 @@ import 'rxjs/add/operator/switchMap';
 
 import { DeviceService } from '../api/services/device.service';
 import { Device } from '../api/models/device';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-device-new',
@@ -29,6 +30,7 @@ export class DeviceNewComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
+    private notif: NotificationsService,
   ) { 
   this.createForm();
   }
@@ -53,9 +55,10 @@ export class DeviceNewComponent implements OnInit, OnDestroy {
     this.deviceService.putDeviceResponse( { "macAddress": v.mac, body: device })
       .takeWhile( ()=> this.alive )
       .subscribe( (response : HttpResponse<void>) => {
-        if( response.status == 204 || response.status == 201 ) {
-          this.router.navigate(["member/view", user ])
-        }
+        this.router.navigate(["member/view", user ])
+        this.notif.success(response.status + ": Success")
+      }, (response) => {
+        this.notif.error(response.status + ": " + response.error); 
       });
   
   }
