@@ -67,8 +67,28 @@ export class MemberEditComponent implements OnInit, OnDestroy {
     this.userService.putUserResponse( { "username": v.username, body: req } )
       .takeWhile( () => this.alive )
       .subscribe( (response : HttpResponse<void>) => {
-        if( response.status == 204 || response.status == 201 ) {
+        if (response.status == 201){
           this.router.navigate(["member/view", user.username ])
+          this.appcomponent.alert_type = "success"
+          this.appcomponent.alert_message_type = "Succès"
+          this.appcomponent.alert_message_display = "Utilisateur Crée"
+        }
+        else if(response.status == 204) {
+          this.router.navigate(["member/view", user.username ])
+          this.appcomponent.alert_type = "info"
+          this.appcomponent.alert_message_type = "Succès"
+          this.appcomponent.alert_message_display = "Utilisateur Modifié"
+        }
+        else if (response.status == 400) {
+          this.router.navigate(["member/view", user.username ])
+          this.appcomponent.alert_type = "warning"
+          this.appcomponent.alert_message_type = "Atenttion"
+          this.appcomponent.alert_message_display = "Informations invalides"
+        }
+        else {
+          this.appcomponent.alert_type = "danger"
+          this.appcomponent.alert_message_type = "Danger "
+          this.appcomponent.alert_message_display = "Erreur Inconnue"
         }
       });
 
@@ -98,10 +118,15 @@ export class MemberEditComponent implements OnInit, OnDestroy {
           this.appcomponent.alert_message_display = "Chambre Supprimée"
         }
         else if (response.status == 404 ){
-          alert("Error Delete User")
+          this.appcomponent.alert_type = "warning"
+          this.appcomponent.alert_message_type = "Attention"
+          this.appcomponent.alert_message_display = "Chambre Inconnue"
         }
         else {
-          alert("Unknown Error")
+          this.appcomponent.alert_type = "danger"
+          this.appcomponent.alert_message_type = "Danger"
+          this.appcomponent.alert_message_display = "Erreur Inconnue"
+
         }
       });
 
