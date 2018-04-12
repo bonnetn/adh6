@@ -26,12 +26,11 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   wired_devices$: Observable<Device[]>;
   wireless_devices$: Observable<Device[]>;
   username: string;
+  public cotisation: boolean = false;
   private sub: any;
   private alive: boolean = true;
-
   private commentForm: FormGroup;
   private commentSubmitDisabled: boolean = false;
-
   private deviceForm: FormGroup;
 
   constructor(
@@ -41,6 +40,10 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
   ) { 
     this.createForm();
+  }
+
+  onCotisation() {
+    this.cotisation = !this.cotisation
   }
 
   createForm() {

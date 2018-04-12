@@ -4,40 +4,63 @@
     <h2>{{ member.firstName }} {{ member.lastName }}</h2>
     <ul>
       <div class="row">
-        <div class="eight columns">
-          <li><strong>Identifiant DISI:</strong> {{ member.username }}</li>
-          <li><strong>Envoyer un mail:</strong> <a href="mailto:{{ member.email }}">
+        <div class="four columns">
+          <li><strong>Identifiant DISI:</strong><br /> {{ member.username }}</li>
+          <li><strong>Envoyer un mail:</strong><br /> <a href="mailto:{{ member.email }}">
               &#9993;</a></li>
-          <li><strong>Date de départ:</strong> {{ member.departureDate }}</li>
+          <li><strong>Date de départ:</strong><br /> {{ member.departureDate }}</li>
         </div>
-
+        <br />
         <div class="four columns">
           <a [routerLink]="['../../edit/', member.username ]">
             <button class="u-full-width">Editer le profil</button>
           </a>
-          <button class="u-full-width">Paiements</button>
-          <button class="u-full-width">Cotiser</button>
-        </div>
-      </div>
-      <br/>
-      <div class="row">
-        <div class="eight columns">
-          <li>
-            <strong>Numéro de chambre: </strong>{{ member.roomNumber }}
-          </li>
-          <li>
-            <strong>Occupée par: </strong>
-          </li>
-        </div>
-
-        <div class="four columns">
           <a [routerLink]="['../../../room', member.roomNumber ]">
-            <button class="u-full-width">Consulter</button>
+            <button class="u-full-width">Chambre {{ member.roomNumber }}</button>
           </a>
-             <button class="u-full-width">Déménager</button>
+        </div>
+        <div class="four columns">
+          <a [routerLink]="['']">
+            <button class="u-full-width">Paiements</button>
+          </a>
+          <button class="u-full-width" (click)="onCotisation()">Cotiser</button>
         </div>
       </div>
     </ul>
+    <div *ngIf="cotisation">
+    <h3>Cotisation</h3>
+      <div class="row">
+        <div class="six columns">
+          <select class="u-full-width" type="text" formControlName=""
+            placeholder="Renouvellement">
+            <option value="">Renouvellement</option>
+            <option value="1">1 mois (9€) - date</option>
+            <option value="2">2 mois (18€) - date</option>
+            <option value="3">3 mois (27€) - date</option>
+            <option value="4">4 mois (36€) - date</option>
+            <option value="5">5 mois (45€) - date</option>
+            <option value="6">1 an (50€) - date</option>
+          </select>
+          <select class="u-full-width" type="text" formControlName=""
+            placeholder="Matériel">
+            <option value="">Matériel</option>
+            <option value="3m">Câble 3m</option>
+            <option value="5m">Câble 5m</option>
+          </select>
+        </div>
+        <div class="six columns">
+          <select class="u-full-width" type="text" formControlName=""
+            placeholder="Payé par">
+            <option value="">Payé par</option>
+            <option value="liq">Liquide</option>
+            <option value="cb">Carte Bancaire</option>
+            <option value="chq">Carte Bancaire</option>
+            <option value="smsch">Summer School</option>
+          </select>
+          <button class="u-full-width button-primary">Valider</button>
+        </div>
+      </div>
+    </div>
     <h3>Appareils</h3>
     <div style="overflow-x:auto;" class="u-max-full-width">
       <table class="u-max-full-width">
@@ -59,7 +82,7 @@
           <td>{{ device.ipv6Address }}</td>
           <td>MAB</td>
           <td><a [routerLink]="['../../../device/edit', device.mac]"><button>Editer</button></a></td>
-          <td><a style="cursor: pointer" (click)="onDelete(device.mac)"><button>Supprimer</button></a></td>
+          <td><a (click)="onDelete(device.mac)"><button class="button-danger">Supprimer</button></a></td>
         </tr>
       </table>
     </div>
@@ -69,7 +92,8 @@
           <input class="u-full-width" type="text" formControlName="mac">
         </div>
         <div class="three columns">
-          <select class="u-full-width" type="text" formControlName="connectionType">
+          <select class="u-full-width" type="text"
+            formControlName="connectionType">
             <option value="wired">Filaire</option>
             <option value="wireless">Wi-Fi</option>
           </select>
