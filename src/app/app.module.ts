@@ -29,6 +29,7 @@ import { MacVendorComponent } from './mac-vendor/mac-vendor.component';
 import { GlobalSearchComponent } from './global-search/global-search.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SimpleNotificationsModule } from 'angular2-notifications';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
     ApiModule,
     ReactiveFormsModule,
     SimpleNotificationsModule.forRoot()
+    BrowserAnimationsModule,
   ],
   providers: [ AppComponent ],
   bootstrap: [ AppComponent ]
