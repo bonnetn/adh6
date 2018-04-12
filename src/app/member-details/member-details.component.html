@@ -96,9 +96,8 @@
   <div class="three columns">
     <h3>Sidebar</h3>
     <ul>
-      <li>{{ member.comment }}</li>
-      <img src="http://trombi.tem-tsp.eu/photo.php?uid={{ member.username
-      }}&h=320&w=240"/>
+      <li class=u-full-width [ngClass]="{'commentaire': member.comment!=' '}">{{ member.comment }}</li>
+      <img src="http://trombi.tem-tsp.eu/photo.php?uid={{ member.username }}&h=320&w=240"/>
       <br />
       <li>
         <button class="u-full-width button-primary bigbutton">

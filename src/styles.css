@@ -124,3 +124,12 @@ ul,li {
     color: black;
 }
 
+.commentaire {
+  width: 7.7em;
+  margin: 1em auto;
+  padding: 10px;
+  border: 4px solid #65B5EA;
+  font-size: 1.4em;
+  text-align: center;
+  font-weight: bold;
+}
