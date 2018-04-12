@@ -1,9 +1,17 @@
 from connexion import NoContent
 from sqlalchemy import or_
-import sqlalchemy.orm.exc
 from adh.model.database import Database as db
 from adh.model.models import Switch
 from adh.exceptions import InvalidIPv4, SwitchNotFound
+
+
+def switchExists(session, switchID):
+    """ Return true if the switch exists """
+    try:
+        Switch.find(switchID)
+    except SwitchNotFound:
+        return False
+    return True
 
 
 def filterSwitch(limit=100, terms=None):
@@ -30,6 +38,8 @@ def filterSwitch(limit=100, terms=None):
 
 def createSwitch(body):
     """ [API] Create a switch in the database """
+    if "id" in body:
+        return "You cannot set the id", 400
     session = db.get_db().get_session()
     try:
         switch = Switch.from_dict(session, body)
@@ -43,33 +53,29 @@ def createSwitch(body):
 
 def getSwitch(switchID):
     """ [API] Get the specified switch from the database """
+    session = db.get_db().get_session()
     try:
-        result = db.get_db().get_session().query(Switch)
-        result = result.filter(Switch.id == switchID)
-        result = result.one()
-        result = dict(result)
-
-        return result
-
-    except sqlalchemy.orm.exc.NoResultFound:
+        return dict(Switch.find(session, switchID))
+    except SwitchNotFound:
         return NoContent, 404
 
 
 def updateSwitch(switchID, body):
     """ [API] Update the specified switch from the database """
-    session = db.get_db().get_session()
+    if "id" in body:
+        return "You cannot update the id", 400
 
-    # Don't update if the Switch does not exists
-    q = session.query(Switch).filter(Switch.id == switchID)
-    if not session.query(q.exists()).scalar():
+    session = db.get_db().get_session()
+    if not switchExists(session, switchID):
         return NoContent, 404
+
     try:
         switch = Switch.from_dict(session, body)
+        switch.id = switchID
     except InvalidIPv4:
         return "Invalid IPv4", 400
-    switch.id = switchID
-    session.merge(switch)
 
+    session.merge(switch)
     session.commit()
 
     return NoContent, 204
@@ -77,15 +83,14 @@ def updateSwitch(switchID, body):
 
 def deleteSwitch(switchID):
     """ [API] Delete the specified switch from the database """
+    session = db.get_db().get_session()
+
     try:
-        session = db.get_db().get_session()
-        # Get the switch to delete
-        switch = session.query(Switch).filter(Switch.id == switchID).one()
-        session.delete(switch)
-
-        session.commit()
-
-        return NoContent, 204
-
-    except sqlalchemy.orm.exc.NoResultFound:
+        switch = Switch.find(switchID)
+    except SwitchNotFound:
         return NoContent, 404
+
+    session.delete(switch)
+    session.commit()
+
+    return NoContent, 204
