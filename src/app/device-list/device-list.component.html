@@ -10,7 +10,7 @@
       <th></th>
     </tr>
     <tr *ngFor="let device of devices$ | async">
-      <td>{{ device.username }}</td>
+      <td><a [routerLink]="['../../member/view', device.username]">{{ device.username }}</a></td>
       <td>{{ device.mac }}</td>
       <td>{{ device.connectionType }}</td>
       <td><a [routerLink]="['../view' , device.mac]"><button>Consulter</button></a></td>
