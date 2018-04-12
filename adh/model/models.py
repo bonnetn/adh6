@@ -298,6 +298,15 @@ class Switch(Base):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
 
+    @staticmethod
+    def from_dict(body):
+        """ Transforms a dictionary to Switch object """
+        return Switch(
+            description=body.get('description'),
+            ip=body.get('ip'),
+            communaute=body.get('community'),
+        )
+
     @validates('ip')
     def valid_ip(self, key, addr):
         if not addr or not checks.isIPv4(addr):
@@ -305,6 +314,7 @@ class Switch(Base):
         return addr
 
     def __iter__(self):
+        yield "id", self.id
         yield "ip", self.ip
         yield "community", self.communaute
         if self.description:
@@ -332,6 +342,7 @@ class Port(Base):
         return s
 
     def __iter__(self):
+        yield "id", self.id
         yield "portNumber", self.numero
         if self.chambre:
             yield "roomNumber", self.chambre.numero
