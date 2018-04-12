@@ -70,9 +70,14 @@ def putUser(username, body):
     """ [API] Create/Update user from the database """
 
     s = db.get_db().get_session()
+
+    new_user = Adherent.from_dict(s, body)
     update = adherentExists(s, username)
+    if update:
+        new_user.id = Adherent.find(s, username).id
+
     try:
-        s.merge(Adherent.from_dict(s, body))
+        s.merge(new_user)
     except ValueError:
         return "String must not be empty", 400
     except InvalidEmail:
