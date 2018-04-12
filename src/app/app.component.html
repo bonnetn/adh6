@@ -1,9 +1,10 @@
+<title>{{ titre }}</title>
 <div class="alert {{ alert_type }}">
 <div class="container" id="title-bar">
   <div class="row">
     <div class="twelve columns">
       <span class="closebtn" (click)="alert_type='default'">&times;</span>  
-      <strong>{{ alert_message_type  }}</strong> {{ alert_message_display }}
+      <strong>{{ alert_message_type  }} ! </strong> {{ alert_message_display }}
     </div>
   </div>
 </div>
@@ -11,7 +12,7 @@
 <div class="container" id="title-bar">
   <div class="row">
     <div class="twelve columns">
-      <h1>AboXII</h1>
+      <h1>{{ titre }}</h1>
     </div>
   </div>
 </div>
