@@ -6,7 +6,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from adh.util import checks
 from adh.model.database import Base
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
-from adh.exceptions import UserNotFound, RoomNotFound
+from adh.exceptions import UserNotFound, RoomNotFound, SwitchNotFound
 from adh.util.date import string_to_date
 
 
@@ -297,6 +297,16 @@ class Switch(Base):
     communaute = Column(String(255))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
+
+    @staticmethod
+    def find(session, switchID):
+        """ [API] Get the specified switch from the database """
+        try:
+            q = session.query(Switch)
+            q = q.filter(Switch.id == switchID)
+            return q.one()
+        except NoResultFound:
+            raise SwitchNotFound
 
     @staticmethod
     def from_dict(session, body):
