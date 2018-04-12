@@ -1,7 +1,8 @@
 from connexion import NoContent
+from adh.exceptions import UserNotFound
 from adh.model.database import Database as db
 from adh.model import models
-import sqlalchemy
+from adh.model.models import Adherent
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidMac
 
 
@@ -23,20 +24,12 @@ def is_wireless(macAddress):
     return session.query(queryWireless.exists()).scalar()
 
 
-def get_adherent(username):
-    """ Return the adherent associated with the given username """
-    s = db.get_db().get_session()
-    q = s.query(models.Adherent)
-    q = q.filter(models.Adherent.login == username)
-    return q.one()
-
-
 def create_wireless_device(body):
     """ Create a wireless device in the database """
     s = db.get_db().get_session()
     dev = models.Portable(
         mac=body['mac'],
-        adherent=get_adherent(body['username']),
+        adherent=Adherent.find(s, body['username']),
     )
     s.add(dev)
     s.commit()
@@ -49,7 +42,7 @@ def create_wired_device(body):
         mac=body['mac'],
         ip=body['ipAddress'],
         ipv6=body['ipv6Address'],
-        adherent=get_adherent(body['username']),
+        adherent=Adherent.find(s, body['username']),
     )
     s.add(dev)
     s.commit()
@@ -61,7 +54,7 @@ def update_wireless_device(macAddress, body):
     q = s.query(models.Portable).filter(models.Portable.mac == macAddress)
     dev = q.one()
     dev.mac = body['mac']
-    dev.adherent = get_adherent(body['username'])
+    dev.adherent = Adherent.find(s, body['username'])
     s.commit()
 
 
@@ -74,7 +67,7 @@ def update_wired_device(macAddress, body):
     dev.mac = body['mac']
     dev.ip = body['ipAddress']
     dev.ipv6 = body['ipv6Address']
-    dev.adherent = get_adherent(body['username'])
+    dev.adherent = Adherent.find(s, body['username'])
     s.commit()
 
 
@@ -105,8 +98,8 @@ def filterDevice(limit=100, username=None, terms=None):
 
     if username:
         try:
-            target = get_adherent(username)
-        except sqlalchemy.orm.exc.NoResultFound:
+            target = Adherent.find(s, username)
+        except UserNotFound:
             return [], 200
 
     q = s.query(models.Portable)
@@ -182,8 +175,8 @@ def putDevice(macAddress, body):
             return NoContent, 201
         return NoContent, 204
 
-    except sqlalchemy.orm.exc.NoResultFound:
-        return 'Invalid username', 400
+    except UserNotFound:
+        return 'User not found', 400
 
     except InvalidMac:
         return 'Invalid mac', 400
