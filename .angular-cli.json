@@ -21,11 +21,9 @@
       "styles": [
         "../node_modules/skeleton-css/css/normalize.css",
         "../node_modules/skeleton-css/css/skeleton.css",
-	"../node_modules/ng-notify/src/styles/ng-notify.css",
         "styles.css"
       ],
       "scripts": [
-	"../node_modules/ng-notify/src/scripts/ng-notify.js"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
