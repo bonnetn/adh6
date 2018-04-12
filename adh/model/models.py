@@ -48,6 +48,15 @@ class Chambre(Base):
     vlan = relationship(Vlan)
 
     @staticmethod
+    def from_dict(session, d):
+        return Chambre(
+            numero=d.get("roomNumber"),
+            description=d.get("description"),
+            telephone=d.get("phone"),
+            # vlan=TODO
+        )
+
+    @staticmethod
     def find(session, roomNumber):
         if not roomNumber:
             return None

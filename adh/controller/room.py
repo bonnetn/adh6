@@ -3,21 +3,6 @@ from sqlalchemy import or_
 from adh.model.database import Database as db
 from adh.model.models import Chambre, Vlan
 import sqlalchemy
-from dateutil import parser
-
-
-def fromDict(d):
-    """ Converts a dictionnary into an actual Port object """
-    adh = Chambre(
-        numero=d['roomNumber'],
-    )
-    if "description" in d:
-        adh.description = d["description"]
-    if "phone" in d:
-        adh.telephone = d["phone"]
-    # if "vlan" in d:
-    #     adh.vlan = d["comment"]
-    return adh
 
 
 def filterRoom(limit=100, terms=None):
@@ -75,7 +60,7 @@ def putRoom(roomNumber, body):
         return NoContent, 204
     else:
         s = db.get_db().get_session()
-        a = fromDict(body)
+        a = Chambre.from_dict(s, body)
         s.add(a)
         q2 = s.query(Vlan)
         q2 = q2.filter(Vlan.numero == roomDict["vlan"])
