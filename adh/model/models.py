@@ -127,7 +127,7 @@ class Adherent(Base):
 
     @validates('mail')
     def valid_email(self, key, mail):
-        if not checks.isEmail(mail):
+        if not mail or not checks.isEmail(mail):
             raise InvalidEmail()
         return mail
 
