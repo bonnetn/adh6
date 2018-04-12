@@ -10,6 +10,7 @@ import 'rxjs/add/operator/takeWhile';
 
 import { DeviceService } from '../api/services/device.service';
 import { Device } from '../api/models/device';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-device-edit',
@@ -35,6 +36,7 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
+    private notif: NotificationsService,
   ) { 
   this.createForm();
   }
@@ -60,9 +62,10 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
     this.deviceService.putDeviceResponse( { "macAddress": mac, body: device })
       .takeWhile( ()=> this.alive )
       .subscribe( (response : HttpResponse<void>) => {
-        if( response.status == 204 || response.status == 201 ) {
-          this.router.navigate(["member/view", v.username ])
-        }
+        this.notif.success(response.status + ": Success");
+        this.router.navigate(["member/view", v.username ]);
+      }, (response) => {
+        this.notif.error(response.status + ": " + response.error);
       });
   
   }
