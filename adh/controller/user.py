@@ -2,7 +2,7 @@ from connexion import NoContent
 from adh.model.database import Database as db
 from adh.model.models import Adherent, Chambre, Adhesion
 from adh.util.date import string_to_date
-from adh.exceptions import InvalidEmail, RoomNotFound
+from adh.exceptions import InvalidEmail, RoomNotFound, UserNotFound
 import datetime
 import sqlalchemy
 
@@ -51,11 +51,9 @@ def filterUser(limit=100, terms=None, roomNumber=None):
 def getUser(username):
     """ [API] Get the specified user from the database """
     s = db.get_db().get_session()
-    q = s.query(Adherent)
-    q = q.filter(Adherent.login == username)
     try:
-        return dict(q.one())
-    except sqlalchemy.orm.exc.NoResultFound:
+        return dict(Adherent.find(s, username))
+    except UserNotFound:
         return NoContent, 404
 
 
