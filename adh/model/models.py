@@ -6,7 +6,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from adh.util import checks
 from adh.model.database import Base
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
-from adh.exceptions import UserNotFound
+from adh.exceptions import UserNotFound, RoomNotFound
 
 
 class Vlan(Base):
@@ -45,6 +45,17 @@ class Chambre(Base):
     dernier_adherent = Column(Integer)
     vlan_id = Column(Integer, ForeignKey(Vlan.id))
     vlan = relationship(Vlan)
+
+    @staticmethod
+    def find(session, roomNumber):
+        if not roomNumber:
+            return None
+        q = session.query(Chambre)
+        q = q.filter(Chambre.numero == roomNumber)
+        try:
+            return q.one()
+        except NoResultFound:
+            raise RoomNotFound()
 
     @validates('numero')
     def not_empty(self, key, s):
