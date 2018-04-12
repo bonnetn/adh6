@@ -2,17 +2,8 @@ from connexion import NoContent
 from sqlalchemy import or_
 import sqlalchemy.orm.exc
 from adh.model.database import Database as db
-from adh.model.models import Switch
+from adh.model.models import Switch, Adherent
 from adh.exceptions import InvalidIPv4
-
-
-def fromDict(body):
-    """ Transforms a dictionary to Switch object """
-    return Switch(
-        description=body.get('description'),
-        ip=body.get('ip'),
-        communaute=body.get('community'),
-    )
 
 
 def filterSwitch(limit=100, terms=None):
@@ -40,7 +31,7 @@ def filterSwitch(limit=100, terms=None):
 def createSwitch(body):
     """ [API] Create a switch in the database """
     try:
-        switch = fromDict(body)
+        switch = Adherent.from_dict(body)
     except InvalidIPv4:
         return "Invalid IPv4", 400
     session = db.get_db().get_session()
@@ -73,7 +64,7 @@ def updateSwitch(switchID, body):
     if not session.query(q.exists()).scalar():
         return NoContent, 404
     try:
-        switch = fromDict(body)
+        switch = Adherent.from_dict(body)
     except InvalidIPv4:
         return "Invalid IPv4", 400
     switch.id = switchID
