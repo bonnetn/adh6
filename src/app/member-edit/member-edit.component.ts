@@ -115,12 +115,12 @@ export class MemberEditComponent implements OnInit, OnDestroy {
           this.router.navigate(["member/search"])
           this.appcomponent.alert_type = "success"
           this.appcomponent.alert_message_type = "Succès"
-          this.appcomponent.alert_message_display = "Chambre Supprimée"
+          this.appcomponent.alert_message_display = "Utilisateur Supprimée"
         }
         else if (response.status == 404 ){
           this.appcomponent.alert_type = "warning"
           this.appcomponent.alert_message_type = "Attention"
-          this.appcomponent.alert_message_display = "Chambre Inconnue"
+          this.appcomponent.alert_message_display = "Utilisateur Inconnue"
         }
         else {
           this.appcomponent.alert_type = "danger"
