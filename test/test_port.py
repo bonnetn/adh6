@@ -2,7 +2,7 @@ import json
 import pytest
 from adh.model.database import Database as db
 from adh.settings.unit_test_settings import DATABASE as db_settings
-from adh.model.models import Port, Switch
+from adh.model.models import Port, Switch, Chambre
 
 from .resource import base_url
 
@@ -49,22 +49,34 @@ def sample_port2(sample_switch2):
     )
 
 
+@pytest.fixture
+def sample_room():
+    yield Chambre(
+        numero=5110,
+        description="Chambre de l'ambiance",
+        telephone=1234
+    )
+
+
 def prep_db(session,
             sample_switch1,
             sample_switch2,
             sample_port1,
-            sample_port2):
+            sample_port2,
+            sample_room):
     session.add_all([
         sample_switch1,
         sample_switch2,
         sample_port1,
-        sample_port2
+        sample_port2,
+        sample_room
     ])
     session.commit()
 
 
 @pytest.fixture
-def api_client(sample_port1, sample_port2, sample_switch1, sample_switch2):
+def api_client(sample_port1, sample_port2, sample_switch1, sample_switch2,
+               sample_room):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
@@ -72,7 +84,8 @@ def api_client(sample_port1, sample_port2, sample_switch1, sample_switch2):
                 sample_switch1,
                 sample_switch2,
                 sample_port1,
-                sample_port2)
+                sample_port2,
+                sample_room)
         yield c
 
 
@@ -171,6 +184,7 @@ def test_port_post_create_port(api_client, sample_switch1):
         "{}/switch/{}/port/".format(base_url, sample_switch1.id),
         data=json.dumps(body),
         content_type='application/json')
+    print(r.data)
     assert r.status_code == 200
     assert 'Location' in r.headers
 
