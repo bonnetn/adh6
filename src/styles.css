@@ -100,6 +100,7 @@ ul,li {
     transition: opacity 0.6s;
     height: 0.2em;
     line-height: 0.2em;
+    text-transform: uppercase;
 }
 
 .alert.danger {background-color: #f44336;}
@@ -114,8 +115,8 @@ ul,li {
     font-weight: bold;
     float: right;
     font-size: 22px;
-    height: 0.2em;
-    line-height: 0.2em;
+    height: 0.1em;
+    line-height: 0.1em;
     cursor: pointer;
 }
 
