@@ -9,10 +9,11 @@ import sqlalchemy
 
 def adherentExists(session, username):
     """ Returns true if the user exists """
-    q = session.query(Adherent)
-    q = q.filter(Adherent.login == username)
-
-    return session.query(q.exists()).scalar()
+    try:
+        Adherent.find(session, username)
+    except UserNotFound:
+        return False
+    return True
 
 
 def filterUser(limit=100, terms=None, roomNumber=None):
