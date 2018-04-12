@@ -82,7 +82,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
         else if (response.status == 400) {
           this.router.navigate(["member/view", user.username ])
           this.appcomponent.alert_type = "warning"
-          this.appcomponent.alert_message_type = "Atenttion"
+          this.appcomponent.alert_message_type = "Attention"
           this.appcomponent.alert_message_display = "Informations invalides"
         }
         else {
