@@ -18,5 +18,9 @@ class UserNotFound(ValueError):
     pass
 
 
+class SwitchNotFound(ValueError):
+    pass
+
+
 class RoomNotFound(ValueError):
     pass
