@@ -8,7 +8,7 @@ from adh.exceptions import InvalidIPv4, SwitchNotFound
 def switchExists(session, switchID):
     """ Return true if the switch exists """
     try:
-        Switch.find(switchID)
+        Switch.find(session, switchID)
     except SwitchNotFound:
         return False
     return True
@@ -86,7 +86,7 @@ def deleteSwitch(switchID):
     session = db.get_db().get_session()
 
     try:
-        switch = Switch.find(switchID)
+        switch = Switch.find(session, switchID)
     except SwitchNotFound:
         return NoContent, 404
 
