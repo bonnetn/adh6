@@ -14,5 +14,9 @@ class InvalidMac(ValueError):
     pass
 
 
+class UserNotFound(ValueError):
+    pass
+
+
 class RoomNotFound(ValueError):
     pass

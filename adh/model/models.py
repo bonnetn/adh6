@@ -2,9 +2,11 @@
 from sqlalchemy import Column, Date, DateTime, Integer, \
         Numeric, String, Text, text, ForeignKey
 from sqlalchemy.orm import relationship, validates
+from sqlalchemy.orm.exc import NoResultFound
 from adh.util import checks
 from adh.model.database import Base
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
+from adh.exceptions import UserNotFound
 
 
 class Vlan(Base):
@@ -80,6 +82,17 @@ class Adherent(Base):
         server_default=text("'2011-04-30 17:50:17'")
     )
     access_token = Column(String(255))
+
+    @staticmethod
+    def find(session, username):
+        if not username:
+            return None
+        q = session.query(Adherent)
+        q = q.filter(Adherent.numero == username)
+        try:
+            return q.one()
+        except NoResultFound:
+            raise UserNotFound()
 
     @validates('nom', 'prenom', 'login', 'password')
     def not_empty(self, key, s):
