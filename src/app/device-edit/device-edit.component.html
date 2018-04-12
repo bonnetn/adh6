@@ -2,25 +2,29 @@
 <form [formGroup]="deviceForm" (ngSubmit)="onSubmit()" novalidate>
   <label>Propriétaire</label>
   <input class="u-full-width" formControlName="username" type="text">
-
+  <br /><br />
   <label>Adresse MAC</label>
   <input class="u-full-width" formControlName="mac" type="text">
-
+  <br /><br />
   <div class="form-group">
     <label>Type d'appareil</label>
-
-    <label>
-      <input type="radio" formControlName="connectionType" value="wired">
-      <span class="label-body">Filaire</span>
-    </label>
-
-    <label>
-      <input type="radio" formControlName="connectionType" value="wireless">
-      <span class="label-body">Wi-Fi</span>
-    </label>
+    <div class="row">
+      <div class="six columns">
+        <label>
+          <input type="radio" formControlName="connectionType" value="wired">
+          <span class="label-body">Filaire</span>
+        </label>
+      </div>
+      <div class="six columns">
+        <label>
+          <input type="radio" formControlName="connectionType" value="wireless">
+          <span class="label-body">Wi-Fi</span>
+        </label>
+      </div>
+    </div>
   </div>
-
+  <br />
   <button type="submit"
           [disabled]="disabled || deviceForm.status == 'INVALID'"
-          class="button-primary">Modifier</button>
+          class="u-full-width button-primary">Modifier</button>
 </form>
