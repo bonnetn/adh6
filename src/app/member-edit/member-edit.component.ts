@@ -75,7 +75,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
         }
         else if(response.status == 204) {
           this.router.navigate(["member/view", user.username ])
-          this.appcomponent.alert_type = "info"
+          this.appcomponent.alert_type = "success"
           this.appcomponent.alert_message_type = "Succès"
           this.appcomponent.alert_message_display = "Utilisateur Modifié"
         }

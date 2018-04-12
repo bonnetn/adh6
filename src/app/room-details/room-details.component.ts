@@ -60,7 +60,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
       firstName: v.firstName,
       lastName: v.lastName,
       username: v.username,
-      roomNumber: null
+      roomNumber: 7601
     }
 
     var req = {
