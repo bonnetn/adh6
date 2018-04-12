@@ -1,17 +1,32 @@
 <div *ngIf="(device$ | async) as device">
   <h2>Détails de l'appareil</h2>
-  <ul>
-    <li><strong>Propriétaire:</strong> <a
-        [routerLink]="['../../../member/view/',device.username]"> {{ device.username
-    }} </a></li>
-    <li><strong>Adresse MAC:</strong> {{ device.mac }}</li>
-    <li><strong>Type d'appareil:</strong> {{ device.connectionType }}</li>
-    <div *ngIf="device.connectionType == 'wired'">
-      <li><strong>Adresse IPv4:</strong> {{ device.ipAddress }}</li>
-      <li><strong>Adresse IPv6:</strong> {{ device.ipv6Address }}</li>
-      <li><strong>MAB:</strong> MAB</li>
+  <div class="row">
+    <ul>
+     <div class="four columns">
+       <li><strong>Propriétaire:</strong><br /> <a
+            [routerLink]="['../../../member/view/',device.username]"> {{ device.username
+        }} </a></li>
+        <li *ngIf="device.connectionType == 'wired'"><strong>Adresse IPv4:</strong><br /> {{ device.ipAddress }}</li>
+     </div>
+     <div class="four columns">
+       <li><strong>Adresse MAC:</strong><br /> {{ device.mac }}</li>
+       <li *ngIf="device.connectionType == 'wired'"><strong>Adresse IPv6:</strong><br /> {{ device.ipv6Address }}</li>
+     </div>
+     <div class="four columns">
+       <li><strong>Type d'appareil:</strong><br /> {{ device.connectionType }}</li>
+       <li *ngIf="device.connectionType == 'wired'"><strong>MAB:</strong><br /> MAB</li>
+     </div>
+    </ul>
+  </div>
+  <br />
+  <div class="row">
+    <div class="six columns">
+      <a [routerLink]='["../../../device/edit", device.mac]'>
+        <button class="u-full-width button-primary">Éditer</button>
+      </a>
     </div>
-    <a [routerLink]='["../../../device/edit", device.mac]'><button>Editer</button></a>
-    <a style="cursor:pointer" (click)="onDelete(device.mac)"><button>Supprimer</button></a>
-  </ul>
+    <div class="six columns">
+      <button class="u-full-width button-danger" (click)="onDelete(device.mac)">Supprimer</button>
+    </div>
+  </div>
 </div>
