@@ -61,7 +61,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     ApiModule,
     ReactiveFormsModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [ AppComponent ],
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }
