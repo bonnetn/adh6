@@ -2,13 +2,13 @@ from connexion import NoContent
 from adh.model.database import Database as db
 from adh.model import models
 from adh.util.date import string_to_date
+from adh.exceptions.invalid_email import InvalidEmail
 import datetime
 import sqlalchemy
-from adh.exceptions.invalid_email import InvalidEmail
-
 
 # MERGE
 # FAIRE FONCTION STATIQUE POUR FIND ROOMS
+# merge totues les exceptions dans 1 fichier
 
 
 def findRoom(roomNumber):
@@ -108,54 +108,21 @@ def roomExists(roomNumber):
 def putUser(username, body):
     """ [API] Create/Update user from the database """
 
-    roomNumber = body["roomNumber"]
-    if roomNumber and not roomExists(roomNumber):
-        return "Room not found", 400
+    s = db.get_db().get_session()
+    update = adherentExists(username)
+    try:
+        s.merge(fromDict(body))
+    except ValueError:
+        return "String must not be empty", 400
+    except InvalidEmail:
+        return "Invalid email", 400
+    except sqlalchemy.orm.exc.NoResultFound:
+        return "No room found", 400
 
-    if adherentExists(username):
-        s = db.get_db().get_session()
-        q = s.query(models.Adherent)
-        q = q.filter(models.Adherent.login == username)
-
-        a = q.one()
-        a.nom = body['lastName']
-        a.prenom = body['firstName']
-        try:
-            a.mail = body['email']
-        except InvalidEmail:
-            s.rollback()
-            return "Invalid email", 400
-        a.login = body['username']
-
-        if roomNumber:
-            q2 = s.query(models.Chambre)
-            q2 = q2.filter(models.Chambre.numero == roomNumber)
-            c = q2.one()
-            a.chambre = c
-
-        if "departureDate" in body:
-            a.date_de_depart = string_to_date(body["departureDate"])
-        if "associationMode" in body:
-            a.mode_association = string_to_date(body["associationMode"])
-        if "comment" in body:
-            a.commentaires = body["comment"]
-
-        s.commit()
+    s.commit()
+    if update:
         return NoContent, 204
     else:
-        s = db.get_db().get_session()
-        try:
-            a = fromDict(body)
-        except InvalidEmail:
-            s.rollback()
-            return "Invalid email", 400
-        if roomNumber:
-            q2 = s.query(models.Chambre)
-            q2 = q2.filter(models.Chambre.numero == roomNumber)
-            c = q2.one()
-            a.chambre = c
-        s.add(a)
-        s.commit()
         return NoContent, 201
 
 
