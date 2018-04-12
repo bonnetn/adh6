@@ -54,6 +54,20 @@ session SQLAlchemy, créée DANS votre fonction de controller. Ca evite les nest
 transactions qui sont pas toujours supportées. (et c'est plus propre, moins
 error-prone)
 
+*Extrait de la doc d'SQLALchemy:*
+> As a general rule, keep the lifecycle of the session separate and external 
+> from functions and objects that access and/or manipulate database data. 
+> This will greatly help with achieving a predictable and consistent 
+> transactional scope.
+
+
+J'ai défini quelques fonctions utiles dans les modèles des objets de la BDD.
+
+- dict(obj) permet de retourner un dict du format de l'api
+- Obj.from_dict(dict) permet de retourner un obj en utilisant un dict de l'API
+- Obj.find(session, value) permet de retourner l'objet qui est associé par l'API
+
+
 
 ## Code coverage report generation:
 > pytest --cov=adh --cov-report html
