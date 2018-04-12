@@ -2,8 +2,7 @@ from connexion import NoContent
 from adh.model.database import Database as db
 from adh.model import models
 import sqlalchemy
-from adh.exceptions.invalid_mac import InvalidMac
-from adh.exceptions.invalid_ip import InvalidIPv4, InvalidIPv6
+from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidMac
 
 
 def is_wired(macAddress):

@@ -4,9 +4,7 @@ from sqlalchemy import Column, Date, DateTime, Integer, \
 from sqlalchemy.orm import relationship, validates
 from adh.util import checks
 from adh.model.database import Base
-from adh.exceptions.invalid_ip import InvalidIPv4, InvalidIPv6
-from adh.exceptions.invalid_email import InvalidEmail
-from adh.exceptions.invalid_mac import InvalidMac
+from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
 
 
 class Vlan(Base):

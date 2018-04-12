@@ -3,7 +3,7 @@ from sqlalchemy import or_
 import sqlalchemy.orm.exc
 from adh.model.database import Database as db
 from adh.model.models import Switch
-from adh.exceptions.invalid_ip import InvalidIPv4
+from adh.exceptions import InvalidIPv4
 
 
 def fromDict(body):

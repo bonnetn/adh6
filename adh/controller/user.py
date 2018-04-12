@@ -2,7 +2,7 @@ from connexion import NoContent
 from adh.model.database import Database as db
 from adh.model import models
 from adh.util.date import string_to_date
-from adh.exceptions.invalid_email import InvalidEmail
+from adh.exceptions import InvalidEmail
 import datetime
 import sqlalchemy
 

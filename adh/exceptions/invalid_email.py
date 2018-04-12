@@ -1,2 +1,0 @@
-class InvalidEmail(ValueError):
-    pass
