@@ -41,6 +41,7 @@ const routes: Routes = [
     path: 'device', 
     children: [
       { path: 'search', component: DeviceListComponent },
+      { path: 'add', component: DeviceNewComponent },
       { path: 'view/:mac', component: DeviceDetailsComponent },
       { path: 'edit/:mac', component: DeviceEditComponent },
     ],

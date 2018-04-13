@@ -37,7 +37,8 @@ export class DeviceNewComponent implements OnInit, OnDestroy {
 
   createForm() {
     this.deviceForm = this.fb.group({
-      mac: ['AA:AA:AA:AA:AA:AA', [Validators.required, Validators.minLength(17), Validators.maxLength(17)] ],
+      username: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)] ],
+      mac: ['', [Validators.required, Validators.minLength(17), Validators.maxLength(17)] ],
       connectionType: ['', Validators.required ],
     });
   }
@@ -45,17 +46,16 @@ export class DeviceNewComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.disabled = true;
     const v = this.deviceForm.value;
-    const user = this.route.snapshot.paramMap.get('username');
     const device: Device = {
-      mac: v.mac,
       connectionType: v.connectionType,
-      username: user
+      mac: v.mac,
+      username: v.username
     }
           
     this.deviceService.putDeviceResponse( { "macAddress": v.mac, body: device })
       .takeWhile( ()=> this.alive )
-      .subscribe( (response : HttpResponse<void>) => {
-        this.router.navigate(["member/view", user ])
+      .subscribe( (response) => {
+        this.router.navigate(["device/view", v.mac ])
         this.notif.success(response.status + ": Success")
       }, (response) => {
         this.notif.error(response.status + ": " + response.error); 
