@@ -8,7 +8,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { RoomService } from '../api/services/room.service';
 import { PortService } from '../api/services/port.service';
 import { Room } from '../api/models/room';
-import { PortSearchResult } from '../api/models/port-search-result';
+import { Port } from '../api/models/port';
 import { User } from '../api/models/user';
 import { UserService } from '../api/services/user.service';
 
@@ -23,7 +23,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   private alive: boolean = true;
 
   room$: Observable<Room>;
-  ports$: Observable<PortSearchResult[]>;
+  ports$: Observable<Port[]>;
   members$: Observable<User[]>;
   roomNumber: number;
   private sub: any;
@@ -61,11 +61,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
       roomNumber: 7601
     }
 
-    var req = {
-      "user" : user,
-    };
-
-    this.userService.putUserResponse( { "username": v.username, body: req } )
+    this.userService.putUserResponse( { "username": v.username, body: user } )
       .takeWhile( () => this.alive )
       .subscribe( (response : HttpResponse<void>) => {
         if(response.status == 204) {
