@@ -12,16 +12,16 @@
   <table class="u-full-width"> 
     <tr>
       <th>Utilisateur</th>
-      <th>MAC de l'appareil</th>
-      <th>Type d'appareil</th>
+      <th class="center">MAC de l'appareil</th>
+      <th class="center">Type d'appareil</th>
       <th></th>
       <th></th>
       <th></th>
     </tr>
     <tr *ngFor="let device of devices$ | async">
       <td><a [routerLink]="['../../member/view', device.username]">{{ device.username }}</a></td>
-      <td>{{ device.mac }}</td>
-      <td>{{ device.connectionType }}</td>
+      <td class="center">{{ device.mac }}</td>
+      <td class="center">{{ device.connectionType }}</td>
       <td><a [routerLink]="['../view' , device.mac]"><button>Consulter</button></a></td>
     </tr>
   </table>

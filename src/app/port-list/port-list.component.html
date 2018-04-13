@@ -11,16 +11,16 @@
 <div style="overflow-x:auto;" class="u-max-full-width">
   <table class="u-full-width">
     <tr>
-      <th>Switch</th>
-      <th>Numéro de port</th>
-      <th>Chambre</th>
+      <th class="center">Switch</th>
+      <th class="center">Numéro de port</th>
+      <th class="center">Chambre</th>
       <th></th>
     </tr>
     <tr *ngFor="let portResult of ports$ | async">  
-      <td>{{ portResult.switchID }}</td>
-      <td>{{ portResult.portNumber }}</td>
-      <td>{{ portResult.roomNumber }}</td>
-      <td><a [routerLink]="['../switch', portResult.switchID, 'port',
+      <td class="center">{{ portResult.switchID }}</td>
+      <td class="center">{{ portResult.portNumber }}</td>
+      <td class="center">{{ portResult.roomNumber }}</td>
+      <td class="center"><a [routerLink]="['../switch', portResult.switchID, 'port',
           portResult.id]"><button>Consulter</button></a></td>
     </tr>
   </table>

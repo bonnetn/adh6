@@ -11,16 +11,16 @@
 <div style="overflow-x:auto;" class="u-max-full-width">
   <table class="u-full-width">
     <tr>
-      <th>Numéro</th>
-      <th>Description</th>
-      <th>VLAN</th>
+      <th class="center">Numéro</th>
+      <th class="center">Description</th>
+      <th class="center">VLAN</th>
       <th></th>
     </tr>
     <tr *ngFor="let room of rooms$ | async">
-      <td>{{ room.roomNumber }}</td>
-      <td>{{ room.description }}</td>
-      <td>{{ room.vlan }}</td>
-      <td><a [routerLink]="[room.roomNumber]"><button>Consulter</button></a></td>
+      <td class="center">{{ room.roomNumber }}</td>
+      <td class="center">{{ room.description }}</td>
+      <td class="center">{{ room.vlan }}</td>
+      <td class="center"><a [routerLink]="[room.roomNumber]"><button>Consulter</button></a></td>
     </tr>
   </table>
 </div>

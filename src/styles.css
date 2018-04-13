@@ -103,3 +103,8 @@ ul,li {
   text-align: center;
   font-weight: bold;
 }
+
+th.center,
+td.center {
+  text-align: center;
+}
