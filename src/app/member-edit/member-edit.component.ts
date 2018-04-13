@@ -57,12 +57,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
       username: v.username,
       roomNumber: v.roomNumber
     }
-
-    var req = {
-      "user" : user,
-    };
-
-    this.userService.putUserResponse( { "username": v.username, body: req } )
+    this.userService.putUserResponse( user )
       .takeWhile( () => this.alive )
       .subscribe( (response) => {
         this.router.navigate(["member/view", user.username ])
