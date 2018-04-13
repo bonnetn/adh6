@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { SwitchService } from '../api/services/switch.service';
 import { Switch } from '../api/models/switch';
-import { PortSearchResult } from '../api/models/port-search-result';
+import { Port } from '../api/models/port';
 import { PortService } from '../api/services/port.service';
 
 import { ActivatedRoute } from '@angular/router';
@@ -17,7 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 export class SwitchDetailsComponent implements OnInit, OnDestroy {
 
   switch$: Observable<Switch>;
-  ports$: Observable<PortSearchResult[]>;
+  ports$: Observable<Port[]>;
   switchID: number;
   private sub: any;
 
