@@ -8,10 +8,11 @@
       <th></th>
     </tr>
     <tr *ngFor="let portResult of ports$ | async">  
-      <td>{{ portResult.port.switchID }}</td>
-      <td>{{ portResult.port.portNumber }}</td>
-      <td>{{ portResult.port.roomNumber }}</td>
-      <td><a [routerLink]="['../switch', portResult.port.switchID, 'port', portResult.portID]"><button>Consulter</button></a></td>
+      <td>{{ portResult.switchID }}</td>
+      <td>{{ portResult.portNumber }}</td>
+      <td>{{ portResult.roomNumber }}</td>
+      <td><a [routerLink]="['../switch', portResult.switchID, 'port',
+          portResult.id]"><button>Consulter</button></a></td>
     </tr>
   </table>
 </div>
