@@ -30,11 +30,11 @@
   </ul>
   <ul><h3>Ports</h3>
     <li *ngFor="let portRes of ports$ | async">
-      <strong>Switch {{ portRes.port.switchID }} port {{ portRes.port.portNumber }}</strong>
+      <strong>Switch {{ portRes.switchID }} port {{ portRes.portNumber }}</strong>
       <ul>
         <li>Etat</li>
         <li>Authentification</li>
-        <li><a [routerLink]="['../../switch', portRes.port.switchID, 'port', portRes.portID]">Configurer</a></li>
+        <li><a [routerLink]="['../../switch', portRes.switchID, 'port', portRes.portID]">Configurer</a></li>
       </ul>
     </li>
   </ul>
