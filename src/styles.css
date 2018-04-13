@@ -73,12 +73,22 @@ button[disabled]:hover{
     background:#ccc;
     border-color: #ccc;
     text-shadow:none;
-    cursor: no-drop
+    cursor: not-allowed
 }
 
 button.button-danger{
     color: #FFF;
     background-color:#f44336;
+}
+
+button.button-warning{
+    color: #FFF;
+    background-color:#f0ad4e;
+}
+
+button.button-success{
+    color: #FFF;
+    background-color:#8BC34A;
 }
 
 textarea{

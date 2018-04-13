@@ -67,23 +67,28 @@
         <tr>
           <th>Adresse MAC</th>
           <th>Fabricant</th>
-          <th>Type d'appareil</th>
           <th>Adresse IPv4</th>
-          <th>Adresse IPv6</th>
           <th>MAB</th>
           <th></th>
           <th></th>
         </tr>
         <tr *ngFor="let device of all_devices$ | async">
           <td><a [routerLink]="['../../../device/view', device.mac ]">{{ device.mac }}</a></td>
-
           <td><app-mac-vendor mac="{{device.mac}}"></app-mac-vendor></td>
-          <td>{{ device.connectionType }}</td>
           <td>{{ device.ipAddress }}</td>
-          <td>{{ device.ipv6Address }}</td>
-          <td>MAB</td>
+          <td><button
+                      style="width: 90px; height: 38px;"
+                      (click)="onMAB()" 
+                      class="u-max-full-width"
+                      [disabled]='MABdisabled'
+                      [ngClass]="{
+                      'off':'button-warning',
+                      'on':'button-success',
+                      'wifi':'button-primary'
+                      }[MAB]"
+                      >{{ MAB }}</button></td>
           <td><a [routerLink]="['../../../device/edit', device.mac]"><button>Éditer</button></a></td>
-          <td><a (click)="onDelete(device.mac)"><button class="button-danger">Supprimer</button></a></td>
+          <td><a (click)="onDelete(device.mac)"><button class="button-danger">X</button></a></td>
         </tr>
       </table>
     </div>

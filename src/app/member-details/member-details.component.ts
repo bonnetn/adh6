@@ -1,18 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { Observable } from 'rxjs/Observable';
 import { of }         from 'rxjs/observable/of';
-
 import { UserService } from '../api/services/user.service';
 import { DeviceService } from '../api/services/device.service';
 import { User } from '../api/models/user';
 import { Device } from '../api/models/device';
-
 import { ActivatedRoute } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
-
 
 @Component({
   selector: 'app-member-details',
@@ -27,6 +22,8 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   wired_devices$: Observable<Device[]>;
   wireless_devices$: Observable<Device[]>;
   username: string;
+  public MAB: string;
+  public MABdisabled: boolean;
   public cotisation: boolean = false;
   private sub: any;
   private alive: boolean = true;
@@ -42,6 +39,28 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     private notif: NotificationsService,
   ) { 
     this.createForm();
+  }
+
+  onMAB() {
+    this.MABdisabled = false
+    const v = this.deviceForm.value;
+    const device: Device = {
+      mac: v.mac,
+      connectionType: v.connectionType,
+      username: this.username
+    }
+    if ( device.connectionType == "wired") {
+      if (this.MAB == 'on') { 
+        this.MAB = 'off' 
+      }
+      else { 
+        this.MAB = 'on' 
+      }
+    }
+    else { 
+      this.MAB = 'wifi'
+      this.MABdisabled = true 
+    }
   }
 
   onCotisation() {
@@ -138,6 +157,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.onMAB();
     this.sub = this.route.params.subscribe(params => {
       this.username = params['username']; 
       this.refreshInfo();
