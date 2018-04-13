@@ -4,14 +4,9 @@ a {
 
 h1,h2,h3{
   text-align: center;
-  /*
-  color: #141414;
-  */
 }
 
 h1{
-  text-decoration: underline;
-  font-weight: bold;
   margin-top: 0.5em;
 }
 
