@@ -110,6 +110,7 @@ def filterDevice(limit=100, username=None, terms=None):
             (models.Portable.mac.contains(terms)) |
             False  # TODO: compare on username ?
         )
+    q = q.limit(limit)
     r = q.all()
     results += list(map(dict, r))
 
@@ -123,6 +124,7 @@ def filterDevice(limit=100, username=None, terms=None):
             (models.Ordinateur.ipv6.contains(terms))
             # TODO: compare on username ?
         )
+    q = q.limit(limit)
     r = q.all()
     results += list(map(dict, r))
     results = results[:limit]
