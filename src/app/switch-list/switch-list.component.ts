@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { SwitchService } from '../api/services/switch.service';
-import { SwitchSearchResult } from '../api/models/switch-search-result';
+import { Switch } from '../api/models/switch';
 
 @Component({
   selector: 'app-switch-list',
@@ -12,7 +12,7 @@ import { SwitchSearchResult } from '../api/models/switch-search-result';
 })
 export class SwitchListComponent implements OnInit {
 
-  switches$: Observable<SwitchSearchResult[]>;
+  switches$: Observable<Switch[]>;
 
   constructor(public switchService: SwitchService) { }
 
