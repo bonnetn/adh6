@@ -1,7 +1,11 @@
 <h2>Liste des appareils</h2>
 <div class="row">
-  <div class="twelve columns">
+  <div class="seven columns">
     <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="u-full-width" type="text"/>
+  </div>
+  <div class="five columns">
+    <a [routerLink]="['../add']"><button class="u-full-width
+        button-primary">Nouvel appareil</button></a>
   </div>
 </div>
 <div style="overflow-x:auto;" class="u-max-full-width">
