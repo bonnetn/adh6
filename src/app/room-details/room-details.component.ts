@@ -11,6 +11,7 @@ import { Room } from '../api/models/room';
 import { Port } from '../api/models/port';
 import { User } from '../api/models/user';
 import { UserService } from '../api/services/user.service';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-room-details',
@@ -28,52 +29,41 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   roomNumber: number;
   private sub: any;
 
-  memberEdit: FormGroup;
-
   constructor(
+    private notif: NotificationsService,
     private router: Router,
     public roomService: RoomService, 
     public portService: PortService, 
     public userService: UserService, 
     private fb: FormBuilder,
     private route: ActivatedRoute,
-  ) { this.createForm(); }
+  ) { }
 
-  createForm() {
-    this.memberEdit = this.fb.group({
-      firstName: ['', Validators.required ],
-      lastName: ['', Validators.required ],
-      username: ['', [Validators.required, Validators.minLength(7)] ],
-      email: ['', [Validators.required, Validators.email] ],
-      roomNumber: [0, [Validators.min(1000), Validators.max(9999), Validators.required ]],
-    });
-
+  refreshInfo() {
+    this.room$ = this.roomService.getRoom( this.roomNumber );
+    this.ports$ = this.portService.filterPort( { 'roomNumber': this.roomNumber } );
+    this.members$ = this.userService.filterUser( { 'roomNumber': this.roomNumber } );
   }
 
-  onKick() {
-    this.disabled = true;
-    const v = this.memberEdit.value;
-    const user: User = {
-      email: v.email,
-      firstName: v.firstName,
-      lastName: v.lastName,
-      username: v.username,
-      roomNumber: 7601
-    }
 
-    this.userService.putUserResponse( { "username": v.username, body: user } )
+  onRemoveFromRoom(username) {
+    this.userService.getUser(username)
       .takeWhile( () => this.alive )
-      .subscribe( (response : HttpResponse<void>) => {
-        if(response.status == 204) {
-          this.router.navigate(["member/view", user.username ])
-        }
-        else if (response.status == 400) {
-          this.router.navigate(["member/view", user.username ])
-        }
-        else {
-        }
-      });
+      .subscribe( (user) => {
+        delete user['roomNumber'];
+        this.userService.putUserResponse( { 
+                  "username": username,
+                  "body": user,
+                })
 
+        .takeWhile( () => this.alive )
+        .subscribe( (response) => {
+          this.refreshInfo();
+          this.notif.success(response.status + ": success")
+        }, (response) => {
+          this.notif.error(response.status + ": " + response.error);
+        });
+    });
   }
 
   onDelete() {
@@ -96,9 +86,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.route.params.subscribe( params => {
       this.roomNumber = +params["roomNumber"];
-      this.room$ = this.roomService.getRoom( this.roomNumber );
-      this.ports$ = this.portService.filterPort( { 'roomNumber': this.roomNumber } );
-      this.members$ = this.userService.filterUser( { 'roomNumber': this.roomNumber } );
+      this.refreshInfo();
     });
   }
   
