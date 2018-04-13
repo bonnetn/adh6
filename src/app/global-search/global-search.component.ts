@@ -114,7 +114,7 @@ export class GlobalSearchComponent implements OnInit {
           .map( (values) => {
             let res = [];
             values.forEach( (obj) => {
-              res.push( new SearchResult( "switch", obj.switch.description ) );
+              res.push( new SearchResult( "switch", obj.description ) );
             });
 
             return res;
@@ -124,7 +124,7 @@ export class GlobalSearchComponent implements OnInit {
           .map( (values) => {
             let res = [];
             values.forEach( (obj) => {
-              res.push( new SearchResult( "port", "Switch " + obj.port.switchID + " " + obj.port.portNumber ) );
+              res.push( new SearchResult( "port", "Switch " + obj.switchID + " " + obj.portNumber ) );
             });
 
             return res;
