@@ -58,18 +58,18 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSubmitComment() {
-    // TODO: implement PATCH in API to simplify that method
-    const newComment = this.commentForm.value.comment;
-    this.commentSubmitDisabled = true;
-    this.userService.getUser(this.username)
-      .takeWhile( () => this.alive )
-      .subscribe( (user) => {
-        user.comment = newComment;
-        this.userService.putUserResponse( { 
-                  "username": this.username,
-                  "body": user,
-                })
+    onSubmitComment() {
+      // TODO: implement PATCH in API to simplify that method
+      const newComment = this.commentForm.value.comment;
+      this.commentSubmitDisabled = true;
+      this.userService.getUser(this.username)
+        .takeWhile( () => this.alive )
+        .subscribe( (user) => {
+          user.comment = newComment;
+          this.userService.putUserResponse( { 
+                    "username": this.username,
+                    "body": user,
+                  })
 
           .takeWhile( () => this.alive )
           .subscribe( (response) => {
