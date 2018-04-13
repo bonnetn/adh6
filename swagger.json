@@ -2,7 +2,7 @@
   "swagger" : "2.0",
   "info" : {
     "description" : "Adherent api\n",
-    "version" : "1.0.1",
+    "version" : "1.0.3",
     "title" : "Adherent",
     "license" : {
       "name" : "Apache 2.0",
@@ -32,7 +32,7 @@
   } ],
   "schemes" : [ "http" ],
   "paths" : {
-    "/user" : {
+    "/user/" : {
       "get" : {
         "tags" : [ "user" ],
         "summary" : "Filter users",
@@ -67,9 +67,12 @@
                 "$ref" : "#/definitions/User"
               }
             }
+          },
+          "400" : {
+            "description" : "Invalid input"
           }
         },
-        "x-swagger-router-controller" : "user"
+        "x-swagger-router-controller" : "adh.controller.user"
       }
     },
     "/user/{username}" : {
@@ -96,7 +99,7 @@
             "description" : "Not found"
           }
         },
-        "x-swagger-router-controller" : "user"
+        "x-swagger-router-controller" : "adh.controller.user"
       },
       "put" : {
         "tags" : [ "user" ],
@@ -116,7 +119,7 @@
           "description" : "New values of the user",
           "required" : true,
           "schema" : {
-            "$ref" : "#/definitions/body"
+            "$ref" : "#/definitions/User"
           }
         } ],
         "responses" : {
@@ -125,9 +128,12 @@
           },
           "204" : {
             "description" : "Updated"
+          },
+          "400" : {
+            "description" : "Invalid input"
           }
         },
-        "x-swagger-router-controller" : "user"
+        "x-swagger-router-controller" : "adh.controller.user"
       },
       "delete" : {
         "tags" : [ "user" ],
@@ -150,7 +156,7 @@
             "description" : "Not found"
           }
         },
-        "x-swagger-router-controller" : "user"
+        "x-swagger-router-controller" : "adh.controller.user"
       }
     },
     "/user/{username}/membership" : {
@@ -168,7 +174,7 @@
         }, {
           "in" : "body",
           "name" : "body",
-          "description" : "Membership record, if no start is specified, it will use the current date.",
+          "description" : "Membership record, if no start is specified, it will use the current date. Duration is expressed in days.",
           "required" : true,
           "schema" : {
             "$ref" : "#/definitions/MembershipRecord"
@@ -176,19 +182,13 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "Success",
-            "headers" : {
-              "Location" : {
-                "type" : "string",
-                "description" : "URI to the newly created membership record"
-              }
-            }
+            "description" : "Success"
           },
-          "404" : {
-            "description" : "Not found"
+          "400" : {
+            "description" : "Invalid input"
           }
         },
-        "x-swagger-router-controller" : "user"
+        "x-swagger-router-controller" : "adh.controller.user"
       }
     },
     "/device/" : {
@@ -226,9 +226,12 @@
                 "$ref" : "#/definitions/Device"
               }
             }
+          },
+          "400" : {
+            "description" : "Invalid input"
           }
         },
-        "x-swagger-router-controller" : "device"
+        "x-swagger-router-controller" : "adh.controller.device"
       }
     },
     "/device/{macAddress}" : {
@@ -255,7 +258,7 @@
             "description" : "Not found"
           }
         },
-        "x-swagger-router-controller" : "device"
+        "x-swagger-router-controller" : "adh.controller.device"
       },
       "put" : {
         "tags" : [ "device" ],
@@ -285,10 +288,10 @@
             "description" : "Updated"
           },
           "400" : {
-            "description" : "Invalid mac address supplied / already in use"
+            "description" : "Invalid input"
           }
         },
-        "x-swagger-router-controller" : "device"
+        "x-swagger-router-controller" : "adh.controller.device"
       },
       "delete" : {
         "tags" : [ "device" ],
@@ -310,7 +313,7 @@
             "description" : "Not found"
           }
         },
-        "x-swagger-router-controller" : "device"
+        "x-swagger-router-controller" : "adh.controller.device"
       }
     },
     "/room/" : {
@@ -342,9 +345,12 @@
                 "$ref" : "#/definitions/Room"
               }
             }
+          },
+          "400" : {
+            "description" : "Invalid input"
           }
         },
-        "x-swagger-router-controller" : "room"
+        "x-swagger-router-controller" : "adh.controller.room"
       }
     },
     "/room/{roomNumber}" : {
@@ -370,7 +376,7 @@
             "description" : "Not found"
           }
         },
-        "x-swagger-router-controller" : "room"
+        "x-swagger-router-controller" : "adh.controller.room"
       },
       "put" : {
         "tags" : [ "room" ],
@@ -397,9 +403,12 @@
           },
           "204" : {
             "description" : "Updated"
+          },
+          "400" : {
+            "description" : "Invalid input"
           }
         },
-        "x-swagger-router-controller" : "room"
+        "x-swagger-router-controller" : "adh.controller.room"
       },
       "delete" : {
         "tags" : [ "room" ],
@@ -420,7 +429,7 @@
             "description" : "Not found"
           }
         },
-        "x-swagger-router-controller" : "room"
+        "x-swagger-router-controller" : "adh.controller.room"
       }
     },
     "/switch/" : {
@@ -449,12 +458,15 @@
             "schema" : {
               "type" : "array",
               "items" : {
-                "$ref" : "#/definitions/SwitchSearchResult"
+                "$ref" : "#/definitions/Switch"
               }
             }
+          },
+          "400" : {
+            "description" : "Invalid input"
           }
         },
-        "x-swagger-router-controller" : "switch"
+        "x-swagger-router-controller" : "adh.controller.switch"
       },
       "post" : {
         "tags" : [ "switch" ],
@@ -479,9 +491,12 @@
                 "description" : "URI to the newly created switch"
               }
             }
+          },
+          "400" : {
+            "description" : "Invalid input"
           }
         },
-        "x-swagger-router-controller" : "switch"
+        "x-swagger-router-controller" : "adh.controller.switch"
       }
     },
     "/switch/{switchID}" : {
@@ -507,7 +522,7 @@
             "description" : "Not found"
           }
         },
-        "x-swagger-router-controller" : "switch"
+        "x-swagger-router-controller" : "adh.controller.switch"
       },
       "put" : {
         "tags" : [ "switch" ],
@@ -532,11 +547,14 @@
           "204" : {
             "description" : "Updated"
           },
+          "400" : {
+            "description" : "Invalid input"
+          },
           "404" : {
             "description" : "Not found"
           }
         },
-        "x-swagger-router-controller" : "switch"
+        "x-swagger-router-controller" : "adh.controller.switch"
       },
       "delete" : {
         "tags" : [ "switch" ],
@@ -557,7 +575,7 @@
             "description" : "Not found"
           }
         },
-        "x-swagger-router-controller" : "switch"
+        "x-swagger-router-controller" : "adh.controller.switch"
       }
     },
     "/ports/" : {
@@ -598,12 +616,15 @@
             "schema" : {
               "type" : "array",
               "items" : {
-                "$ref" : "#/definitions/PortSearchResult"
+                "$ref" : "#/definitions/Port"
               }
             }
+          },
+          "400" : {
+            "description" : "Invalid input"
           }
         },
-        "x-swagger-router-controller" : "port"
+        "x-swagger-router-controller" : "adh.controller.port"
       }
     },
     "/switch/{switchID}/port/" : {
@@ -635,9 +656,12 @@
                 "description" : "URI to the newly created port"
               }
             }
+          },
+          "400" : {
+            "description" : "Invalid input"
           }
         },
-        "x-swagger-router-controller" : "port"
+        "x-swagger-router-controller" : "adh.controller.port"
       }
     },
     "/switch/{switchID}/port/{portID}" : {
@@ -668,7 +692,7 @@
             "description" : "Not found"
           }
         },
-        "x-swagger-router-controller" : "port"
+        "x-swagger-router-controller" : "adh.controller.port"
       },
       "put" : {
         "tags" : [ "port" ],
@@ -698,11 +722,14 @@
           "204" : {
             "description" : "Updated"
           },
+          "400" : {
+            "description" : "Invalid input"
+          },
           "404" : {
             "description" : "Not found"
           }
         },
-        "x-swagger-router-controller" : "port"
+        "x-swagger-router-controller" : "adh.controller.port"
       },
       "delete" : {
         "tags" : [ "port" ],
@@ -728,7 +755,7 @@
             "description" : "Not found"
           }
         },
-        "x-swagger-router-controller" : "port"
+        "x-swagger-router-controller" : "adh.controller.port"
       }
     }
   },
@@ -861,6 +888,10 @@
       "type" : "object",
       "required" : [ "portNumber" ],
       "properties" : {
+        "id" : {
+          "type" : "integer",
+          "example" : 1
+        },
         "portNumber" : {
           "type" : "string",
           "example" : "1/0/4"
@@ -880,36 +911,14 @@
         "portNumber" : "1/0/4"
       }
     },
-    "PortSearchResult" : {
-      "type" : "object",
-      "required" : [ "port", "portID", "switchID" ],
-      "properties" : {
-        "port" : {
-          "$ref" : "#/definitions/Port"
-        },
-        "portID" : {
-          "type" : "integer",
-          "example" : 1
-        },
-        "switchID" : {
-          "type" : "integer",
-          "example" : 6
-        }
-      },
-      "example" : {
-        "port" : {
-          "roomNumber" : 5110,
-          "switchID" : 6,
-          "portNumber" : "1/0/4"
-        },
-        "switchID" : 6,
-        "portID" : 1
-      }
-    },
     "Switch" : {
       "type" : "object",
       "required" : [ "community", "ip" ],
       "properties" : {
+        "id" : {
+          "type" : "integer",
+          "example" : 1
+        },
         "description" : {
           "type" : "string",
           "example" : "Switch U5"
@@ -930,26 +939,6 @@
         "community" : "ghWgpQvHRkrYuqpMLWYkstS3"
       }
     },
-    "SwitchSearchResult" : {
-      "type" : "object",
-      "properties" : {
-        "switch" : {
-          "$ref" : "#/definitions/Switch"
-        },
-        "switchID" : {
-          "type" : "integer",
-          "example" : 1
-        }
-      },
-      "example" : {
-        "switchID" : 1,
-        "switch" : {
-          "ip" : "192.168.102.211",
-          "description" : "Switch U5",
-          "community" : "ghWgpQvHRkrYuqpMLWYkstS3"
-        }
-      }
-    },
     "MembershipRecord" : {
       "type" : "object",
       "required" : [ "duration" ],
@@ -967,19 +956,6 @@
       "example" : {
         "duration" : 365,
         "start" : "2000-01-23T04:56:07.000+00:00"
-      }
-    },
-    "body" : {
-      "type" : "object",
-      "properties" : {
-        "user" : {
-          "$ref" : "#/definitions/User"
-        },
-        "password" : {
-          "type" : "string",
-          "format" : "password",
-          "example" : "toto123"
-        }
       }
     }
   },
