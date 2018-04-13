@@ -21,6 +21,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
 
   disabled: boolean = false;
   private alive: boolean = true;
+  private originalUsername;
 
   private member$: Observable<User>;
 
@@ -57,7 +58,10 @@ export class MemberEditComponent implements OnInit, OnDestroy {
       username: v.username,
       roomNumber: v.roomNumber
     }
-    this.userService.putUserResponse( user )
+    this.userService.putUserResponse( { 
+              "username": this.originalUsername,
+              "body": user,
+            })
       .takeWhile( () => this.alive )
       .subscribe( (response) => {
         this.router.navigate(["member/view", user.username ])
@@ -99,6 +103,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
         this.userService.getUser( params.get("username") ))
       .takeWhile( () => this.alive )
       .subscribe( (member: User) => {
+        this.originalUsername = member.username;
         this.memberEdit.patchValue(member);
       });
   }
