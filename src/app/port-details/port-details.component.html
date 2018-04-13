@@ -1,40 +1,35 @@
 <div *ngIf="(port$ | async) as port">
-
-<h2>Configuration de port</h2>
+<h2>Port {{ port.portNumber }}</h2>
 <h3>Informations</h3>
 <div class="row">
-  <div class="three columns">
-    <strong>Chambre: </strong>{{ port.roomNumber }}
+  <div class="six columns">
+    <button class="u-full-width">Chambre {{ port.roomNumber }}</button>
   </div>
-  <div class="three columns">
-    <a [routerLink]="['../../../../room/', port.roomNumber]"><button>Consulter</button></a>
-  </div>
-</div>
-<div class="row">
-  <div class="three columns">
-    <strong>Switch: </strong>{{ port.switchID }}
-  </div>
-  <div class="three columns">
-    <a [routerLink]="['../../../', port.switchID]"><button>Consulter</button></a>
+  <div class="six columns">
+    <a [routerLink]="['../../../../room/', port.switchID]"><button class="u-full-width">Switch {{ port.switchID }}</button></a>
   </div>
 </div>
-<strong>Numéro de port: </strong>{{ port.portNumber }}
 <p></p>
 <h3>Configuration</h3>
+<br />
 <div class=row>
-  <div class="three columns"><strong>Port ouvert</strong></div>
-  <div class="three columns"><button> Fermer le port </button></div>
+  <div class="six columns">
+    <strong align="center">Port ouvert</strong><br />
+    <button class="u-full-width"> Fermer le port </button>
+  </div>
+  <div class="six columns">
+    <strong>Authentifié</strong><br />
+    <button class="u-full-width"> Désauthentifier</button>
+  </div>
 </div>
 <div class=row>
-  <div class="three columns"><strong>Authentifié</strong></div>
-  <div class="three columns"><button> Désauthentifier</button></div>
-</div>
-<div class=row>
-  <div class="three columns"><strong>VLAN 41</strong></div>
-  <div class="three columns"><button>Changer de VLAN</button></div>
-</div>
-<div class=row>
-  <div class="three columns"><strong>Vitesse 10Mb/s</strong></div>
-  <div class="three columns"><button>Changer le débit</button></div>
+  <div class="six columns">
+    <strong>VLAN 41</strong><br />
+    <button class="u-full-width">Changer de VLAN</button>
+  </div>
+  <div class="six columns">
+    <strong>Vitesse 10Mb/s</strong><br />
+    <button class="u-full-width">Changer le débit</button>
+  </div>
 </div>
 </div>
