@@ -64,12 +64,7 @@ export class MemberFormComponent implements OnInit, OnDestroy {
       roomNumber: v.roomNumber
     }
 
-    var req = {
-      "user" : user,
-      "password" : v.passwords.password
-    };
-
-    this.userService.putUserResponse( { "username": v.username, body: req } )
+    this.userService.putUserResponse( { "username": v.username, body: user } )
       .takeWhile( () => this.alive )
       .subscribe( (response : HttpResponse<void>) => {
         this.router.navigate(["member/view", user.username ])
