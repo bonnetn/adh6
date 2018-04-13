@@ -66,13 +66,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
       .takeWhile( () => this.alive )
       .subscribe( (user) => {
         user.comment = newComment;
-        const req = {
-          "user":user,
-        };
-        this.userService.putUserResponse( { 
-          "username": this.username,
-          "body": req,
-        })
+        this.userService.putUserResponse( user )
           .takeWhile( () => this.alive )
           .subscribe( (response) => {
             this.commentSubmitDisabled = false 
