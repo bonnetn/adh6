@@ -70,16 +70,12 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
     const v = this.roomNumber;
     this.roomService.deleteRoomResponse( v )
       .takeWhile( () => this.alive )
-      .subscribe( (response : HttpResponse<void>) => {
-        if( response.status == 204 ) {
-          this.router.navigate(["room"])
-        }
-        else if (response.status == 404 ){
-        }
-        else {
-        }
+      .subscribe( (response) => {
+        this.router.navigate(["room"])
+        this.notif.success(response.status + ": success")
+      }, (response) => {
+        this.notif.error(response.status + ": " + response.error);
       });
-  
   }
 
 
