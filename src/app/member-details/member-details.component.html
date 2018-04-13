@@ -75,7 +75,8 @@
           <th></th>
         </tr>
         <tr *ngFor="let device of all_devices$ | async">
-          <td>{{ device.mac }}</td>
+          <td><a [routerLink]="['../../../device/view', device.mac ]">{{ device.mac }}</a></td>
+
           <td><app-mac-vendor mac="{{device.mac}}"></app-mac-vendor></td>
           <td>{{ device.connectionType }}</td>
           <td>{{ device.ipAddress }}</td>
