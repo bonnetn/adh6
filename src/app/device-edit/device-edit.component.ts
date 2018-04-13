@@ -11,7 +11,7 @@ import 'rxjs/add/operator/takeWhile';
 import { DeviceService } from '../api/services/device.service';
 import { Device } from '../api/models/device';
 import { NotificationsService } from 'angular2-notifications';
-import { Location } from '@angular/common';
+// import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-device-edit',
@@ -32,7 +32,7 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
   private device: Device;
   
   constructor(
-    private _location: Location,
+    // private _location: Location,
     public deviceService: DeviceService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
