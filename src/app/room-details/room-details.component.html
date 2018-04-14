@@ -29,6 +29,7 @@
       <div *ngIf="isDemenager">
       <div *ngIf="ref == member.username">
         <h3>Déménager</h3>
+        <strong>Nouveau numéro de chambre</strong><br /><br />
          <form [formGroup]="roomForm" (ngSubmit)="onSubmitMoveRoom(member.username)" novalidate>
           <div class="row">
             <div class="six columns">
