@@ -60,6 +60,7 @@ export class DeviceNewComponent implements OnInit, OnDestroy {
       }, (response) => {
         this.notif.error(response.status + ": " + response.error); 
       });
+    this.disabled = false;
   
   }
 
