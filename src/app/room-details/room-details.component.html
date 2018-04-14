@@ -14,7 +14,7 @@
         <div class="four columns">
           <button 
             class="u-full-width button-primary"
-            (click)="onDemenager()"
+            (click)="onDemenager(member.username)"
             [disabled]="enabled">
             Déménager</button>
         </div>
@@ -27,6 +27,7 @@
         </div>
       </div>
       <div *ngIf="isDemenager">
+      <div *ngIf="ref == member.username">
         <h3>Déménager</h3>
          <form [formGroup]="roomForm" (ngSubmit)="onSubmitMoveRoom(member.username)" novalidate>
           <div class="row">
@@ -45,6 +46,7 @@
             </div>
           </div>
         </form>
+      </div>
       </div>
     </li>
   </ul>

@@ -31,6 +31,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
 
   roomForm: FormGroup;
   public isDemenager: boolean = false;
+  public ref: string;
 
   constructor(
     private notif: NotificationsService,
@@ -51,7 +52,9 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
     });
   }
  
-  onDemenager() {
+  onDemenager(username) {
+    console.log(username)
+    this.ref = username
     this.isDemenager = !this.isDemenager
   }
 
@@ -79,7 +82,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
         .takeWhile( () => this.alive )
         .subscribe( (response) => {
           this.refreshInfo();
-          this.onDemenager()
+          this.onDemenager(username)
           this.router.navigate(["room", v.roomNumberNew ])
           this.notif.success(response.status + ": success")
         }, (response) => {
