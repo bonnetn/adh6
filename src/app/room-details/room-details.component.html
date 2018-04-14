@@ -8,15 +8,15 @@
           <a [routerLink]="['../../member/view', member.username]"><button 
               class="u-full-width button-primary"
               [disabled]="enabled">
-              Consulter</button>
+              Consulter le profile</button>
           </a>
         </div>
         <div class="four columns">
-          <a [routerLink]="['../../member/edit/', member.username]"><button 
-              class="u-full-width button-primary"
-              [disabled]="enabled">
-              Déménager</button>
-          </a>
+          <button 
+            class="u-full-width button-primary"
+            (click)="onDemenager()"
+            [disabled]="enabled">
+            Déménager</button>
         </div>
         <div class="four columns">
         <a (click)="onRemoveFromRoom(member.username)"><button
@@ -25,6 +25,26 @@
             Supprimer de la chambre</button>
         </a>
         </div>
+      </div>
+      <div *ngIf="isDemenager">
+        <h3>Déménager</h3>
+         <form [formGroup]="roomForm" (ngSubmit)="onSubmitMoveRoom(member.username)" novalidate>
+          <div class="row">
+            <div class="six columns">
+              <input 
+                 class="u-full-width"
+                 type="number"
+                 formControlName="roomNumberNew" 
+              > 
+            </div>
+            <div class="six columns">
+              <button 
+                class="u-full-width"
+                [disabled]="disabled || roomForm.status == 'INVALID'">
+                Valider</button>
+            </div>
+          </div>
+        </form>
       </div>
     </li>
   </ul>

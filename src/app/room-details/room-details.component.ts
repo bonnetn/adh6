@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/takeWhile';
 import { HttpResponse } from '@angular/common/http';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { RoomService } from '../api/services/room.service';
 import { PortService } from '../api/services/port.service';
@@ -29,6 +29,9 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   roomNumber: number;
   private sub: any;
 
+  roomForm: FormGroup;
+  public isDemenager: boolean = false;
+
   constructor(
     private notif: NotificationsService,
     private router: Router,
@@ -37,7 +40,20 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
     public userService: UserService, 
     private fb: FormBuilder,
     private route: ActivatedRoute,
-  ) { }
+  ) { 
+  this.createForm();
+  }
+
+  createForm() {
+    this.ngOnInit()
+    this.roomForm = this.fb.group({
+      roomNumberNew: [this.roomNumber, [Validators.min(1000), Validators.max(9999), Validators.required ]],
+    });
+  }
+ 
+  onDemenager() {
+    this.isDemenager = !this.isDemenager
+  }
 
   refreshInfo() {
     this.room$ = this.roomService.getRoom( this.roomNumber );
@@ -45,6 +61,32 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
     this.members$ = this.userService.filterUser( { 'roomNumber': this.roomNumber } );
   }
 
+  onSubmitMoveRoom(username) {
+    const v = this.roomForm.value;
+    const room: Room = {
+      roomNumber: v.roomNumberNew
+    }
+    this.userService.getUser(username)
+      .takeWhile( () => this.alive )
+      .subscribe( (user) => {
+        user["roomNumber"]=v.roomNumberNew
+        console.log(user)
+        this.userService.putUserResponse( { 
+                  "username": username,
+                  "body": user,
+                })
+
+        .takeWhile( () => this.alive )
+        .subscribe( (response) => {
+          this.refreshInfo();
+          this.onDemenager()
+          this.router.navigate(["room", v.roomNumberNew ])
+          this.notif.success(response.status + ": success")
+        }, (response) => {
+          this.notif.error(response.status + ": " + response.error);
+        });
+    });
+  }
 
   onRemoveFromRoom(username) {
     this.userService.getUser(username)
