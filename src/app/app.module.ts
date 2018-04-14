@@ -15,6 +15,7 @@ import { PatchingComponent } from './patching/patching.component';
 import { ApiModule } from './api/api.module';
 import { RoomListComponent } from './room-list/room-list.component';
 import { RoomDetailsComponent } from './room-details/room-details.component';
+import { RoomNewComponent } from './room-new/room-new.component';
 import { PortListComponent } from './port-list/port-list.component';
 import { PortDetailsComponent } from './port-details/port-details.component';
 import { SwitchListComponent } from './switch-list/switch-list.component';
@@ -41,6 +42,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     PatchingComponent,
     RoomListComponent,
     RoomDetailsComponent,
+    RoomNewComponent,
     PortListComponent,
     PortDetailsComponent,
     SwitchListComponent,

@@ -8,6 +8,7 @@ import { MemberEditComponent } from './member-edit/member-edit.component';
 import { MemberDetailsComponent } from './member-details/member-details.component';
 import { RoomListComponent } from './room-list/room-list.component';
 import { RoomDetailsComponent } from './room-details/room-details.component';
+import { RoomNewComponent } from './room-new/room-new.component';
 import { PortListComponent } from './port-list/port-list.component';
 import { PortDetailsComponent } from './port-details/port-details.component';
 import { PatchingComponent } from './patching/patching.component';
@@ -36,6 +37,7 @@ const routes: Routes = [
   },
   { path: 'room', component: RoomListComponent },
   { path: 'room/:roomNumber', component: RoomDetailsComponent },
+  { path: 'add', component: RoomNewComponent },
   { path: 'port', component: PortListComponent },
   { 
     path: 'device', 

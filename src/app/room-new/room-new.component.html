@@ -1,0 +1,15 @@
+<h2>Création d'une chambre</h2>
+<form [formGroup]="deviceForm" (ngSubmit)="onSubmit()" novalidate>
+  <label>Numéro de la chambre</label>
+  <input class="u-full-width" formControlName="roomNumber" type="text">
+  <br /><br />
+  <label>Vlan</label>
+  <input class="u-full-width" formControlName="vlan" type="text">
+  <br /><br />
+  <label>Description</label>
+  <input class="u-full-width" formControlName="description" type="text">
+  <br /><br />
+  <button type="submit"
+          [disabled]="disabled || roomForm.status == 'INVALID'"
+          class="u-full-width button-primary">Créer</button>
+</form>
