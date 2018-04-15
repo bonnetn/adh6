@@ -18,12 +18,10 @@ import { NotificationsService } from 'angular2-notifications';
 
 export class RoomNewComponent implements OnInit, OnDestroy {
   
-  // Disable the button to prevent multiple submit
   disabled: boolean = false;
-  // Variable to destroy all subscriptions
   private alive: boolean = true;
   
-  RoomForm: FormGroup;
+  roomForm: FormGroup;
   
   constructor(
     public roomService: RoomService,
@@ -36,28 +34,31 @@ export class RoomNewComponent implements OnInit, OnDestroy {
   }
 
   createForm() {
-    this.RoomForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)] ],
-      mac: ['', [Validators.required, Validators.minLength(17), Validators.maxLength(17)] ],
-      connectionType: ['', Validators.required ],
+    this.roomForm = this.fb.group({
+      roomNumber: ['', [Validators.min(1000), Validators.max(9999), Validators.required ]],
+      vlan: ['', [Validators.min(0), Validators.max(100), Validators.required ]],
+      description: ['', Validators.required ],
     });
   }
  
   onSubmit() {
     this.disabled = true;
-    const v = this.RoomForm.value;
+    const v = this.roomForm.value;
     const room: Room = {
-      roomNumber: v.roomNumber
+      roomNumber: v.roomNumber,
+      vlan: v.vlan,
+      description: v.description
     }
           
     this.roomService.putRoomResponse( { "roomNumber": v.roomNumber, body: room })
       .takeWhile( ()=> this.alive )
       .subscribe( (response) => {
-        this.router.navigate(["device/view", v.mac ])
+        this.router.navigate(["room/", v.roomNumber ])
         this.notif.success(response.status + ": Success")
       }, (response) => {
         this.notif.error(response.status + ": " + response.error); 
       });
+    this.disabled = false;
   
   }
 
