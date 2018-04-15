@@ -18,13 +18,11 @@ import { NotificationsService } from 'angular2-notifications';
 
 export class DeviceNewComponent implements OnInit, OnDestroy {
   
-  // Disable the button to prevent multiple submit
   disabled: boolean = false;
-  // Variable to destroy all subscriptions
   private alive: boolean = true;
-  
+
   deviceForm: FormGroup;
-  
+
   constructor(
     public deviceService: DeviceService,
     private fb: FormBuilder,
