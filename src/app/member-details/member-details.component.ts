@@ -51,7 +51,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
       connectionType: v.connectionType,
       username: this.username
     }
-    if ( device.connectionType == "wired") {
+    if ( v.connectionType == "wired") {
       if (this.MAB == 'on') { 
         this.MAB = 'off' 
       }

@@ -77,7 +77,7 @@
           <th></th>
         </tr>
         <tr *ngFor="let device of all_devices$ | async">
-          <td><a [routerLink]="['../../../device/view', device.mac ]">{{ device.mac }}</a></td>
+          <td><a [routerLink]="['/device/view', device.mac ]">{{ device.mac }}</a></td>
           <td><app-mac-vendor mac="{{device.mac}}"></app-mac-vendor></td>
           <td>{{ device.ipAddress }}</td>
           <td><button
@@ -91,7 +91,7 @@
                       'wifi':'button-primary'
                       }[MAB]"
                       >{{ MAB }}</button></td>
-          <td><a [routerLink]="['../../../device/edit', device.mac]"><button>Éditer</button></a></td>
+          <td><a [routerLink]="['/device/edit', device.mac]"><button>Éditer</button></a></td>
           <td><a (click)="onDelete(device.mac)"><button class="button-danger">X</button></a></td>
         </tr>
       </table>
