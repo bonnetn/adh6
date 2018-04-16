@@ -17,12 +17,9 @@ import { NotificationsService } from 'angular2-notifications';
 })
 
 export class DeviceEditComponent implements OnInit, OnDestroy {
-  
-  // Disable the button to prevent multiple submit
+
   disabled: boolean = false;
-  // Variable to destroy all subscriptions
   private alive: boolean = true;
-  
   deviceForm: FormGroup;
   username: string;
   private sub: any;
@@ -65,7 +62,6 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
       }, (response) => {
         this.notif.error(response.status + ": " + response.error);
       });
-  
   }
 
   ngOnInit() {
@@ -77,9 +73,6 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
           this.device = device;
           this.deviceForm.patchValue(device);
         });
-
-
-
   }
   
   ngOnDestroy() {
