@@ -27,11 +27,8 @@ const routes: Routes = [
     path: 'member', 
     children: [
       { path: 'search', component: MemberListComponent },
-      { path: 'view/:username', component: MemberDetailsComponent },
-      { path: 'edit/:username', component: MemberEditComponent },
       { path: 'add', component: MemberFormComponent },
-      { path: 'view/:username/newdevice', component: DeviceNewComponent },
-      { path: 'view/:username/editdevice/:mac', component: DeviceEditComponent },
+      { path: 'view/:username', component: MemberDetailsComponent },
       { path: 'edit/:username', component: MemberEditComponent },
     ],
   },
@@ -39,10 +36,9 @@ const routes: Routes = [
     path: 'room', 
     children: [
       { path: 'search', component: RoomListComponent },
+      { path: 'add', component: RoomNewComponent },
       { path: 'view/:roomNumber', component: RoomDetailsComponent },
       { path: 'edit/:roomNumber', component: RoomEditComponent },
-      { path: 'add', component: RoomNewComponent },
-      { path: 'port', component: PortListComponent },
     ],
   },
   { 
@@ -59,13 +55,14 @@ const routes: Routes = [
     path: 'switch',
     children: [
       { path: 'search', component: SwitchListComponent },
-      { 
-        path: 'view/:switchID',
-        children: [
-          { path: '', component: SwitchDetailsComponent },
-          { path: 'port/:portID', component: PortDetailsComponent },
-        ],
-      }
+      { path: 'view/:switchID', component: SwitchDetailsComponent },
+    ],
+  },
+  {
+    path: 'port',
+    children: [
+      { path: 'search', component: PortListComponent },
+      { path: 'view/:portID', component: PortDetailsComponent },
     ],
   }
 ];

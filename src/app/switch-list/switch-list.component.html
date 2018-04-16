@@ -16,9 +16,10 @@
       <th></th>
     </tr>
     <tr *ngFor="let switchResult of switches$ | async">
-      <td>{{ switchResult.switch.description }}</td>
-      <td class="center">{{ switchResult.switch.ip }}</td>
-      <td class="center"><a [routerLink]="[switchResult.switchID]"><button>Consulter</button></a></td>
+      <td *ngIf="switchResult.switch.description != 'Switch Local'">{{ switchResult.switch.description }}</td>
+      <td *ngIf="switchResult.switch.description != 'Switch Local'" class="center">{{ switchResult.switch.ip }}</td>
+      <td *ngIf="switchResult.switch.description != 'Switch Local'"
+        class="center"><a [routerLink]="['/switch/view', switchResult.switchID]"><button>Consulter</button></a></td>
     </tr>
   </table>
 </div>
