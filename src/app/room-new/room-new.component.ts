@@ -50,16 +50,21 @@ export class RoomNewComponent implements OnInit, OnDestroy {
       description: v.description
     }
           
-    this.roomService.putRoomResponse( { "roomNumber": v.roomNumber, body: room })
+    this.roomService.getRoomResponse(v.roomNumber)
       .takeWhile( ()=> this.alive )
       .subscribe( (response) => {
-        this.router.navigate(["room/", v.roomNumber ])
-        this.notif.success(response.status + ": Success")
+        this.notif.error("Room already exists"); 
       }, (response) => {
-        this.notif.error(response.status + ": " + response.error); 
+        this.roomService.putRoomResponse( { "roomNumber": v.roomNumber, body: room })
+          .takeWhile( ()=> this.alive )
+          .subscribe( (response) => {
+            this.router.navigate(["room/", v.roomNumber ])
+            this.notif.success(response.status + ": Success")
+          }, (response) => {
+            this.notif.error(response.status + ": " + response.error); 
+          });
       });
     this.disabled = false;
-  
   }
 
   ngOnInit() {
