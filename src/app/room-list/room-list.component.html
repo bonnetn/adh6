@@ -4,7 +4,7 @@
     <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="u-full-width" type="text"/>
   </div>
   <div class="five columns">
-    <a [routerLink]="['../add']"><button class="u-full-width
+    <a [routerLink]="['/room/add']"><button class="u-full-width
         button-primary">Nouvelle chambre</button></a>
   </div>
 </div>
@@ -20,7 +20,7 @@
       <td class="center">{{ room.roomNumber }}</td>
       <td class="center">{{ room.description }}</td>
       <td class="center">{{ room.vlan }}</td>
-      <td class="center"><a [routerLink]="[room.roomNumber]"><button>Consulter</button></a></td>
+      <td class="center"><a [routerLink]="['/room/view',room.roomNumber]"><button>Consulter</button></a></td>
     </tr>
   </table>
 </div>

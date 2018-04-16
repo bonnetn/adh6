@@ -65,11 +65,15 @@
     <li><strong>Numéro de chambre: </strong>{{ room.roomNumber }}</li>
     <li><strong>VLAN assigné: </strong>{{ room.vlan }}</li>
   </ul>
-  <div class="twelve columns">
-    <a (click)="onDelete()"><button
-        class="button-danger u-full-width"
-        [disabled]="enabled">
-        Supprimer la chambre</button>
-    </a>
+  <div class="row">
+    <div class="six columns">
+      <a [routerLink]='["/room/edit", room.roomNumber]'>
+        <button class="u-full-width button-primary">Éditer</button>
+      </a>
+    </div>
+    <div class="six columns">
+      <button class="u-full-width button-danger" (click)="onDelete()">Supprimer</button>
+    </div>
   </div>
 </div>
+<br /><br /><br />
