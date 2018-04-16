@@ -5,7 +5,7 @@
       <strong>{{ member.firstName }} {{ member.lastName }}</strong><br /><br />
       <div class="row">
         <div class="four columns">
-          <a [routerLink]="['../../member/view', member.username]"><button 
+          <a [routerLink]="['/member/view', member.username]"><button 
               class="u-full-width button-primary"
               [disabled]="enabled">
               Consulter le profile</button>
