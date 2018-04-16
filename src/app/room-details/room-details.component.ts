@@ -73,7 +73,6 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
       .takeWhile( () => this.alive )
       .subscribe( (user) => {
         user["roomNumber"]=v.roomNumberNew
-        console.log(user)
         this.userService.putUserResponse( { 
                   "username": username,
                   "body": user,
