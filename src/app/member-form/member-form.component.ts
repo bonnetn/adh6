@@ -16,9 +16,7 @@ import { NotificationsService } from 'angular2-notifications';
 })
 export class MemberFormComponent implements OnInit, OnDestroy {
 
-  // Disable the button to prevent multiple submit
   disabled: boolean = false;
-  // Variable to destroy all subscriptions
   private alive: boolean = true;
 
   memberForm: FormGroup;
@@ -64,17 +62,23 @@ export class MemberFormComponent implements OnInit, OnDestroy {
       roomNumber: v.roomNumber
     }
 
-    this.userService.putUserResponse( { "username": v.username, body: user } )
+    this.userService.getUserResponse(v.username)
       .takeWhile( () => this.alive )
-      .subscribe( (response : HttpResponse<void>) => {
-        this.router.navigate(["member/view", user.username ])
-        this.notif.success(response.status + ": Success")
+      .subscribe( (response) => {
+        this.notif.error("Error: User already exists")
       }, (response) => {
-        this.notif.error(response.status + ": " + response.error)
-        this.disabled = false;
+        this.userService.putUserResponse( { "username": v.username, body: user } )
+            .takeWhile( () => this.alive )
+            .subscribe( (response) => {
+              this.router.navigate(["member/view", user.username ])
+              this.notif.success(response.status + ": Success")
+            }, (response) => {
+              this.notif.error(response.status + ": " + response.error)
+          });
       });
-        this.disabled = true;
+    this.disabled = false;
   }
+   
 
   ngOnInit() {
   }
