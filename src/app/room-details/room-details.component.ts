@@ -53,7 +53,6 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   }
  
   onDemenager(username) {
-    console.log(username)
     this.ref = username
     this.isDemenager = !this.isDemenager
   }
@@ -77,7 +76,6 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
                   "username": username,
                   "body": user,
                 })
-
         .takeWhile( () => this.alive )
         .subscribe( (response) => {
           this.refreshInfo();
