@@ -40,26 +40,30 @@ export class DeviceNewComponent implements OnInit, OnDestroy {
       connectionType: ['', Validators.required ],
     });
   }
- 
+  
   onSubmit() {
     this.disabled = true;
     const v = this.deviceForm.value;
     const device: Device = {
-      connectionType: v.connectionType,
+      username: v.username,
       mac: v.mac,
-      username: v.username
+      connectionType: v.connectionType
     }
-          
-    this.deviceService.putDeviceResponse( { "macAddress": v.mac, body: device })
+    this.deviceService.getDeviceResponse(v.mac)
       .takeWhile( ()=> this.alive )
-      .subscribe( (response) => {
-        this.router.navigate(["device/view", v.mac ])
-        this.notif.success(response.status + ": Success")
-      }, (response) => {
-        this.notif.error(response.status + ": " + response.error); 
+      .subscribe( (response)=> { 
+        this.notif.error("Device already exists")
+      }, (reponse)=> {
+        this.deviceService.putDeviceResponse( { "macAddress": v.mac, body: device })
+          .takeWhile( ()=> this.alive )
+          .subscribe( (response)=> { 
+            this.router.navigate(["device/view", v.mac ])
+            this.notif.success(response.status + ": Success")
+          }, (response) => {
+            this.notif.error(response.status + ": " + response.error);
+          });
       });
     this.disabled = false;
-  
   }
 
   ngOnInit() {
