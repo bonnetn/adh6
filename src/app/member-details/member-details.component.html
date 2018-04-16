@@ -10,10 +10,9 @@
               <font size="5">&#9993;</font></a></li>
           <li><strong>Date de départ:</strong><br /> {{ member.departureDate }}</li>
         </div>
-        <br />
         <div class="four columns">
-          <a [routerLink]="['/member/edit/', member.username ]">
-            <button class="u-full-width">Éditer le profil</button>
+          <a [routerLink]="['']">
+            <button class="u-full-width">Port {{ member.roomNumber }}</button>
           </a>
           <a [routerLink]="['/room/view', member.roomNumber ]">
             <button class="u-full-width">Chambre {{ member.roomNumber }}</button>
@@ -21,9 +20,14 @@
         </div>
         <div class="four columns">
           <a [routerLink]="['']">
-            <button class="u-full-width">Paiements</button>
+            <button class="u-full-width">Historique</button>
           </a>
           <button class="u-full-width" (click)="onCotisation()">Cotiser</button>
+        </div>
+        <div class="eight columns">
+          <a [routerLink]="['/member/edit/', member.username ]">
+            <button class="u-full-width">Éditer le profil</button>
+          </a>
         </div>
       </div>
     </ul>
