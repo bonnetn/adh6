@@ -16,6 +16,9 @@ import { NotificationsService } from 'angular2-notifications';
 })
 export class MemberDetailsComponent implements OnInit, OnDestroy {
 
+  disabled: boolean = false;
+  private alive: boolean = true;
+ 
   member$: Observable<User>;
   subDevices: any;
   all_devices$: Observable<Device[]>;
@@ -26,7 +29,6 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   public MABdisabled: boolean;
   public cotisation: boolean = false;
   private sub: any;
-  private alive: boolean = true;
   private commentForm: FormGroup;
   private commentSubmitDisabled: boolean = false;
   private deviceForm: FormGroup;
@@ -78,6 +80,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   }
 
   onSubmitComment() {
+    this.disabled=true
     const newComment = this.commentForm.value.comment;
     this.commentSubmitDisabled = true;
     this.userService.getUser(this.username)
@@ -97,9 +100,11 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
           this.notif.error(response.status + ": " + response.error);
         });
     });
+    this.disabled=false
   }
   
   onSubmitDevice() {
+    this.disabled=true
     const v = this.deviceForm.value;
     const device: Device = {
       mac: v.mac,
@@ -120,6 +125,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
             this.notif.error(response.status + ": " + response.error);
           });
       });
+    this.disabled=false
   }
 
   onDelete(mac: string) {
