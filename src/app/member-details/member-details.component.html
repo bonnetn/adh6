@@ -12,10 +12,10 @@
         </div>
         <br />
         <div class="four columns">
-          <a [routerLink]="['../../edit/', member.username ]">
+          <a [routerLink]="['/member/edit/', member.username ]">
             <button class="u-full-width">Éditer le profil</button>
           </a>
-          <a [routerLink]="['../../../room', member.roomNumber ]">
+          <a [routerLink]="['/room/view', member.roomNumber ]">
             <button class="u-full-width">Chambre {{ member.roomNumber }}</button>
           </a>
         </div>
