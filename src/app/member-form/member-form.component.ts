@@ -41,7 +41,7 @@ export class MemberFormComponent implements OnInit, OnDestroy {
     this.memberForm = this.fb.group({
       firstName: ['', Validators.required ], 
       lastName: ['', Validators.required ], 
-      username: ['', [Validators.required, Validators.minLength(7)] ], 
+      username: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(8)] ],
       email: ['', [Validators.required, Validators.email] ], 
       roomNumber: [0, [Validators.min(1000), Validators.max(9999), Validators.required ]],
       passwords: this.fb.group( { password: ['', [Validators.required]],
