@@ -12,7 +12,6 @@ import { RoomEditComponent } from './room-edit/room-edit.component';
 import { RoomNewComponent } from './room-new/room-new.component';
 import { PortListComponent } from './port-list/port-list.component';
 import { PortDetailsComponent } from './port-details/port-details.component';
-import { PatchingComponent } from './patching/patching.component';
 import { SwitchLocalComponent } from './switch-local/switch-local.component';
 import { SwitchListComponent } from './switch-list/switch-list.component';
 import { SwitchDetailsComponent } from './switch-details/switch-details.component';
@@ -55,17 +54,20 @@ const routes: Routes = [
       { path: 'edit/:mac', component: DeviceEditComponent },
     ],
   },
-  { path: 'patching', component: PatchingComponent },
   { path: 'switch_local', component: SwitchLocalComponent },
-  { path: 'switch', component: SwitchListComponent },
   { 
-    path: 'switch/:switchID',
+    path: 'switch',
     children: [
-      { path: 'port/:portID', component: PortDetailsComponent },
-      { path: '', component: SwitchDetailsComponent },
+      { path: 'search', component: SwitchListComponent },
+      { 
+        path: 'view/:switchID',
+        children: [
+          { path: '', component: SwitchDetailsComponent },
+          { path: 'port/:portID', component: PortDetailsComponent },
+        ],
+      }
     ],
   }
-
 ];
 
 @NgModule({
