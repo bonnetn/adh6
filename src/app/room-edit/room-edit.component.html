@@ -1,0 +1,15 @@
+<h2>Modification d'une chambre</h2>
+<form [formGroup]="roomEdit" (ngSubmit)="onSubmit()" novalidate>
+  <label>Numéro de la chambre</label>
+  <input class="u-full-width" formControlName="roomNumber" disabled type="number">
+  <br /><br />
+  <label>Vlan</label>
+  <input class="u-full-width" formControlName="vlan" type="number">
+  <br /><br />
+  <label>Description</label>
+  <input class="u-full-width" formControlName="description" type="text">
+  <br /><br /><br />
+  <button type="submit"
+          [disabled]="disabled || roomEdit.status == 'INVALID'"
+          class="u-full-width button-primary">Modifier</button>
+</form>
