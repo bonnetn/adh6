@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Location } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/takeWhile';
@@ -30,7 +29,6 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location,
     private notif: NotificationsService,
   ) { 
   this.createForm();
