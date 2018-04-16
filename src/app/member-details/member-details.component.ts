@@ -77,28 +77,26 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-    onSubmitComment() {
-      // TODO: implement PATCH in API to simplify that method
-      const newComment = this.commentForm.value.comment;
-      this.commentSubmitDisabled = true;
-      this.userService.getUser(this.username)
+  onSubmitComment() {
+    const newComment = this.commentForm.value.comment;
+    this.commentSubmitDisabled = true;
+    this.userService.getUser(this.username)
+      .takeWhile( () => this.alive )
+      .subscribe( (user) => {
+        user.comment = newComment;
+        this.userService.putUserResponse( { 
+                  "username": this.username,
+                  "body": user,
+                })
         .takeWhile( () => this.alive )
-        .subscribe( (user) => {
-          user.comment = newComment;
-          this.userService.putUserResponse( { 
-                    "username": this.username,
-                    "body": user,
-                  })
-
-          .takeWhile( () => this.alive )
-          .subscribe( (response) => {
-            this.commentSubmitDisabled = false 
-            this.refreshInfo();
-            this.notif.success(response.status + ": success")
-          }, (response) => {
-            this.notif.error(response.status + ": " + response.error);
-          });
-      });
+        .subscribe( (response) => {
+          this.commentSubmitDisabled = false 
+          this.refreshInfo();
+          this.notif.success(response.status + ": success")
+        }, (response) => {
+          this.notif.error(response.status + ": " + response.error);
+        });
+    });
   }
   
   onSubmitDevice() {
@@ -108,13 +106,19 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
       connectionType: v.connectionType,
       username: this.username
     }
-    this.deviceService.putDeviceResponse( { "macAddress": v.mac, body: device })
+    this.deviceService.getDeviceResponse(v.mac)
       .takeWhile( ()=> this.alive )
       .subscribe( (response)=> { 
-        this.refreshInfo() 
-        this.notif.success(response.status + ": Success")
-      }, (response) => {
-        this.notif.error(response.status + ": " + response.error);
+        this.notif.error("Device already exists")
+      }, (reponse)=> {
+        this.deviceService.putDeviceResponse( { "macAddress": v.mac, body: device })
+          .takeWhile( ()=> this.alive )
+          .subscribe( (response)=> { 
+            this.refreshInfo() 
+            this.notif.success(response.status + ": Success")
+          }, (response) => {
+            this.notif.error(response.status + ": " + response.error);
+          });
       });
   }
 
