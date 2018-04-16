@@ -58,7 +58,7 @@ export class RoomNewComponent implements OnInit, OnDestroy {
         this.roomService.putRoomResponse( { "roomNumber": v.roomNumber, body: room })
           .takeWhile( ()=> this.alive )
           .subscribe( (response) => {
-            this.router.navigate(["room/", v.roomNumber ])
+            this.router.navigate(["/room/view", v.roomNumber ])
             this.notif.success(response.status + ": Success")
           }, (response) => {
             this.notif.error(response.status + ": " + response.error); 
