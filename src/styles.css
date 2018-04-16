@@ -71,6 +71,11 @@ button[disabled]:hover{
     cursor: not-allowed
 }
 
+input[disabled],
+input[disabled]:hover{
+    cursor: not-allowed
+}
+
 button.button-danger{
     color: #FFF;
     background-color:#f44336;
