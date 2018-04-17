@@ -21,7 +21,12 @@ def current_user():
 def home():
     if request.method == 'POST':
         username = request.form.get('username')
+        password = request.form.get('password')
         user = User.query.filter_by(username=username).first()
+
+        if not user.check_password(password):
+            return redirect('/')
+
         if not user:
             user = User(username=username)
             db.session.add(user)
