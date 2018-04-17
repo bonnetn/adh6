@@ -22,7 +22,8 @@ export class SwitchLocalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.switchID = 8;
     this.switch$ = this.switchService.getSwitch(this.switchID);
-    this.ports$ = this.portService.filterPort( { 'switchID': this.switchID } );
+    // this.ports$ = this.portService.filterPort( { 'switchID': this.switchID } );
+    this.ports$ = this.portService.filterPort( {} );
   }
 
   ngOnDestroy() {
