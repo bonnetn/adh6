@@ -1,23 +1,32 @@
 <h2>Switch Local</h2>
 <div class=row>
+  <div *ngIf="(switch$ | async) as switch">
   <div class="six columns">
+    <p><strong>Adresse IP:</strong> {{ switch.ip }}</p>
     <img src="assets/plan-local.png" />
     <br /><br /><br />
   </div>
+  <br /><br /><br /><br />
   <div class="six columns">
-    <div *ngIf="(switch$ | async) as switch">
-      <h2>{{ switch.description }}</h2>
-      <p><strong>Adresse IP:</strong> {{ switch.ip }}</p>
       <table class="u-full-width">
         <tr>
-          <th>Numéro de port</th>
-          <th>Numéro de chambre</th>
+          <th></th>
+          <th></th>
           <th></th>
         </tr>
         <tr *ngFor="let portRes of ports$ | async">
-          <td>{{ portRes.port.portNumber }}</td>
-          <td>{{ portRes.port.roomNumber }}</td>
-          <td><a [routerLink]="['port/', portRes.portID]"><button>Consulter</button></a></td>
+          <td>
+              <a [routerLink]="['port/', portRes.portID]">
+              <button>{{ i }}</button>
+              </a></td>
+          <td>
+              <a [routerLink]="['port/', portRes.portID]">
+              <button>{{ portRes.port.portNumber }}</button>
+              </a></td>
+          <td>
+              <a [routerLink]="['port/', portRes.portID]">
+              <button>{{ portRes.port.portNumber }}</button>
+              </a></td>
         </tr>
       </table>
     </div>
