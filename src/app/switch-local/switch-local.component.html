@@ -5,7 +5,21 @@
     <br /><br /><br />
   </div>
   <div class="six columns">
-    <img src="" />
+    <div *ngIf="(switch$ | async) as switch">
+      <h2>{{ switch.description }}</h2>
+      <p><strong>Adresse IP:</strong> {{ switch.ip }}</p>
+      <table class="u-full-width">
+        <tr>
+          <th>Numéro de port</th>
+          <th>Numéro de chambre</th>
+          <th></th>
+        </tr>
+        <tr *ngFor="let portRes of ports$ | async">
+          <td>{{ portRes.port.portNumber }}</td>
+          <td>{{ portRes.port.roomNumber }}</td>
+          <td><a [routerLink]="['port/', portRes.portID]"><button>Consulter</button></a></td>
+        </tr>
+      </table>
+    </div>
   </div>
 </div>
-
