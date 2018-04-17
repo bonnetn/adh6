@@ -30,6 +30,8 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   private sub: any;
 
   roomForm: FormGroup;
+  EmmenagerForm: FormGroup;
+  public isEmmenager: boolean = false;
   public isDemenager: boolean = false;
   public ref: string;
 
@@ -50,6 +52,13 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
     this.roomForm = this.fb.group({
       roomNumberNew: [this.roomNumber, [Validators.min(1000), Validators.max(9999), Validators.required ]],
     });
+    this.EmmenagerForm = this.fb.group({
+      username: ['', [Validators.minLength(7), Validators.maxLength(8), Validators.required ]],
+    });
+  }
+
+  onEmmenager() {
+    this.isEmmenager = !this.isEmmenager
   }
  
   onDemenager(username) {
@@ -61,6 +70,29 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
     this.room$ = this.roomService.getRoom( this.roomNumber );
     this.ports$ = this.portService.filterPort( { 'roomNumber': this.roomNumber } );
     this.members$ = this.userService.filterUser( { 'roomNumber': this.roomNumber } );
+  }
+  
+  onSubmitComeInRoom() {
+    const v = this.EmmenagerForm.value;
+    this.userService.getUser(v.username)
+      .takeWhile( () => this.alive )
+      .subscribe( (user) => {
+        user["roomNumber"]=this.roomNumber
+        this.userService.putUserResponse( { 
+                  "username": v.username,
+                  "body": user,
+                })
+        .takeWhile( () => this.alive )
+        .subscribe( (response) => {
+          this.refreshInfo();
+          this.notif.success(response.status + ": success")
+          this.onEmmenager()
+        }, (response) => {
+          this.notif.error(response.status + ": " + response.error);
+        });
+      }, (user) => {
+          this.notif.error("User "+v.username+" does not exists");
+      });
   }
 
   onSubmitMoveRoom(username) {

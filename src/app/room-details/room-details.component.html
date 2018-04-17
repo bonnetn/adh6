@@ -1,6 +1,32 @@
 <div *ngIf="(room$ | async) as room">
   <h2>{{ room.description }}</h2>
-  <ul><h3>Adhérent·e·s</h3>
+  <ul>
+    <h3>Adhérent·e·s</h3>
+    <button 
+      class="u-full-width button-warning"
+      (click)="onEmmenager()" 
+      >Emménagement</button>
+    <div *ngIf="isEmmenager">
+      <h3>Emménager</h3>
+      <strong>Login DISI du nouvel adhérent</strong><br /><br />
+       <form [formGroup]="EmmenagerForm" (ngSubmit)="onSubmitComeInRoom()" novalidate>
+        <div class="row">
+          <div class="six columns">
+            <input 
+               class="u-full-width"
+               type="text"
+               formControlName="username" 
+            > 
+          </div>
+          <div class="six columns">
+            <button 
+              class="u-full-width"
+              [disabled]="disabled || EmmenagerForm.status == 'INVALID'">
+              Valider</button>
+          </div>
+        </div>
+      </form>
+    </div>
     <li *ngFor="let member of members$ | async">
       <strong>{{ member.firstName }} {{ member.lastName }}</strong><br /><br />
       <div class="row">
