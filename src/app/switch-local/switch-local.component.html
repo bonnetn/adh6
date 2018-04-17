@@ -1,40 +1,52 @@
 <h2>Switch Local</h2>
-<div class=row>
+<div class="row">
   <div *ngIf="(switch$ | async) as switch">
-    <div class="six columns">
-      <p><strong>Adresse IP:</strong> {{ switch.ip }}</p>
-      <br /><br /><br />
+    <p><strong>Adresse IP:</strong> {{ switch.ip }}</p>
+    <div class="five columns">
       <img src="assets/plan-local.png" />
+    </div>
+    <br /><br /><br />
+    <div class="two columns">
+      <div *ngFor="let portResult of ports$ | async">
+        <div *ngIf="+portResult.portNumber.split('/').pop() % 3 == 0">
+        <div *ngIf="+portResult.portNumber.split('/').pop()>=3">
+        <div *ngIf="+portResult.portNumber.split('/').pop()<=24">
+        <div *ngIf="+portResult.switchID==8">
+          <button
+            class="u-full-width button-primary"
+            >{{ portResult.portNumber.split('/').pop() }}</button>
+        </div>
+        </div>
+        </div>
+        </div>
+      </div>
     </div>
     <div class="two columns">
       <div *ngFor="let portResult of ports$ | async">
         <div *ngIf="+portResult.portNumber.split('/').pop() % 3 == 1">
+        <div *ngIf="+portResult.portNumber.split('/').pop()>=3">
+        <div *ngIf="+portResult.portNumber.split('/').pop()<=24">
         <div *ngIf="+portResult.switchID==8">
           <button
             class="u-full-width button-primary"
             >{{ portResult.portNumber.split('/').pop() }}</button>
+        </div>
+        </div>
         </div>
         </div>
       </div>
     </div>
     <div class="two columns">
       <div *ngFor="let portResult of ports$ | async">
-       <div *ngIf="+portResult.portNumber.split('/').pop() % 3 == 2">
+        <div *ngIf="+portResult.portNumber.split('/').pop() % 3 == 2">
+        <div *ngIf="+portResult.portNumber.split('/').pop()>=3">
+        <div *ngIf="+portResult.portNumber.split('/').pop()<=24">
         <div *ngIf="+portResult.switchID==8">
           <button
             class="u-full-width button-primary"
             >{{ portResult.portNumber.split('/').pop() }}</button>
         </div>
         </div>
-      </div>
-    </div>
-    <div class="two columns">
-      <div *ngFor="let portResult of ports$ | async">
-        <div *ngIf="+portResult.portNumber.split('/').pop() % 3 == 0">
-        <div *ngIf="+portResult.switchID==8">
-          <button
-            class="u-full-width button-primary"
-            >{{ portResult.portNumber.split('/').pop() }}</button>
         </div>
         </div>
       </div>
