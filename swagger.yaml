@@ -1,9 +1,9 @@
 ---
-swagger: '2.0'
+swagger: "2.0"
 info:
   description: |
     Adherent api
-  version: 1.0.3
+  version: 1.0.4
   title: Adherent
   license:
     name: Apache 2.0
@@ -60,6 +60,8 @@ paths:
               $ref: '#/definitions/User'
         400:
           description: Invalid input
+      security:
+        - oauth2: ['profile']
       x-swagger-router-controller: adh.controller.user
   /user/{username}:
     get:
@@ -621,17 +623,13 @@ paths:
           description: Not found
       x-swagger-router-controller: adh.controller.port
 securityDefinitions:
-  petstore_auth:
+  oauth2:
     type: oauth2
-    authorizationUrl: http://petstore.swagger.io/oauth/dialog
+    authorizationUrl: http://localhost:5000/oauth/authorize
     flow: implicit
     scopes:
-      write:pets: modify pets in your account
-      read:pets: read your pets
-  api_key:
-    type: apiKey
-    name: api_key
-    in: header
+      profile: test
+    x-tokenInfoFunc: adh.auth.token_info
 definitions:
   User:
     type: object
