@@ -1,3 +1,12 @@
+# Comment lancer ?
+Lancer le serveur.
+
+aller sur localhost:5000
+se connecter avec n'importe quel username, password = "valid".
+Créer un client avec allowed_scope "profile", Allowed Grant Types: "implicit", 
+Allowed Response Types "token", Token Endpoint Auth Method: "none".
+Prenez le client_id, et authentifiez vous avec swaggerhub ou faites de la magie
+
 # How to create an OAuth 2.0 Provider
 
 This is an example of OAuth 2.0 server in [Authlib](https://authlib.org/).
