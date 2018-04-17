@@ -7,14 +7,14 @@ from .routes import bp
 
 def create_app(config=None):
     app = Flask(__name__)
-
-    # load default configuration
-    app.config.from_object('website.settings')
-
-    # load environment configuration
-    if 'WEBSITE_CONF' in os.environ:
-        app.config.from_envvar('WEBSITE_CONF')
-
+    #
+    # # load default configuration
+    # app.config.from_object('website.settings')
+    #
+    # # load environment configuration
+    # if 'WEBSITE_CONF' in os.environ:
+    #     app.config.from_envvar('WEBSITE_CONF')
+    #
     # load app sepcified configuration
     if config is not None:
         if isinstance(config, dict):
