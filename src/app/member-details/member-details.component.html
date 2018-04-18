@@ -11,7 +11,7 @@
           <li><strong>Date de départ:</strong><br /> {{ member.departureDate }}</li>
         </div>
         <div class="four columns">
-          <a [routerLink]="['','#port']">
+          <a [routerLink]="['/room/view', member.roomNumber]">
             <button class="u-full-width">Port {{ member.roomNumber }}</button>
           </a>
           <a [routerLink]="['/room/view', member.roomNumber ]">
