@@ -27,6 +27,8 @@ import { GlobalSearchComponent } from './global-search/global-search.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { OAuthModule } from 'angular-oauth2-oidc';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MacVendorComponent,
     GlobalSearchComponent,
     NavbarComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,9 +69,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       clickIconToClose: true,
       animate: "fade",
       showProgressBar: false,
-    
     }),
     BrowserAnimationsModule,
+    OAuthModule.forRoot(),
   ],
   providers: [ AppComponent ],
   bootstrap: [ AppComponent ]

@@ -1,0 +1,20 @@
+<h1>Test Authentication</h1>
+<h1 *ngIf="!name">
+    Hello
+</h1>
+<h1 *ngIf="name">
+    Hello, {{name}}
+</h1>
+<div class="container">
+  <div class="row">
+    <div class="twelve columns">
+      <button class="u-full-width button-primary" (click)="login()">
+          Login
+      </button>
+      <br />
+      <button class="u-full-width button-primary" (click)="logoff()">
+          Logout
+      </button>
+    </div>
+  </div>
+</div>
