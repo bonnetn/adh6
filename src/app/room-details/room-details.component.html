@@ -81,12 +81,30 @@
   <ul><h3 id="port">Ports</h3>
     <li *ngFor="let portRes of ports$ | async">
       <div *ngIf="portRes.roomNumber==this.roomNumber">
-      <strong>Switch {{ portRes.switchID }} port {{ portRes.portNumber }}</strong>
-      <ul>
-        <li>Etat</li>
-        <li>Authentification</li>
-        <li><a [routerLink]="['../../switch', portRes.switchID, 'port', portRes.portID]">Configurer</a></li>
-      </ul>
+        <strong>Switch {{ portRes.switchID }} port {{ portRes.portNumber }}</strong>
+        <br /><br />
+        <div class="row">
+          <div class="four columns">
+            <button class="u-full-width button-success"
+            >Etat
+            </button>
+          </div>
+          <div class="four columns">
+            <button class="u-full-width"
+                    [ngClass]="{true:'button-success',
+                    false:'button-danger'}[authenth]"
+                    (click)="auth()"
+            >Authentification
+            </button>
+          </div>
+          <div class="four columns">
+            <a [routerLink]="['../../switch', portRes.switchID, 'port', portRes.portID]">
+            <button class="u-full-width button-primary"
+            >Configurer
+            </button>
+            </a>
+          </div>
+        </div>
       </div>
     </li>
   </ul>

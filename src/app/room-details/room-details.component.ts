@@ -22,6 +22,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   
   disabled: boolean = false;
   private alive: boolean = true;
+  authenth: boolean = false;
 
   room$: Observable<Room>;
   ports$: Observable<Port[]>;
@@ -55,6 +56,10 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
     this.EmmenagerForm = this.fb.group({
       username: ['', [Validators.minLength(7), Validators.maxLength(8), Validators.required ]],
     });
+  }
+
+  auth() {
+    this.authenth = !this.authenth
   }
 
   onEmmenager() {
