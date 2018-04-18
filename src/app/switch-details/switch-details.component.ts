@@ -1,12 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
 import { Observable } from 'rxjs/Observable';
-
 import { SwitchService } from '../api/services/switch.service';
 import { Switch } from '../api/models/switch';
 import { Port } from '../api/models/port';
 import { PortService } from '../api/services/port.service';
-
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -27,7 +24,8 @@ export class SwitchDetailsComponent implements OnInit, OnDestroy {
     this.sub = this.route.params.subscribe( params => {
       this.switchID = +params["switchID"];
       this.switch$ = this.switchService.getSwitch(this.switchID);
-      this.ports$ = this.portService.filterPort( { 'switchID': this.switchID } );
+      // this.ports$ = this.portService.filterPort( { 'switchID': this.switchID } );
+      this.ports$ = this.portService.filterPort( {} );
     });
   }
 

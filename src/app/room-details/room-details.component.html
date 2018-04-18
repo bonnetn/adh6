@@ -78,14 +78,16 @@
       </div>
     </li>
   </ul>
-  <ul><h3>Ports</h3>
+  <ul><h3 id="port">Ports</h3>
     <li *ngFor="let portRes of ports$ | async">
+      <div *ngIf="portRes.roomNumber==this.roomNumber">
       <strong>Switch {{ portRes.switchID }} port {{ portRes.portNumber }}</strong>
       <ul>
         <li>Etat</li>
         <li>Authentification</li>
         <li><a [routerLink]="['../../switch', portRes.switchID, 'port', portRes.portID]">Configurer</a></li>
       </ul>
+      </div>
     </li>
   </ul>
   <ul><h3>Informations</h3>
