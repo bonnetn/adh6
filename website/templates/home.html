@@ -1,3 +1,8 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='skeleton.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<link rel="icon" type="image/x-icon" href="{{ url_for('static',
+filename='favicon.ico') }}">
 {% if user %}
 <style>pre{white-space:wrap}</style>
 <div>Logged in as <strong>{{user}}</strong> (<a href="{{ url_for('.logout') }}">Log Out</a>)</div>
@@ -13,9 +18,21 @@
 <br><a href="{{ url_for('.create_client') }}">Create Client</a>
 
 {% else %}
-<form action="" method="post">
-  <input type="text" name="username" placeholder="username">
-  <input type="password" name="password" placeholder="password"> 
-  <button type="submit">Login / Signup</button>
-</form>
+<div class="container">
+  <div class="row">
+    <div class="twelve columns">
+      <br />
+      <h1>Authentication</h1>
+      <form action="" method="post">
+        <label>Login</label>
+        <input class="u-full-width" type="text" name="username" placeholder="username">
+        <br /><br />
+        <label>Password</label>
+        <input class="u-full-width" type="password" name="password" placeholder="password"> 
+        <br /><br />
+        <button class="u-full-width button-primary" type="submit">Login / Signup</button>
+      </form>
+    </div>
+  </div>
+</div>
 {% endif %}
