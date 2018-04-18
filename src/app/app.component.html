@@ -1,13 +1,38 @@
 <title>{{ titre }}</title>
-<div class="container" id="title-bar">
-  <div class="row">
-    <div class="twelve columns">
-      <h1>{{ titre }}</h1>
+<div *ngIf="isAuthenticated(); else elseBlock">
+  <div class="container" id="title-bar">
+    <div class="row">
+      <div class="twelve columns">
+        <h1>{{ titre }}</h1>
+      </div>
     </div>
   </div>
+  <app-navbar></app-navbar>
+  <div class="container">
+      <router-outlet></router-outlet>
+  </div>
+  <simple-notifications></simple-notifications>
 </div>
-<app-navbar></app-navbar>
-<div class="container">
-    <router-outlet></router-outlet>
-</div>
-<simple-notifications></simple-notifications>
+<ng-template #elseBlock>
+  <div class="container" id="title-bar">
+    <div class="row">
+      <div class="twelve columns">
+        <h1>Vous devez vous authentifier pour accéder à adh6.minet.net</h1>
+        <br /><br />
+        <a href="http://zteeed.fr:50000">
+        <button 
+          class="u-full-width button-primary"
+          >
+          Se connecter
+        </button>
+        </a>
+        <button 
+          class="u-full-width button-danger"
+          (click)="this.token='ok'"
+          >
+          Bypass
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
