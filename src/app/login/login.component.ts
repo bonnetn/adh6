@@ -10,26 +10,16 @@ import { authConfig } from '../auth.config';
 })
 export class LoginComponent implements OnInit, OnDestroy{
 
-    constructor(private oauthService: OAuthService) {
-    }
+  constructor(private oauthService: OAuthService) {
+  }
 
-    public login() {
-        this.oauthService.initImplicitFlow();
-    }
+  public login() {
+      this.oauthService.initImplicitFlow();
+  }
 
-    public logoff() {
-        this.oauthService.logOut();
-    }
-
-    public get name() {
-      let claims = this.oauthService.getIdentityClaims();
-      console.log(claims)
-      if (!claims) {
-        return null;
-      }
-      // return claims.client_name;
-      return claims;
-    }
+  public logoff() {
+      this.oauthService.logOut();
+  }
 
   ngOnInit() {
   }

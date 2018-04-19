@@ -27,8 +27,6 @@ export class AppComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit() {
-    // refresh page --> undefined token - have to set smthg
-    // connexion au oauth service et si ca marche pas this.token=null
   }
 
   ngOnDestroy() {
