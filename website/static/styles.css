@@ -113,3 +113,11 @@ th.center,
 td.center {
   text-align: center;
 }
+
+img{
+  width:75%;
+}
+
+div{
+  text-align: center;
+}
