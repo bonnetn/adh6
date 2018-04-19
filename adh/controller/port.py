@@ -2,7 +2,7 @@ from connexion import NoContent
 from adh.model.database import Database as db
 from sqlalchemy import or_
 from adh.exceptions import RoomNotFound, SwitchNotFound, PortNotFound
-from adh.model.models import Port
+from adh.model.models import Port, Chambre, Switch
 
 
 def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
@@ -10,11 +10,14 @@ def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
     if limit < 0:
         return 'Limit must be a positive number', 400
 
-    q = db.get_db().get_session().query(Port)
+    s = db.get_db().get_session()
+    q = s.query(Port)
     if switchID:
-        q = q.filter(Port.switch_id == switchID)
+        q = q.join(Switch)
+        q = q.filter(Switch.numero == switchID)
     if roomNumber:
-        q = q.filter(Port.chambre_id == roomNumber)
+        q = q.join(Chambre)
+        q = q.filter(Chambre.numero == roomNumber)
     if terms:
         q = q.filter(or_(
             Port.numero.contains(terms),
