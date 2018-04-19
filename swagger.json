@@ -46,6 +46,13 @@
           "type" : "integer",
           "default" : 100
         }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "Skip the first n results",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
+        }, {
           "name" : "terms",
           "in" : "query",
           "description" : "The generic search terms (will search in any field)",
@@ -205,6 +212,13 @@
           "type" : "integer",
           "default" : 100
         }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "Skip the first n results",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
+        }, {
           "name" : "username",
           "in" : "query",
           "description" : "Filter by owner's username",
@@ -330,6 +344,13 @@
           "type" : "integer",
           "default" : 100
         }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "Skip the first n results",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
+        }, {
           "name" : "terms",
           "in" : "query",
           "description" : "Search terms",
@@ -445,6 +466,13 @@
           "required" : false,
           "type" : "integer",
           "default" : 100
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "Skip the first n results",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
         }, {
           "name" : "terms",
           "in" : "query",
@@ -591,6 +619,13 @@
           "required" : false,
           "type" : "integer",
           "default" : 100
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "Skip the first n results",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
         }, {
           "name" : "switchID",
           "in" : "query",
