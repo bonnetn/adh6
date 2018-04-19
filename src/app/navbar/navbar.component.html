@@ -1,17 +1,18 @@
+<a [routerLink]="['dashboard']">
+<h1>{{ titre }}</h1>
+</a>
 <nav [class.responsive]="navBarStatus">
   <div class="container">
     <div class="row">
       <div class="twelve columns">
         <ul>
-          <li [routerLinkActive]="['active']"><a [routerLink]="['dashboard']">Accueil</a></li>
           <li [routerLinkActive]="['active']"><a [routerLink]="['member/search']">Adhérent·e·s</a></li>
           <li [routerLinkActive]="['active']"><a [routerLink]="['device/search']">Appareils</a></li>
           <li [routerLinkActive]="['active']"><a [routerLink]="['room/search']">Chambres</a></li>
           <li [routerLinkActive]="['active']"><a [routerLink]="['switch_local']">Switch Local</a></li>
           <li [routerLinkActive]="['active']"><a [routerLink]="['switch/search']">Switchs</a></li>
           <li [routerLinkActive]="['active']"><a [routerLink]="['port/search']">Ports</a></li>
-          <li [routerLinkActive]="['active']"><a><button class="u-full-width
-                button-danger" (click)="logout()">Deconnexion</button></a></li>
+          <li><a (click)="logout()">Déconnexion</a></li>
           <li class="icon"><a (click)="navBarStatus=!navBarStatus">&#9776;</a></li>
         </ul>
       </div>

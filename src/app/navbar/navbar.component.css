@@ -1,18 +1,9 @@
-.container {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
 #title-bar div div h1 {
   margin: 0;
 }
-nav {
-	/*margin: 13px 0 0 0;*/
-  /*
-  background-color: #33c3f0;
-  */
-  background-color: #65B5EA;
 
+nav {
+  background-color: #65B5EA;
 }
 
 nav ul,
@@ -68,3 +59,18 @@ nav div ul .icon {
   }
 }
 
+a {
+  cursor: pointer;
+}
+
+h1 {
+ color: #ffffff;
+ margin: 0;
+ background-color: #65B5EA;
+ padding-top: 0.3em;
+ padding-bottom: 0.3em;
+}
+
+h1:hover {
+  background-color: #2196F3;
+}

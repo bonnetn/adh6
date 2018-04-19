@@ -1,12 +1,5 @@
 <title>{{ titre }}</title>
 <div *ngIf="isAuthenticated(); else elseBlock">
-  <div class="container" id="title-bar">
-    <div class="row">
-      <div class="twelve columns">
-        <h1>{{ titre }}</h1>
-      </div>
-    </div>
-  </div>
   <app-navbar></app-navbar>
   <div class="container">
       <router-outlet></router-outlet>

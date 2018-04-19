@@ -9,6 +9,8 @@ import { AppComponent } from '../app.component';
 })
 export class NavbarComponent implements OnInit {
 
+  public titre: string = this.appcomponent.titre
+
   constructor(
     private appcomponent: AppComponent,
     private router: Router
