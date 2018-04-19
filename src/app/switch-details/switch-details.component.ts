@@ -24,8 +24,7 @@ export class SwitchDetailsComponent implements OnInit, OnDestroy {
     this.sub = this.route.params.subscribe( params => {
       this.switchID = +params["switchID"];
       this.switch$ = this.switchService.getSwitch(this.switchID);
-      // this.ports$ = this.portService.filterPort( { 'switchID': this.switchID } );
-      this.ports$ = this.portService.filterPort( {} );
+      this.ports$ = this.portService.filterPort( { 'switchID': this.switchID } );
     });
   }
 

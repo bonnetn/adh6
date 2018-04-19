@@ -73,8 +73,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
 
   refreshInfo() {
     this.room$ = this.roomService.getRoom( this.roomNumber );
-    // this.ports$ = this.portService.filterPort( { 'roomNumber': this.roomNumber } );
-    this.ports$ = this.portService.filterPort( {} );
+    this.ports$ = this.portService.filterPort( { 'roomNumber': this.roomNumber } );
     this.members$ = this.userService.filterUser( { 'roomNumber': this.roomNumber } );
   }
   
