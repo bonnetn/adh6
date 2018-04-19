@@ -1,5 +1,5 @@
 <title>{{ titre }}</title>
-<div *ngIf="isAuthenticated(); else elseBlock">
+<div *ngIf="isTokenValid; else elseBlock">
   <app-navbar></app-navbar>
   <div class="container">
       <router-outlet></router-outlet>

@@ -17,7 +17,7 @@ export class NavbarComponent implements OnInit {
   ) { }
 
   logout(){
-    this.appcomponent.token=null
+    this.appcomponent.isTokenValid=false
     this.router.navigate(["dashboard"])
   }
 

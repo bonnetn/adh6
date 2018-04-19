@@ -10,7 +10,7 @@ import { authConfig } from './auth.config';
 })
 export class AppComponent implements OnInit, OnDestroy{
   titre: string = 'ADH6';
-  public token: any;
+  public isTokenValid: boolean;
 
   constructor(private oauthService: OAuthService) {
     this.configureWithNewConfigApi();
@@ -23,10 +23,17 @@ export class AppComponent implements OnInit, OnDestroy{
   }
 
   isAuthenticated() {
-    return this.token!=null
+    console.log(this.oauthService.hasValidIdToken())
+    if (this.oauthService.hasValidIdToken()) {
+      this.isTokenValid = true;
+    }
+    else {
+      this.isTokenValid = false;
+    }
   }
 
   ngOnInit() {
+    this.isAuthenticated();
   }
 
   ngOnDestroy() {
