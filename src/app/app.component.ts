@@ -10,7 +10,6 @@ import { authConfig } from './auth.config';
 })
 export class AppComponent implements OnInit, OnDestroy{
   titre: string = 'ADH6';
-  public isTokenValid: boolean;
 
   constructor(private oauthService: OAuthService) {
     this.configureWithNewConfigApi();
@@ -19,20 +18,15 @@ export class AppComponent implements OnInit, OnDestroy{
   private configureWithNewConfigApi() {
     this.oauthService.configure(authConfig);
     this.oauthService.tokenValidationHandler = new JwksValidationHandler();
-    this.oauthService.loadDiscoveryDocumentAndTryLogin();
+    this.oauthService.tryLogin();
   }
 
   isAuthenticated() {
-    console.log(this.oauthService.hasValidIdToken())
-    if (this.oauthService.hasValidIdToken()) {
-      this.isTokenValid = true;
-    }
-    else {
-      this.isTokenValid = false;
-    }
+    return this.oauthService.hasValidAccessToken()
   }
 
   ngOnInit() {
+    console.log(this.oauthService.getAccessToken())
     this.isAuthenticated();
   }
 

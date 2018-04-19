@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponent } from '../app.component';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-navbar',
@@ -11,14 +12,13 @@ export class NavbarComponent implements OnInit {
 
   public titre: string = this.appcomponent.titre
 
-  constructor(
+  constructor(private oauthService: OAuthService,
     private appcomponent: AppComponent,
     private router: Router
   ) { }
 
   logout(){
-    this.appcomponent.isTokenValid=false
-    this.router.navigate(["dashboard"])
+    this.oauthService.logOut()
   }
 
   navBarStatus: boolean = false;
