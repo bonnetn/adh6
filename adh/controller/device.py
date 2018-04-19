@@ -89,7 +89,7 @@ def delete_wired_device(macAddress):
     s.commit()
 
 
-def filterDevice(limit=100, username=None, terms=None):
+def filterDevice(limit=100, offset=0, username=None, terms=None):
     """ [API] Filter the list of the devices according to some criterias """
     if limit < 0:
         return 'Limit must be a positive number', 400

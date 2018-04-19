@@ -16,7 +16,7 @@ def adherentExists(session, username):
     return True
 
 
-def filterUser(limit=100, terms=None, roomNumber=None):
+def filterUser(limit=100, offset=0, terms=None, roomNumber=None):
     """ [API] Filter the list of users from the the database """
     if limit < 0:
         return "Limit must be positive", 400
@@ -41,6 +41,7 @@ def filterUser(limit=100, terms=None, roomNumber=None):
             (Adherent.login.contains(terms)) |
             (Adherent.commentaires.contains(terms))
         )
+    q = q.offset(offset)
     q = q.limit(limit)
     r = q.all()
     return list(map(dict, r)), 200

@@ -3,7 +3,7 @@ swagger: "2.0"
 info:
   description: |
     Adherent api
-  version: 1.0.4
+  version: 1.0.3
   title: Adherent
   license:
     name: Apache 2.0
@@ -41,6 +41,12 @@ paths:
         required: false
         type: integer
         default: 100
+      - name: offset
+        in: query
+        description: Skip the first n results
+        required: false
+        type: integer
+        default: 0
       - name: terms
         in: query
         description: The generic search terms (will search in any field)
@@ -60,8 +66,6 @@ paths:
               $ref: '#/definitions/User'
         400:
           description: Invalid input
-      security:
-        - oauth2: ['profile']
       x-swagger-router-controller: adh.controller.user
   /user/{username}:
     get:
@@ -174,6 +178,12 @@ paths:
         required: false
         type: integer
         default: 100
+      - name: offset
+        in: query
+        description: Skip the first n results
+        required: false
+        type: integer
+        default: 0
       - name: username
         in: query
         description: Filter by owner's username
@@ -277,6 +287,12 @@ paths:
         required: false
         type: integer
         default: 100
+      - name: offset
+        in: query
+        description: Skip the first n results
+        required: false
+        type: integer
+        default: 0
       - name: terms
         in: query
         description: Search terms
@@ -372,6 +388,12 @@ paths:
         required: false
         type: integer
         default: 100
+      - name: offset
+        in: query
+        description: Skip the first n results
+        required: false
+        type: integer
+        default: 0
       - name: terms
         in: query
         description: Search terms
@@ -491,6 +513,12 @@ paths:
         required: false
         type: integer
         default: 100
+      - name: offset
+        in: query
+        description: Skip the first n results
+        required: false
+        type: integer
+        default: 0
       - name: switchID
         in: query
         description: Filter only ports that belongs to that switch
@@ -623,13 +651,17 @@ paths:
           description: Not found
       x-swagger-router-controller: adh.controller.port
 securityDefinitions:
-  oauth2:
+  petstore_auth:
     type: oauth2
-    authorizationUrl: http://localhost:5000/oauth/authorize
+    authorizationUrl: http://petstore.swagger.io/oauth/dialog
     flow: implicit
     scopes:
-      profile: test
-    x-tokenInfoFunc: adh.auth.token_info
+      write:pets: modify pets in your account
+      read:pets: read your pets
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header
 definitions:
   User:
     type: object

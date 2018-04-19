@@ -5,7 +5,7 @@ from adh.exceptions import RoomNotFound, SwitchNotFound, PortNotFound
 from adh.model.models import Port, Chambre, Switch
 
 
-def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
+def filterPort(limit=100, offset=0, switchID=None, roomNumber=None, terms=None):
     """ [API] Filter the port list according to some criteria """
     if limit < 0:
         return 'Limit must be a positive number', 400
@@ -23,6 +23,7 @@ def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
             Port.numero.contains(terms),
             Port.oid.contains(terms),
         ))
+    q = q.offset(offset) 
     q = q.limit(limit)
     result = q.all()
 

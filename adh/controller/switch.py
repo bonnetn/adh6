@@ -14,7 +14,7 @@ def switchExists(session, switchID):
     return True
 
 
-def filterSwitch(limit=100, terms=None):
+def filterSwitch(limit=100, offset=0, terms=None):
     """ [API] Filter the switch list """
     if limit < 0:
         return "Limit must be positive", 400
@@ -26,6 +26,7 @@ def filterSwitch(limit=100, terms=None):
             Switch.ip.contains(terms),
             Switch.communaute.contains(terms),
         ))
+    result = result.offset(offset)
     result = result.limit(limit)  # Limit the number of matches
     result = result.all()
 

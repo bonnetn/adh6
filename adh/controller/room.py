@@ -14,7 +14,7 @@ def roomExists(session, roomNumber):
     return True
 
 
-def filterRoom(limit=100, terms=None):
+def filterRoom(limit=100, offset=0, terms=None):
     """ [API] Filter the list of the rooms """
     if limit < 0:
         return "Limit must be a positive integer", 400
@@ -25,6 +25,7 @@ def filterRoom(limit=100, terms=None):
             Chambre.telephone.contains(terms),
             Chambre.description.contains(terms),
         ))
+    q = q.offset(offset)
     q = q.limit(limit)
     result = q.all()
     result = map(dict, result)
