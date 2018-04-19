@@ -2,7 +2,6 @@ from flask import Blueprint, request, session
 from flask import render_template, redirect, jsonify
 from werkzeug.security import gen_salt
 from authlib.flask.oauth2 import current_token
-from authlib.specs.rfc6749 import OAuth2Error
 from .models import db, User, OAuth2Client
 from .oauth2 import authorization, require_oauth
 
@@ -23,14 +22,14 @@ def home():
         username = request.form.get('username')
         password = request.form.get('password')
         user = User.query.filter_by(username=username).first()
-
-        if not user.check_password(password):
-            return redirect('/')
-
         if not user:
             user = User(username=username)
             db.session.add(user)
             db.session.commit()
+
+        if not user.check_password(password):
+            return redirect('/')
+
         session['id'] = user.id
         return redirect('/')
     user = current_user()
@@ -95,6 +94,7 @@ def authorize():
 # def revoke_token():
 #     return authorization.create_endpoint_response('revocation')
 #
+
 
 @bp.route('/api/me')
 @require_oauth('profile')
