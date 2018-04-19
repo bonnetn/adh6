@@ -74,20 +74,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
   }
 
   onDelete() {
-    const v = this.memberEdit.value;
-    const user: User = {
-      email: v.email,
-      firstName: v.firstName,
-      lastName: v.lastName,
-      username: v.username,
-      roomNumber: v.roomNumber
-    }
-
-    var req = {
-      "user" : user,
-    };
-
-    this.userService.deleteUserResponse( v.username )
+    this.userService.deleteUserResponse( this.originalUsername )
       .takeWhile( () => this.alive )
       .subscribe( (response) => {
         this.router.navigate(["member/search"])

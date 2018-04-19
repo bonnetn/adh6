@@ -23,18 +23,12 @@
   <input class="u-full-width" type="text" formControlName="roomNumber" type="number">
 
   <br /><br />
-  <div class="row">
-    <div class="six columns">
-     <button type="submit"
-        [disabled]="disabled || memberEdit.status == 'INVALID'"
-        class="u-full-width button-primary"
-        >Éditer</button>
-    </div>
-    <div class="six columns">
-     <a (click)="onDelete()"><button
-        [disabled]="enabled"
-        class="u-full-width button-danger">
-        Supprimer</button></a>
-    </div>
-  </div>
+  <button type="submit"
+    [disabled]="disabled || memberEdit.status == 'INVALID'"
+    class="u-full-width button-primary"
+    >Éditer</button>
 </form>
+ <a (click)="onDelete()"><button
+    [disabled]="enabled"
+    class="u-full-width button-danger">
+    Supprimer</button></a>
