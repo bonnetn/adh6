@@ -1,10 +1,5 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='skeleton.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-<link rel="icon" type="image/x-icon" href="{{ url_for('static',
-filename='favicon.ico') }}">
+{% include 'head.html' %}
 {% if user %}
-<style>pre{white-space:wrap}</style>
 <div>Logged in as <strong>{{user}}</strong> (<a href="{{ url_for('.logout') }}">Log Out</a>)</div>
 
 {% for client in clients %}

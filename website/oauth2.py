@@ -9,6 +9,7 @@ from authlib.specs.rfc6749 import grants
 from werkzeug.security import gen_salt
 from .models import db, User
 from .models import OAuth2Client, OAuth2AuthorizationCode, OAuth2Token
+import authlib.specs.oidc.grants
 
 #
 # class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
@@ -68,6 +69,7 @@ def config_oauth(app):
 
     # support all grants
     authorization.register_grant(grants.ImplicitGrant)
+    authorization.register_grant(authlib.specs.oidc.grants.OpenIDImplicitGrant)
     # authorization.register_grant(grants.ClientCredentialsGrant)
     # authorization.register_grant(AuthorizationCodeGrant)
     # authorization.register_grant(PasswordGrant)
