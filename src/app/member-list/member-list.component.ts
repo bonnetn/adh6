@@ -36,7 +36,7 @@ export class MemberListComponent implements OnInit {
       distinctUntilChanged(),
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.userService.filterUser( {'terms':term} )),
+      switchMap((term: string) => this.userService.filterUser( {'offset': 100, 'terms':term} )),
     );
     //this.searchTerms.next("c");
   }
