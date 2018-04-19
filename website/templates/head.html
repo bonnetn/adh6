@@ -1,18 +1,19 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='skeleton.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='login.component.css') }}">
 <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
 <a>
-<h1>AUTHENTIFICATION SERVER</h1>
+<h1>AUTHENTICATION SERVER</h1>
 </a>
 <nav [class.responsive]="navBarStatus">
   <div class="container">
     <div class="row">
       <div class="twelve columns">
         <ul>
-          <li>&nbsp;</li>
+          <li><a href="/">Home</a></li>
+          <li><a href="/create_client">Create Client</a></li>
         </ul>
       </div>
     </div>
@@ -21,6 +22,6 @@
 <br />
 <div class="container">
   <div class="dashboard">
-    <img class="u-full-width" src="{{ url_for('static', filename='logoMiNET.png') }}">
+    <img src="{{ url_for('static', filename='logoMiNET.png') }}">
   </div>
 </div>

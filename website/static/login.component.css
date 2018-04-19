@@ -34,6 +34,7 @@ nav a {
  
 nav a:hover {
   background-color: #2196F3;
+  color: white;
 }
 
 .active {
@@ -82,4 +83,8 @@ h1 {
 
 h1:hover {
   background-color: #2196F3;
+}
+
+label {
+  text-align: left;
 }

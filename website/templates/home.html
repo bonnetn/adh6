@@ -1,23 +1,28 @@
 {% include 'head.html' %}
-{% if user %}
-<div>Logged in as <strong>{{user}}</strong> (<a href="{{ url_for('.logout') }}">Log Out</a>)</div>
-
-{% for client in clients %}
-<pre>
-{{ client.client_info|tojson }}
-{{ client.client_metadata|tojson }}
-</pre>
-<hr>
-{% endfor %}
-
-<br><a href="{{ url_for('.create_client') }}">Create Client</a>
-
-{% else %}
 <div class="container">
   <div class="row">
     <div class="twelve columns">
+      {% if user %}
+      <div>
+        Logged in as <strong>{{user}}</strong>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="{{ url_for('.logout') }}">
+        <button class="button-danger">Log Out</button>
+        </a>
+      </div>
       <br />
-      <h1>Authentication</h1>
+      {% for client in clients %}
+      <pre>
+      {{ client.client_info|tojson }}
+      {{ client.client_metadata|tojson }}
+      </pre>
+      <hr>
+      {% endfor %}
+
+      <br><a href="{{ url_for('.create_client') }}">
+      <button class="u-full-width button-primary">Create Client</button></a>
+
+      {% else %}
       <form action="" method="post">
         <label>Login</label>
         <input class="u-full-width" type="text" name="username" placeholder="username">
@@ -27,7 +32,7 @@
         <br /><br />
         <button class="u-full-width button-primary" type="submit">Login / Signup</button>
       </form>
+      {% endif %}
     </div>
   </div>
 </div>
-{% endif %}
