@@ -14,7 +14,7 @@ def filterPort(limit=100, switchID=None, roomNumber=None, terms=None):
     q = s.query(Port)
     if switchID:
         q = q.join(Switch)
-        q = q.filter(Switch.numero == switchID)
+        q = q.filter(Switch.id == switchID)
     if roomNumber:
         q = q.join(Chambre)
         q = q.filter(Chambre.numero == roomNumber)
