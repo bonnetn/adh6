@@ -11,9 +11,8 @@
           <li><strong>Date de départ:</strong><br /> {{ member.departureDate }}</li>
         </div>
         <div class="eight columns">
-          <a [routerLink]="['/room/view', member.roomNumber ]">
-            <button class="u-full-width">Chambre {{ member.roomNumber }}</button>
-          </a>
+          <button class="u-full-width" [disabled]="member.roomNumber == null"
+            (click)="IfRoomExists(member.roomNumber)">Chambre {{ member.roomNumber }}</button>
         </div>
         <div class="four columns">
           <a [routerLink]="['']">
@@ -57,7 +56,7 @@
             <option value="">Payé par</option>
             <option value="liq">Liquide</option>
             <option value="cb">Carte Bancaire</option>
-            <option value="chq">Carte Bancaire</option>
+            <option value="chq">Chèque</option>
             <option value="smsch">Summer School</option>
           </select>
           <button class="u-full-width button-primary">Valider</button>

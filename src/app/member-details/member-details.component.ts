@@ -4,9 +4,10 @@ import { Observable } from 'rxjs/Observable';
 import { of }         from 'rxjs/observable/of';
 import { UserService } from '../api/services/user.service';
 import { DeviceService } from '../api/services/device.service';
+import { RoomService } from '../api/services/room.service';
 import { User } from '../api/models/user';
 import { Device } from '../api/models/device';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
 
 @Component({
@@ -36,7 +37,9 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   constructor(
     public userService: UserService, 
     public deviceService: DeviceService, 
+    public roomService: RoomService, 
     private route: ActivatedRoute,
+    private router: Router,
     private fb: FormBuilder,
     private notif: NotificationsService,
   ) { 
@@ -67,6 +70,16 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
 
   onCotisation() {
     this.cotisation = !this.cotisation
+  }
+
+  IfRoomExists(roomNumber) {
+    console.log(roomNumber)
+    if (roomNumber == null) {
+      this.notif.error("This user is not assigned to a room");
+    }
+    else {
+      this.router.navigate(["/room/view", roomNumber])
+    }
   }
 
   createForm() {
