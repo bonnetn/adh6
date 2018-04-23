@@ -26,6 +26,7 @@
     "angular2-notifications": "^0.9.8",
     "core-js": "^2.4.1",
     "jquery": "^3.2.1",
+    "ngx-pagination": "^3.1.1",
     "npm": "^5.8.0",
     "rxjs": "5.5.2",
     "skeleton-css": "^2.0.4",
