@@ -4,6 +4,43 @@ from adh.model.database import Database as db
 from adh.model import models
 from adh.model.models import Adherent
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidMac
+from sqlalchemy.sql.expression import literal
+from sqlalchemy.types import String
+
+
+def query_all_devices(s):
+
+    q_wired = s.query(
+        models.Ordinateur.mac.label("mac"),
+        models.Ordinateur.ip.label("ip"),
+        models.Ordinateur.ipv6.label("ipv6"),
+        models.Ordinateur.adherent_id.label("adherent_id"),
+        literal("wired", type_=String).label("type"),
+    )
+
+    q_wireless = s.query(
+        models.Portable.mac.label("mac"),
+        literal(None, type_=String).label("ip"),
+        literal(None, type_=String).label("ipv6"),
+        models.Portable.adherent_id.label("adherent_id"),
+        literal("wireless", type_=String).label("type"),
+    )
+    q = q_wireless.union_all(q_wired)
+    return q.subquery()
+
+
+def _dev_to_gen(d, s):
+    yield "mac", d.mac,
+    yield "connectionType", d.type,
+    if d.ip:
+        yield "ipAddress", d.ip
+    if d.ipv6:
+        yield "ipv6Address", d.ipv6
+    yield "username", s.query(Adherent).get(d.adherent_id).login
+
+
+def dev_to_dict(d, s):
+    return dict(_dev_to_gen(d, s))
 
 
 def is_wired(macAddress):
@@ -94,7 +131,6 @@ def filterDevice(limit=100, offset=0, username=None, terms=None):
     if limit < 0:
         return 'Limit must be a positive number', 400
     s = db.get_db().get_session()
-    results = []
 
     if username:
         try:
@@ -102,32 +138,23 @@ def filterDevice(limit=100, offset=0, username=None, terms=None):
         except UserNotFound:
             return [], 200
 
-    q = s.query(models.Portable)
+    all_devices = query_all_devices(s)
+
+    q = s.query(all_devices)
     if username:
-        q = q.filter(models.Portable.adherent == target)
+        q = q.filter(all_devices.columns.adherent_id == target.id)
     if terms:
         q = q.filter(
-            (models.Portable.mac.contains(terms)) |
+            (all_devices.columns.mac.contains(terms)) |
+            (all_devices.columns.ip.contains(terms)) |
+            (all_devices.columns.ipv6.contains(terms)) |
             False  # TODO: compare on username ?
         )
-    q = q.limit(limit)
-    r = q.all()
-    results += list(map(dict, r))
 
-    q = s.query(models.Ordinateur)
-    if username:
-        q = q.filter(models.Ordinateur.adherent == target)
-    if terms:
-        q = q.filter(
-            (models.Ordinateur.mac.contains(terms)) |
-            (models.Ordinateur.ip.contains(terms)) |
-            (models.Ordinateur.ipv6.contains(terms))
-            # TODO: compare on username ?
-        )
+    q = q.offset(offset)
     q = q.limit(limit)
     r = q.all()
-    results += list(map(dict, r))
-    results = results[:limit]
+    results = list(map(lambda x: dev_to_dict(x, s), r))
 
     return results, 200
 
