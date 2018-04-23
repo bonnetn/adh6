@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import {Observable} from 'rxjs/Observable';
 import { BehaviorSubject }    from 'rxjs/BehaviorSubject';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 
 import { UserService } from '../api/services/user.service'

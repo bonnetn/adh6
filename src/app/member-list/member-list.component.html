@@ -17,12 +17,13 @@
       <th></th>
       <th></th>
     </tr>
-    <tr *ngFor="let member of members$ | async" >
+    <tr *ngFor="let member of members$ | async | paginate: { itemsPerPage: 5, currentPage: p }">
       <td>{{member.firstName}}</td>
       <td>{{member.lastName}}</td>
       <td>{{member.username}}</td>
       <td class="center"><a [routerLink]="['/room/view', member.roomNumber]">{{member.roomNumber}}</a></td>
       <td><a [routerLink]="['../view', member.username]"><button>Consulter</button></a></td>
-    </tr>
+    </tr><br />
+    <pagination-controls class="u-full-width" (pageChange)="p = $event"></pagination-controls>
   </table>
 </div>

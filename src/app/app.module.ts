@@ -29,6 +29,7 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { LoginComponent } from './login/login.component';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { LoginComponent } from './login/login.component';
     }),
     BrowserAnimationsModule,
     OAuthModule.forRoot(),
+    NgxPaginationModule,
   ],
   providers: [ AppComponent ],
   bootstrap: [ AppComponent ]
