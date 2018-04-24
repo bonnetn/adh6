@@ -4,138 +4,36 @@ from adh.model.database import Database as db
 from adh.model import models
 from adh.model.models import Adherent
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidMac
-from sqlalchemy.sql.expression import literal
-from sqlalchemy.types import String
-
-
-def query_all_devices(s):
-
-    q_wired = s.query(
-        models.Ordinateur.mac.label("mac"),
-        models.Ordinateur.ip.label("ip"),
-        models.Ordinateur.ipv6.label("ipv6"),
-        models.Ordinateur.adherent_id.label("adherent_id"),
-        literal("wired", type_=String).label("type"),
-    )
-
-    q_wireless = s.query(
-        models.Portable.mac.label("mac"),
-        literal(None, type_=String).label("ip"),
-        literal(None, type_=String).label("ipv6"),
-        models.Portable.adherent_id.label("adherent_id"),
-        literal("wireless", type_=String).label("type"),
-    )
-    q = q_wireless.union_all(q_wired)
-    return q.subquery()
-
-
-def _dev_to_gen(d):
-    yield "mac", d.mac,
-    yield "connectionType", d.type,
-    if d.ip:
-        yield "ipAddress", d.ip
-    if d.ipv6:
-        yield "ipv6Address", d.ipv6
-    yield "username", d.login
-
-
-def dev_to_dict(d):
-    return dict(_dev_to_gen(d))
-
-
-def is_wired(macAddress, s):
-    """ Return true if the mac address corresponds to a wired device """
-    queryWired = s.query(models.Ordinateur)
-    queryWired = queryWired.filter(models.Ordinateur.mac == macAddress)
-
-    return s.query(queryWired.exists()).scalar()
-
-
-def is_wireless(macAddress, s):
-    """ Return true if the mac address corresponds to a wireless device """
-    queryWireless = s.query(models.Portable)
-    queryWireless = queryWireless.filter(models.Portable.mac == macAddress)
-
-    return s.query(queryWireless.exists()).scalar()
-
-
-def create_wireless_device(body, s):
-    """ Create a wireless device in the database """
-    dev = models.Portable(
-        mac=body['mac'],
-        adherent=Adherent.find(s, body['username']),
-    )
-    s.add(dev)
-    s.commit()
-
-
-def create_wired_device(body, s):
-    """ Create a wired device in the database """
-    dev = models.Ordinateur(
-        mac=body['mac'],
-        ip=body['ipAddress'],
-        ipv6=body['ipv6Address'],
-        adherent=Adherent.find(s, body['username']),
-    )
-    s.add(dev)
-    s.commit()
-
-
-def update_wireless_device(macAddress, body, s):
-    """ Update a wireless device in the database """
-    q = s.query(models.Portable).filter(models.Portable.mac == macAddress)
-    dev = q.one()
-    dev.mac = body['mac']
-    dev.adherent = Adherent.find(s, body['username'])
-    s.commit()
-
-
-def update_wired_device(macAddress, body, s):
-    """ Update a wired device in the database """
-    q = s.query(models.Ordinateur).filter(models.Ordinateur.mac == macAddress)
-    dev = q.one()
-
-    dev.mac = body['mac']
-    dev.ip = body['ipAddress']
-    dev.ipv6 = body['ipv6Address']
-    dev.adherent = Adherent.find(s, body['username'])
-    s.commit()
-
-
-def delete_wireless_device(macAddress, s):
-    """ Delete a wireless device from the database """
-    q = s.query(models.Portable).filter(models.Portable.mac == macAddress)
-    dev = q.one()
-    s.delete(dev)
-    s.commit()
-
-
-def delete_wired_device(macAddress, s):
-    """ Delete a wired device from the databse """
-    q = s.query(models.Ordinateur).filter(models.Ordinateur.mac == macAddress)
-    dev = q.one()
-    s.delete(dev)
-    s.commit()
+from adh.controller.device_utils import is_wired, is_wireless, \
+                                        delete_wireless_device, \
+                                        delete_wired_device, \
+                                        update_wireless_device, \
+                                        update_wired_device, \
+                                        create_wireless_device, \
+                                        create_wired_device, \
+                                        get_all_devices, \
+                                        dev_to_dict
 
 
 def filterDevice(limit=100, offset=0, username=None, terms=None):
     """ [API] Filter the list of the devices according to some criterias """
-    if limit < 0:
-        return 'Limit must be a positive number', 400
     s = db.get_db().get_session()
 
-    if username:
-        try:
-            target = Adherent.find(s, username)
-        except UserNotFound:
-            return [], 200
+    if limit < 0:
+        return 'Limit must be a positive number', 400
 
-    all_devices = query_all_devices(s)
+    # Return a subquery with all devices (wired & wireless)
+    # The fields, ip, ipv6, dns, etc, are set to None for wireless devices
+    # There is also a field "type" wich is wired and wireless
+    all_devices = get_all_devices(s)
 
+    # Query all devices and their owner's unsername
     q = s.query(all_devices, Adherent.login.label("login"))
     q = q.join(Adherent, Adherent.id == all_devices.columns.adherent_id)
+
     if username:
-        q = q.filter(Adherent.login == target.login)
+        q = q.filter(Adherent.login == username)
+
     if terms:
         q = q.filter(
             (all_devices.columns.mac.contains(terms)) |
