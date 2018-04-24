@@ -49,9 +49,9 @@ def filterDevice(limit=100, offset=0, username=None, terms=None):
 
     headers = {
         "X-Total-Count": count,
-        'access-control-expose-headers': 'X-Total-Count'
+        "X-Total-Count"
     }
-    return results, 200, headers
+    return results, 200, 
 
 
 def putDevice(macAddress, body):
