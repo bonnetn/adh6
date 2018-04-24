@@ -108,7 +108,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
         .subscribe( (response) => {
           this.commentSubmitDisabled = false 
           this.refreshInfo();
-          this.notif.success(response.status + ": success")
+          this.notif.success(response.status + ": Success")
         }, (response) => {
           this.notif.error(response.status + ": " + response.error);
         });

@@ -90,7 +90,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
         .takeWhile( () => this.alive )
         .subscribe( (response) => {
           this.refreshInfo();
-          this.notif.success(response.status + ": success")
+          this.notif.success(response.status + ": Success")
           this.onEmmenager()
         }, (response) => {
           this.notif.error(response.status + ": " + response.error);
@@ -118,7 +118,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
           this.refreshInfo();
           this.onDemenager(username)
           this.router.navigate(["room", v.roomNumberNew ])
-          this.notif.success(response.status + ": success")
+          this.notif.success(response.status + ": Success")
         }, (response) => {
           this.notif.error(response.status + ": " + response.error);
         });
@@ -138,7 +138,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
         .takeWhile( () => this.alive )
         .subscribe( (response) => {
           this.refreshInfo();
-          this.notif.success(response.status + ": success")
+          this.notif.success(response.status + ": Success")
         }, (response) => {
           this.notif.error(response.status + ": " + response.error);
         });
@@ -151,7 +151,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
       .takeWhile( () => this.alive )
       .subscribe( (response) => {
         this.router.navigate(["room"])
-        this.notif.success(response.status + ": success")
+        this.notif.success(response.status + ": Success")
       }, (response) => {
         this.notif.error(response.status + ": " + response.error);
       });
