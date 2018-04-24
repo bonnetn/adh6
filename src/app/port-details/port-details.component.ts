@@ -37,7 +37,6 @@ export class PortDetailsComponent implements OnInit, OnDestroy {
   }
 
   IfRoomExists(roomNumber) {
-    console.log(roomNumber)
     if (roomNumber == null) {
       this.notif.error("This port is not assigned to a room");
     }

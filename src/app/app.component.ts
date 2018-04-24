@@ -26,7 +26,6 @@ export class AppComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit() {
-    console.log(this.oauthService.getAccessToken())
     this.isAuthenticated();
   }
 
