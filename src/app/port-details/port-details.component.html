@@ -3,10 +3,11 @@
 <h3>Informations</h3>
 <div class="row">
   <div class="six columns">
-    <button class="u-full-width">Chambre {{ port.roomNumber }}</button>
+    <button class="u-full-width" [disabled]="port.roomNumber == null"
+      (click)="IfRoomExists(port.roomNumber)">Chambre {{ port.roomNumber }}</button>
   </div>
   <div class="six columns">
-    <a [routerLink]="['../../../../room/', port.switchID]"><button class="u-full-width">Switch {{ port.switchID }}</button></a>
+    <a [routerLink]="['/switch/view', port.switchID]"><button class="u-full-width">Switch {{ port.switchID }}</button></a>
   </div>
 </div>
 <p></p>
@@ -14,12 +15,20 @@
 <br />
 <div class=row>
   <div class="six columns">
-    <strong align="center">Port ouvert</strong><br />
-    <button class="u-full-width"> Fermer le port </button>
+  <button class="u-full-width"
+    [ngClass]="{true:'button-success',
+    false:'button-danger'}[portouvert]"
+    (click)="ouverture()"
+          >Port {{ port_ouverture }}
+  </button>
   </div>
   <div class="six columns">
-    <strong>Authentifié</strong><br />
-    <button class="u-full-width"> Désauthentifier</button>
+    <button class="u-full-width"
+      [ngClass]="{true:'button-success',
+      false:'button-danger'}[isportauthenth]"
+      (click)="authenth()"
+            >{{ port_authenth  }}
+    </button>
   </div>
 </div>
 <div class=row>
