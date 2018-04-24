@@ -18,23 +18,24 @@ def filterSwitch(limit=100, offset=0, terms=None):
     """ [API] Filter the switch list """
     if limit < 0:
         return "Limit must be positive", 400
-    result = db.get_db().get_session().query(Switch)
+    q = db.get_db().get_session().query(Switch)
     # Filter by terms
     if terms:
-        result = result.filter(or_(
+        q = q.filter(or_(
             Switch.description.contains(terms),
             Switch.ip.contains(terms),
             Switch.communaute.contains(terms),
         ))
-    result = result.offset(offset)
-    result = result.limit(limit)  # Limit the number of matches
-    result = result.all()
+    count = q.count()
+    q = q.offset(offset)
+    q = q.limit(limit)  # Limit the number of matches
+    q = q.all()
 
-    # Convert the results into data suited for the API
-    result = map(lambda x: {'switchID': x.id, 'switch': dict(x)}, result)
-    result = list(result)  # Cast generator as list
+    # Convert the qs into data suited for the API
+    q = map(lambda x: {'switchID': x.id, 'switch': dict(x)}, q)
+    result = list(q)  # Cast generator as list
 
-    return result
+    return result, 200, {"X-Total-Count": count}
 
 
 def createSwitch(body):

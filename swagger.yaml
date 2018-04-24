@@ -64,6 +64,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/User'
+          headers:
+            X-Total-Count:
+              type: integer
+              description: Total count of filtered entities
         400:
           description: Invalid input
       x-swagger-router-controller: adh.controller.user
@@ -201,6 +205,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Device'
+          headers:
+            X-Total-Count:
+              type: integer
+              description: Total count of filtered entities
         400:
           description: Invalid input
       x-swagger-router-controller: adh.controller.device
@@ -305,6 +313,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Room'
+          headers:
+            X-Total-Count:
+              type: integer
+              description: Total count of filtered entities
         400:
           description: Invalid input
       x-swagger-router-controller: adh.controller.room
@@ -406,6 +418,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Switch'
+          headers:
+            X-Total-Count:
+              type: integer
+              description: Total count of filtered entities
         400:
           description: Invalid input
       x-swagger-router-controller: adh.controller.switch
@@ -541,6 +557,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Port'
+          headers:
+            X-Total-Count:
+              type: integer
+              description: Total count of filtered entities
         400:
           description: Invalid input
       x-swagger-router-controller: adh.controller.port

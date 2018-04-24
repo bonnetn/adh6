@@ -41,10 +41,11 @@ def filterUser(limit=100, offset=0, terms=None, roomNumber=None):
             (Adherent.login.contains(terms)) |
             (Adherent.commentaires.contains(terms))
         )
+    count = q.count()
     q = q.offset(offset)
     q = q.limit(limit)
     r = q.all()
-    return list(map(dict, r)), 200
+    return list(map(dict, r)), 200, {"X-Total-Count": count}
 
 
 def getUser(username):

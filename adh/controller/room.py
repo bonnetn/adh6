@@ -25,12 +25,13 @@ def filterRoom(limit=100, offset=0, terms=None):
             Chambre.telephone.contains(terms),
             Chambre.description.contains(terms),
         ))
+    count = q.count()
     q = q.offset(offset)
     q = q.limit(limit)
     result = q.all()
     result = map(dict, result)
     result = list(result)
-    return result, 200
+    return result, 200, {"X-Total-Count": count}
 
 
 def putRoom(roomNumber, body):

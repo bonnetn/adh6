@@ -5,14 +5,14 @@ from adh.model import models
 from adh.model.models import Adherent
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidMac
 from adh.controller.device_utils import is_wired, is_wireless, \
-                                        delete_wireless_device, \
-                                        delete_wired_device, \
-                                        update_wireless_device, \
-                                        update_wired_device, \
-                                        create_wireless_device, \
-                                        create_wired_device, \
-                                        get_all_devices, \
-                                        dev_to_dict
+        delete_wireless_device, \
+        delete_wired_device, \
+        update_wireless_device, \
+        update_wired_device, \
+        create_wireless_device, \
+        create_wired_device, \
+        get_all_devices, \
+        dev_to_dict
 
 
 def filterDevice(limit=100, offset=0, username=None, terms=None):
@@ -41,13 +41,13 @@ def filterDevice(limit=100, offset=0, username=None, terms=None):
             (all_devices.columns.ipv6.contains(terms)) |
             (Adherent.login.contains(terms))
         )
-
+    count = q.count()
     q = q.offset(offset)
     q = q.limit(limit)
     r = q.all()
     results = list(map(dev_to_dict, r))
 
-    return results, 200
+    return results, 200, {"X-Total-Count": count}
 
 
 def putDevice(macAddress, body):
