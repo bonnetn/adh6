@@ -14,8 +14,12 @@ import { RoomEditComponent } from './room-edit/room-edit.component';
 import { RoomNewComponent } from './room-new/room-new.component';
 import { PortListComponent } from './port-list/port-list.component';
 import { PortDetailsComponent } from './port-details/port-details.component';
+import { PortEditComponent } from './port-edit/port-edit.component';
+import { PortNewComponent } from './port-new/port-new.component';
 import { SwitchListComponent } from './switch-list/switch-list.component';
 import { SwitchDetailsComponent } from './switch-details/switch-details.component';
+import { SwitchEditComponent } from './switch-edit/switch-edit.component';
+import { SwitchNewComponent } from './switch-new/switch-new.component';
 import { DeviceListComponent } from './device-list/device-list.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
 import { MemberFormComponent } from './member-form/member-form.component';
@@ -44,8 +48,12 @@ import {NgxPaginationModule} from 'ngx-pagination';
     RoomNewComponent,
     PortListComponent,
     PortDetailsComponent,
+    PortEditComponent,
+    PortNewComponent,
     SwitchListComponent,
     SwitchDetailsComponent,
+    SwitchEditComponent,
+    SwitchNewComponent,
     DeviceListComponent,
     DeviceDetailsComponent,
     MemberFormComponent,

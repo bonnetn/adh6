@@ -12,9 +12,13 @@ import { RoomEditComponent } from './room-edit/room-edit.component';
 import { RoomNewComponent } from './room-new/room-new.component';
 import { PortListComponent } from './port-list/port-list.component';
 import { PortDetailsComponent } from './port-details/port-details.component';
+import { PortEditComponent } from './port-edit/port-edit.component';
+import { PortNewComponent } from './port-new/port-new.component';
 import { SwitchLocalComponent } from './switch-local/switch-local.component';
 import { SwitchListComponent } from './switch-list/switch-list.component';
 import { SwitchDetailsComponent } from './switch-details/switch-details.component';
+import { SwitchEditComponent } from './switch-edit/switch-edit.component';
+import { SwitchNewComponent } from './switch-new/switch-new.component';
 import { DeviceListComponent } from './device-list/device-list.component';
 import { DeviceNewComponent } from './device-new/device-new.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
@@ -56,7 +60,11 @@ const routes: Routes = [
     children: [
       { path: 'search', component: SwitchListComponent },
       { path: 'view/:switchID', component: SwitchDetailsComponent },
+      { path: 'edit/:switchID', component: SwitchEditComponent },
+      { path: 'add', component: SwitchNewComponent },
       { path: 'view/:switchID/port/:portID', component: PortDetailsComponent },
+      { path: 'edit/:switchID/port/:portID', component: PortEditComponent },
+      { path: 'add/:switchID/port', component: PortNewComponent },
     ],
   },
   {

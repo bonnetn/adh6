@@ -1,0 +1,15 @@
+<h2>Création d'un switch</h2>
+<form [formGroup]="switchForm" (ngSubmit)="onSubmit()" novalidate>
+  <label>11111</label>
+  <input class="u-full-width" formControlName="roomNumber" type="number">
+  <br /><br />
+  <label>22222</label>
+  <input class="u-full-width" formControlName="vlan" type="number">
+  <br /><br />
+  <label>33333</label>
+  <input class="u-full-width" formControlName="description" type="text">
+  <br /><br /><br />
+  <button type="submit"
+          [disabled]="disabled || switchForm.status == 'INVALID'"
+          class="u-full-width button-primary">Créer</button>
+</form>
