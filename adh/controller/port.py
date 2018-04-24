@@ -32,7 +32,11 @@ def filterPort(limit=100, offset=0,
 
     result = map(dict, result)
     result = list(result)
-    return result, 200, {"X-Total-Count": count}
+    headers = {
+        'access-control-expose-headers': 'X-Total-Count',
+        'X-Total-Count': str(count)
+    }
+    return result, 200, headers
 
 
 def createPort(switchID, body):

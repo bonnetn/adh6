@@ -30,7 +30,7 @@ def filterUser(limit=100, offset=0, terms=None, roomNumber=None):
             q2 = q2.filter(Chambre.numero == roomNumber)
             result = q2.one()
         except sqlalchemy.orm.exc.NoResultFound:
-            return [], 200
+            return [], 200, {"X-Total-Count": '0'}
 
         q = q.filter(Adherent.chambre == result)
     if terms:
@@ -45,7 +45,11 @@ def filterUser(limit=100, offset=0, terms=None, roomNumber=None):
     q = q.offset(offset)
     q = q.limit(limit)
     r = q.all()
-    return list(map(dict, r)), 200, {"X-Total-Count": count}
+    headers = {
+        "X-Total-Count": str(count),
+        'access-control-expose-headers': 'X-Total-Count'
+    }
+    return list(map(dict, r)), 200, headers
 
 
 def getUser(username):
