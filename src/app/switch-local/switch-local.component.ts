@@ -15,15 +15,14 @@ export class SwitchLocalComponent implements OnInit, OnDestroy {
 
   switch$: Observable<Switch>;
   ports$: Observable<Port[]>;
-  switchID: number;
+  switchID: number = 8;
 
   constructor(public switchService: SwitchService, private route: ActivatedRoute, public portService: PortService) { }
 
   ngOnInit() {
     this.switchID = 8;
     this.switch$ = this.switchService.getSwitch(this.switchID);
-    // this.ports$ = this.portService.filterPort( { 'switchID': this.switchID } );
-    this.ports$ = this.portService.filterPort( {} );
+    this.ports$ = this.portService.filterPort( { 'switchID': this.switchID } );
   }
 
   ngOnDestroy() {
