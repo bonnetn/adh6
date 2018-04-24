@@ -141,14 +141,15 @@ def filterDevice(limit=100, offset=0, username=None, terms=None):
     all_devices = query_all_devices(s)
 
     q = s.query(all_devices)
+    q = q.join(Adherent, Adherent.id == all_devices.columns.adherent_id)
     if username:
-        q = q.filter(all_devices.columns.adherent_id == target.id)
+        q = q.filter(Adherent.login == target.login)
     if terms:
         q = q.filter(
             (all_devices.columns.mac.contains(terms)) |
             (all_devices.columns.ip.contains(terms)) |
             (all_devices.columns.ipv6.contains(terms)) |
-            False  # TODO: compare on username ?
+            (Adherent.login.contains(terms))
         )
 
     q = q.offset(offset)
