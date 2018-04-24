@@ -29,18 +29,18 @@ def query_all_devices(s):
     return q.subquery()
 
 
-def _dev_to_gen(d, s):
+def _dev_to_gen(d):
     yield "mac", d.mac,
     yield "connectionType", d.type,
     if d.ip:
         yield "ipAddress", d.ip
     if d.ipv6:
         yield "ipv6Address", d.ipv6
-    yield "username", s.query(Adherent).get(d.adherent_id).login
+    yield "username", d.login
 
 
-def dev_to_dict(d, s):
-    return dict(_dev_to_gen(d, s))
+def dev_to_dict(d):
+    return dict(_dev_to_gen(d))
 
 
 def is_wired(macAddress):
@@ -140,7 +140,7 @@ def filterDevice(limit=100, offset=0, username=None, terms=None):
 
     all_devices = query_all_devices(s)
 
-    q = s.query(all_devices)
+    q = s.query(all_devices, Adherent.login.label("login"))
     q = q.join(Adherent, Adherent.id == all_devices.columns.adherent_id)
     if username:
         q = q.filter(Adherent.login == target.login)
@@ -155,7 +155,7 @@ def filterDevice(limit=100, offset=0, username=None, terms=None):
     q = q.offset(offset)
     q = q.limit(limit)
     r = q.all()
-    results = list(map(lambda x: dev_to_dict(x, s), r))
+    results = list(map(dev_to_dict, r))
 
     return results, 200
 

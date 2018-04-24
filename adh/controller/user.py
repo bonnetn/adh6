@@ -73,12 +73,12 @@ def putUser(username, body):
 
     try:
         new_user = Adherent.from_dict(s, body)
-    except ValueError:
-        return "String must not be empty", 400
     except InvalidEmail:
         return "Invalid email", 400
     except RoomNotFound:
         return "No room found", 400
+    except ValueError:
+        return "String must not be empty", 400
 
     update = adherentExists(s, username)
     if update:
