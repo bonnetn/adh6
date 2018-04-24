@@ -113,3 +113,7 @@ th.center,
 td.center {
   text-align: center;
 }
+
+.pagination {
+  text-align: center;
+}
