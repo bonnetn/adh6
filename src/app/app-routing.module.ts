@@ -56,13 +56,13 @@ const routes: Routes = [
     children: [
       { path: 'search', component: SwitchListComponent },
       { path: 'view/:switchID', component: SwitchDetailsComponent },
+      { path: 'view/:switchID/port/:portID', component: PortDetailsComponent },
     ],
   },
   {
     path: 'port',
     children: [
       { path: 'search', component: PortListComponent },
-      { path: 'view/:portID', component: PortDetailsComponent },
     ],
   }
 ];

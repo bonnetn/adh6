@@ -17,14 +17,14 @@
       <th></th>
     </tr>
     <tr *ngFor="let portResult of ports$ | async">  
-      <td *ngIf="portResult.switchID!=8" class="center">{{ portResult.switchID }}</td>
-      <td *ngIf="portResult.switchID!=8" class="center">{{ portResult.portNumber }}</td>
-      <td *ngIf="portResult.switchID!=8" class="center">
+      <td class="center">{{ portResult.switchID }}</td>
+      <td class="center">{{ portResult.portNumber }}</td>
+      <td class="center">
         <a [routerLink]="['/room/view', portResult.roomNumber]">{{ portResult.roomNumber }}</a></td>
-      <td *ngIf="portResult.switchID!=8" class="center">
-      <a [routerLink]="['/port/view', portResult.switchID, 'port', portResult.id]">
-      <button>Consulter</button>
-      </a>
+      <td class="center">
+        <a [routerLink]="['/switch/view', portResult.switchID, 'port', portResult.id]">
+        <button>Consulter</button>
+        </a>
       </td>
     </tr>
   </table>
