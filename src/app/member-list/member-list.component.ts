@@ -20,7 +20,9 @@ import {
 export class MemberListComponent implements OnInit {
 
   members$: Observable<User[]>;
+  page_number : number = 0
   private searchTerms = new BehaviorSubject<string>("");
+  private PAGE_SIZE : number = 10;
   
   constructor(public userService: UserService) { }
 
@@ -28,7 +30,8 @@ export class MemberListComponent implements OnInit {
     this.searchTerms.next(term);
   }
 
-  ngOnInit() {
+  refreshMembers(page:number) : void {
+    this.page_number = page;  
     this.members$ = this.searchTerms.pipe(
       // wait 300ms after each keystroke before considering the term
       debounceTime(300),
@@ -37,8 +40,14 @@ export class MemberListComponent implements OnInit {
       distinctUntilChanged(),
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.userService.filterUser( { 'terms':term } )),
+      switchMap((term: string) => {
+        return this.userService.filterUser( { 'terms':term, 'limit':this.PAGE_SIZE, 'offset':page*this.PAGE_SIZE} )
+      }),
     );
+  }
+
+  ngOnInit() {
+    this.refreshMembers(0)
     //this.searchTerms.next("c");
   }
 
