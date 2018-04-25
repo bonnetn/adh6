@@ -1,0 +1,5 @@
+LDAP_CONF = {
+    'host': '192.168.X.Y',
+    'cn_anonymous': 'anonymous_user',
+    'pass_anonymous': 'superpassword'
+}

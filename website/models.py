@@ -5,8 +5,13 @@ from authlib.flask.oauth2.sqla import (
     OAuth2AuthorizationCodeMixin,
     OAuth2TokenMixin,
 )
+from website.ldap import LdapServ
 
 db = SQLAlchemy()
+
+
+class UserNotFound(Exception):
+    pass
 
 
 class User(db.Model):
@@ -20,7 +25,7 @@ class User(db.Model):
         return self.id
 
     def check_password(self, password):
-        return password == 'valid'
+        return LdapServ.login(self.username, password)
 
 
 class OAuth2Client(db.Model, OAuth2ClientMixin):
