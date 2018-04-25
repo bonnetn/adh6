@@ -3,6 +3,7 @@ from adh.exceptions import UserNotFound
 from adh.model.database import Database as db
 from adh.model import models
 from adh.model.models import Adherent
+from sqlalchemy.orm.exc import MultipleResultsFound
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidMac
 from adh.controller.device_utils import is_wired, is_wireless, \
         delete_wireless_device, \
@@ -112,6 +113,9 @@ def putDevice(macAddress, body):
 
     except InvalidIPv4:
         return 'Invalid IPv4', 400
+    except MultipleResultsFound:
+        return 'Multiple records for that MAC address found in database. ' + \
+               'A MAC address should be unique. Fix your database.', 500
 
 
 def getDevice(macAddress):
