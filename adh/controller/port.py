@@ -26,6 +26,7 @@ def filterPort(limit=100, offset=0,
         ))
 
     count = q.count()
+    q = q.order_by(Port.switch_id.asc(), Port.numero.asc())
     q = q.offset(offset)
     q = q.limit(limit)
     result = q.all()

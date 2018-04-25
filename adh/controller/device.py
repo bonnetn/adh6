@@ -42,6 +42,7 @@ def filterDevice(limit=100, offset=0, username=None, terms=None):
             (Adherent.login.contains(terms))
         )
     count = q.count()
+    q = q.order_by(all_devices.columns.mac.asc())
     q = q.offset(offset)
     q = q.limit(limit)
     r = q.all()
@@ -49,9 +50,9 @@ def filterDevice(limit=100, offset=0, username=None, terms=None):
 
     headers = {
         "X-Total-Count": count,
-        "X-Total-Count"
+        "access-control-expose-headers": "X-Total-Count"
     }
-    return results, 200, 
+    return results, 200, headers
 
 
 def putDevice(macAddress, body):

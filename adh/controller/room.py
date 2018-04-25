@@ -26,6 +26,7 @@ def filterRoom(limit=100, offset=0, terms=None):
             Chambre.description.contains(terms),
         ))
     count = q.count()
+    q = q.order_by(Chambre.id.asc())
     q = q.offset(offset)
     q = q.limit(limit)
     result = q.all()

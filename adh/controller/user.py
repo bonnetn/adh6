@@ -42,6 +42,7 @@ def filterUser(limit=100, offset=0, terms=None, roomNumber=None):
             (Adherent.commentaires.contains(terms))
         )
     count = q.count()
+    q = q.order_by(Adherent.login.asc())
     q = q.offset(offset)
     q = q.limit(limit)
     r = q.all()

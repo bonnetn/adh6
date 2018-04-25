@@ -27,6 +27,7 @@ def filterSwitch(limit=100, offset=0, terms=None):
             Switch.communaute.contains(terms),
         ))
     count = q.count()
+    q = q.order_by(Switch.description.asc())
     q = q.offset(offset)
     q = q.limit(limit)  # Limit the number of matches
     q = q.all()
