@@ -4,8 +4,6 @@ import { ApiConfiguration } from 'app/api/api-configuration'
 import { HttpResponse } from '@angular/common/http';
 import { HttpEventType } from '@angular/common/http';
 import { NotificationsService } from 'angular2-notifications';
-
-
 import {
   HttpEvent, HttpInterceptor, HttpHandler, HttpRequest
 } from '@angular/common/http';
@@ -26,6 +24,7 @@ export class NotifInterceptor implements HttpInterceptor {
       // if there is an error, notify
       return next.handle(req).catch(response => {
         this.notif.error(response.status + ": " + response.error);
+        return Observable.throw(response)
       });
     } else {
       return next.handle(req);
