@@ -33,7 +33,10 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { LoginComponent } from './login/login.component';
-import {NgxPaginationModule} from 'ngx-pagination';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './http-interceptor/auth-interceptor';
+
 
 @NgModule({
   declarations: [
@@ -83,7 +86,14 @@ import {NgxPaginationModule} from 'ngx-pagination';
     OAuthModule.forRoot(),
     NgxPaginationModule,
   ],
-  providers: [ AppComponent ],
+  providers: [ 
+    AppComponent,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+  ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
