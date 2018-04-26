@@ -6,7 +6,6 @@ from .models import db, User, OAuth2Client
 from .oauth2 import authorization, require_oauth
 # from authlib.specs.rfc6749 import OAuth2Error
 from website.ldap import LdapServ
-from website.models import OAuth2Token
 
 
 bp = Blueprint(__name__, 'home')
@@ -101,20 +100,12 @@ def authorize():
 #
 
 
-@bp.route('/api/groups/<token>')
-def get_groups(token):
+@bp.route('/api/me')
+@require_oauth('profile')
+def api_me():
+    user = current_token.user
 
-    passwd = request.args.get('passwd')
-    if passwd != "VseVCqoW9WWpYdtwjKdGPUZhphccq7xAWgTg8ksDmZ":
-        return "Unauthorized. Go away.", 401
-
-    q = db.session.query(OAuth2Token)
-    q = q.filter(OAuth2Token.access_token == token)
-    tokenObj = q.one_or_none()
-    if not tokenObj:
-        return "[]"
-
-    groups = LdapServ.find_groups(tokenObj.user.username)
+    groups = LdapServ.find_groups(user.username)
     adh6_groups = []
 
     if "adh5" in groups:
@@ -124,13 +115,6 @@ def get_groups(token):
         adh6_groups += ["adh6_admin"]
 
     return jsonify({
-        "uid": tokenObj.user.username,
-        "scopes": adh6_groups
+        "uid": user.username,
+        "groups": adh6_groups
     })
-
-
-@bp.route('/api/me')
-@require_oauth('profile')
-def api_me():
-    user = current_token.user
-    return jsonify(id=user.id, username=user.username)
