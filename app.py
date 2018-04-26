@@ -5,6 +5,7 @@ app = create_app({
     'SECRET_KEY': 'secret',
     'SQLALCHEMY_TRACK_MODIFICATIONS': False,
     'SQLALCHEMY_DATABASE_URI': 'sqlite:///db.sqlite',
+    'ADH6_ADDRESS': 'http://localhost:4200'
 })
 
 
