@@ -6,7 +6,6 @@ from adh.model.models import Chambre
 from adh.auth import auth_simple_user
 
 
-@auth_simple_user
 def roomExists(session, roomNumber):
     """ Returns true if the room exists in the database """
     try:
