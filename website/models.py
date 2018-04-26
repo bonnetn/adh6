@@ -16,7 +16,7 @@ class UserNotFound(Exception):
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(40), unique=True)
+    username = db.Column(db.String(255), unique=True)
 
     def __str__(self):
         return self.username
