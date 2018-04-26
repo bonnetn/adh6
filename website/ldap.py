@@ -20,7 +20,7 @@ class LdapServ():
 
     @staticmethod
     def __find_cn(nickname, ldapObj):
-
+        nickname = ldap.filter.escape_filter_chars(nickname)
         ldapObj.simple_bind(
             "cn={},dc=minet,dc=net".format(LDAP_CONF["cn_anonymous"]),
             LDAP_CONF["pass_anonymous"]
@@ -29,7 +29,7 @@ class LdapServ():
         baseDN = "ou=equipe,dc=minet,dc=net"
         searchScope = ldap.SCOPE_SUBTREE
         retrieveAttributes = None
-        searchFilter = "uid=" + ldap.filter.escape_filter_chars(nickname)
+        searchFilter = "uid=" + nickname
 
         ldap_result_id = ldapObj.search(baseDN, searchScope, searchFilter,
                                         retrieveAttributes)
@@ -53,6 +53,7 @@ class LdapServ():
 
     @staticmethod
     def login(username, password):
+        username = ldap.filter.escape_filter_chars(username)
         try:
             ldapObj = LdapServ.__init_ldap_con()
             dn = LdapServ.__find_cn(username, ldapObj)
@@ -61,7 +62,9 @@ class LdapServ():
             return False
 
     @staticmethod
-    def find_groups(username, ldapObj):
+    def find_groups(username):
+        username = ldap.filter.escape_filter_chars(username)
+        ldapObj = LdapServ.__init_ldap_con()
         search_filter = '(|(&(objectClass=*)(memberUid=%s)))' % username
         try:
             results = ldapObj.search_s("ou=groups,dc=minet,dc=net",

@@ -5,6 +5,7 @@ from authlib.flask.oauth2 import current_token
 from .models import db, User, OAuth2Client
 from .oauth2 import authorization, require_oauth
 # from authlib.specs.rfc6749 import OAuth2Error
+from website.ldap import LdapServ
 
 
 bp = Blueprint(__name__, 'home')
@@ -97,6 +98,24 @@ def authorize():
 # def revoke_token():
 #     return authorization.create_endpoint_response('revocation')
 #
+
+
+@bp.route('/api/groups/<uid>')
+def get_groups(uid):
+    passwd = request.args.get('passwd')
+    if passwd != "VseVCqoW9WWpYdtwjKdGPUZhphccq7xAWgTg8ksDmZ":
+        return "Unauthorized. Go away.", 401
+
+    groups = LdapServ.find_groups(uid)
+    adh6_groups = []
+
+    if "adh5" in groups:
+        adh6_groups += ["adh6_user"]
+
+    if "sudovpn" in groups:
+        adh6_groups += ["adh6_admin"]
+
+    return jsonify(adh6_groups)
 
 
 @bp.route('/api/me')
