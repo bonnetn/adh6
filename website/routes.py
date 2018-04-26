@@ -123,7 +123,10 @@ def get_groups(token):
     if "sudovpn" in groups:
         adh6_groups += ["adh6_admin"]
 
-    return jsonify(adh6_groups)
+    return jsonify({
+        "uid": tokenObj.user.username,
+        "scopes": adh6_groups
+    })
 
 
 @bp.route('/api/me')
