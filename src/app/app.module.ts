@@ -36,6 +36,7 @@ import { LoginComponent } from './login/login.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './http-interceptor/auth-interceptor';
+import { NotifInterceptor } from './http-interceptor/notif-interceptor';
 
 
 @NgModule({
@@ -91,6 +92,11 @@ import { AuthInterceptor } from './http-interceptor/auth-interceptor';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: NotifInterceptor,
       multi: true
     },
   ],

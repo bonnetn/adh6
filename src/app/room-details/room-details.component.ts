@@ -92,8 +92,6 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
           this.refreshInfo();
           this.notif.success(response.status + ": Success")
           this.onEmmenager()
-        }, (response) => {
-          this.notif.error(response.status + ": " + response.error);
         });
       }, (user) => {
           this.notif.error("User "+v.username+" does not exists");
@@ -119,8 +117,6 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
           this.onDemenager(username)
           this.router.navigate(["room", v.roomNumberNew ])
           this.notif.success(response.status + ": Success")
-        }, (response) => {
-          this.notif.error(response.status + ": " + response.error);
         });
     });
   }
@@ -139,8 +135,6 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
         .subscribe( (response) => {
           this.refreshInfo();
           this.notif.success(response.status + ": Success")
-        }, (response) => {
-          this.notif.error(response.status + ": " + response.error);
         });
     });
   }
@@ -152,8 +146,6 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
       .subscribe( (response) => {
         this.router.navigate(["room"])
         this.notif.success(response.status + ": Success")
-      }, (response) => {
-        this.notif.error(response.status + ": " + response.error);
       });
   }
 

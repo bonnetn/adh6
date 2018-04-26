@@ -108,8 +108,6 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
           this.commentSubmitDisabled = false 
           this.refreshInfo();
           this.notif.success(response.status + ": Success")
-        }, (response) => {
-          this.notif.error(response.status + ": " + response.error);
         });
     });
     this.disabled=false
@@ -133,8 +131,6 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
           .subscribe( (response)=> { 
             this.refreshInfo() 
             this.notif.success(response.status + ": Success")
-          }, (response) => {
-            this.notif.error(response.status + ": " + response.error);
           });
       });
     this.disabled=false

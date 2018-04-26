@@ -60,8 +60,6 @@ export class RoomNewComponent implements OnInit, OnDestroy {
           .subscribe( (response) => {
             this.router.navigate(["/room/view", v.roomNumber ])
             this.notif.success(response.status + ": Success")
-          }, (response) => {
-            this.notif.error(response.status + ": " + response.error); 
           });
       });
     this.disabled = false;

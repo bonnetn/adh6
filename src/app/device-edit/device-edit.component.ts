@@ -57,8 +57,6 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
       .subscribe( (response : HttpResponse<void>) => {
         this.notif.success(response.status + ": Success");
         this.router.navigate(["member/view", v.username ]);
-      }, (response) => {
-        this.notif.error(response.status + ": " + response.error);
       });
   }
 
