@@ -6,6 +6,7 @@ from .models import db, User, OAuth2Client
 from .oauth2 import authorization, require_oauth
 # from authlib.specs.rfc6749 import OAuth2Error
 from website.ldap import LdapServ
+from website.models import OAuth2Token
 
 
 bp = Blueprint(__name__, 'home')
@@ -100,13 +101,20 @@ def authorize():
 #
 
 
-@bp.route('/api/groups/<uid>')
-def get_groups(uid):
+@bp.route('/api/groups/<token>')
+def get_groups(token):
+
     passwd = request.args.get('passwd')
     if passwd != "VseVCqoW9WWpYdtwjKdGPUZhphccq7xAWgTg8ksDmZ":
         return "Unauthorized. Go away.", 401
 
-    groups = LdapServ.find_groups(uid)
+    q = db.session.query(OAuth2Token)
+    q = q.filter(OAuth2Token.access_token == token)
+    tokenObj = q.one_or_none()
+    if not tokenObj:
+        return "[]"
+
+    groups = LdapServ.find_groups(tokenObj.user.username)
     adh6_groups = []
 
     if "adh5" in groups:
