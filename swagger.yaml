@@ -3,7 +3,7 @@ swagger: "2.0"
 info:
   description: |
     Adherent api
-  version: 1.0.3
+  version: 1.0.5
   title: Adherent
   license:
     name: Apache 2.0
@@ -70,6 +70,9 @@ paths:
               description: Total count of filtered entities
         400:
           description: Invalid input
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.user
   /user/{username}:
     get:
@@ -92,6 +95,9 @@ paths:
             $ref: '#/definitions/User'
         404:
           description: Not found
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.user
     put:
       tags:
@@ -120,6 +126,9 @@ paths:
           description: Updated
         400:
           description: Invalid input
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.user
     delete:
       tags:
@@ -140,6 +149,9 @@ paths:
           description: Deleted
         404:
           description: Not found
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.user
   /user/{username}/membership:
     post:
@@ -166,6 +178,9 @@ paths:
           description: Success
         400:
           description: Invalid input
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.user
   /device/:
     get:
@@ -211,6 +226,9 @@ paths:
               description: Total count of filtered entities
         400:
           description: Invalid input
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.device
   /device/{macAddress}:
     get:
@@ -233,6 +251,9 @@ paths:
             $ref: '#/definitions/Device'
         404:
           description: Not found
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.device
     put:
       tags:
@@ -260,6 +281,9 @@ paths:
           description: Updated
         400:
           description: Invalid input
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.device
     delete:
       tags:
@@ -279,6 +303,9 @@ paths:
           description: Deleted
         404:
           description: Not found
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.device
   /room/:
     get:
@@ -319,6 +346,9 @@ paths:
               description: Total count of filtered entities
         400:
           description: Invalid input
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.room
   /room/{roomNumber}:
     get:
@@ -340,6 +370,9 @@ paths:
             $ref: '#/definitions/Room'
         404:
           description: Not found
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.room
     put:
       tags:
@@ -366,6 +399,9 @@ paths:
           description: Updated
         400:
           description: Invalid input
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.room
     delete:
       tags:
@@ -384,6 +420,9 @@ paths:
           description: Deleted
         404:
           description: Not found
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.room
   /switch/:
     get:
@@ -424,6 +463,9 @@ paths:
               description: Total count of filtered entities
         400:
           description: Invalid input
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.switch
     post:
       tags:
@@ -448,6 +490,9 @@ paths:
               description: URI to the newly created switch
         400:
           description: Invalid input
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.switch
   /switch/{switchID}:
     get:
@@ -469,6 +514,9 @@ paths:
             $ref: '#/definitions/Switch'
         404:
           description: Not found
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.switch
     put:
       tags:
@@ -495,6 +543,9 @@ paths:
           description: Invalid input
         404:
           description: Not found
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.switch
     delete:
       tags:
@@ -513,6 +564,9 @@ paths:
           description: Deleted
         404:
           description: Not found
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.switch
   /ports/:
     get:
@@ -563,6 +617,9 @@ paths:
               description: Total count of filtered entities
         400:
           description: Invalid input
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.port
   /switch/{switchID}/port/:
     post:
@@ -592,6 +649,9 @@ paths:
               description: URI to the newly created port
         400:
           description: Invalid input
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.port
   /switch/{switchID}/port/{portID}:
     get:
@@ -617,6 +677,9 @@ paths:
             $ref: '#/definitions/Port'
         404:
           description: Not found
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.port
     put:
       tags:
@@ -647,6 +710,9 @@ paths:
           description: Invalid input
         404:
           description: Not found
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.port
     delete:
       tags:
@@ -669,19 +735,18 @@ paths:
           description: Deleted
         404:
           description: Not found
+      security:
+      - oauth2:
+        - profile
       x-swagger-router-controller: adh.controller.port
 securityDefinitions:
-  petstore_auth:
+  oauth2:
     type: oauth2
-    authorizationUrl: http://petstore.swagger.io/oauth/dialog
+    authorizationUrl: http://localhost:5000/oauth/authorize
     flow: implicit
     scopes:
-      write:pets: modify pets in your account
-      read:pets: read your pets
-  api_key:
-    type: apiKey
-    name: api_key
-    in: header
+      profile: access username & adh groups of user from LDAP
+    x-tokenInfoFunc: adh.auth.token_info
 definitions:
   User:
     type: object

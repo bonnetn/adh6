@@ -3,8 +3,10 @@ from sqlalchemy import or_
 from adh.exceptions import RoomNotFound, VlanNotFound
 from adh.model.database import Database as db
 from adh.model.models import Chambre
+from adh.auth import auth_simple_user
 
 
+@auth_simple_user
 def roomExists(session, roomNumber):
     """ Returns true if the room exists in the database """
     try:
@@ -14,6 +16,7 @@ def roomExists(session, roomNumber):
     return True
 
 
+@auth_simple_user
 def filterRoom(limit=100, offset=0, terms=None):
     """ [API] Filter the list of the rooms """
     if limit < 0:
@@ -39,6 +42,7 @@ def filterRoom(limit=100, offset=0, terms=None):
     return result, 200, headers
 
 
+@auth_simple_user
 def putRoom(roomNumber, body):
     """ [API] Update/create a room in the database """
     s = db.get_db().get_session()
@@ -61,6 +65,7 @@ def putRoom(roomNumber, body):
         return NoContent, 201
 
 
+@auth_simple_user
 def getRoom(roomNumber):
     """ [API] Get the room specified """
     s = db.get_db().get_session()
@@ -70,6 +75,7 @@ def getRoom(roomNumber):
         return NoContent, 404
 
 
+@auth_simple_user
 def deleteRoom(roomNumber):
     """ [API] Delete room from the database """
     s = db.get_db().get_session()

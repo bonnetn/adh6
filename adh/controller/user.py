@@ -5,6 +5,7 @@ from adh.util.date import string_to_date
 from adh.exceptions import InvalidEmail, RoomNotFound, UserNotFound
 import datetime
 import sqlalchemy
+from adh.auth import auth_simple_user
 
 
 def adherentExists(session, username):
@@ -16,6 +17,7 @@ def adherentExists(session, username):
     return True
 
 
+@auth_simple_user
 def filterUser(limit=100, offset=0, terms=None, roomNumber=None):
     """ [API] Filter the list of users from the the database """
     if limit < 0:
@@ -53,6 +55,7 @@ def filterUser(limit=100, offset=0, terms=None, roomNumber=None):
     return list(map(dict, r)), 200, headers
 
 
+@auth_simple_user
 def getUser(username):
     """ [API] Get the specified user from the database """
     s = db.get_db().get_session()
@@ -62,6 +65,7 @@ def getUser(username):
         return NoContent, 404
 
 
+@auth_simple_user
 def deleteUser(username):
     """ [API] Delete the specified User from the database """
     s = db.get_db().get_session()
@@ -73,6 +77,7 @@ def deleteUser(username):
         return NoContent, 404
 
 
+@auth_simple_user
 def putUser(username, body):
     """ [API] Create/Update user from the database """
     s = db.get_db().get_session()
@@ -98,6 +103,7 @@ def putUser(username, body):
         return NoContent, 201
 
 
+@auth_simple_user
 def addMembership(username, body):
     """ [API] Add a membership record in the database """
 

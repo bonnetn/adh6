@@ -3,8 +3,10 @@ from adh.model.database import Database as db
 from sqlalchemy import or_
 from adh.exceptions import RoomNotFound, SwitchNotFound, PortNotFound
 from adh.model.models import Port, Chambre, Switch
+from adh.auth import auth_simple_user
 
 
+@auth_simple_user
 def filterPort(limit=100, offset=0,
                switchID=None, roomNumber=None, terms=None):
     """ [API] Filter the port list according to some criteria """
@@ -40,6 +42,7 @@ def filterPort(limit=100, offset=0,
     return result, 200, headers
 
 
+@auth_simple_user
 def createPort(switchID, body):
     """ [API] Create a port in the database """
 
@@ -59,6 +62,7 @@ def createPort(switchID, body):
     return NoContent, 200, headers
 
 
+@auth_simple_user
 def getPort(switchID, portID):
     """ [API] Get a port from the database """
     s = db.get_db().get_session()
@@ -71,6 +75,7 @@ def getPort(switchID, portID):
     return result, 200
 
 
+@auth_simple_user
 def updatePort(switchID, portID, body):
     """ [API] Update a port in the database """
 
@@ -92,6 +97,7 @@ def updatePort(switchID, portID, body):
     return NoContent, 204
 
 
+@auth_simple_user
 def deletePort(switchID, portID):
     """ [API] Delete a port from the database """
     session = db.get_db().get_session()

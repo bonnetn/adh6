@@ -14,8 +14,10 @@ from adh.controller.device_utils import is_wired, is_wireless, \
         create_wired_device, \
         get_all_devices, \
         dev_to_dict
+from adh.auth import auth_simple_user
 
 
+@auth_simple_user
 def filterDevice(limit=100, offset=0, username=None, terms=None):
     """ [API] Filter the list of the devices according to some criterias """
     s = db.get_db().get_session()
@@ -56,6 +58,7 @@ def filterDevice(limit=100, offset=0, username=None, terms=None):
     return results, 200, headers
 
 
+@auth_simple_user
 def putDevice(macAddress, body):
     """ [API] Put (update or create) a new device in the database """
     s = db.get_db().get_session()
@@ -118,6 +121,7 @@ def putDevice(macAddress, body):
                'A MAC address should be unique. Fix your database.', 500
 
 
+@auth_simple_user
 def getDevice(macAddress):
     """ [API] Return the device specified by the macAddress """
     s = db.get_db().get_session()
@@ -137,6 +141,7 @@ def getDevice(macAddress):
         return NoContent, 404
 
 
+@auth_simple_user
 def deleteDevice(macAddress):
     """ [API] Delete the specified device from the database """
     s = db.get_db().get_session()

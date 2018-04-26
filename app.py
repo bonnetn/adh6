@@ -9,6 +9,9 @@ from connexion.resolver import RestyResolver
 
 logging.basicConfig(level=logging.INFO)
 app = connexion.FlaskApp(__name__)
+app.app.config.update(
+    AUTH_SERVER_ADDRESS='http://localhost:5000'
+)
 app.add_api('swagger.yaml',
             resolver=RestyResolver('adh.controller'),
             strict_validation=True)
