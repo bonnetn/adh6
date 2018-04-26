@@ -8,3 +8,4 @@ mysqlclient
 pip
 pytest-cov
 python-dateutil
+pysnmp
