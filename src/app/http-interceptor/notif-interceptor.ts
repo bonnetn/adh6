@@ -25,7 +25,7 @@ export class NotifInterceptor implements HttpInterceptor {
     if( req.url.substr(0, api_url.length) == api_url ) {
       // if there is an error, notify
       return next.handle(req).catch(response => {
-        this.notif.error(response.status + ": " + response.statusText);
+        this.notif.error(response.status + ": " + response.error);
       });
     } else {
       return next.handle(req);
