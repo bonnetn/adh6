@@ -1,0 +1,3 @@
+[submodule "certs"]
+	path = certs
+	url = git@gitlab.minet.net:security/pki_x.509.git

@@ -11,10 +11,13 @@ class LdapServ():
 
     @staticmethod
     def __init_ldap_con():
-            ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
-            ldapObj = ldap.open(LDAP_CONF["host"])
-            # ldapObj.start_tls_s()
+            # Force nice LDAP over TLS with CA
+            ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_HARD)
+            ldap.set_option(ldap.OPT_PROTOCOL_VERSION, 3)
+            ldap.set_option(ldap.OPT_X_TLS_CACERTFILE, LDAP_CONF["ca_file"])
+            ldap.set_option(ldap.OPT_X_TLS_DEMAND, True)
 
+            ldapObj = ldap.initialize(LDAP_CONF["host"])
             ldapObj.protocol_version = ldap.VERSION3
             return ldapObj
 
@@ -58,7 +61,8 @@ class LdapServ():
             ldapObj = LdapServ.__init_ldap_con()
             dn = LdapServ.__find_cn(username, ldapObj)
             return LdapServ.__try_to_connect(dn, password, ldapObj)
-        except Exception:
+        except Exception as e:
+            print(e)
             return False
 
     @staticmethod
