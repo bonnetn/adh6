@@ -1,2 +1,3 @@
 *.sqlite
 *.pyc
+**/ldap_conf.py
