@@ -3,7 +3,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import { ApiConfiguration } from 'app/api/api-configuration'
 import { HttpResponse } from '@angular/common/http';
 import { HttpEventType } from '@angular/common/http';
-import { NotificationsService } from 'angular2-notifications';
+import { NotificationsService } from 'angular2-notifications/dist';
 import {
   HttpEvent, HttpInterceptor, HttpHandler, HttpRequest
 } from '@angular/common/http';

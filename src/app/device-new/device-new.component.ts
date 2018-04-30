@@ -8,7 +8,7 @@ import 'rxjs/add/operator/switchMap';
 
 import { DeviceService } from '../api/services/device.service';
 import { Device } from '../api/models/device';
-import { NotificationsService } from 'angular2-notifications';
+import { NotificationsService } from 'angular2-notifications/dist';
 
 @Component({
   selector: 'app-device-new',

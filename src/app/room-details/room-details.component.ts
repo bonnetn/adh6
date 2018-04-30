@@ -11,7 +11,7 @@ import { Room } from '../api/models/room';
 import { Port } from '../api/models/port';
 import { User } from '../api/models/user';
 import { UserService } from '../api/services/user.service';
-import { NotificationsService } from 'angular2-notifications';
+import { NotificationsService } from 'angular2-notifications/dist';
 
 @Component({
   selector: 'app-room-details',

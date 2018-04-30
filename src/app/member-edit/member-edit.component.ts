@@ -9,7 +9,7 @@ import 'rxjs/add/operator/takeWhile';
 
 import { UserService } from '../api/services/user.service';
 import { User } from '../api/models/user';
-import { NotificationsService } from 'angular2-notifications';
+import { NotificationsService } from 'angular2-notifications/dist';
 
 
 @Component({

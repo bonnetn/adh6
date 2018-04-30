@@ -8,7 +8,7 @@ import 'rxjs/add/operator/switchMap';
 
 import { RoomService } from '../api/services/room.service';
 import { Room } from '../api/models/room';
-import { NotificationsService } from 'angular2-notifications';
+import { NotificationsService } from 'angular2-notifications/dist';
 
 @Component({
   selector: 'app-room-new',

@@ -8,7 +8,7 @@ import { RoomService } from '../api/services/room.service';
 import { User } from '../api/models/user';
 import { Device } from '../api/models/device';
 import { Router, ActivatedRoute } from '@angular/router';
-import { NotificationsService } from 'angular2-notifications';
+import { NotificationsService } from 'angular2-notifications/dist';
 
 @Component({
   selector: 'app-member-details',

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { PortService } from '../api/services/port.service';
 import { Port } from '../api/models/port';
 import { Router, ActivatedRoute } from '@angular/router';
-import { NotificationsService } from 'angular2-notifications';
+import { NotificationsService } from 'angular2-notifications/dist';
 
 @Component({
   selector: 'app-port-details',
