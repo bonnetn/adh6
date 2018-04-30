@@ -39,6 +39,7 @@ const routes: Routes = [
   { 
     path: 'room', 
     children: [
+      { path: '', redirectTo: 'search', pathMatch: 'full' },
       { path: 'search', component: RoomListComponent },
       { path: 'add', component: RoomNewComponent },
       { path: 'view/:roomNumber', component: RoomDetailsComponent },
@@ -48,6 +49,7 @@ const routes: Routes = [
   { 
     path: 'device', 
     children: [
+      { path: '', redirectTo: 'search', pathMatch: 'full' },
       { path: 'search', component: DeviceListComponent },
       { path: 'add', component: DeviceNewComponent },
       { path: 'view/:mac', component: DeviceDetailsComponent },
@@ -58,6 +60,7 @@ const routes: Routes = [
   { 
     path: 'switch',
     children: [
+      { path: '', redirectTo: 'search', pathMatch: 'full' },
       { path: 'search', component: SwitchListComponent },
       { path: 'view/:switchID', component: SwitchDetailsComponent },
       { path: 'edit/:switchID', component: SwitchEditComponent },
@@ -70,6 +73,7 @@ const routes: Routes = [
   {
     path: 'port',
     children: [
+      { path: '', redirectTo: 'search', pathMatch: 'full' },
       { path: 'search', component: PortListComponent },
     ],
   }
