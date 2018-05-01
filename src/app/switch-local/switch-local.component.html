@@ -8,7 +8,7 @@
     <br /><br /><br />
     <div class="two columns">
       <div *ngFor="let portResult of ports$ | async">
-        <div *ngIf="portResult.id>=3 && portResult.id<=10">
+        <div *ngIf="portResult.id>=3 && portResult.id<=9">
           <a [routerLink]="['/switch/view', switchID, 'port', portResult.id]">
           <button
             class="u-full-width button-primary"
@@ -19,7 +19,7 @@
     </div>
     <div class="two columns">
       <div *ngFor="let portResult of ports$ | async">
-        <div *ngIf="portResult.id>=11 && portResult.id<=18">
+        <div *ngIf="portResult.id>=10 && portResult.id<=16">
           <a [routerLink]="['/switch/view', switchID, 'port', portResult.id]">
           <button
             class="u-full-width button-primary"
@@ -30,7 +30,7 @@
     </div>
     <div class="two columns">
       <div *ngFor="let portResult of ports$ | async">
-        <div *ngIf="portResult.id>=19 && portResult.id<=26">
+        <div *ngIf="portResult.id>=17 && portResult.id<=24">
           <a [routerLink]="['/switch/view', switchID, 'port', portResult.id]">
           <button
             class="u-full-width button-primary"
