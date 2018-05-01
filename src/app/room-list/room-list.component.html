@@ -16,11 +16,17 @@
       <th class="center">VLAN</th>
       <th></th>
     </tr>
-    <tr *ngFor="let room of rooms$ | async">
+    <tr *ngFor="let room of rooms$ | async | paginate: { itemsPerPage:
+      items_per_page, currentPage: page_number, totalItems: item_count}">
       <td class="center">{{ room.roomNumber }}</td>
       <td class="center">{{ room.description }}</td>
       <td class="center">{{ room.vlan }}</td>
       <td class="center"><a [routerLink]="['/room/view',room.roomNumber]"><button>Consulter</button></a></td>
     </tr>
   </table>
+  <pagination-controls 
+    class="pagination" 
+    (pageChange)="refreshRooms($event)"
+    previousLabel="" nextLabel=""
+    ></pagination-controls>
 </div>
