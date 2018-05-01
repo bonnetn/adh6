@@ -18,11 +18,17 @@
       <th></th>
       <th></th>
     </tr>
-    <tr *ngFor="let device of devices$ | async">
+    <tr *ngFor="let device of devices$ | async | paginate: { itemsPerPage:
+      items_per_page, currentPage: page_number, totalItems: item_count}">
       <td><a [routerLink]="['../../member/view', device.username]">{{ device.username }}</a></td>
       <td class="center">{{ device.mac }}</td>
       <td class="center">{{ device.connectionType }}</td>
       <td><a [routerLink]="['../view' , device.mac]"><button>Consulter</button></a></td>
     </tr>
   </table>
+  <pagination-controls 
+    class="pagination" 
+    (pageChange)="refreshDevices($event)"
+    previousLabel="" nextLabel=""
+    ></pagination-controls>
 </div>
