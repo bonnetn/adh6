@@ -16,7 +16,8 @@
       <th class="center">Chambre</th>
       <th></th>
     </tr>
-    <tr *ngFor="let portResult of ports$ | async">  
+    <tr *ngFor="let portResult of ports$ | async | paginate: { itemsPerPage:
+      items_per_page, currentPage: page_number, totalItems: item_count}">
       <td class="center">{{ portResult.switchID }}</td>
       <td class="center">{{ portResult.portNumber }}</td>
       <td class="center">
@@ -28,4 +29,9 @@
       </td>
     </tr>
   </table>
+  <pagination-controls 
+    class="pagination" 
+    (pageChange)="refreshPorts($event)"
+    previousLabel="" nextLabel=""
+    ></pagination-controls>
 </div>
