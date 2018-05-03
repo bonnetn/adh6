@@ -1,4 +1,5 @@
 import ldap
+import logging
 import ldap.filter
 from website.ldap_conf import LDAP_CONF
 
@@ -62,7 +63,8 @@ class LdapServ():
             dn = LdapServ.__find_cn(username, ldapObj)
             return LdapServ.__try_to_connect(dn, password, ldapObj)
         except Exception as e:
-            print(e)
+            logging.exception("Could not connect to LDAP "
+                              "to check the credentials")
             return False
 
     @staticmethod
