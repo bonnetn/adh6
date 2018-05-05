@@ -58,6 +58,13 @@
     }
   },
   "defaults": {
+    "serve": {
+        "port": 8443,
+	"host": "192.168.102.186",
+	"ssl": true,
+	"ssl-key": "./certs/adh6.key",
+	"ssl-cert": "./certs/adh6.crt"
+    },
     "styleExt": "css",
     "component": {}
   }

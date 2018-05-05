@@ -43,3 +43,6 @@ Thumbs.db
 
 #api
 src/app/api/*
+
+# certificats
+certs/
