@@ -1,8 +1,8 @@
 # Comment lancer ?
-Lancer le serveur.
+> sudo apt-get install libpcre3 libpcre3-dev
+> pip3 install -r requirements
+> uwsgi --ini oauth2-provider.ini 
 
-aller sur localhost:5000
-se connecter avec n'importe quel username, password = "valid".
 Créer un client avec allowed_scope "profile", Allowed Grant Types: "implicit", 
 Allowed Response Types "token", Token Endpoint Auth Method: "none".
 Prenez le client_id, et authentifiez vous avec swaggerhub ou faites de la magie
