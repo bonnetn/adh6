@@ -1,4 +1,4 @@
-from flask import Blueprint, request, session
+from flask import Blueprint, request, session, url_for
 from flask import render_template, redirect, jsonify
 from werkzeug.security import gen_salt
 from authlib.flask.oauth2 import current_token
@@ -30,10 +30,10 @@ def home():
             db.session.commit()
 
         if not user.check_password(password):
-            return redirect('/')
+            return redirect(url_for("index"))
 
         session['id'] = user.id
-        return redirect('/')
+        return redirect(url_for('website.routes.home'))
     user = current_user()
     if user:
         clients = OAuth2Client.query.filter_by(user_id=user.id).all()
@@ -45,14 +45,14 @@ def home():
 @bp.route('/logout')
 def logout():
     del session['id']
-    return redirect('/')
+    return redirect(url_for('website.routes.home'))
 
 
 @bp.route('/create_client', methods=('GET', 'POST'))
 def create_client():
     user = current_user()
     if not user:
-        return redirect('/')
+        return redirect(url_for('website.routes.home'))
     if request.method == 'GET':
         return render_template('create_client.html')
     client = OAuth2Client(**request.form.to_dict(flat=True))
@@ -64,7 +64,7 @@ def create_client():
         client.client_secret = gen_salt(48)
     db.session.add(client)
     db.session.commit()
-    return redirect('/')
+    return redirect(url_for('website.routes.home'))
 
 
 @bp.route('/oauth/authorize', methods=['GET', 'POST'])
@@ -81,7 +81,7 @@ def authorize():
     #     user = User.query.filter_by(username=username).first()
     # if request.form['confirm']:
     if not user:
-        return redirect('/')
+        return redirect(url_for('website.routes.home'))
     grant_user = user
     # else:
     #     grant_user = None
@@ -118,3 +118,4 @@ def api_me():
         "uid": user.username,
         "groups": adh6_groups
     })
+
