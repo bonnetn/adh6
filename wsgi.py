@@ -6,11 +6,14 @@ from adh.model.database import Database
 from adh.settings.settings import DATABASE
 from connexion.resolver import RestyResolver
 
+Database.init_db(DATABASE)
 
 logging.basicConfig(level=logging.INFO)
 app = connexion.FlaskApp(__name__)
 app.app.config.update(
-    AUTH_SERVER_ADDRESS='http://localhost:5000'
+    AUTH_SERVER_ADDRESS='https://adh6.minet.net/oauth',
+    APPLICATION_ROOT='/api',
+
 )
 app.add_api('swagger.yaml',
             resolver=RestyResolver('adh.controller'),
@@ -26,8 +29,3 @@ def shutdown_session(exception=None):
     if Database.get_db():
         Database.get_db().remove_session()
 
-
-if __name__ == '__main__':
-    Database.init_db(DATABASE)
-    # run our standalone gevent server
-    app.run(port=3000, server='gevent')
