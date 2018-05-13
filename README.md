@@ -6,7 +6,7 @@
 - Install the requirements ```pip3 install -r requirements.txt```
 - Fill the settings files (there are some examples provided) ``` vim settings.py ``` & ``` vim unit_test_settings.py```
 - Run the tests ```pytest```
-- ``` apt install uwsgi ```
+- ``` apt install uwsgi uwsgi-plugin-python3 ```
 - ``` cp adh6-api.ini /etc/uwsgi/sites-available ```
 - ``` ln -s /etc/uwsgi/sites-available /etc/uwsgi/sites-enabled ```
 - Edit the file you just copied to have the correct paths...
