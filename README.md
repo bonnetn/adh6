@@ -6,7 +6,11 @@
 - Install the requirements ```pip3 install -r requirements.txt```
 - Fill the settings files (there are some examples provided) ``` vim settings.py ``` & ``` vim unit_test_settings.py```
 - Run the tests ```pytest```
-- Launch the server ```uwsgi --ini adh6-api.ini```
+- ``` apt install uwsgi ```
+- ``` cp adh6-api.ini /etc/uwsgi/sites-available ```
+- ``` ln -s /etc/uwsgi/sites-available /etc/uwsgi/sites-enabled ```
+- Edit the file you just copied to have the correct paths...
+- Launch the server ```systemctl restart uwsgi```
 
 ## What the hell is this mess?
 Ce projet consiste juste en l'implémentation des différents méthodes définies
