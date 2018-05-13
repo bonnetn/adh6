@@ -1,7 +1,13 @@
 # Comment lancer ?
 > sudo apt-get install libpcre3 libpcre3-dev
 > pip3 install -r requirements
-> uwsgi --ini oauth2-provider.ini 
+> apt install uwsgi
+> apt install uwsgi ```
+> cp adh6-api.ini /etc/uwsgi/sites-available
+> ln -s /etc/uwsgi/sites-available /etc/uwsgi/sites-enabled
+> Edit the file you just copied to have the correct paths...
+> systemctl restart uwsgi
+
 
 Créer un client avec allowed_scope "profile", Allowed Grant Types: "implicit", 
 Allowed Response Types "token", Token Endpoint Auth Method: "none".
