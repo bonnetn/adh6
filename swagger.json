@@ -9,8 +9,8 @@
       "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "host" : "localhost:3000",
-  "basePath" : "/",
+  "host" : "adh6.minet.net",
+  "basePath" : "/api",
   "tags" : [ {
     "name" : "user",
     "description" : "Operations on users"
@@ -30,7 +30,7 @@
     "name" : "port",
     "description" : "Operations on ports"
   } ],
-  "schemes" : [ "http" ],
+  "schemes" : [ "https" ],
   "paths" : {
     "/user/" : {
       "get" : {
