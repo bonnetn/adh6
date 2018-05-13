@@ -67,7 +67,7 @@ def create_client():
     return redirect(url_for('website.routes.home'))
 
 
-@bp.route('/oauth/authorize', methods=['GET', 'POST'])
+@bp.route('/authorize', methods=['GET', 'POST'])
 def authorize():
     user = current_user()
     # if request.method == 'GET':
@@ -108,10 +108,10 @@ def api_me():
     groups = LdapServ.find_groups(user.username)
     adh6_groups = []
 
-    if "adh5" in groups:
+    if "adh6_user" in groups:
         adh6_groups += ["adh6_user"]
 
-    if "sudovpn" in groups:
+    if "adh6_admin" in groups:
         adh6_groups += ["adh6_admin"]
 
     return jsonify({
