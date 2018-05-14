@@ -33,6 +33,9 @@ LDAP_CONF = {
 
     # Password of this anonymous user...
     'pass_anonymous': 'superpassword',
+
+    # Base distinguished name where it will look for users
+    'base_dn': 'ou=equipe,dc=minet,dc=net',
 }
 
 # Configuration related to OAuth

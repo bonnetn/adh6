@@ -1,7 +1,0 @@
-LDAP_CONF = {
-    'ca_file': 'certs/ca.crt',
-    'host': 'ldaps://ldap-master.minet.net',
-    'cn_anonymous': 'anonymous_user',
-    'pass_anonymous': 'superpassword',
-    'ca_file': 'certs/ca.crt',
-}

@@ -1,7 +1,7 @@
 import ldap
 import logging
 import ldap.filter
-from website.ldap_conf import LDAP_CONF
+from CONFIGURATION import LDAP_CONF
 
 
 class UserNotFound(Exception):
@@ -30,7 +30,7 @@ class LdapServ():
             LDAP_CONF["pass_anonymous"]
         )
 
-        baseDN = "ou=equipe,dc=minet,dc=net"
+        baseDN = LDAP_CONF["base_dn"]
         searchScope = ldap.SCOPE_SUBTREE
         retrieveAttributes = None
         searchFilter = "uid=" + nickname
