@@ -3,7 +3,7 @@ swagger: "2.0"
 info:
   description: |
     Adherent api
-  version: 1.0.5
+  version: 1.0.7
   title: Adherent
   license:
     name: Apache 2.0
@@ -24,7 +24,7 @@ tags:
 - name: port
   description: Operations on ports
 schemes:
-- http
+- https
 paths:
   /user/:
     get:
@@ -739,6 +739,126 @@ paths:
       - oauth2:
         - profile
       x-swagger-router-controller: adh.controller.port
+  /switch/{switchID}/port/{portID}/state/:
+    get:
+      tags:
+      - port
+      summary: Retrieve the status of a port.
+      operationId: getPortStatus
+      produces:
+      - application/json
+      parameters:
+      - name: switchID
+        in: path
+        required: true
+        type: integer
+      - name: portID
+        in: path
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Success, false if it is shutdown, true otherwise
+          schema:
+            type: boolean
+        404:
+          description: Not found
+      security:
+      - oauth2:
+        - profile
+      x-swagger-router-controller: adh.controller.snmp_port
+    put:
+      tags:
+      - port
+      summary: Shutdown/enable a port
+      operationId: setPortStatus
+      produces:
+      - application/json
+      parameters:
+      - name: switchID
+        in: path
+        required: true
+        type: integer
+      - name: portID
+        in: path
+        required: true
+        type: integer
+      - in: body
+        name: state
+        description: True to open, False to shutdown
+        required: true
+        schema:
+          type: boolean
+      responses:
+        204:
+          description: Updated
+        404:
+          description: Not found
+      security:
+      - oauth2:
+        - profile
+      x-swagger-router-controller: adh.controller.snmp_port
+  /switch/{switchID}/port/{portID}/vlan/:
+    get:
+      tags:
+      - port
+      summary: Retrieve the VLAN assigned to the port.
+      operationId: getPortVlan
+      produces:
+      - application/json
+      parameters:
+      - name: switchID
+        in: path
+        required: true
+        type: integer
+      - name: portID
+        in: path
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Success, returns 1 if the port has authentication on
+          schema:
+            type: integer
+            example: 48
+        404:
+          description: Not found
+      security:
+      - oauth2:
+        - profile
+      x-swagger-router-controller: adh.controller.snmp_port
+    put:
+      tags:
+      - port
+      summary: Change the VLAN assigned a to port
+      operationId: setPortVlan
+      produces:
+      - application/json
+      parameters:
+      - name: switchID
+        in: path
+        required: true
+        type: integer
+      - name: portID
+        in: path
+        required: true
+        type: integer
+      - in: body
+        name: vlan
+        description: VLAN to assign. Set it to 1 if you want to enable authentication on the port.
+        required: true
+        schema:
+          type: integer
+          example: "48"
+      responses:
+        204:
+          description: Updated
+        404:
+          description: Not found
+      security:
+      - oauth2:
+        - profile
+      x-swagger-router-controller: adh.controller.snmp_port
 securityDefinitions:
   oauth2:
     type: oauth2
