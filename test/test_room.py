@@ -2,7 +2,7 @@ import json
 import pytest
 from adh.model.database import Database as db
 from adh.model.models import Chambre, Vlan
-from adh.settings.unit_test_settings import DATABASE as db_settings
+from CONFIGURATION import TEST_DATABSE as db_settings
 from .resource import base_url
 
 

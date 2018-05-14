@@ -1,7 +1,7 @@
 import json
 import pytest
 from adh.model.database import Database as db
-from adh.settings.unit_test_settings import DATABASE as db_settings
+from CONFIGURATION import TEST_DATABSE as db_settings
 from test.resource import base_url
 from adh.model.models import Adherent, Chambre, Vlan
 

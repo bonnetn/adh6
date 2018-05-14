@@ -3,7 +3,7 @@ import connexion
 import logging
 from flask_cors import CORS
 from adh.model.database import Database
-from adh.settings.settings import DATABASE
+from CONFIGURATION import PROD_DATABASE as DATABASE
 from connexion.resolver import RestyResolver
 
 Database.init_db(DATABASE)
@@ -28,4 +28,3 @@ application = app.app
 def shutdown_session(exception=None):
     if Database.get_db():
         Database.get_db().remove_session()
-
