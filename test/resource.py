@@ -1,4 +1,4 @@
-base_url = ""
+base_url = "api"
 device_cazal = {
     'mac': 'FF:FF:FF:FF:FF:FF',
     'ipAddress': '127.0.0.1',
