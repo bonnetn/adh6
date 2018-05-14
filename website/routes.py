@@ -18,30 +18,6 @@ def current_user():
     return None
 
 
-@bp.route('/', methods=('GET', 'POST'))
-def home():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        user = User.query.filter_by(username=username).first()
-        if not user:
-            user = User(username=username)
-            db.session.add(user)
-            db.session.commit()
-
-        if not user.check_password(password):
-            return redirect(url_for("index"))
-
-        session['id'] = user.id
-        return redirect(url_for('website.routes.home'))
-    user = current_user()
-    if user:
-        clients = OAuth2Client.query.filter_by(user_id=user.id).all()
-    else:
-        clients = []
-    return render_template('home.html', user=user, clients=clients)
-
-
 @bp.route('/logout')
 def logout():
     del session['id']
@@ -67,37 +43,38 @@ def create_client():
     return redirect(url_for('website.routes.home'))
 
 
+def ask_for_login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = User.query.filter_by(username=username).first()
+
+        if not user:
+            user = User(username=username)
+            db.session.add(user)
+            db.session.commit()
+
+        if not user.check_password(password):
+            return redirect(url_for("website.routes.authorize"))
+
+        session['id'] = user.id
+        return None
+
+    elif request.method == 'GET':
+        user = current_user()
+        return render_template('home.html', user=user, clients=[])
+
+
 @bp.route('/authorize', methods=['GET', 'POST'])
 def authorize():
     user = current_user()
-    # if request.method == 'GET':
-    #     try:
-    #         grant = authorization.validate_consent_request(end_user=user)
-    #     except OAuth2Error as error:
-    #         return error.error
-    #     return render_template('authorize.html', user=user, grant=grant)
-    # if not user and 'username' in request.form:
-    #     username = request.form.get('username')
-    #     user = User.query.filter_by(username=username).first()
-    # if request.form['confirm']:
     if not user:
-        return redirect(url_for('website.routes.home'))
-    grant_user = user
-    # else:
-    #     grant_user = None
-    return authorization.create_authorization_response(grant_user=grant_user)
+        returnVal = ask_for_login()
+        if returnVal:
+            return returnVal
 
-#
-# @bp.route('/oauth/token', methods=['POST'])
-# def issue_token():
-#     print(request.form)
-#     return authorization.create_token_response()
-#
-#
-# @bp.route('/oauth/revoke', methods=['POST'])
-# def revoke_token():
-#     return authorization.create_endpoint_response('revocation')
-#
+    grant_user = current_user()
+    return authorization.create_authorization_response(grant_user=grant_user)
 
 
 @bp.route('/api/me')
@@ -118,4 +95,3 @@ def api_me():
         "uid": user.username,
         "groups": adh6_groups
     })
-
