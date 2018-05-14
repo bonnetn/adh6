@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponent } from '../app.component';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { authConfig } from '../auth.config';
+
 
 @Component({
   selector: 'app-navbar',
@@ -19,6 +21,7 @@ export class NavbarComponent implements OnInit {
 
   logout(){
     this.oauthService.logOut()
+    window.location.href=authConfig.logoutUrl;
   }
 
   navBarStatus: boolean = false;
