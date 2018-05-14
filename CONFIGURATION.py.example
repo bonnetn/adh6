@@ -1,3 +1,9 @@
+# API server options general
+API_CONF = {
+    'AUTH_SERVER_ADDRESS': 'https://adh6.minet.net/oauth',
+    'APPLICATION_ROOT': '/api',
+}
+                              
 # Permanent database, used to store every object
 PROD_DATABASE = {
     'drivername': '',  # if using MySQL: 'mysql+mysqldb'

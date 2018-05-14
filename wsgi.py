@@ -5,16 +5,13 @@ from flask_cors import CORS
 from adh.model.database import Database
 from CONFIGURATION import PROD_DATABASE as DATABASE
 from connexion.resolver import RestyResolver
+from CONFIGURATION import API_CONF
 
 Database.init_db(DATABASE)
 
 logging.basicConfig(level=logging.INFO)
 app = connexion.FlaskApp(__name__)
-app.app.config.update(
-    AUTH_SERVER_ADDRESS='https://adh6.minet.net/oauth',
-    APPLICATION_ROOT='/api',
-
-)
+app.app.config.update(API_CONF)
 app.add_api('swagger.yaml',
             resolver=RestyResolver('adh.controller'),
             strict_validation=True)
