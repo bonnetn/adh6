@@ -2,7 +2,7 @@
   "swagger" : "2.0",
   "info" : {
     "description" : "Adherent api\n",
-    "version" : "1.0.3",
+    "version" : "1.0.7",
     "title" : "Adherent",
     "license" : {
       "name" : "Apache 2.0",
@@ -73,12 +73,21 @@
               "items" : {
                 "$ref" : "#/definitions/User"
               }
+            },
+            "headers" : {
+              "X-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total count of filtered entities"
+              }
             }
           },
           "400" : {
             "description" : "Invalid input"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.user"
       }
     },
@@ -106,6 +115,9 @@
             "description" : "Not found"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.user"
       },
       "put" : {
@@ -140,6 +152,9 @@
             "description" : "Invalid input"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.user"
       },
       "delete" : {
@@ -163,6 +178,9 @@
             "description" : "Not found"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.user"
       }
     },
@@ -195,6 +213,9 @@
             "description" : "Invalid input"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.user"
       }
     },
@@ -239,12 +260,21 @@
               "items" : {
                 "$ref" : "#/definitions/Device"
               }
+            },
+            "headers" : {
+              "X-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total count of filtered entities"
+              }
             }
           },
           "400" : {
             "description" : "Invalid input"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.device"
       }
     },
@@ -272,6 +302,9 @@
             "description" : "Not found"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.device"
       },
       "put" : {
@@ -305,6 +338,9 @@
             "description" : "Invalid input"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.device"
       },
       "delete" : {
@@ -327,6 +363,9 @@
             "description" : "Not found"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.device"
       }
     },
@@ -365,12 +404,21 @@
               "items" : {
                 "$ref" : "#/definitions/Room"
               }
+            },
+            "headers" : {
+              "X-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total count of filtered entities"
+              }
             }
           },
           "400" : {
             "description" : "Invalid input"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.room"
       }
     },
@@ -397,6 +445,9 @@
             "description" : "Not found"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.room"
       },
       "put" : {
@@ -429,6 +480,9 @@
             "description" : "Invalid input"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.room"
       },
       "delete" : {
@@ -450,6 +504,9 @@
             "description" : "Not found"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.room"
       }
     },
@@ -488,12 +545,21 @@
               "items" : {
                 "$ref" : "#/definitions/Switch"
               }
+            },
+            "headers" : {
+              "X-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total count of filtered entities"
+              }
             }
           },
           "400" : {
             "description" : "Invalid input"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.switch"
       },
       "post" : {
@@ -524,6 +590,9 @@
             "description" : "Invalid input"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.switch"
       }
     },
@@ -550,6 +619,9 @@
             "description" : "Not found"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.switch"
       },
       "put" : {
@@ -582,6 +654,9 @@
             "description" : "Not found"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.switch"
       },
       "delete" : {
@@ -603,6 +678,9 @@
             "description" : "Not found"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.switch"
       }
     },
@@ -653,12 +731,21 @@
               "items" : {
                 "$ref" : "#/definitions/Port"
               }
+            },
+            "headers" : {
+              "X-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total count of filtered entities"
+              }
             }
           },
           "400" : {
             "description" : "Invalid input"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.port"
       }
     },
@@ -696,6 +783,9 @@
             "description" : "Invalid input"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.port"
       }
     },
@@ -727,6 +817,9 @@
             "description" : "Not found"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.port"
       },
       "put" : {
@@ -764,6 +857,9 @@
             "description" : "Not found"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.port"
       },
       "delete" : {
@@ -790,24 +886,166 @@
             "description" : "Not found"
           }
         },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
         "x-swagger-router-controller" : "adh.controller.port"
+      }
+    },
+    "/switch/{switchID}/port/{portID}/state/" : {
+      "get" : {
+        "tags" : [ "port" ],
+        "summary" : "Retrieve the status of a port.",
+        "operationId" : "getPortStatus",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "switchID",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "portID",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success, false if it is shutdown, true otherwise",
+            "schema" : {
+              "type" : "boolean"
+            }
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
+        "x-swagger-router-controller" : "adh.controller.snmp_port"
+      },
+      "put" : {
+        "tags" : [ "port" ],
+        "summary" : "Shutdown/enable a port",
+        "operationId" : "setPortStatus",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "switchID",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "portID",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "state",
+          "description" : "True to open, False to shutdown",
+          "required" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Updated"
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
+        "x-swagger-router-controller" : "adh.controller.snmp_port"
+      }
+    },
+    "/switch/{switchID}/port/{portID}/vlan/" : {
+      "get" : {
+        "tags" : [ "port" ],
+        "summary" : "Retrieve the VLAN assigned to the port.",
+        "operationId" : "getPortVlan",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "switchID",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "portID",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success, returns 1 if the port has authentication on",
+            "schema" : {
+              "type" : "integer",
+              "example" : 48
+            }
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
+        "x-swagger-router-controller" : "adh.controller.snmp_port"
+      },
+      "put" : {
+        "tags" : [ "port" ],
+        "summary" : "Change the VLAN assigned a to port",
+        "operationId" : "setPortVlan",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "switchID",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "portID",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "vlan",
+          "description" : "VLAN to assign. Set it to 1 if you want to enable authentication on the port.",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "example" : "48"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Updated"
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ "profile" ]
+        } ],
+        "x-swagger-router-controller" : "adh.controller.snmp_port"
       }
     }
   },
   "securityDefinitions" : {
-    "petstore_auth" : {
+    "oauth2" : {
       "type" : "oauth2",
-      "authorizationUrl" : "http://petstore.swagger.io/oauth/dialog",
+      "authorizationUrl" : "http://localhost:5000/oauth/authorize",
       "flow" : "implicit",
       "scopes" : {
-        "write:pets" : "modify pets in your account",
-        "read:pets" : "read your pets"
-      }
-    },
-    "api_key" : {
-      "type" : "apiKey",
-      "name" : "api_key",
-      "in" : "header"
+        "profile" : "access username & adh groups of user from LDAP"
+      },
+      "x-tokenInfoFunc" : "adh.auth.token_info"
     }
   },
   "definitions" : {
