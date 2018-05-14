@@ -2,3 +2,4 @@
 *.pyc
 **/ldap_conf.py
 certs_local/
+CONFIGURATION.py
