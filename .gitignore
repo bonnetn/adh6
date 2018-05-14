@@ -9,7 +9,6 @@ lib/
 htmlcov/*
 **.pyc
 **.idea
-settings.py
-unit_test_settings.py
 pip-selfcheck.json
 certs/
+CONFIGURATION.py
