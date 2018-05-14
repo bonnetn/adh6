@@ -1,0 +1,16 @@
+# Permanent database, used to store every object
+PROD_DATABASE = {
+    'drivername': '',  # if using MySQL: 'mysql+mysqldb'
+    'host': '',
+    'port': '',
+    'username': '',
+    'password': '',
+    'database': ''
+}
+
+# Temporary database, that will be clear at every test, used when you launch
+# the unit tests. Default settings is in RAM memory.
+TEST_DATABASE = {
+    'drivername': 'sqlite',
+    'database': ':memory:',
+}
