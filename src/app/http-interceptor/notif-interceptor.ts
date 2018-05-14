@@ -20,7 +20,7 @@ export class NotifInterceptor implements HttpInterceptor {
     Observable<HttpEvent<any>> {
     let api_url = this.conf.rootUrl
     // Check that the request is for the API server
-    if( req.url.substr(0, api_url.length) == api_url ) {
+    if( req.method != "GET" && req.url.substr(0, api_url.length) == api_url) {
       // if there is an error, notify
       return next.handle(req).catch(response => {
         this.notif.error(response.status + ": " + response.error);
