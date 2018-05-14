@@ -3,7 +3,7 @@ import pytest
 from adh.model.database import Database as db
 from adh.model.models import Chambre, Vlan
 from CONFIGURATION import TEST_DATABASE as db_settings
-from .resource import base_url
+from .resource import base_url, TEST_HEADERS
 
 
 @pytest.fixture
@@ -62,40 +62,58 @@ def test_room_to_dict(sample_room1):
 
 
 def test_room_filter_all_rooms(api_client):
-    r = api_client.get("{}/room/".format(base_url))
+    r = api_client.get(
+        "{}/room/".format(base_url),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
     response = json.loads(r.data.decode())
     assert len(response) == 2
 
 
 def test_room_filter_all_rooms_limit_invalid(api_client):
-    r = api_client.get("{}/room/?limit={}".format(base_url, -1))
+    r = api_client.get(
+        "{}/room/?limit={}".format(base_url, -1),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 400
 
 
 def test_room_filter_all_rooms_limit(api_client):
-    r = api_client.get("{}/room/?limit={}".format(base_url, 1))
+    r = api_client.get(
+        "{}/room/?limit={}".format(base_url, 1),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
     response = json.loads(r.data.decode())
     assert len(response) == 1
 
 
 def test_room_filter_by_term(api_client):
-    r = api_client.get("{}/room/?terms={}".format(base_url, "voisin"))
+    r = api_client.get(
+        "{}/room/?terms={}".format(base_url, "voisin"),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
     response = json.loads(r.data.decode())
     assert len(response) == 1
 
 
 def test_room_get_valid_room(api_client):
-    r = api_client.get("{}/room/{}".format(base_url, 4591))
+    r = api_client.get(
+        "{}/room/{}".format(base_url, 4591),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
     response = json.loads(r.data.decode())
     assert len(response) == 4
 
 
 def test_room_get_invalid_room(api_client):
-    r = api_client.get("{}/room/{}".format(base_url, 4900))
+    r = api_client.get(
+        "{}/room/{}".format(base_url, 4900),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 404
 
 
@@ -106,9 +124,12 @@ def test_room_put_new_room_invalid_vlan(api_client):
       "phone": 6842,
       "description": "Chambre 5110"
     }
-    r = api_client.put("{}/room/{}".format(base_url, 5110),
-                       data=json.dumps(room),
-                       content_type='application/json')
+    r = api_client.put(
+        "{}/room/{}".format(base_url, 5110),
+        data=json.dumps(room),
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 400
 
 
@@ -119,9 +140,12 @@ def test_room_put_new_room(api_client):
       "phone": 6842,
       "description": "Chambre 5110"
     }
-    r = api_client.put("{}/room/{}".format(base_url, 5110),
-                       data=json.dumps(room),
-                       content_type='application/json')
+    r = api_client.put(
+        "{}/room/{}".format(base_url, 5110),
+        data=json.dumps(room),
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 201
 
 
@@ -132,17 +156,26 @@ def test_room_put_update_room(api_client):
       "phone": 6842,
       "description": "Chambre 5110"
     }
-    r = api_client.put("{}/room/{}".format(base_url, 4591),
-                       data=json.dumps(room),
-                       content_type='application/json')
+    r = api_client.put(
+        "{}/room/{}".format(base_url, 4591),
+        data=json.dumps(room),
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 204
 
 
 def test_room_delete_existant_room(api_client):
-    r = api_client.delete("{}/room/{}".format(base_url, 4591))
+    r = api_client.delete(
+        "{}/room/{}".format(base_url, 4591),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 204
 
 
 def test_room_delete_non_existant_room(api_client):
-    r = api_client.delete("{}/room/{}".format(base_url, 4900))
+    r = api_client.delete(
+        "{}/room/{}".format(base_url, 4900),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 404
