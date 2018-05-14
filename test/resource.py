@@ -44,3 +44,5 @@ INVALID_MAC = [
     "12:34:56:78:9A:BG",     # Non hexa byte (BG)
     42,                      # Wrong type
 ]
+
+TEST_HEADERS = {"Authorization": "Bearer TEST_TOKEN"}

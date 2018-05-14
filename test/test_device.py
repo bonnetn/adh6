@@ -5,7 +5,9 @@ from adh.model.database import Database as db
 from CONFIGURATION import TEST_DATABASE as db_settings
 from adh.model.models import Ordinateur, Portable, Adherent
 
-from .resource import base_url, INVALID_MAC, INVALID_IP, INVALID_IPv6
+from .resource import (
+    base_url, INVALID_MAC, INVALID_IP, INVALID_IPv6, TEST_HEADERS
+)
 
 
 @pytest.fixture
@@ -106,7 +108,10 @@ def api_client(member1,
 
 
 def test_device_filter_all_devices(api_client):
-    r = api_client.get('{}/device/'.format(base_url))
+    r = api_client.get(
+        '{}/device/'.format(base_url),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -121,10 +126,13 @@ def test_device_filter_all_devices(api_client):
 ])
 def test_device_filter_wired_by_username(
         api_client, user, expected):
-    r = api_client.get('{}/device/?username={}'.format(
-        base_url,
-        user
-    ))
+    r = api_client.get(
+        '{}/device/?username={}'.format(
+            base_url,
+            user
+        ),
+        headers=TEST_HEADERS
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -143,10 +151,13 @@ def test_device_filter_wired_by_username(
 ])
 def test_device_filter_by_terms(
         api_client, wired_device, terms, expected):
-    r = api_client.get('{}/device/?terms={}'.format(
-        base_url,
-        terms,
-    ))
+    r = api_client.get(
+        '{}/device/?terms={}'.format(
+            base_url,
+            terms,
+        ),
+        headers=TEST_HEADERS
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -154,7 +165,10 @@ def test_device_filter_by_terms(
 
 
 def test_device_filter_invalid_limit(api_client, member1):
-    r = api_client.get('{}/device/?limit={}'.format(base_url, -1))
+    r = api_client.get(
+        '{}/device/?limit={}'.format(base_url, -1),
+        headers=TEST_HEADERS
+    )
     assert r.status_code == 400
 
 
@@ -172,7 +186,10 @@ def test_device_filter_hit_limit(api_client, member1):
         s.add(dev)
     s.commit()
 
-    r = api_client.get('{}/device/?limit={}'.format(base_url, LIMIT))
+    r = api_client.get(
+        '{}/device/?limit={}'.format(base_url, LIMIT),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -186,7 +203,8 @@ def test_device_put_create_wireless_without_ip(api_client,
     addr = '{}/device/{}'.format(base_url, wireless_device_dict['mac'])
     r = api_client.put(addr,
                        data=json.dumps(wireless_device_dict),
-                       content_type='application/json')
+                       content_type='application/json',
+                       headers=TEST_HEADERS)
     assert r.status_code == 201
 
 
@@ -195,7 +213,8 @@ def test_device_put_create_wireless(api_client, wireless_device_dict):
     addr = '{}/device/{}'.format(base_url, wireless_device_dict['mac'])
     r = api_client.put(addr,
                        data=json.dumps(wireless_device_dict),
-                       content_type='application/json')
+                       content_type='application/json',
+                       headers=TEST_HEADERS)
     assert r.status_code == 201
 
 
@@ -205,7 +224,8 @@ def test_device_put_create_wired_without_ip(api_client, wired_device_dict):
     r = api_client.put('{}/device/{}'.format(base_url,
                                              wired_device_dict['mac']),
                        data=json.dumps(wired_device_dict),
-                       content_type='application/json')
+                       content_type='application/json',
+                       headers=TEST_HEADERS)
     assert r.status_code == 201
 
 
@@ -214,7 +234,8 @@ def test_device_put_create_wired(api_client, wired_device_dict):
     r = api_client.put('{}/device/{}'.format(base_url,
                                              wired_device_dict['mac']),
                        data=json.dumps(wired_device_dict),
-                       content_type='application/json')
+                       content_type='application/json',
+                       headers=TEST_HEADERS)
     assert r.status_code == 201
 
 
@@ -224,7 +245,8 @@ def test_device_put_create_different_mac_addresses(api_client,
     wired_device_dict['mac'] = "11:11:11:11:11:11"
     r = api_client.put('{}/device/{}'.format(base_url, "22:22:22:22:22:22"),
                        data=json.dumps(wired_device_dict),
-                       content_type='application/json')
+                       content_type='application/json',
+                       headers=TEST_HEADERS)
     assert r.status_code == 400
 
 
@@ -237,7 +259,8 @@ def test_device_put_create_invalid_mac_address(api_client,
     r = api_client.put(
         '{}/device/{}'.format(base_url, wired_device_dict['mac']),
         data=json.dumps(wired_device_dict),
-        content_type='application/json'
+        content_type='application/json',
+        headers=TEST_HEADERS,
     )
     assert r.status_code == 400 or r.status_code == 405
 
@@ -250,7 +273,8 @@ def test_device_put_create_invalid_ipv6(api_client, test_ip,
     r = api_client.put(
         '{}/device/{}'.format(base_url, wired_device_dict['mac']),
         data=json.dumps(wired_device_dict),
-        content_type='application/json'
+        content_type='application/json',
+        headers=TEST_HEADERS,
     )
     assert r.status_code == 400
 
@@ -263,7 +287,8 @@ def test_device_put_create_invalid_ipv4(api_client, test_ip,
     r = api_client.put(
         '{}/device/{}'.format(base_url, wired_device_dict['mac']),
         data=json.dumps(wired_device_dict),
-        content_type='application/json'
+        content_type='application/json',
+        headers=TEST_HEADERS,
     )
     assert r.status_code == 400
 
@@ -274,7 +299,8 @@ def test_device_put_create_invalid_username(api_client, wired_device_dict):
     r = api_client.put(
         '{}/device/{}'.format(base_url, wired_device_dict['mac']),
         data=json.dumps(wired_device_dict),
-        content_type='application/json'
+        content_type='application/json',
+        headers=TEST_HEADERS,
     )
     assert r.status_code == 400
 
@@ -285,7 +311,8 @@ def test_device_put_update_wireless(api_client, wireless_device,
     r = api_client.put(
         '{}/device/{}'.format(base_url, wireless_device.mac),
         data=json.dumps(wireless_device_dict),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS)
     assert r.status_code == 204
 
 
@@ -294,7 +321,8 @@ def test_device_put_update_wired(api_client, wired_device, wired_device_dict):
     r = api_client.put(
         '{}/device/{}'.format(base_url, wired_device.mac),
         data=json.dumps(wired_device_dict),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS)
     assert r.status_code == 204
 
 
@@ -304,7 +332,8 @@ def test_device_put_update_wired_to_wireless(api_client, wired_device,
     r = api_client.put(
         '{}/device/{}'.format(base_url, wired_device.mac),
         data=json.dumps(wireless_device_dict),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS)
     assert r.status_code == 204
 
 
@@ -315,7 +344,8 @@ def test_device_put_update_wireless_to_wired(api_client,
     r = api_client.put(
         '{}/device/{}'.format(base_url, wireless_device.mac),
         data=json.dumps(wired_device_dict),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS)
     assert r.status_code == 204
 
 
@@ -341,7 +371,8 @@ def test_device_put_update_wired_and_wireless_to_wireless(
     r = api_client.put(
         '{}/device/{}'.format(base_url, wired_device.mac),
         data=json.dumps(wireless_device_dict),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS)
     assert r.status_code == 204
 
 
@@ -366,33 +397,46 @@ def test_device_put_update_wired_and_wireless_to_wired(api_client,
     r = api_client.put(
         '{}/device/{}'.format(base_url, wireless_device.mac),
         data=json.dumps(wired_device_dict),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS)
     assert r.status_code == 204
 
 
 def test_device_get_unknown_mac(api_client):
     mac = '00:00:00:00:00:00'
-    r = api_client.get('{}/device/{}'.format(base_url, mac))
+    r = api_client.get(
+        '{}/device/{}'.format(base_url, mac),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 404
 
 
 def test_device_get_valid_wired(api_client, wired_device):
     mac = wired_device.mac
-    r = api_client.get('{}/device/{}'.format(base_url, mac))
+    r = api_client.get(
+        '{}/device/{}'.format(base_url, mac),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
     assert json.loads(r.data.decode('utf-8'))
 
 
 def test_device_get_valid_wireless(api_client, wireless_device):
     mac = wireless_device.mac
-    r = api_client.get('{}/device/{}'.format(base_url, mac))
+    r = api_client.get(
+        '{}/device/{}'.format(base_url, mac),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
     assert json.loads(r.data.decode('utf-8'))
 
 
 def test_device_delete_wired(api_client, wired_device):
     mac = wired_device.mac
-    r = api_client.delete('{}/device/{}'.format(base_url, mac))
+    r = api_client.delete(
+        '{}/device/{}'.format(base_url, mac),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 204
 
     s = db.get_db().get_session()
@@ -403,7 +447,10 @@ def test_device_delete_wired(api_client, wired_device):
 
 def test_device_delete_wireless(api_client, wireless_device):
     mac = wireless_device.mac
-    r = api_client.delete('{}/device/{}'.format(base_url, mac))
+    r = api_client.delete(
+        '{}/device/{}'.format(base_url, mac),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 204
 
     s = db.get_db().get_session()
@@ -414,5 +461,8 @@ def test_device_delete_wireless(api_client, wireless_device):
 
 def test_device_delete_unexistant(api_client):
     mac = '00:00:00:00:00:00'
-    r = api_client.delete('{}/device/{}'.format(base_url, mac))
+    r = api_client.delete(
+        '{}/device/{}'.format(base_url, mac),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 404
