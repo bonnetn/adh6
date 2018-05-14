@@ -21,7 +21,7 @@ def current_user():
 @bp.route('/logout')
 def logout():
     del session['id']
-    return redirect(url_for('website.routes.home'))
+    return redirect(request.referrer)
 
 
 @bp.route('/create_client', methods=('GET', 'POST'))
