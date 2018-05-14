@@ -24,8 +24,8 @@ LDAP_CONF = {
     # right LDAP.
     'ca_file': 'certs/ca.crt',
 
-    # Address of the LDAP (please use LDAPs)
-    'host': 'ldaps://ldap-master.minet.net',
+    # Address of the LDAP (please use LDAP over TLS [ldaps])
+    'host': 'ldaps://ldap-master.priv.minet.net',
 
     # common name of the anonymous user that will connect to the LDAP server to
     # get the uid of the users.
