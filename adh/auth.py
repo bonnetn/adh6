@@ -22,6 +22,14 @@ def get_groups(token):
 
 
 def token_info(access_token) -> dict:
+
+    if current_app.config["TESTING"]:
+        return {
+            "uid": "TestingClient",
+            "scope": ["profile"],
+            "groups": []
+        }
+
     infos = get_groups(access_token)
     if not infos:
         return None
@@ -34,7 +42,8 @@ def token_info(access_token) -> dict:
 
 def auth_simple_user(f):
     def wrapper(*args, user, token_info, **kwargs):
-        if "adh6_user" in token_info["groups"]:
+        if current_app.config["TESTING"] \
+           or "adh6_user" in token_info["groups"]:
             return f(*args, **kwargs)
         return NoContent, 401
     return wrapper
