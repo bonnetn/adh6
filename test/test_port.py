@@ -4,7 +4,7 @@ from adh.model.database import Database as db
 from CONFIGURATION import TEST_DATABASE as db_settings
 from adh.model.models import Port, Switch, Chambre
 
-from .resource import base_url
+from .resource import base_url, TEST_HEADERS
 
 
 @pytest.fixture
@@ -94,7 +94,10 @@ def test_port_to_dict(sample_port1):
 
 
 def test_port_get_filter_all(api_client):
-    r = api_client.get("{}/ports/".format(base_url))
+    r = api_client.get(
+        "{}/ports/".format(base_url),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
     switches = json.loads(r.data.decode())
     assert switches
@@ -102,12 +105,18 @@ def test_port_get_filter_all(api_client):
 
 
 def test_port_get_filter_all_with_invalid_limit(api_client):
-    r = api_client.get("{}/ports/?limit={}".format(base_url, -1))
+    r = api_client.get(
+        "{}/ports/?limit={}".format(base_url, -1),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 400
 
 
 def test_port_get_filter_all_with_limit(api_client):
-    r = api_client.get("{}/ports/?limit={}".format(base_url, 1))
+    r = api_client.get(
+        "{}/ports/?limit={}".format(base_url, 1),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
     switches = json.loads(r.data.decode())
     assert switches
@@ -116,7 +125,9 @@ def test_port_get_filter_all_with_limit(api_client):
 
 def test_port_get_filter_by_switchid(api_client, sample_switch2):
     r = api_client.get(
-        "{}/ports/?switchID={}".format(base_url, sample_switch2.id))
+        "{}/ports/?switchID={}".format(base_url, sample_switch2.id),
+        headers=TEST_HEADERS
+    )
     assert r.status_code == 200
     switches = json.loads(r.data.decode())
     assert switches
@@ -125,7 +136,10 @@ def test_port_get_filter_by_switchid(api_client, sample_switch2):
 
 def test_port_get_filter_by_roomnumber_with_results(api_client):
     r = api_client.get(
-        "{}/ports/?roomNumber={}".format(base_url, 0))
+        "{}/ports/?roomNumber={}".format(base_url, 0),
+        headers=TEST_HEADERS,
+    )
+
     assert r.status_code == 200
     switches = json.loads(r.data.decode())
     assert switches
@@ -134,7 +148,9 @@ def test_port_get_filter_by_roomnumber_with_results(api_client):
 
 def test_port_get_filter_by_roomnumber_without_result(api_client):
     r = api_client.get(
-        "{}/ports/?roomNumber={}".format(base_url, 42))
+        "{}/ports/?roomNumber={}".format(base_url, 42),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
     switches = json.loads(r.data.decode())
     assert not switches
@@ -143,7 +159,9 @@ def test_port_get_filter_by_roomnumber_without_result(api_client):
 
 def test_port_get_filter_by_term_oid(api_client):
     r = api_client.get(
-        "{}/ports/?terms={}".format(base_url, "1.2"))
+        "{}/ports/?terms={}".format(base_url, "1.2"),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
     switches = json.loads(r.data.decode())
     assert switches
@@ -152,7 +170,9 @@ def test_port_get_filter_by_term_oid(api_client):
 
 def test_port_get_filter_by_term_numero(api_client):
     r = api_client.get(
-        "{}/ports/?terms={}".format(base_url, "0/0/1"))
+        "{}/ports/?terms={}".format(base_url, "0/0/1"),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
     switches = json.loads(r.data.decode())
     assert switches
@@ -169,7 +189,9 @@ def test_port_post_create_port_invalid_switch_id(api_client, sample_switch1):
     r = api_client.post(
         "{}/switch/{}/port/".format(base_url, sample_switch1.id),
         data=json.dumps(body),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 400
 
 
@@ -183,7 +205,9 @@ def test_port_post_create_port(api_client, sample_switch1):
     r = api_client.post(
         "{}/switch/{}/port/".format(base_url, sample_switch1.id),
         data=json.dumps(body),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
     print(r.data)
     assert r.status_code == 200
     assert 'Location' in r.headers
@@ -193,7 +217,9 @@ def test_port_get_existant_port(api_client, sample_switch1, sample_port1):
     r = api_client.get(
         "{}/switch/{}/port/{}".format(base_url,
                                       sample_switch1.id,
-                                      sample_port1.id))
+                                      sample_port1.id),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
     switch = json.loads(r.data.decode())
     assert switch
@@ -203,7 +229,9 @@ def test_port_get_non_existant_port(api_client, sample_switch1, sample_port1):
     r = api_client.get(
         "{}/switch/{}/port/{}".format(base_url,
                                       sample_switch1.id,
-                                      4242))
+                                      4242),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 404
 
 
@@ -223,7 +251,9 @@ def test_port_put_update_port_invalid_switch(api_client,
                                       sample_switch1.id,
                                       sample_port1.id),
         data=json.dumps(body),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 400
 
 
@@ -242,7 +272,9 @@ def test_port_put_update_port(api_client, sample_switch1, sample_port1):
                                       sample_switch1.id,
                                       sample_port1.id),
         data=json.dumps(body),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 204
     assert sample_port1.numero == portNumber
 
@@ -262,7 +294,9 @@ def test_port_put_update_non_existant_port(api_client,
                                       sample_switch1.id,
                                       4242),
         data=json.dumps(body),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 404
 
 
@@ -271,7 +305,9 @@ def test_port_put_delete_port(api_client, sample_switch1, sample_port1):
     r = api_client.delete(
         "{}/switch/{}/port/{}".format(base_url,
                                       sample_switch1.id,
-                                      sample_port1.id))
+                                      sample_port1.id),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 204
 
 
@@ -281,5 +317,7 @@ def test_port_put_delete_non_existant_port(api_client,
     r = api_client.delete(
         "{}/switch/{}/port/{}".format(base_url,
                                       sample_switch1.id,
-                                      4242))
+                                      4242),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 404
