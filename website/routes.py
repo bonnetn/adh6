@@ -1,8 +1,7 @@
 from flask import Blueprint, request, session, url_for
 from flask import render_template, redirect, jsonify
-from werkzeug.security import gen_salt
 from authlib.flask.oauth2 import current_token
-from .models import db, User, OAuth2Client
+from .models import db, User
 from .oauth2 import authorization, require_oauth
 # from authlib.specs.rfc6749 import OAuth2Error
 from website.ldap import LdapServ
@@ -22,25 +21,6 @@ def current_user():
 def logout():
     del session['id']
     return redirect(request.referrer)
-
-
-@bp.route('/create_client', methods=('GET', 'POST'))
-def create_client():
-    user = current_user()
-    if not user:
-        return redirect(url_for('website.routes.home'))
-    if request.method == 'GET':
-        return render_template('create_client.html')
-    client = OAuth2Client(**request.form.to_dict(flat=True))
-    client.user_id = user.id
-    client.client_id = gen_salt(24)
-    if client.token_endpoint_auth_method == 'none':
-        client.client_secret = ''
-    else:
-        client.client_secret = gen_salt(48)
-    db.session.add(client)
-    db.session.commit()
-    return redirect(url_for('website.routes.home'))
 
 
 def ask_for_login():
