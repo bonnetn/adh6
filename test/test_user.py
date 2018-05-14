@@ -2,7 +2,7 @@ import json
 import pytest
 from adh.model.database import Database as db
 from CONFIGURATION import TEST_DATABASE as db_settings
-from test.resource import base_url
+from test.resource import base_url, TEST_HEADERS
 from adh.model.models import Adherent, Chambre, Vlan
 
 
@@ -101,7 +101,10 @@ def test_user_to_dict(sample_member):
 
 
 def test_user_filter_all(api_client):
-    r = api_client.get('{}/user/'.format(base_url))
+    r = api_client.get(
+        '{}/user/'.format(base_url),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -109,12 +112,18 @@ def test_user_filter_all(api_client):
 
 
 def test_user_filter_all_with_invalid_limit(api_client):
-    r = api_client.get('{}/user/?limit={}'.format(base_url, -1))
+    r = api_client.get(
+        '{}/user/?limit={}'.format(base_url, -1),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 400
 
 
 def test_user_filter_all_with_limit(api_client):
-    r = api_client.get('{}/user/?limit={}'.format(base_url, 1))
+    r = api_client.get(
+        '{}/user/?limit={}'.format(base_url, 1),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -122,7 +131,10 @@ def test_user_filter_all_with_limit(api_client):
 
 
 def test_user_filter_by_room_number(api_client):
-    r = api_client.get('{}/user/?roomNumber={}'.format(base_url, 1234))
+    r = api_client.get(
+        '{}/user/?roomNumber={}'.format(base_url, 1234),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -130,7 +142,10 @@ def test_user_filter_by_room_number(api_client):
 
 
 def test_user_filter_by_non_existant_room_number(api_client):
-    r = api_client.get('{}/user/?roomNumber={}'.format(base_url, 6666))
+    r = api_client.get(
+        '{}/user/?roomNumber={}'.format(base_url, 6666),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -138,7 +153,10 @@ def test_user_filter_by_non_existant_room_number(api_client):
 
 
 def test_user_filter_terms_first_name(api_client):
-    r = api_client.get('{}/user/?terms={}'.format(base_url, "Jean"))
+    r = api_client.get(
+        '{}/user/?terms={}'.format(base_url, "Jean"),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -146,7 +164,10 @@ def test_user_filter_terms_first_name(api_client):
 
 
 def test_user_filter_terms_last_name(api_client):
-    r = api_client.get('{}/user/?terms={}'.format(base_url, "ubois"))
+    r = api_client.get(
+        '{}/user/?terms={}'.format(base_url, "ubois"),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -154,7 +175,10 @@ def test_user_filter_terms_last_name(api_client):
 
 
 def test_user_filter_terms_email(api_client):
-    r = api_client.get('{}/user/?terms={}'.format(base_url, "bgdu78"))
+    r = api_client.get(
+        '{}/user/?terms={}'.format(base_url, "bgdu78"),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -162,7 +186,10 @@ def test_user_filter_terms_email(api_client):
 
 
 def test_user_filter_terms_login(api_client):
-    r = api_client.get('{}/user/?terms={}'.format(base_url, "dubois_j"))
+    r = api_client.get(
+        '{}/user/?terms={}'.format(base_url, "dubois_j"),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -170,7 +197,10 @@ def test_user_filter_terms_login(api_client):
 
 
 def test_user_filter_terms_comment(api_client):
-    r = api_client.get('{}/user/?terms={}'.format(base_url, "routeur"))
+    r = api_client.get(
+        '{}/user/?terms={}'.format(base_url, "routeur"),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -178,7 +208,10 @@ def test_user_filter_terms_comment(api_client):
 
 
 def test_user_filter_terms_nonexistant(api_client):
-    r = api_client.get('{}/user/?terms={}'.format(base_url, "azerty"))
+    r = api_client.get(
+        '{}/user/?terms={}'.format(base_url, "azerty"),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -186,7 +219,10 @@ def test_user_filter_terms_nonexistant(api_client):
 
 
 def test_user_filter_terms_test_upper_case(api_client):
-    r = api_client.get('{}/user/?terms={}'.format(base_url, "DUBOIS_J"))
+    r = api_client.get(
+        '{}/user/?terms={}'.format(base_url, "DUBOIS_J"),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
 
     response = json.loads(r.data.decode('utf-8'))
@@ -194,18 +230,27 @@ def test_user_filter_terms_test_upper_case(api_client):
 
 
 def test_user_get_existant(api_client):
-    r = api_client.get('{}/user/{}'.format(base_url, "dubois_j"))
+    r = api_client.get(
+        '{}/user/{}'.format(base_url, "dubois_j"),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 200
     assert json.loads(r.data.decode('utf-8'))
 
 
 def test_user_get_nonexistant(api_client):
-    r = api_client.get('{}/user/{}'.format(base_url, "bond_jam"))
+    r = api_client.get(
+        '{}/user/{}'.format(base_url, "bond_jam"),
+        headers=TEST_HEADERS,
+    )
     assert r.status_code == 404
 
 
 def test_user_delete_existant(api_client):
-    r = api_client.delete('{}/user/{}'.format(base_url, "dubois_j"))
+    r = api_client.delete(
+        '{}/user/{}'.format(base_url, "dubois_j"),
+        headers=TEST_HEADERS
+    )
     assert r.status_code == 204
 
     s = db.get_db().get_session()
@@ -215,7 +260,10 @@ def test_user_delete_existant(api_client):
 
 
 def test_user_delete_non_existant(api_client):
-    r = api_client.delete('{}/user/{}'.format(base_url, "azerty"))
+    r = api_client.delete(
+        '{}/user/{}'.format(base_url, "azerty"),
+        headers=TEST_HEADERS
+    )
     assert r.status_code == 404
 
 
@@ -233,7 +281,9 @@ def test_user_put_user_create_invalid_email(api_client):
     res = api_client.put(
         '{}/user/{}'.format(base_url, body["username"]),
         data=json.dumps(body),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS
+    )
     assert res.status_code == 400
 
 
@@ -251,7 +301,9 @@ def test_user_put_user_create_unknown_room(api_client):
     res = api_client.put(
         '{}/user/{}'.format(base_url, body["username"]),
         data=json.dumps(body),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS
+    )
     assert res.status_code == 400
 
 
@@ -269,7 +321,9 @@ def test_user_put_user_create(api_client):
     res = api_client.put(
         '{}/user/{}'.format(base_url, ["username"]),
         data=json.dumps(body),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS
+    )
     assert res.status_code == 201
 
 
@@ -287,7 +341,9 @@ def test_user_put_user_update(api_client):
     res = api_client.put(
         '{}/user/{}'.format(base_url, body["username"]),
         data=json.dumps(body),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS
+    )
     assert res.status_code == 204
 
 
@@ -299,7 +355,9 @@ def test_user_post_add_membership_not_found(api_client):
     result = api_client.post(
         '{}/user/{}/membership'.format(base_url, "charlie"),
         data=json.dumps(body),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
     assert result.status_code == 404
 
 
@@ -311,5 +369,7 @@ def test_user_post_add_membership_ok(api_client):
     result = api_client.post(
         '{}/user/{}/membership'.format(base_url, "dubois_j"),
         data=json.dumps(body),
-        content_type='application/json')
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
     assert result.status_code == 200
