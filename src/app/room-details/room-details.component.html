@@ -86,19 +86,18 @@
         <div class="row">
           <div class="four columns">
             <button class="u-full-width button-success"
+                    (click)="etat()"
             >Etat
             </button>
           </div>
           <div class="four columns">
             <button class="u-full-width"
-                    [ngClass]="{true:'button-success',
-                    false:'button-danger'}[authenth]"
                     (click)="auth()"
             >Authentification
             </button>
           </div>
           <div class="four columns">
-            <a [routerLink]="['../../switch', portRes.switchID, 'port', portRes.portID]">
+            <a [routerLink]="['/switch/view', portRes.switchID, 'port', portRes.id]">
             <button class="u-full-width button-primary"
             >Configurer
             </button>
