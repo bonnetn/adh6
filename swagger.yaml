@@ -173,8 +173,7 @@ paths:
         description: New values of the user
         required: true
         schema:
-          type: string
-          example: '&<Hs8XK/H+dT{7d7:=bxN~9;EqhwtW-;'
+          $ref: '#/definitions/password'
       responses:
         204:
           description: Modified
@@ -1049,6 +1048,14 @@ definitions:
     example:
       duration: 365
       start: 2000-01-23T04:56:07.000+00:00
+  password:
+    type: object
+    required:
+    - password
+    properties:
+      password:
+        type: string
+        example: '&<Hs8XK/H+dT{7d7:=bxN~9;EqhwtW-;'
 externalDocs:
   description: Find out more about MiNET
   url: http://minet.net
