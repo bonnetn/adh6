@@ -3,7 +3,7 @@ swagger: "2.0"
 info:
   description: |
     Adherent api
-  version: 1.0.7
+  version: 1.0.8
   title: Adherent
   license:
     name: Apache 2.0
@@ -153,6 +153,33 @@ paths:
       - oauth2:
         - profile
       x-swagger-router-controller: adh.controller.user
+  /user/{username}/password:
+    put:
+      tags:
+      - user
+      summary: Update an user's password
+      description: This can only be done by the logged in user.
+      operationId: updatePassword
+      produces:
+      - application/json
+      parameters:
+      - name: username
+        in: path
+        description: username of the user will be updated
+        required: true
+        type: string
+      - in: body
+        name: password
+        description: New values of the user
+        required: true
+        schema:
+          type: string
+          example: '&<Hs8XK/H+dT{7d7:=bxN~9;EqhwtW-;'
+      responses:
+        204:
+          description: Modified
+        404:
+          description: Not found
   /user/{username}/membership:
     post:
       tags:
