@@ -180,6 +180,10 @@ paths:
           description: Modified
         404:
           description: Not found
+      security:
+      - oauth2:
+        - profile
+      x-swagger-router-controller: adh.controller.user
   /user/{username}/membership:
     post:
       tags:
