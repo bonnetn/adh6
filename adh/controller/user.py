@@ -6,6 +6,7 @@ from adh.exceptions import InvalidEmail, RoomNotFound, UserNotFound
 import datetime
 import sqlalchemy
 from adh.auth import auth_simple_user
+import hashlib
 
 
 def adherentExists(session, username):
@@ -126,3 +127,28 @@ def addMembership(username, body):
 
     s.commit()
     return NoContent, 200, {'Location': 'test'}  # TODO: finish that!
+
+
+def ntlm_hash(txt):
+    """
+    NTLM hashing function
+    wow much security such hashing function
+    Needed by MSCHAPv2.
+    """
+
+    return hashlib.new('md4', txt.encode('utf-16le')).hexdigest()
+
+
+@auth_simple_user
+def updatePassword(username, body):
+    password = body["password"]
+    s = db.get_db().get_session()
+
+    try:
+        a = Adherent.find(s, username)
+    except UserNotFound:
+        return NoContent, 404
+
+    a.password = ntlm_hash(password)
+    s.commit()
+    return NoContent, 204

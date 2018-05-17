@@ -349,8 +349,8 @@ def test_user_put_user_update(api_client):
 
 def test_user_post_add_membership_not_found(api_client):
     body = {
-      "duration": 365,
-      "start": "2000-01-23T04:56:07.000+00:00"
+        "duration": 365,
+        "start": "2000-01-23T04:56:07.000+00:00"
     }
     result = api_client.post(
         '{}/user/{}/membership'.format(base_url, "charlie"),
@@ -373,3 +373,29 @@ def test_user_post_add_membership_ok(api_client):
         headers=TEST_HEADERS,
     )
     assert result.status_code == 200
+
+
+def test_user_change_password_ok(api_client):
+    body = {
+        "password": "on;X\\${QG55Bd\"#NyL#+k:_xEdJrEDT7",
+    }
+    result = api_client.put(
+        '{}/user/{}/password/'.format(base_url, "dubois_j"),
+        data=json.dumps(body),
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
+    assert result.status_code == 204
+
+
+def test_user_change_password_user_not_exist(api_client):
+    body = {
+        "password": "on;X\\${QG55Bd\"#NyL#+k:_xEdJrEDT7",
+    }
+    result = api_client.put(
+        '{}/user/{}/password/'.format(base_url, "sherlock"),
+        data=json.dumps(body),
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
+    assert result.status_code == 404
