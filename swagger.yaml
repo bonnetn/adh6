@@ -153,7 +153,7 @@ paths:
       - oauth2:
         - profile
       x-swagger-router-controller: adh.controller.user
-  /user/{username}/password:
+  /user/{username}/password/:
     put:
       tags:
       - user
