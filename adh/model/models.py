@@ -9,6 +9,18 @@ from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
 from adh.exceptions import UserNotFound, RoomNotFound, SwitchNotFound
 from adh.exceptions import VlanNotFound, PortNotFound
 from adh.util.date import string_to_date
+from abc import ABC, abstractmethod
+
+
+class RubyHashModification(ABC):
+    @staticmethod
+    @abstractmethod
+    def get_hash_modif(old_data, new_data):
+        """
+        Ruby serialize
+        allow us to keep compatiblity with ADH5
+        """
+        pass
 
 
 class Vlan(Base):
