@@ -10,6 +10,7 @@ from adh.exceptions import UserNotFound, RoomNotFound, SwitchNotFound
 from adh.exceptions import VlanNotFound, PortNotFound
 from adh.util.date import string_to_date
 import datetime
+from sqlalchemy import inspect
 
 
 def _get_model_dict(model):
@@ -36,7 +37,8 @@ class ModificationTracker():
         """
         self._old_data = getattr(self, "_old_data", {})
         self._new_data = _get_model_dict(self)
-        self._new_data = self._new_data if self._new_data is not None else {}
+        if inspect(self).deleted:
+            self._new_data = {}
 
     def start_modif_tracking(self):
         """
