@@ -69,6 +69,7 @@ def test_switch_post_valid(api_client):
     )
     assert r.status_code == 201
     assert 'Location' in r.headers
+    assert r.headers['Location'] == 'http://localhost/switch/2'
 
 
 def test_switch_get_all_invalid_limit(api_client):
