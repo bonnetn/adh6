@@ -56,7 +56,10 @@ class RubyHashModificationTracker(ModificationTracker):
         self._end_modif_tracking()
 
         txt = ['--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n']
-        for key in self._new_data.keys():
+        for key in sorted(set().union(
+            self._new_data.keys(),
+            self._old_data.keys()
+        )):
             old = self._old_data.get(key)
             new = self._new_data.get(key)
 
