@@ -1,6 +1,6 @@
 from connexion import NoContent
 from adh.model.database import Database as db
-from adh.model.models import Adherent, Chambre, Adhesion
+from adh.model.models import Adherent, Chambre, Adhesion, Modification
 from adh.util.date import string_to_date
 from adh.exceptions import InvalidEmail, RoomNotFound, UserNotFound
 import datetime
@@ -70,19 +70,27 @@ def getUser(admin, username):
 def deleteUser(admin, username):
     """ [API] Delete the specified User from the database """
     s = db.get_db().get_session()
+
+    # Find the soon-to-be deleted user
     try:
-        s.delete(Adherent.find(s, username))
-        s.commit()
-        return NoContent, 204
+        a = Adherent.find(s, username) 
     except UserNotFound:
         return NoContent, 404
 
+    # Actually delete it
+    s.delete(a)
+    s.commit()
+
+    # Write it in the modification table
+    Modification.add_and_commit(s, a, a.get_ruby_modif(), admin)
+    return NoContent, 204
 
 @auth_simple_user
 def putUser(admin, username, body):
     """ [API] Create/Update user from the database """
     s = db.get_db().get_session()
 
+    # Create a valid object
     try:
         new_user = Adherent.from_dict(s, body)
     except InvalidEmail:
@@ -92,12 +100,20 @@ def putUser(admin, username, body):
     except ValueError:
         return "String must not be empty", 400
 
+    # Check if it already exists
     update = adherentExists(s, username)
     if update:
-        new_user.id = Adherent.find(s, username).id
-
-    s.merge(new_user)
+        current_adh = Adherent.find(s,username)
+        new_user.id = current_adh.id
+        current_adh.start_modif_tracking() # if so, start tracking for modifications
+        
+    # Merge the object (will create a new if it doesn't exist)
+    new_user = s.merge(new_user)
     s.commit()
+
+    # Create the corresponding modification
+    Modification.add_and_commit(s, new_user, new_user.get_ruby_modif(), admin)
+
     if update:
         return NoContent, 204
     else:
@@ -149,6 +165,10 @@ def updatePassword(admin, username, body):
     except UserNotFound:
         return NoContent, 404
 
+    a.start_modif_tracking()
     a.password = ntlm_hash(password)
     s.commit()
+
+    # Build the corresponding modification
+    Modification.add_and_commit(s, a, a.get_ruby_modif(), admin)
     return NoContent, 204

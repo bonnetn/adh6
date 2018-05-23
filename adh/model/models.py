@@ -10,18 +10,63 @@ from adh.exceptions import UserNotFound, RoomNotFound, SwitchNotFound
 from adh.exceptions import VlanNotFound, PortNotFound
 from adh.util.date import string_to_date
 from abc import ABC, abstractmethod
+from sqlalchemy import inspect
+import datetime
 
+def _get_model_dict(model):
+    """
+    Converts a SQLAlchemy row to a dictionnary of Column:Value
+    """
+    return dict((column.name, getattr(model, column.name))
+            for column in model.__table__.columns)
 
-class RubyHashModification(ABC):
-    @staticmethod
-    @abstractmethod
-    def get_hash_modif(old_data, new_data):
+class ModificationTracker():
+    """
+    Define a class on which you can record modification of this instance
+    """
+    __abstract__ = True
+
+    def _end_modif_tracking(self):
         """
-        Ruby serialize
-        allow us to keep compatiblity with ADH5
-        """
-        pass
+        Call this function when you want to stop recording modifications
+        This should not be called by the user.
 
+        If start_modif was not called before, it will consider that the object 
+        was created from scratch.
+        """
+        self._old_data = getattr(self, "_old_data", {})
+        self._new_data = _get_model_dict(self)
+        self._new_data = self._new_data if self._new_data is not None else {}
+
+    def start_modif_tracking(self):
+        """
+        Call this function when you want to start recording modifications
+        """
+        self._old_data = _get_model_dict(self)
+        self._new_data = None
+
+
+class RubyHashModificationTracker(ModificationTracker):
+    """
+    Define a class on which you can record modification and get the result as
+    ruby/hash modification (like ADH5 does)
+    """
+
+    def get_ruby_modif(self):
+        self._end_modif_tracking()
+
+        txt = ['--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess']
+        for key in self._new_data.keys():
+            old = self._old_data.get(key)
+            new = self._new_data.get(key)
+
+            old = old if old is not None else ""
+            new = new if new is not None else ""
+
+            if old != new:
+                txt+= ["{}:\n- {}\n- {}\n".format(key, old, new)]
+
+        return "\n".join(txt)
 
 class Vlan(Base):
     __tablename__ = 'vlans'
@@ -106,7 +151,7 @@ class Chambre(Base):
             yield "vlan", self.vlan.numero
 
 
-class Adherent(Base):
+class Adherent(Base, RubyHashModificationTracker):
     __tablename__ = 'adherents'
 
     id = Column(Integer, primary_key=True)
@@ -179,8 +224,6 @@ class Adherent(Base):
 
         if self.mode_association:
             yield "associationMode", self.mode_association
-
-
 class Caisse(Base):
     __tablename__ = 'caisse'
 
@@ -252,6 +295,19 @@ class Modification(Base):
     updated_at = Column(DateTime)
     utilisateur_id = Column(Integer, index=True)
 
+    @staticmethod
+    def add_and_commit(session, adherent, action, admin):
+        now = datetime.datetime.now()
+        m = Modification(
+                adherent_id = adherent.id,
+                action = action,
+                created_at = now,
+                updated_at = now,
+                utilisateur_id = admin.id
+                )
+        session.add(m)
+        session.commit()
+    
 
 class Ordinateur(Base):
     __tablename__ = 'ordinateurs'
