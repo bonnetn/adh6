@@ -37,6 +37,19 @@ def sample_member(sample_room):
     )
 
 
+@pytest.fixture
+def sample_member2(sample_room):
+    yield Adherent(
+        nom='Reignier',
+        prenom='Edouard',
+        mail='bgdu78@hotmail.fr',
+        login='reignier',
+        commentaires='Desauthent pour routeur',
+        password='a',
+        chambre=sample_room,
+    )
+
+
 def prep_db(session,
             sample_member,
             sample_room, sample_vlan):
@@ -117,6 +130,57 @@ def test_modification_multiple_changes_updated(api_client, sample_member):
         '- Hey I am a comment\n'
     )
     assert m.adherent_id == sample_member.id
+    now = datetime.datetime.now()
+    one_sec = datetime.timedelta(seconds=1)
+    assert now - m.created_at < one_sec
+    assert now - m.updated_at < one_sec
+    assert m.utilisateur_id == 1
+
+
+def test_modification_add_new_user(api_client, sample_member2):
+    s = db.get_db().get_session()
+
+    a = sample_member2
+    s.add(a)
+    s.flush()
+
+    # Build the corresponding modification
+    Modification.add_and_commit(s, a, a.get_ruby_modif(),
+                                Utilisateur.find_or_create(s, "test"))
+    q = s.query(Modification)
+    m = q.first()
+    print(m.action)
+    assert m.action == (
+        '--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n'
+        'id:\n'
+        '- \n'
+        '- 2\n'
+        'nom:\n'
+        '- \n'
+        '- Reignier\n'
+        'prenom:\n'
+        '- \n'
+        '- Edouard\n'
+        'mail:\n'
+        '- \n'
+        '- bgdu78@hotmail.fr\n'
+        'login:\n'
+        '- \n'
+        '- reignier\n'
+        'password:\n'
+        '- \n'
+        '- a\n'
+        'chambre_id:\n'
+        '- \n'
+        '- 1\n'
+        'commentaires:\n'
+        '- \n'
+        '- Desauthent pour routeur\n'
+        'mode_association:\n'
+        '- \n'
+        '- 2011-04-30 17:50:17\n'
+    )
+    assert m.adherent_id == a.id
     now = datetime.datetime.now()
     one_sec = datetime.timedelta(seconds=1)
     assert now - m.created_at < one_sec
