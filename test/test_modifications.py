@@ -185,3 +185,28 @@ def test_modification_add_new_user(api_client, sample_member2):
     assert now - m.created_at < one_sec
     assert now - m.updated_at < one_sec
     assert m.utilisateur_id == 1
+
+
+def test_modification_delete_member(api_client, sample_member):
+    s = db.get_db().get_session()
+    a = Adherent.find(s, sample_member.login)
+
+    a.start_modif_tracking()
+    print(a._old_data)
+    s.delete(a)
+    s.flush()
+
+    # Build the corresponding modification
+    Modification.add_and_commit(s, a, a.get_ruby_modif(),
+                                Utilisateur.find_or_create(s, "test"))
+    q = s.query(Modification)
+    m = q.first()
+    print(m.action)
+    assert m.action == (
+    )
+    assert m.adherent_id == sample_member.id
+    now = datetime.datetime.now()
+    one_sec = datetime.timedelta(seconds=1)
+    assert now - m.created_at < one_sec
+    assert now - m.updated_at < one_sec
+    assert m.utilisateur_id == 1
