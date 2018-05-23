@@ -3,7 +3,9 @@ import pytest
 from adh.model.database import Database as db
 from CONFIGURATION import TEST_DATABASE as db_settings
 from test.resource import base_url, TEST_HEADERS
-from adh.model.models import Adherent, Chambre, Vlan
+from adh.model.models import Adherent, Chambre, Vlan, Modification
+from dateutil import parser
+from adh.controller.user import ntlm_hash
 
 
 @pytest.fixture
@@ -94,6 +96,30 @@ def api_client(sample_member, sample_member2, sample_member3,
                 sample_room2,
                 sample_vlan)
         yield c
+
+
+def assert_user_in_db(body):
+    # Actually check that the object was inserted
+    s = db.get_db().get_session()
+    q = s.query(Adherent)
+    q = q.filter(Adherent.login == body["username"])
+    r = q.one()
+    assert r.nom == body["lastName"]
+    assert r.prenom == body["firstName"]
+    assert r.mail == body["email"]
+    print(r.date_de_depart)
+    assert r.date_de_depart == parser.parse(body["departureDate"]).date()
+    asso_time = parser.parse(body["associationMode"]).replace(tzinfo=None)
+    assert r.mode_association == asso_time
+    assert r.chambre.numero == body["roomNumber"]
+    assert r.commentaires == body["comment"]
+    assert r.login == body["username"]
+
+
+def assert_one_modification_created(username):
+    s = db.get_db().get_session()
+    q = s.query(Modification)
+    assert q.count() == 1
 
 
 def test_user_to_dict(sample_member):
@@ -325,12 +351,15 @@ def test_user_put_user_create(api_client):
         "username": "doe_john"
     }
     res = api_client.put(
-        '{}/user/{}'.format(base_url, ["username"]),
+        '{}/user/{}'.format(base_url, body["username"]),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS
     )
     assert res.status_code == 201
+
+    assert_user_in_db(body)
+    assert_one_modification_created(body["username"])
 
 
 def test_user_put_user_update(api_client):
@@ -351,6 +380,9 @@ def test_user_put_user_update(api_client):
         headers=TEST_HEADERS
     )
     assert res.status_code == 204
+
+    assert_user_in_db(body)
+    assert_one_modification_created(body["username"])
 
 
 def test_user_post_add_membership_not_found(api_client):
@@ -382,16 +414,24 @@ def test_user_post_add_membership_ok(api_client):
 
 
 def test_user_change_password_ok(api_client):
+    USERNAME = "dubois_j"
     body = {
         "password": "on;X\\${QG55Bd\"#NyL#+k:_xEdJrEDT7",
     }
     result = api_client.put(
-        '{}/user/{}/password/'.format(base_url, "dubois_j"),
+        '{}/user/{}/password/'.format(base_url, USERNAME),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS,
     )
     assert result.status_code == 204
+
+    s = db.get_db().get_session()
+    q = s.query(Adherent)
+    q = q.filter(Adherent.login == USERNAME)
+    r = q.one()
+    assert r.password == ntlm_hash(body["password"])
+    assert_one_modification_created(USERNAME)
 
 
 def test_user_change_password_user_not_exist(api_client):
