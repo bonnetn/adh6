@@ -18,7 +18,7 @@ from adh.auth import auth_simple_user
 
 
 @auth_simple_user
-def filterDevice(limit=100, offset=0, username=None, terms=None):
+def filterDevice(admin, limit=100, offset=0, username=None, terms=None):
     """ [API] Filter the list of the devices according to some criterias """
     s = db.get_db().get_session()
 
@@ -59,7 +59,7 @@ def filterDevice(limit=100, offset=0, username=None, terms=None):
 
 
 @auth_simple_user
-def putDevice(macAddress, body):
+def putDevice(admin, macAddress, body):
     """ [API] Put (update or create) a new device in the database """
     s = db.get_db().get_session()
     try:
@@ -122,7 +122,7 @@ def putDevice(macAddress, body):
 
 
 @auth_simple_user
-def getDevice(macAddress):
+def getDevice(admin, macAddress):
     """ [API] Return the device specified by the macAddress """
     s = db.get_db().get_session()
     if is_wireless(macAddress, s):
@@ -142,7 +142,7 @@ def getDevice(macAddress):
 
 
 @auth_simple_user
-def deleteDevice(macAddress):
+def deleteDevice(admin, macAddress):
     """ [API] Delete the specified device from the database """
     s = db.get_db().get_session()
     if is_wireless(macAddress, s):

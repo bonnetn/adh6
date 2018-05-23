@@ -423,6 +423,29 @@ class Utilisateur(Base):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
     access_token = Column(String(255))
+    
+    @staticmethod
+    def find(session, username):
+        """ Get the specified admin, if it does not exist, create it. """
+        try:
+            q = session.query(Utilisateur)
+            q = q.filter(Utilisateur.login == username)
+            return q.one()
+        except NoResultFound:
+            now = datetime.datetime.now()
+            new_admin = Utilisateur(
+                nom="-",
+                access=42,
+                email="-",
+                login=username,
+                password_hash="-",
+                created_at=now,
+                updated_at=now,
+                access_token="-"
+            )
+            session.add(new_admin)
+            return new_admin
+
 
 
 class Adhesion(Base):

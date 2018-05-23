@@ -16,7 +16,7 @@ def roomExists(session, roomNumber):
 
 
 @auth_simple_user
-def filterRoom(limit=100, offset=0, terms=None):
+def filterRoom(admin, limit=100, offset=0, terms=None):
     """ [API] Filter the list of the rooms """
     if limit < 0:
         return "Limit must be a positive integer", 400
@@ -42,7 +42,7 @@ def filterRoom(limit=100, offset=0, terms=None):
 
 
 @auth_simple_user
-def putRoom(roomNumber, body):
+def putRoom(admin, roomNumber, body):
     """ [API] Update/create a room in the database """
     s = db.get_db().get_session()
 
@@ -65,7 +65,7 @@ def putRoom(roomNumber, body):
 
 
 @auth_simple_user
-def getRoom(roomNumber):
+def getRoom(admin, roomNumber):
     """ [API] Get the room specified """
     s = db.get_db().get_session()
     try:
@@ -75,7 +75,7 @@ def getRoom(roomNumber):
 
 
 @auth_simple_user
-def deleteRoom(roomNumber):
+def deleteRoom(admin, roomNumber):
     """ [API] Delete room from the database """
     s = db.get_db().get_session()
     try:

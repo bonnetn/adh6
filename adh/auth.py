@@ -2,6 +2,8 @@ import requests
 import requests.exceptions
 from flask import current_app
 from connexion import NoContent
+from adh.model.database import Database as db
+from adh.model.models import Utilisateur
 
 
 def get_groups(token):
@@ -44,6 +46,8 @@ def auth_simple_user(f):
     def wrapper(*args, user, token_info, **kwargs):
         if current_app.config["TESTING"] \
            or "adh6_user" in token_info["groups"]:
-            return f(*args, **kwargs)
+            s = db.get_db().get_session()
+            admin = Utilisateur.find(s, user)
+            return f(admin, *args, **kwargs)
         return NoContent, 401
     return wrapper

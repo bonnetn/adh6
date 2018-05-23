@@ -7,7 +7,7 @@ from adh.auth import auth_simple_user
 
 
 @auth_simple_user
-def filterPort(limit=100, offset=0,
+def filterPort(admin, limit=100, offset=0,
                switchID=None, roomNumber=None, terms=None):
     """ [API] Filter the port list according to some criteria """
     if limit < 0:
@@ -43,7 +43,7 @@ def filterPort(limit=100, offset=0,
 
 
 @auth_simple_user
-def createPort(switchID, body):
+def createPort(admin, switchID, body):
     """ [API] Create a port in the database """
 
     session = db.get_db().get_session()
@@ -63,7 +63,7 @@ def createPort(switchID, body):
 
 
 @auth_simple_user
-def getPort(switchID, portID):
+def getPort(admin, switchID, portID):
     """ [API] Get a port from the database """
     s = db.get_db().get_session()
     try:
@@ -76,7 +76,7 @@ def getPort(switchID, portID):
 
 
 @auth_simple_user
-def updatePort(switchID, portID, body):
+def updatePort(admin, switchID, portID, body):
     """ [API] Update a port in the database """
 
     s = db.get_db().get_session()
@@ -98,7 +98,7 @@ def updatePort(switchID, portID, body):
 
 
 @auth_simple_user
-def deletePort(switchID, portID):
+def deletePort(admin, switchID, portID):
     """ [API] Delete a port from the database """
     session = db.get_db().get_session()
     try:

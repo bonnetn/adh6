@@ -19,7 +19,7 @@ def adherentExists(session, username):
 
 
 @auth_simple_user
-def filterUser(limit=100, offset=0, terms=None, roomNumber=None):
+def filterUser(admin, limit=100, offset=0, terms=None, roomNumber=None):
     """ [API] Filter the list of users from the the database """
     if limit < 0:
         return "Limit must be positive", 400
@@ -57,7 +57,7 @@ def filterUser(limit=100, offset=0, terms=None, roomNumber=None):
 
 
 @auth_simple_user
-def getUser(username):
+def getUser(admin, username):
     """ [API] Get the specified user from the database """
     s = db.get_db().get_session()
     try:
@@ -67,7 +67,7 @@ def getUser(username):
 
 
 @auth_simple_user
-def deleteUser(username):
+def deleteUser(admin, username):
     """ [API] Delete the specified User from the database """
     s = db.get_db().get_session()
     try:
@@ -79,7 +79,7 @@ def deleteUser(username):
 
 
 @auth_simple_user
-def putUser(username, body):
+def putUser(admin, username, body):
     """ [API] Create/Update user from the database """
     s = db.get_db().get_session()
 
@@ -105,7 +105,7 @@ def putUser(username, body):
 
 
 @auth_simple_user
-def addMembership(username, body):
+def addMembership(admin, username, body):
     """ [API] Add a membership record in the database """
 
     s = db.get_db().get_session()
@@ -140,7 +140,7 @@ def ntlm_hash(txt):
 
 
 @auth_simple_user
-def updatePassword(username, body):
+def updatePassword(admin, username, body):
     password = body["password"]
     s = db.get_db().get_session()
 
