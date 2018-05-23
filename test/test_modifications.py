@@ -64,7 +64,7 @@ def test_modification_pass_updated(api_client, sample_member):
 
     a.start_modif_tracking()
     a.password = "TESTESTEST"
-    s.commit()
+    s.flush()
 
     # Build the corresponding modification
     Modification.add_and_commit(s, a, a.get_ruby_modif(),
@@ -76,6 +76,45 @@ def test_modification_pass_updated(api_client, sample_member):
         'password:\n'
         '- a\n'
         '- TESTESTEST\n'
+    )
+    assert m.adherent_id == sample_member.id
+    now = datetime.datetime.now()
+    one_sec = datetime.timedelta(seconds=1)
+    assert now - m.created_at < one_sec
+    assert now - m.updated_at < one_sec
+    assert m.utilisateur_id == 1
+
+
+def test_modification_multiple_changes_updated(api_client, sample_member):
+    s = db.get_db().get_session()
+    a = Adherent.find(s, sample_member.login)
+
+    a.start_modif_tracking()
+    a.commentaires = "Hey I am a comment"
+    a.nom = "Test"
+    a.prenom = "Test"
+    a.mail = "ono@no.fr"
+    s.flush()
+
+    # Build the corresponding modification
+    Modification.add_and_commit(s, a, a.get_ruby_modif(),
+                                Utilisateur.find_or_create(s, "test"))
+    q = s.query(Modification)
+    m = q.first()
+    assert m.action == (
+        '--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n'
+        'nom:\n'
+        '- Dubois\n'
+        '- Test\n'
+        'prenom:\n'
+        '- Jean-Louis\n'
+        '- Test\n'
+        'mail:\n'
+        '- j.dubois@free.fr\n'
+        '- ono@no.fr\n'
+        'commentaires:\n'
+        '- \n'
+        '- Hey I am a comment\n'
     )
     assert m.adherent_id == sample_member.id
     now = datetime.datetime.now()
