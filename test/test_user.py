@@ -97,7 +97,13 @@ def api_client(sample_member, sample_member2, sample_member3,
 
 
 def test_user_to_dict(sample_member):
-    dict(sample_member)
+    dict_member = {'email': 'j.dubois@free.fr',
+                   'firstName': 'Jean-Louis',
+                   'lastName': 'Dubois',
+                   'username': 'dubois_j',
+                   'roomNumber': 1234}
+
+    assert dict(sample_member) == dict_member
 
 
 def test_user_filter_all(api_client):
