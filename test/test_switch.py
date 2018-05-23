@@ -32,8 +32,25 @@ def api_client(sample_switch):
         yield c
 
 
+def assert_switch_in_db(body):
+    s = db.get_db().get_session()
+    q = s.query(Switch)
+    q = q.filter(Switch.ip == body["ip"])
+    sw = q.one()
+    assert sw.ip == body["ip"]
+    assert sw.communaute == body["community"]
+    assert sw.description == body["description"]
+
+
 def test_switch_to_dict(sample_switch):
-    dict(sample_switch)
+    dict_sw = {
+        'id': 1,
+        'ip': '192.168.102.2',
+        'community': 'communaute',
+        'description': 'Switch'
+    }
+
+    assert dict(sample_switch) == dict_sw
 
 
 @pytest.mark.parametrize("test_ip", INVALID_IP)
@@ -70,6 +87,7 @@ def test_switch_post_valid(api_client):
     assert r.status_code == 201
     assert 'Location' in r.headers
     assert r.headers['Location'] == 'http://localhost/switch/2'
+    assert_switch_in_db(sample_switch)
 
 
 def test_switch_get_all_invalid_limit(api_client):
@@ -184,15 +202,7 @@ def test_switch_update_existant_switch(api_client):
         headers=TEST_HEADERS
     )
     assert r.status_code == 204
-
-    r = api_client.get(
-        "{}/switch/{}".format(base_url, 1),
-        headers=TEST_HEADERS,
-    )
-    assert r.status_code == 200
-    tbl = json.loads(r.data.decode('utf-8'))
-    del tbl["id"]
-    assert tbl == sample_switch, "The switch wasn't modified"
+    assert_switch_in_db(sample_switch)
 
 
 def test_switch_update_non_existant_switch(api_client):
@@ -217,12 +227,11 @@ def test_switch_delete_existant_switch(api_client):
         headers=TEST_HEADERS
     )
     assert r.status_code == 204
+    s = db.get_db().get_session()
+    q = s.query(Switch)
+    q = q.filter(Switch.id == 1)
 
-    r = api_client.get(
-        "{}/switch/{}".format(base_url, 1),
-        headers=TEST_HEADERS,
-    )
-    assert r.status_code == 404
+    assert not s.query(q.exists()).scalar()
 
 
 def test_switch_delete_non_existant_switch(api_client):
