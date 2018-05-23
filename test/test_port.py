@@ -89,8 +89,18 @@ def api_client(sample_port1, sample_port2, sample_switch1, sample_switch2,
         yield c
 
 
+def assert_port_in_db(body):
+    s = db.get_db().get_session()
+    q = s.query(Port)
+    q = q.filter(Port.numero == body["portNumber"])
+    p = q.one()
+    assert body["portNumber"] == p.numero
+    assert body["roomNumber"] == p.chambre.numero
+    assert body["switchID"] == p.switch.id
+
+
 def test_port_to_dict(sample_port1):
-    dict(sample_port1)
+    assert dict(sample_port1) == {'id': None, 'portNumber': '0/0/1'}
 
 
 def test_port_get_filter_all(api_client):
@@ -277,6 +287,7 @@ def test_port_put_update_port(api_client, sample_switch1, sample_port1):
     )
     assert r.status_code == 204
     assert sample_port1.numero == portNumber
+    assert_port_in_db(body)
 
 
 def test_port_put_update_non_existant_port(api_client,
@@ -309,6 +320,11 @@ def test_port_put_delete_port(api_client, sample_switch1, sample_port1):
         headers=TEST_HEADERS,
     )
     assert r.status_code == 204
+
+    s = db.get_db().get_session()
+    q = s.query(Port)
+    q = q.filter(Port.id == sample_port1.id)
+    assert not s.query(q.exists()).scalar()
 
 
 def test_port_put_delete_non_existant_port(api_client,
