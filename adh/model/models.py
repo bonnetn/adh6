@@ -55,7 +55,7 @@ class RubyHashModificationTracker(ModificationTracker):
     def get_ruby_modif(self):
         self._end_modif_tracking()
 
-        txt = ['--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess']
+        txt = ['--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n']
         for key in self._new_data.keys():
             old = self._old_data.get(key)
             new = self._new_data.get(key)
@@ -66,7 +66,7 @@ class RubyHashModificationTracker(ModificationTracker):
             if old != new:
                 txt += ["{}:\n- {}\n- {}\n".format(key, old, new)]
 
-        return "\n".join(txt)
+        return "".join(txt)
 
 
 class Vlan(Base):
