@@ -73,7 +73,7 @@ def deleteUser(admin, username):
 
     # Find the soon-to-be deleted user
     try:
-        a = Adherent.find(s, username) 
+        a = Adherent.find(s, username)
     except UserNotFound:
         return NoContent, 404
 
@@ -84,6 +84,7 @@ def deleteUser(admin, username):
     # Write it in the modification table
     Modification.add_and_commit(s, a, a.get_ruby_modif(), admin)
     return NoContent, 204
+
 
 @auth_simple_user
 def putUser(admin, username, body):
@@ -103,13 +104,14 @@ def putUser(admin, username, body):
     # Check if it already exists
     update = adherentExists(s, username)
     if update:
-        current_adh = Adherent.find(s,username)
+        current_adh = Adherent.find(s, username)
         new_user.id = current_adh.id
-        current_adh.start_modif_tracking() # if so, start tracking for modifications
-        
+        # if so, start tracking for modifications
+        current_adh.start_modif_tracking()
+
     # Merge the object (will create a new if it doesn't exist)
     new_user = s.merge(new_user)
-    s.commit()
+    s.flush()
 
     # Create the corresponding modification
     Modification.add_and_commit(s, new_user, new_user.get_ruby_modif(), admin)
@@ -167,7 +169,7 @@ def updatePassword(admin, username, body):
 
     a.start_modif_tracking()
     a.password = ntlm_hash(password)
-    s.commit()
+    s.flush()
 
     # Build the corresponding modification
     Modification.add_and_commit(s, a, a.get_ruby_modif(), admin)
