@@ -79,7 +79,7 @@ def deleteUser(admin, username):
 
     # Actually delete it
     s.delete(a)
-    s.commit()
+    s.flush()
 
     # Write it in the modification table
     Modification.add_and_commit(s, a, a.get_ruby_modif(), admin)
