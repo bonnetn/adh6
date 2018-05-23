@@ -68,7 +68,7 @@ def test_modification_pass_updated(api_client, sample_member):
 
     # Build the corresponding modification
     Modification.add_and_commit(s, a, a.get_ruby_modif(),
-                                Utilisateur.find(s, "test"))
+                                Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
     assert m.action == (

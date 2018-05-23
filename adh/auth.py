@@ -47,7 +47,7 @@ def auth_simple_user(f):
         if current_app.config["TESTING"] \
            or "adh6_user" in token_info["groups"]:
             s = db.get_db().get_session()
-            admin = Utilisateur.find(s, user)
+            admin = Utilisateur.find_or_create(s, user)
             return f(admin, *args, **kwargs)
         return NoContent, 401
     return wrapper

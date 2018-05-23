@@ -484,7 +484,7 @@ class Utilisateur(Base):
     access_token = Column(String(255))
 
     @staticmethod
-    def find(session, username):
+    def find_or_create(session, username):
         """ Get the specified admin, if it does not exist, create it. """
         try:
             q = session.query(Utilisateur)
