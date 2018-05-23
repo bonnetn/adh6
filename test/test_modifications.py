@@ -192,7 +192,6 @@ def test_modification_delete_member(api_client, sample_member):
     a = Adherent.find(s, sample_member.login)
 
     a.start_modif_tracking()
-    print(a._old_data)
     s.delete(a)
     s.flush()
 
@@ -201,8 +200,32 @@ def test_modification_delete_member(api_client, sample_member):
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
-    print(m.action)
     assert m.action == (
+        '--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n'
+        'chambre_id:\n'
+        '- 1\n'
+        '- \n'
+        'id:\n'
+        '- 1\n'
+        '- \n'
+        'login:\n'
+        '- dubois_j\n'
+        '- \n'
+        'mail:\n'
+        '- j.dubois@free.fr\n'
+        '- \n'
+        'mode_association:\n'
+        '- 2011-04-30 17:50:17\n'
+        '- \n'
+        'nom:\n'
+        '- Dubois\n'
+        '- \n'
+        'password:\n'
+        '- a\n'
+        '- \n'
+        'prenom:\n'
+        '- Jean-Louis\n'
+        '- \n'
     )
     assert m.adherent_id == sample_member.id
     now = datetime.datetime.now()
