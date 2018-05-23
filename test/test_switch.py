@@ -70,14 +70,6 @@ def test_switch_post_valid(api_client):
     assert r.status_code == 201
     assert 'Location' in r.headers
 
-    # Make sure the data is now fetchable
-    r = api_client.get(
-        r.headers["Location"],
-        headers=TEST_HEADERS
-    )
-    assert r.status_code == 200, "Couldn't fetch the newly created switch"
-    assert json.loads(r.data.decode('utf-8'))
-
 
 def test_switch_get_all_invalid_limit(api_client):
     r = api_client.get(
