@@ -503,6 +503,7 @@ class Utilisateur(Base):
                 access_token="-"
             )
             session.add(new_admin)
+            session.flush()
             return new_admin
 
 
