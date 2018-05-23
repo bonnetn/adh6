@@ -9,16 +9,16 @@ from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
 from adh.exceptions import UserNotFound, RoomNotFound, SwitchNotFound
 from adh.exceptions import VlanNotFound, PortNotFound
 from adh.util.date import string_to_date
-from abc import ABC, abstractmethod
-from sqlalchemy import inspect
 import datetime
+
 
 def _get_model_dict(model):
     """
     Converts a SQLAlchemy row to a dictionnary of Column:Value
     """
     return dict((column.name, getattr(model, column.name))
-            for column in model.__table__.columns)
+                for column in model.__table__.columns)
+
 
 class ModificationTracker():
     """
@@ -31,7 +31,7 @@ class ModificationTracker():
         Call this function when you want to stop recording modifications
         This should not be called by the user.
 
-        If start_modif was not called before, it will consider that the object 
+        If start_modif was not called before, it will consider that the object
         was created from scratch.
         """
         self._old_data = getattr(self, "_old_data", {})
@@ -64,9 +64,10 @@ class RubyHashModificationTracker(ModificationTracker):
             new = new if new is not None else ""
 
             if old != new:
-                txt+= ["{}:\n- {}\n- {}\n".format(key, old, new)]
+                txt += ["{}:\n- {}\n- {}\n".format(key, old, new)]
 
         return "\n".join(txt)
+
 
 class Vlan(Base):
     __tablename__ = 'vlans'
@@ -224,6 +225,8 @@ class Adherent(Base, RubyHashModificationTracker):
 
         if self.mode_association:
             yield "associationMode", self.mode_association
+
+
 class Caisse(Base):
     __tablename__ = 'caisse'
 
@@ -299,15 +302,15 @@ class Modification(Base):
     def add_and_commit(session, adherent, action, admin):
         now = datetime.datetime.now()
         m = Modification(
-                adherent_id = adherent.id,
-                action = action,
-                created_at = now,
-                updated_at = now,
-                utilisateur_id = admin.id
+                adherent_id=adherent.id,
+                action=action,
+                created_at=now,
+                updated_at=now,
+                utilisateur_id=admin.id
                 )
         session.add(m)
         session.commit()
-    
+
 
 class Ordinateur(Base):
     __tablename__ = 'ordinateurs'
@@ -479,7 +482,7 @@ class Utilisateur(Base):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
     access_token = Column(String(255))
-    
+
     @staticmethod
     def find(session, username):
         """ Get the specified admin, if it does not exist, create it. """
@@ -501,7 +504,6 @@ class Utilisateur(Base):
             )
             session.add(new_admin)
             return new_admin
-
 
 
 class Adhesion(Base):
