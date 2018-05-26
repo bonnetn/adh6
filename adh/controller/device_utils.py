@@ -1,4 +1,4 @@
-from adh.model.models import Adherent, Portable, Ordinateur
+from adh.model.models import Adherent, Portable, Ordinateur, Modification
 from sqlalchemy.sql.expression import literal
 from sqlalchemy.types import String
 
@@ -25,8 +25,11 @@ def create_wireless_device(admin, body, s):
         mac=body['mac'],
         adherent=Adherent.find(s, body['username']),
     )
+
     s.add(dev)
     s.flush()
+
+    Modification.add_and_commit(s, dev.adherent, dev.get_ruby_modif(), admin)
 
 
 def create_wired_device(admin, body, s):
@@ -37,17 +40,24 @@ def create_wired_device(admin, body, s):
         ipv6=body['ipv6Address'],
         adherent=Adherent.find(s, body['username']),
     )
+
     s.add(dev)
     s.flush()
+
+    Modification.add_and_commit(s, dev.adherent, dev.get_ruby_modif(), admin)
 
 
 def update_wireless_device(admin, macAddress, body, s):
     """ Update a wireless device in the database """
     q = s.query(Portable).filter(Portable.mac == macAddress)
     dev = q.one()
+
+    dev.start_modif_tracking()
     dev.mac = body['mac']
     dev.adherent = Adherent.find(s, body['username'])
     s.flush()
+
+    Modification.add_and_commit(s, dev.adherent, dev.get_ruby_modif(), admin)
 
 
 def update_wired_device(admin, macAddress, body, s):
@@ -55,27 +65,38 @@ def update_wired_device(admin, macAddress, body, s):
     q = s.query(Ordinateur).filter(Ordinateur.mac == macAddress)
     dev = q.one()
 
+    dev.start_modif_tracking()
     dev.mac = body['mac']
     dev.ip = body['ipAddress']
     dev.ipv6 = body['ipv6Address']
     dev.adherent = Adherent.find(s, body['username'])
     s.flush()
 
-
-def delete_wireless_device(admin, macAddress, s):
-    """ Delete a wireless device from the database """
-    q = s.query(Portable).filter(Portable.mac == macAddress)
-    dev = q.one()
-    s.delete(dev)
-    s.flush()
+    Modification.add_and_commit(s, dev.adherent, dev.get_ruby_modif(), admin)
 
 
 def delete_wired_device(admin, macAddress, s):
     """ Delete a wired device from the databse """
     q = s.query(Ordinateur).filter(Ordinateur.mac == macAddress)
     dev = q.one()
+
+    dev.start_modif_tracking()
     s.delete(dev)
     s.flush()
+
+    Modification.add_and_commit(s, dev.adherent, dev.get_ruby_modif(), admin)
+
+
+def delete_wireless_device(admin, macAddress, s):
+    """ Delete a wireless device from the database """
+    q = s.query(Portable).filter(Portable.mac == macAddress)
+    dev = q.one()
+
+    dev.start_modif_tracking()
+    s.delete(dev)
+    s.flush()
+
+    Modification.add_and_commit(s, dev.adherent, dev.get_ruby_modif(), admin)
 
 
 def get_all_devices(s):
