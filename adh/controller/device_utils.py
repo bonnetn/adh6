@@ -26,7 +26,7 @@ def create_wireless_device(admin, body, s):
         adherent=Adherent.find(s, body['username']),
     )
     s.add(dev)
-    s.commit()
+    s.flush()
 
 
 def create_wired_device(admin, body, s):
@@ -38,7 +38,7 @@ def create_wired_device(admin, body, s):
         adherent=Adherent.find(s, body['username']),
     )
     s.add(dev)
-    s.commit()
+    s.flush()
 
 
 def update_wireless_device(admin, macAddress, body, s):
@@ -47,7 +47,7 @@ def update_wireless_device(admin, macAddress, body, s):
     dev = q.one()
     dev.mac = body['mac']
     dev.adherent = Adherent.find(s, body['username'])
-    s.commit()
+    s.flush()
 
 
 def update_wired_device(admin, macAddress, body, s):
@@ -59,7 +59,7 @@ def update_wired_device(admin, macAddress, body, s):
     dev.ip = body['ipAddress']
     dev.ipv6 = body['ipv6Address']
     dev.adherent = Adherent.find(s, body['username'])
-    s.commit()
+    s.flush()
 
 
 def delete_wireless_device(admin, macAddress, s):
@@ -67,7 +67,7 @@ def delete_wireless_device(admin, macAddress, s):
     q = s.query(Portable).filter(Portable.mac == macAddress)
     dev = q.one()
     s.delete(dev)
-    s.commit()
+    s.flush()
 
 
 def delete_wired_device(admin, macAddress, s):
@@ -75,7 +75,7 @@ def delete_wired_device(admin, macAddress, s):
     q = s.query(Ordinateur).filter(Ordinateur.mac == macAddress)
     dev = q.one()
     s.delete(dev)
-    s.commit()
+    s.flush()
 
 
 def get_all_devices(s):
