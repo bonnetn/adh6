@@ -77,12 +77,19 @@ def deleteUser(admin, username):
     except UserNotFound:
         return NoContent, 404
 
-    # Actually delete it
-    s.delete(a)
-    s.flush()
+    try:
+        # if so, start tracking for modifications
+        a.start_modif_tracking()
 
-    # Write it in the modification table
-    Modification.add_and_commit(s, a, a.get_ruby_modif(), admin)
+        # Actually delete it
+        s.delete(a)
+        s.flush()
+
+        # Write it in the modification table
+        Modification.add_and_commit(s, a, a.get_ruby_modif(), admin)
+    except Exception:
+        s.rollback()
+        raise
     return NoContent, 204
 
 
@@ -101,20 +108,25 @@ def putUser(admin, username, body):
     except ValueError:
         return "String must not be empty", 400
 
-    # Check if it already exists
-    update = adherentExists(s, username)
-    if update:
-        current_adh = Adherent.find(s, username)
-        new_user.id = current_adh.id
-        # if so, start tracking for modifications
-        current_adh.start_modif_tracking()
+    try:
+        # Check if it already exists
+        update = adherentExists(s, username)
 
-    # Merge the object (will create a new if it doesn't exist)
-    new_user = s.merge(new_user)
-    s.flush()
+        if update:
+            current_adh = Adherent.find(s, username)
+            new_user.id = current_adh.id
+            current_adh.start_modif_tracking()
 
-    # Create the corresponding modification
-    Modification.add_and_commit(s, new_user, new_user.get_ruby_modif(), admin)
+        # Merge the object (will create a new if it doesn't exist)
+        new_user = s.merge(new_user)
+        s.flush()
+
+        # Create the corresponding modification
+        Modification.add_and_commit(s, new_user,
+                                    new_user.get_ruby_modif(), admin)
+    except Exception:
+        s.rollback()
+        raise
 
     if update:
         return NoContent, 204
@@ -167,10 +179,16 @@ def updatePassword(admin, username, body):
     except UserNotFound:
         return NoContent, 404
 
-    a.start_modif_tracking()
-    a.password = ntlm_hash(password)
-    s.flush()
+    try:
+        a.start_modif_tracking()
+        a.password = ntlm_hash(password)
+        s.flush()
 
-    # Build the corresponding modification
-    Modification.add_and_commit(s, a, a.get_ruby_modif(), admin)
+        # Build the corresponding modification
+        Modification.add_and_commit(s, a, a.get_ruby_modif(), admin)
+
+    except Exception:
+        s.rollback()
+        raise
+
     return NoContent, 204
