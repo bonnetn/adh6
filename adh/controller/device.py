@@ -103,7 +103,10 @@ def putDevice(admin, macAddress, body):
             else:
                 create_wireless_device(admin, body, s)
 
+            s.commit()
             return NoContent, 201
+
+        s.commit()
         return NoContent, 204
 
     except UserNotFound:
