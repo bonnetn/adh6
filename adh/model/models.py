@@ -57,7 +57,8 @@ class RubyHashModificationTracker(ModificationTracker):
     def get_ruby_modif(self):
         self._end_modif_tracking()
 
-        txt = ['--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n']
+        base_str = '{} !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n'
+        txt = [base_str.format(self._ruby_hash_prefix)]
         for key in sorted(set().union(
             self._new_data.keys(),
             self._old_data.keys()
@@ -159,6 +160,7 @@ class Chambre(Base):
 
 class Adherent(Base, RubyHashModificationTracker):
     __tablename__ = 'adherents'
+    _ruby_hash_prefix = '---'
 
     id = Column(Integer, primary_key=True)
     nom = Column(String(255))
@@ -317,8 +319,9 @@ class Modification(Base):
         session.commit()
 
 
-class Ordinateur(Base):
+class Ordinateur(Base, RubyHashModificationTracker):
     __tablename__ = 'ordinateurs'
+    _ruby_hash_prefix = 'ordinateurs:'
 
     id = Column(Integer, primary_key=True)
     mac = Column(String(255))
@@ -360,8 +363,9 @@ class Ordinateur(Base):
             yield "username", self.adherent.login
 
 
-class Portable(Base):
+class Portable(Base, RubyHashModificationTracker):
     __tablename__ = 'portables'
+    _ruby_hash_prefix = 'portables:'
 
     id = Column(Integer, primary_key=True)
     mac = Column(String(255))
