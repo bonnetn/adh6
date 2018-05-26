@@ -76,32 +76,33 @@ def putDevice(admin, macAddress, body):
 
         if wired and wireless:
             if wanted_type == "wired":
-                delete_wireless_device(macAddress, s)
-                update_wired_device(macAddress, body, s)
+                delete_wireless_device(admin, macAddress, s)
+                update_wired_device(admin, macAddress, body, s)
             else:
-                delete_wired_device(macAddress, s)
-                update_wireless_device(macAddress, body, s)
+                delete_wired_device(admin, macAddress, s)
+                update_wireless_device(admin, macAddress, body, s)
         elif wired:
             if wanted_type == "wireless":
-                delete_wired_device(macAddress, s)
-                create_wireless_device(body, s)
+                delete_wired_device(admin, macAddress, s)
+                create_wireless_device(admin, body, s)
             else:
-                update_wired_device(macAddress, body, s)
+                update_wired_device(admin, macAddress, body, s)
         elif wireless:
             if wanted_type == "wired":
-                delete_wireless_device(macAddress, s)
-                create_wired_device(body, s)
+                delete_wireless_device(admin, macAddress, s)
+                create_wired_device(admin, body, s)
             else:
-                update_wireless_device(macAddress, body, s)
+                update_wireless_device(admin, macAddress, body, s)
         else:  # Create device
             if body["mac"] != macAddress:
                 return 'The MAC address in the query ' + \
                        'and in the body don\'t match', 400
 
             if wanted_type == "wired":
-                create_wired_device(body, s)
+                create_wired_device(admin, body, s)
             else:
-                create_wireless_device(body, s)
+                create_wireless_device(admin, body, s)
+
             return NoContent, 201
         return NoContent, 204
 
@@ -146,11 +147,11 @@ def deleteDevice(admin, macAddress):
     """ [API] Delete the specified device from the database """
     s = db.get_db().get_session()
     if is_wireless(macAddress, s):
-        delete_wireless_device(macAddress, s)
+        delete_wireless_device(admin, macAddress, s)
         return NoContent, 204
 
     elif is_wired(macAddress, s):
-        delete_wired_device(macAddress, s)
+        delete_wired_device(admin, macAddress, s)
         return NoContent, 204
 
     else:

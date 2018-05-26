@@ -19,7 +19,7 @@ def is_wireless(macAddress, s):
     return s.query(queryWireless.exists()).scalar()
 
 
-def create_wireless_device(body, s):
+def create_wireless_device(admin, body, s):
     """ Create a wireless device in the database """
     dev = Portable(
         mac=body['mac'],
@@ -29,7 +29,7 @@ def create_wireless_device(body, s):
     s.commit()
 
 
-def create_wired_device(body, s):
+def create_wired_device(admin, body, s):
     """ Create a wired device in the database """
     dev = Ordinateur(
         mac=body['mac'],
@@ -41,7 +41,7 @@ def create_wired_device(body, s):
     s.commit()
 
 
-def update_wireless_device(macAddress, body, s):
+def update_wireless_device(admin, macAddress, body, s):
     """ Update a wireless device in the database """
     q = s.query(Portable).filter(Portable.mac == macAddress)
     dev = q.one()
@@ -50,7 +50,7 @@ def update_wireless_device(macAddress, body, s):
     s.commit()
 
 
-def update_wired_device(macAddress, body, s):
+def update_wired_device(admin, macAddress, body, s):
     """ Update a wired device in the database """
     q = s.query(Ordinateur).filter(Ordinateur.mac == macAddress)
     dev = q.one()
@@ -62,7 +62,7 @@ def update_wired_device(macAddress, body, s):
     s.commit()
 
 
-def delete_wireless_device(macAddress, s):
+def delete_wireless_device(admin, macAddress, s):
     """ Delete a wireless device from the database """
     q = s.query(Portable).filter(Portable.mac == macAddress)
     dev = q.one()
@@ -70,7 +70,7 @@ def delete_wireless_device(macAddress, s):
     s.commit()
 
 
-def delete_wired_device(macAddress, s):
+def delete_wired_device(admin, macAddress, s):
     """ Delete a wired device from the databse """
     q = s.query(Ordinateur).filter(Ordinateur.mac == macAddress)
     dev = q.one()
