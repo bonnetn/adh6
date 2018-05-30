@@ -2,7 +2,7 @@ import pytest
 from adh.model.database import Database as db
 from CONFIGURATION import TEST_DATABASE as db_settings
 from adh.model.models import (
-    Adherent, Chambre, Vlan, Modification, Utilisateur, Ordinateur
+    Adherent, Chambre, Vlan, Modification, Utilisateur, Ordinateur, Portable
 )
 import datetime
 
@@ -59,6 +59,14 @@ def wired_device(sample_member):
         dns='bonnet_n4651',
         adherent=sample_member,
         ipv6='e91f:bd71:56d9:13f3:5499:25b:cc84:f7e4'
+    )
+
+
+@pytest.fixture
+def wireless_device(sample_member):
+    yield Portable(
+        mac='80:65:F3:FC:44:A9',
+        adherent=sample_member,
     )
 
 
@@ -282,6 +290,39 @@ def test_add_device_wired(api_client, wired_device, sample_member):
         "mac:\n"
         "- \n"
         "- 96:24:F6:D0:48:A7\n"
+    )
+    assert m.adherent_id == sample_member.id
+    now = datetime.datetime.now()
+    one_sec = datetime.timedelta(seconds=1)
+    assert now - m.created_at < one_sec
+    assert now - m.updated_at < one_sec
+    assert m.utilisateur_id == 2
+
+
+
+def test_add_device_wireless(api_client, wireless_device, sample_member):
+
+    s = db.get_db().get_session()
+    s.add(wireless_device)
+    s.flush()
+
+    # Build the corresponding modification
+    Modification.add_and_commit(s, wireless_device,
+                                Utilisateur.find_or_create(s, "test"))
+    q = s.query(Modification)
+    m = q.first()
+    print(m.action)
+    assert m.action == (
+        "portables: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
+        "adherent_id:\n"
+        "- \n"
+        "- 1\n"
+        "id:\n"
+        "- \n"
+        "- 1\n"
+        "mac:\n"
+        "- \n"
+        "- 80:65:F3:FC:44:A9\n"
     )
     assert m.adherent_id == sample_member.id
     now = datetime.datetime.now()
