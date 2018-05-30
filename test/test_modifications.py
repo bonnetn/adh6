@@ -26,18 +26,6 @@ def sample_room(sample_vlan):
 
 
 @pytest.fixture
-def sample_device(sample_room):
-    yield Adherent(
-        nom='Dubois',
-        prenom='Jean-Louis',
-        mail='j.dubois@free.fr',
-        login='dubois_j',
-        password='a',
-        chambre=sample_room,
-    )
-
-
-@pytest.fixture
 def sample_member(sample_room):
     yield Adherent(
         nom='Dubois',
