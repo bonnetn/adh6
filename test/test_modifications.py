@@ -57,6 +57,9 @@ def prep_db(session,
         sample_room, sample_vlan,
         sample_member])
     session.commit()
+    Utilisateur.find_or_create(session, "BadUser")
+    Utilisateur.find_or_create(session, "test")
+    Utilisateur.find_or_create(session, "BadUser2")
 
 
 @pytest.fixture
@@ -95,7 +98,7 @@ def test_modification_pass_updated(api_client, sample_member):
     one_sec = datetime.timedelta(seconds=1)
     assert now - m.created_at < one_sec
     assert now - m.updated_at < one_sec
-    assert m.utilisateur_id == 1
+    assert m.utilisateur_id == 2
 
 
 def test_modification_multiple_changes_updated(api_client, sample_member):
@@ -134,7 +137,7 @@ def test_modification_multiple_changes_updated(api_client, sample_member):
     one_sec = datetime.timedelta(seconds=1)
     assert now - m.created_at < one_sec
     assert now - m.updated_at < one_sec
-    assert m.utilisateur_id == 1
+    assert m.utilisateur_id == 2
 
 
 def test_modification_add_new_user(api_client, sample_member2):
@@ -184,7 +187,7 @@ def test_modification_add_new_user(api_client, sample_member2):
     one_sec = datetime.timedelta(seconds=1)
     assert now - m.created_at < one_sec
     assert now - m.updated_at < one_sec
-    assert m.utilisateur_id == 1
+    assert m.utilisateur_id == 2
 
 
 def test_modification_delete_member(api_client, sample_member):
@@ -232,4 +235,4 @@ def test_modification_delete_member(api_client, sample_member):
     one_sec = datetime.timedelta(seconds=1)
     assert now - m.created_at < one_sec
     assert now - m.updated_at < one_sec
-    assert m.utilisateur_id == 1
+    assert m.utilisateur_id == 2
