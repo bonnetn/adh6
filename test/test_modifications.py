@@ -2,7 +2,7 @@ import pytest
 from adh.model.database import Database as db
 from CONFIGURATION import TEST_DATABASE as db_settings
 from adh.model.models import (
-    Adherent, Chambre, Vlan, Modification, Utilisateur
+    Adherent, Chambre, Vlan, Modification, Utilisateur, Ordinateur
 )
 import datetime
 
@@ -22,6 +22,18 @@ def sample_room(sample_vlan):
         numero=1234,
         description='chambre 1',
         vlan=sample_vlan,
+    )
+
+
+@pytest.fixture
+def sample_device(sample_room):
+    yield Adherent(
+        nom='Dubois',
+        prenom='Jean-Louis',
+        mail='j.dubois@free.fr',
+        login='dubois_j',
+        password='a',
+        chambre=sample_room,
     )
 
 
@@ -50,12 +62,24 @@ def sample_member2(sample_room):
     )
 
 
+
+@pytest.fixture
+def wired_device(sample_member):
+    yield Ordinateur(
+        mac='96:24:F6:D0:48:A7',
+        ip='157.159.42.42',
+        dns='bonnet_n4651',
+        adherent=sample_member,
+        ipv6='e91f:bd71:56d9:13f3:5499:25b:cc84:f7e4'
+    )
+
+
 def prep_db(session,
             sample_member,
-            sample_room, sample_vlan):
+            sample_room, sample_vlan, wired_device):
     session.add_all([
         sample_room, sample_vlan,
-        sample_member])
+        sample_member, wired_device])
     session.commit()
     Utilisateur.find_or_create(session, "BadUser")
     Utilisateur.find_or_create(session, "test")
@@ -63,14 +87,15 @@ def prep_db(session,
 
 
 @pytest.fixture
-def api_client(sample_member, sample_room, sample_vlan):
+def api_client(sample_member, sample_room, sample_vlan, wired_device):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
         prep_db(db.get_db().get_session(),
                 sample_member,
                 sample_room,
-                sample_vlan)
+                sample_vlan,
+                wired_device)
         yield c
 
 
@@ -236,3 +261,45 @@ def test_modification_delete_member(api_client, sample_member):
     assert now - m.created_at < one_sec
     assert now - m.updated_at < one_sec
     assert m.utilisateur_id == 2
+
+
+def test_add_device_wired(api_client, wired_device, sample_member):
+
+    s = db.get_db().get_session()
+    s.add(wired_device)
+    s.flush()
+
+    # Build the corresponding modification
+    Modification.add_and_commit(s, wired_device,
+                                Utilisateur.find_or_create(s, "test"))
+    q = s.query(Modification)
+    m = q.first()
+    assert m.action == (
+        "ordinateurs: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
+        "adherent_id:\n"
+        "- \n"
+        "- 1\n"
+        "dns:\n"
+        "- \n"
+        "- bonnet_n4651\n"
+        "id:\n"
+        "- \n"
+        "- 1\n"
+        "ip:\n"
+        "- \n"
+        "- 157.159.42.42\n"
+        "ipv6:\n"
+        "- \n"
+        "- e91f:bd71:56d9:13f3:5499:25b:cc84:f7e4\n"
+        "mac:\n"
+        "- \n"
+        "- 96:24:F6:D0:48:A7\n"
+    )
+    assert m.adherent_id == sample_member.id
+    now = datetime.datetime.now()
+    one_sec = datetime.timedelta(seconds=1)
+    assert now - m.created_at < one_sec
+    assert now - m.updated_at < one_sec
+    assert m.utilisateur_id == 2
+
+
