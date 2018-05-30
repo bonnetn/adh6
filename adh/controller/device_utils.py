@@ -29,7 +29,7 @@ def create_wireless_device(admin, body, s):
     s.add(dev)
     s.flush()
 
-    Modification.add_and_commit(s, dev.adherent, dev.get_ruby_modif(), admin)
+    Modification.add_and_commit(s, dev, admin)
 
 
 def create_wired_device(admin, body, s):
@@ -44,7 +44,7 @@ def create_wired_device(admin, body, s):
     s.add(dev)
     s.flush()
 
-    Modification.add_and_commit(s, dev.adherent, dev.get_ruby_modif(), admin)
+    Modification.add_and_commit(s, dev, admin)
 
 
 def update_wireless_device(admin, macAddress, body, s):
@@ -57,7 +57,7 @@ def update_wireless_device(admin, macAddress, body, s):
     dev.adherent = Adherent.find(s, body['username'])
     s.flush()
 
-    Modification.add_and_commit(s, dev.adherent, dev.get_ruby_modif(), admin)
+    Modification.add_and_commit(s, dev, admin)
 
 
 def update_wired_device(admin, macAddress, body, s):
@@ -72,7 +72,7 @@ def update_wired_device(admin, macAddress, body, s):
     dev.adherent = Adherent.find(s, body['username'])
     s.flush()
 
-    Modification.add_and_commit(s, dev.adherent, dev.get_ruby_modif(), admin)
+    Modification.add_and_commit(s, dev, admin)
 
 
 def delete_wired_device(admin, macAddress, s):
@@ -84,7 +84,7 @@ def delete_wired_device(admin, macAddress, s):
     s.delete(dev)
     s.flush()
 
-    Modification.add_and_commit(s, dev.adherent, dev.get_ruby_modif(), admin)
+    Modification.add_and_commit(s, dev, admin)
 
 
 def delete_wireless_device(admin, macAddress, s):
@@ -96,7 +96,7 @@ def delete_wireless_device(admin, macAddress, s):
     s.delete(dev)
     s.flush()
 
-    Modification.add_and_commit(s, dev.adherent, dev.get_ruby_modif(), admin)
+    Modification.add_and_commit(s, dev, admin)
 
 
 def get_all_devices(s):

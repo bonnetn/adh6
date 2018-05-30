@@ -86,7 +86,7 @@ def deleteUser(admin, username):
         s.flush()
 
         # Write it in the modification table
-        Modification.add_and_commit(s, a, a.get_ruby_modif(), admin)
+        Modification.add_and_commit(s, a, admin)
     except Exception:
         s.rollback()
         raise
@@ -122,8 +122,7 @@ def putUser(admin, username, body):
         s.flush()
 
         # Create the corresponding modification
-        Modification.add_and_commit(s, new_user,
-                                    new_user.get_ruby_modif(), admin)
+        Modification.add_and_commit(s, new_user, admin)
     except Exception:
         s.rollback()
         raise
@@ -185,7 +184,7 @@ def updatePassword(admin, username, body):
         s.flush()
 
         # Build the corresponding modification
-        Modification.add_and_commit(s, a, a.get_ruby_modif(), admin)
+        Modification.add_and_commit(s, a, admin)
 
     except Exception:
         s.rollback()

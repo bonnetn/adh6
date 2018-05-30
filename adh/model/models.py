@@ -51,14 +51,17 @@ class ModificationTracker():
 class RubyHashModificationTracker(ModificationTracker):
     """
     Define a class on which you can record modification and get the result as
-    ruby/hash modification (like ADH5 does)
+    ruby/hash modification (like ADH5 does), it also returns the adherent linked
+    to the modification.
+    Override this function if you want to add information (for instance the
+    adhrent linked to the modification, since this function will always return
+    None.)
     """
 
     def get_ruby_modif(self):
         self._end_modif_tracking()
 
-        base_str = '{} !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n'
-        txt = [base_str.format(self._ruby_hash_prefix)]
+        txt = []
         for key in sorted(set().union(
             self._new_data.keys(),
             self._old_data.keys()
@@ -68,11 +71,12 @@ class RubyHashModificationTracker(ModificationTracker):
 
             old = old if old is not None else ""
             new = new if new is not None else ""
+            print(key, old, new)
 
             if old != new:
                 txt += ["{}:\n- {}\n- {}\n".format(key, old, new)]
 
-        return "".join(txt)
+        return "".join(txt), None
 
 
 class Vlan(Base):
@@ -160,7 +164,6 @@ class Chambre(Base):
 
 class Adherent(Base, RubyHashModificationTracker):
     __tablename__ = 'adherents'
-    _ruby_hash_prefix = '---'
 
     id = Column(Integer, primary_key=True)
     nom = Column(String(255))
@@ -179,6 +182,18 @@ class Adherent(Base, RubyHashModificationTracker):
         server_default=text("'2011-04-30 17:50:17'")
     )
     access_token = Column(String(255))
+
+
+    def get_ruby_modif(self):
+        """
+        Override this method to add the prefix and to return the Adherent as
+        second argument
+        """
+        modif, adh = super(Adherent, self).get_ruby_modif()
+        modif = '--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
+                modif
+        return modif, self
+ 
 
     @staticmethod
     def find(session, username):
@@ -306,8 +321,9 @@ class Modification(Base):
     utilisateur_id = Column(Integer, index=True)
 
     @staticmethod
-    def add_and_commit(session, adherent, action, admin):
+    def add_and_commit(session, object_updated, admin):
         now = datetime.datetime.now()
+        action, adherent = object_updated.get_ruby_modif()
         m = Modification(
                 adherent_id=adherent.id,
                 action=action,
@@ -321,7 +337,6 @@ class Modification(Base):
 
 class Ordinateur(Base, RubyHashModificationTracker):
     __tablename__ = 'ordinateurs'
-    _ruby_hash_prefix = 'ordinateurs:'
 
     id = Column(Integer, primary_key=True)
     mac = Column(String(255))
@@ -333,6 +348,18 @@ class Ordinateur(Base, RubyHashModificationTracker):
     updated_at = Column(DateTime)
     last_seen = Column(DateTime)
     ipv6 = Column(String(255))
+
+
+    def get_ruby_modif(self):
+        """
+        Override this method to add the prefix and to return the Adherent as
+        second argument
+        """
+        modif, adh = super(Ordinateur, self).get_ruby_modif()
+        modif = 'ordinateurs: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
+                modif
+        return modif, self.adherent
+ 
 
     @validates('mac')
     def mac_valid(self, key, mac):
@@ -365,7 +392,6 @@ class Ordinateur(Base, RubyHashModificationTracker):
 
 class Portable(Base, RubyHashModificationTracker):
     __tablename__ = 'portables'
-    _ruby_hash_prefix = 'portables:'
 
     id = Column(Integer, primary_key=True)
     mac = Column(String(255))
@@ -374,6 +400,17 @@ class Portable(Base, RubyHashModificationTracker):
     last_seen = Column(DateTime)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
+
+
+    def get_ruby_modif(self):
+        """
+        Override this method to add the prefix and to return the Adherent as
+        second argument
+        """
+        modif, adh = super(Portable, self).get_ruby_modif()
+        modif = 'portables: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
+                modif
+        return modif, self.adherent
 
     @validates('mac')
     def mac_valid(self, key, mac):

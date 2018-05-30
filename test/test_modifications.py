@@ -80,7 +80,7 @@ def test_modification_pass_updated(api_client, sample_member):
     s.flush()
 
     # Build the corresponding modification
-    Modification.add_and_commit(s, a, a.get_ruby_modif(),
+    Modification.add_and_commit(s, a,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
@@ -110,7 +110,7 @@ def test_modification_multiple_changes_updated(api_client, sample_member):
     s.flush()
 
     # Build the corresponding modification
-    Modification.add_and_commit(s, a, a.get_ruby_modif(),
+    Modification.add_and_commit(s, a,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
@@ -145,7 +145,7 @@ def test_modification_add_new_user(api_client, sample_member2):
     s.flush()
 
     # Build the corresponding modification
-    Modification.add_and_commit(s, a, a.get_ruby_modif(),
+    Modification.add_and_commit(s, a,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
@@ -196,7 +196,7 @@ def test_modification_delete_member(api_client, sample_member):
     s.flush()
 
     # Build the corresponding modification
-    Modification.add_and_commit(s, a, a.get_ruby_modif(),
+    Modification.add_and_commit(s, a,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
