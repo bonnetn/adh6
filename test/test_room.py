@@ -1,64 +1,32 @@
 import json
 import pytest
 from adh.model.database import Database as db
-from adh.model.models import Chambre, Vlan
 from CONFIGURATION import TEST_DATABASE as db_settings
 from .resource import base_url, TEST_HEADERS
 
 
-@pytest.fixture
-def sample_vlan():
-    yield Vlan(
-        numero=42,
-        adresses="192.168.1.0/24",
-        adressesv6="fe80::0",
-    )
-
-
-@pytest.fixture
-def sample_room1(sample_vlan):
-    yield Chambre(
-        numero=4591,
-        description="Chambre du swag",
-        telephone="1234",
-        vlan=sample_vlan,
-    )
-
-
-@pytest.fixture
-def sample_room2(sample_vlan):
-    yield Chambre(
-        numero=4592,
-        description="Chambre voisine du swag",
-        telephone="5678",
-        vlan=sample_vlan,
-    )
-
-
 def prep_db(session,
-            sample_room1,
-            sample_room2,
-            sample_vlan):
+            sample_room,
+            sample_room2):
     session.add_all([
-        sample_vlan,
-        sample_room1,
+        sample_room,
         sample_room2,
     ])
     session.commit()
 
 
 @pytest.fixture
-def api_client(sample_room1, sample_room2, sample_vlan):
+def api_client(sample_room, sample_room2):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
         prep_db(db.get_db().get_session(),
-                sample_room1, sample_room2, sample_vlan)
+                sample_room, sample_room2)
         yield c
 
 
-def test_room_to_dict(sample_room1):
-    dict(sample_room1)
+def test_room_to_dict(sample_room):
+    dict(sample_room)
 
 
 def test_room_filter_all_rooms(api_client):
@@ -101,7 +69,7 @@ def test_room_filter_by_term(api_client):
 
 def test_room_get_valid_room(api_client):
     r = api_client.get(
-        "{}/room/{}".format(base_url, 4591),
+        "{}/room/{}".format(base_url, 5110),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -119,13 +87,13 @@ def test_room_get_invalid_room(api_client):
 
 def test_room_put_new_room_invalid_vlan(api_client):
     room = {
-      "roomNumber": 5110,
+      "roomNumber": 5111,
       "vlan": 45,
       "phone": 6842,
-      "description": "Chambre 5110"
+      "description": "Chambre 5111"
     }
     r = api_client.put(
-        "{}/room/{}".format(base_url, 5110),
+        "{}/room/{}".format(base_url, 5111),
         data=json.dumps(room),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -135,13 +103,13 @@ def test_room_put_new_room_invalid_vlan(api_client):
 
 def test_room_put_new_room(api_client):
     room = {
-      "roomNumber": 5110,
+      "roomNumber": 5111,
       "vlan": 42,
       "phone": 6842,
-      "description": "Chambre 5110"
+      "description": "Chambre 5111"
     }
     r = api_client.put(
-        "{}/room/{}".format(base_url, 5110),
+        "{}/room/{}".format(base_url, 5111),
         data=json.dumps(room),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -151,13 +119,13 @@ def test_room_put_new_room(api_client):
 
 def test_room_put_update_room(api_client):
     room = {
-      "roomNumber": 5110,
+      "roomNumber": 5111,
       "vlan": 42,
       "phone": 6842,
-      "description": "Chambre 5110"
+      "description": "Chambre 5111"
     }
     r = api_client.put(
-        "{}/room/{}".format(base_url, 4591),
+        "{}/room/{}".format(base_url, 5110),
         data=json.dumps(room),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -167,7 +135,7 @@ def test_room_put_update_room(api_client):
 
 def test_room_delete_existant_room(api_client):
     r = api_client.delete(
-        "{}/room/{}".format(base_url, 4591),
+        "{}/room/{}".format(base_url, 5110),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 204

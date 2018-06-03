@@ -17,18 +17,18 @@ def sample_switch():
     )
 
 
-def prep_db(session, sample_switch):
+def prep_db(session, sample_switch1):
     """ Insert the test objects in the db """
-    session.add(sample_switch)
-    session.commit()  # TODO: remove?
+    session.add(sample_switch1)
+    session.commit()
 
 
 @pytest.fixture
-def api_client(sample_switch):
+def api_client(sample_switch1):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
-        prep_db(db.get_db().get_session(), sample_switch)
+        prep_db(db.get_db().get_session(), sample_switch1)
         yield c
 
 
@@ -42,27 +42,27 @@ def assert_switch_in_db(body):
     assert sw.description == body["description"]
 
 
-def test_switch_to_dict(sample_switch):
+def test_switch_to_dict(api_client, sample_switch1):
     dict_sw = {
         'id': 1,
-        'ip': '192.168.102.2',
-        'community': 'communaute',
-        'description': 'Switch'
+        'ip': '192.168.102.51',
+        'community': 'GrosMotDePasse',
+        'description': 'Switch sample 1'
     }
 
-    assert dict(sample_switch) == dict_sw
+    assert dict(sample_switch1) == dict_sw
 
 
 @pytest.mark.parametrize("test_ip", INVALID_IP)
 def test_switch_post_invalid_ip(api_client, test_ip):
-    sample_switch = {
+    sample_switch1 = {
       "description": "Test Switch",
       "ip": test_ip,
       "community": "myGreatCommunity"
     }
     r = api_client.post(
         "{}/switch/".format(base_url),
-        data=json.dumps(sample_switch),
+        data=json.dumps(sample_switch1),
         content_type='application/json',
         headers=TEST_HEADERS
     )
@@ -71,7 +71,7 @@ def test_switch_post_invalid_ip(api_client, test_ip):
 
 def test_switch_post_valid(api_client):
 
-    sample_switch = {
+    sample_switch1 = {
       "description": "Test Switch",
       "ip": "192.168.103.128",
       "community": "myGreatCommunity"
@@ -80,14 +80,14 @@ def test_switch_post_valid(api_client):
     # Insert data to the database
     r = api_client.post(
         "{}/switch/".format(base_url),
-        data=json.dumps(sample_switch),
+        data=json.dumps(sample_switch1),
         content_type='application/json',
         headers=TEST_HEADERS
     )
     assert r.status_code == 201
     assert 'Location' in r.headers
     assert r.headers['Location'] == 'http://localhost/switch/2'
-    assert_switch_in_db(sample_switch)
+    assert_switch_in_db(sample_switch1)
 
 
 def test_switch_get_all_invalid_limit(api_client):
@@ -137,7 +137,7 @@ def test_switch_get_non_existant_switch(api_client):
 
 
 def test_switch_filter_by_term_ip(api_client):
-    terms = "102.2"
+    terms = "102.51"
     r = api_client.get(
         "{}/switch/?terms={}".format(base_url, terms),
         headers=TEST_HEADERS,
@@ -173,7 +173,7 @@ def test_switch_filter_by_term_nonexistant(api_client):
 
 @pytest.mark.parametrize("test_ip", INVALID_IP)
 def test_switch_update_switch_invalid_ip(api_client, test_ip):
-    sample_switch = {
+    sample_switch1 = {
       "description": "Modified switch",
       "ip": test_ip,
       "community": "communityModified"
@@ -181,7 +181,7 @@ def test_switch_update_switch_invalid_ip(api_client, test_ip):
 
     r = api_client.put(
         "{}/switch/{}".format(base_url, 1),
-        data=json.dumps(sample_switch),
+        data=json.dumps(sample_switch1),
         content_type='application/json',
         headers=TEST_HEADERS
     )
@@ -189,7 +189,7 @@ def test_switch_update_switch_invalid_ip(api_client, test_ip):
 
 
 def test_switch_update_existant_switch(api_client):
-    sample_switch = {
+    sample_switch1 = {
       "description": "Modified switch",
       "ip": "192.168.103.132",
       "community": "communityModified"
@@ -197,16 +197,16 @@ def test_switch_update_existant_switch(api_client):
 
     r = api_client.put(
         "{}/switch/{}".format(base_url, 1),
-        data=json.dumps(sample_switch),
+        data=json.dumps(sample_switch1),
         content_type='application/json',
         headers=TEST_HEADERS
     )
     assert r.status_code == 204
-    assert_switch_in_db(sample_switch)
+    assert_switch_in_db(sample_switch1)
 
 
 def test_switch_update_non_existant_switch(api_client):
-    sample_switch = {
+    sample_switch1 = {
       "description": "Modified switch",
       "ip": "192.168.103.132",
       "community": "communityModified"
@@ -214,7 +214,7 @@ def test_switch_update_non_existant_switch(api_client):
 
     r = api_client.put(
         "{}/switch/{}".format(base_url, 100000),
-        data=json.dumps(sample_switch),
+        data=json.dumps(sample_switch1),
         content_type='application/json',
         headers=TEST_HEADERS
     )

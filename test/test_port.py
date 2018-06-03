@@ -2,87 +2,29 @@ import json
 import pytest
 from adh.model.database import Database as db
 from CONFIGURATION import TEST_DATABASE as db_settings
-from adh.model.models import Port, Switch, Chambre
+from adh.model.models import Port
 
 from .resource import base_url, TEST_HEADERS
 
 
-@pytest.fixture
-def sample_switch1():
-    yield Switch(
-        description="Switch sample 1",
-        ip="192.168.102.51",
-        communaute="GrosMotDePasse",
-    )
-
-
-@pytest.fixture
-def sample_switch2():
-    yield Switch(
-        description="Switch sample 2",
-        ip="192.168.102.52",
-        communaute="GrosMotDePasse",
-    )
-
-
-@pytest.fixture
-def sample_port1(sample_switch1):
-    yield Port(
-        rcom=1,
-        numero="0/0/1",
-        oid="1.1.1",
-        switch=sample_switch1,
-        chambre_id=0,
-
-    )
-
-
-@pytest.fixture
-def sample_port2(sample_switch2):
-    yield Port(
-        rcom=2,
-        numero="0/0/2",
-        oid="1.1.2",
-        switch=sample_switch2,
-        chambre_id=0,
-
-    )
-
-
-@pytest.fixture
-def sample_room():
-    yield Chambre(
-        numero=5110,
-        description="Chambre de l'ambiance",
-        telephone=1234
-    )
-
-
 def prep_db(session,
-            sample_switch1,
-            sample_switch2,
             sample_port1,
             sample_port2,
             sample_room):
     session.add_all([
-        sample_switch1,
-        sample_switch2,
         sample_port1,
         sample_port2,
-        sample_room
+        sample_room,
     ])
     session.commit()
 
 
 @pytest.fixture
-def api_client(sample_port1, sample_port2, sample_switch1, sample_switch2,
-               sample_room):
+def api_client(sample_port1, sample_port2, sample_room):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
         prep_db(db.get_db().get_session(),
-                sample_switch1,
-                sample_switch2,
                 sample_port1,
                 sample_port2,
                 sample_room)

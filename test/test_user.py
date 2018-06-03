@@ -3,48 +3,10 @@ import pytest
 from adh.model.database import Database as db
 from CONFIGURATION import TEST_DATABASE as db_settings
 from test.resource import base_url, TEST_HEADERS
-from adh.model.models import Adherent, Chambre, Vlan, Modification
+from adh.model.models import Adherent, Modification
 from dateutil import parser
 from adh.controller.user import ntlm_hash
-
-
-@pytest.fixture
-def sample_vlan():
-    yield Vlan(
-        numero=42,
-        adresses="192.168.42.1",
-        adressesv6="fe80::1",
-    )
-
-
-@pytest.fixture
-def sample_room(sample_vlan):
-    yield Chambre(
-        numero=1234,
-        description='chambre 1',
-        vlan=sample_vlan,
-    )
-
-
-@pytest.fixture
-def sample_room2(sample_vlan):
-    yield Chambre(
-        numero=1111,
-        description='chambre 2',
-        vlan=sample_vlan,
-    )
-
-
-@pytest.fixture
-def sample_member(sample_room):
-    yield Adherent(
-        nom='Dubois',
-        prenom='Jean-Louis',
-        mail='j.dubois@free.fr',
-        login='dubois_j',
-        password='a',
-        chambre=sample_room,
-    )
+import datetime
 
 
 @pytest.fixture
@@ -122,12 +84,14 @@ def assert_one_modification_created(username):
     assert q.count() == 1
 
 
-def test_user_to_dict(sample_member):
+def test_user_to_dict(api_client, sample_member):
+    t = datetime.datetime(2011, 4, 30, 17, 50, 17)
     dict_member = {'email': 'j.dubois@free.fr',
                    'firstName': 'Jean-Louis',
                    'lastName': 'Dubois',
                    'username': 'dubois_j',
-                   'roomNumber': 1234}
+                   'roomNumber': 5110,
+                   'associationMode': t}
 
     assert dict(sample_member) == dict_member
 
@@ -164,7 +128,7 @@ def test_user_filter_all_with_limit(api_client):
 
 def test_user_filter_by_room_number(api_client):
     r = api_client.get(
-        '{}/user/?roomNumber={}'.format(base_url, 1234),
+        '{}/user/?roomNumber={}'.format(base_url, 5110),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -303,7 +267,7 @@ def test_user_put_user_create_invalid_email(api_client):
     body = {
         "firstName": "John",
         "lastName": "Doe",
-        "roomNumber": 1111,
+        "roomNumber": 4592,
         "comment": "comment",
         "departureDate": "2000-01-23T04:56:07.000+00:00",
         "associationMode": "2000-01-23T04:56:07.000+00:00",
@@ -343,7 +307,7 @@ def test_user_put_user_create(api_client):
     body = {
         "firstName": "John",
         "lastName": "Doe",
-        "roomNumber": 1111,
+        "roomNumber": 4592,
         "comment": "comment",
         "departureDate": "2000-01-23T04:56:07.000+00:00",
         "associationMode": "2000-01-23T04:56:07.000+00:00",
@@ -366,7 +330,7 @@ def test_user_put_user_update(api_client):
     body = {
         "firstName": "Jean-Louis",
         "lastName": "Dubois",
-        "roomNumber": 1111,
+        "roomNumber": 4592,
         "comment": "comment",
         "departureDate": "2000-01-23T04:56:07.000+00:00",
         "associationMode": "2000-01-23T04:56:07.000+00:00",

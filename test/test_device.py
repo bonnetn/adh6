@@ -3,25 +3,17 @@ import json
 import pytest
 from adh.model.database import Database as db
 from CONFIGURATION import TEST_DATABASE as db_settings
-from adh.model.models import Ordinateur, Portable, Adherent
+from adh.model.models import Ordinateur, Portable
 
 from .resource import (
     base_url, INVALID_MAC, INVALID_IP, INVALID_IPv6, TEST_HEADERS
 )
-from .fixtures import (
-    member1, member2, wired_device, wireless_device,
-    wired_device_dict, wireless_device_dict
-)
 
 
 def prep_db(session,
-            member1,
-            member2,
             wired_device,
             wireless_device):
     session.add_all([
-        member1,
-        member2,
         wired_device,
         wireless_device
     ])
@@ -29,16 +21,12 @@ def prep_db(session,
 
 
 @pytest.fixture
-def api_client(member1,
-               member2,
-               wired_device,
+def api_client(wired_device,
                wireless_device):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
         prep_db(db.get_db().get_session(),
-                member1,
-                member2,
                 wired_device,
                 wireless_device)
         yield c
@@ -101,7 +89,7 @@ def test_device_filter_by_terms(
     assert len(response) == expected
 
 
-def test_device_filter_invalid_limit(api_client, member1):
+def test_device_filter_invalid_limit(api_client):
     r = api_client.get(
         '{}/device/?limit={}'.format(base_url, -1),
         headers=TEST_HEADERS
@@ -109,7 +97,7 @@ def test_device_filter_invalid_limit(api_client, member1):
     assert r.status_code == 400
 
 
-def test_device_filter_hit_limit(api_client, member1):
+def test_device_filter_hit_limit(api_client, sample_member):
     s = db.get_db().get_session()
     LIMIT = 10
 
@@ -117,7 +105,7 @@ def test_device_filter_hit_limit(api_client, member1):
     for i in range(LIMIT*2):
         suffix = "{0:04X}".format(i)
         dev = Portable(
-            adherent=member1,
+            adherent=sample_member,
             mac='00:00:00:00:'+suffix[:2]+":"+suffix[2:]
         )
         s.add(dev)
