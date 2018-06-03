@@ -5,7 +5,7 @@ from CONFIGURATION import TEST_DATABASE as db_settings
 from test.resource import (
         base_url, TEST_HEADERS, assert_modification_was_created
 )
-from adh.model.models import Adherent, Modification
+from adh.model.models import Adherent
 from dateutil import parser
 from adh.controller.user import ntlm_hash
 import datetime
@@ -78,12 +78,6 @@ def assert_user_in_db(body):
     assert r.chambre.numero == body["roomNumber"]
     assert r.commentaires == body["comment"]
     assert r.login == body["username"]
-
-
-def assert_one_modification_created(username):
-    s = db.get_db().get_session()
-    q = s.query(Modification)
-    assert q.count() == 1
 
 
 def test_user_to_dict(api_client, sample_member1):
@@ -327,7 +321,6 @@ def test_user_put_user_create(api_client):
     assert_modification_was_created(db.get_db().get_session())
 
     assert_user_in_db(body)
-    assert_one_modification_created(body["username"])
 
 
 def test_user_put_user_update(api_client):
@@ -351,7 +344,6 @@ def test_user_put_user_update(api_client):
     assert_modification_was_created(db.get_db().get_session())
 
     assert_user_in_db(body)
-    assert_one_modification_created(body["username"])
 
 
 def test_user_post_add_membership_not_found(api_client):
@@ -401,7 +393,6 @@ def test_user_change_password_ok(api_client):
     q = q.filter(Adherent.login == USERNAME)
     r = q.one()
     assert r.password == ntlm_hash(body["password"])
-    assert_one_modification_created(USERNAME)
 
 
 def test_user_change_password_user_not_exist(api_client):
