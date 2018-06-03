@@ -97,7 +97,7 @@ def test_device_filter_invalid_limit(api_client):
     assert r.status_code == 400
 
 
-def test_device_filter_hit_limit(api_client, sample_member):
+def test_device_filter_hit_limit(api_client, sample_member1):
     s = db.get_db().get_session()
     LIMIT = 10
 
@@ -105,7 +105,7 @@ def test_device_filter_hit_limit(api_client, sample_member):
     for i in range(LIMIT*2):
         suffix = "{0:04X}".format(i)
         dev = Portable(
-            adherent=sample_member,
+            adherent=sample_member1,
             mac='00:00:00:00:'+suffix[:2]+":"+suffix[2:]
         )
         s.add(dev)

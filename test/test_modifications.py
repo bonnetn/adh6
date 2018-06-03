@@ -7,8 +7,8 @@ from adh.model.models import (
 import datetime
 
 
-def prep_db(session, sample_member, wired_device):
-    session.add_all([sample_member, wired_device])
+def prep_db(session, sample_member1, wired_device):
+    session.add_all([sample_member1, wired_device])
     session.commit()
     Utilisateur.find_or_create(session, "BadUser")
     Utilisateur.find_or_create(session, "test")
@@ -16,17 +16,17 @@ def prep_db(session, sample_member, wired_device):
 
 
 @pytest.fixture
-def api_client(sample_member, wired_device):
+def api_client(sample_member1, wired_device):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
-        prep_db(db.get_db().get_session(), sample_member, wired_device)
+        prep_db(db.get_db().get_session(), sample_member1, wired_device)
         yield c
 
 
-def test_modification_pass_updated(api_client, sample_member):
+def test_modification_pass_updated(api_client, sample_member1):
     s = db.get_db().get_session()
-    a = Adherent.find(s, sample_member.login)
+    a = Adherent.find(s, sample_member1.login)
 
     a.start_modif_tracking()
     a.password = "TESTESTEST"
@@ -43,7 +43,7 @@ def test_modification_pass_updated(api_client, sample_member):
         '- a\n'
         '- TESTESTEST\n'
     )
-    assert m.adherent_id == sample_member.id
+    assert m.adherent_id == sample_member1.id
     now = datetime.datetime.now()
     one_sec = datetime.timedelta(seconds=1)
     assert now - m.created_at < one_sec
@@ -51,9 +51,9 @@ def test_modification_pass_updated(api_client, sample_member):
     assert m.utilisateur_id == 2
 
 
-def test_modification_multiple_changes_updated(api_client, sample_member):
+def test_modification_multiple_changes_updated(api_client, sample_member1):
     s = db.get_db().get_session()
-    a = Adherent.find(s, sample_member.login)
+    a = Adherent.find(s, sample_member1.login)
 
     a.start_modif_tracking()
     a.commentaires = "Hey I am a comment"
@@ -82,7 +82,7 @@ def test_modification_multiple_changes_updated(api_client, sample_member):
         '- Jean-Louis\n'
         '- Test\n'
     )
-    assert m.adherent_id == sample_member.id
+    assert m.adherent_id == sample_member1.id
     now = datetime.datetime.now()
     one_sec = datetime.timedelta(seconds=1)
     assert now - m.created_at < one_sec
@@ -140,9 +140,9 @@ def test_modification_add_new_user(api_client, sample_member2):
     assert m.utilisateur_id == 2
 
 
-def test_modification_delete_member(api_client, sample_member):
+def test_modification_delete_member(api_client, sample_member1):
     s = db.get_db().get_session()
-    a = Adherent.find(s, sample_member.login)
+    a = Adherent.find(s, sample_member1.login)
 
     a.start_modif_tracking()
     s.delete(a)
@@ -180,7 +180,7 @@ def test_modification_delete_member(api_client, sample_member):
         '- Jean-Louis\n'
         '- \n'
     )
-    assert m.adherent_id == sample_member.id
+    assert m.adherent_id == sample_member1.id
     now = datetime.datetime.now()
     one_sec = datetime.timedelta(seconds=1)
     assert now - m.created_at < one_sec
@@ -188,7 +188,7 @@ def test_modification_delete_member(api_client, sample_member):
     assert m.utilisateur_id == 2
 
 
-def test_add_device_wired(api_client, wired_device, sample_member):
+def test_add_device_wired(api_client, wired_device, sample_member1):
 
     s = db.get_db().get_session()
     s.add(wired_device)
@@ -220,7 +220,7 @@ def test_add_device_wired(api_client, wired_device, sample_member):
         "- \n"
         "- 96:24:F6:D0:48:A7\n"
     )
-    assert m.adherent_id == sample_member.id
+    assert m.adherent_id == sample_member1.id
     now = datetime.datetime.now()
     one_sec = datetime.timedelta(seconds=1)
     assert now - m.created_at < one_sec
@@ -229,7 +229,7 @@ def test_add_device_wired(api_client, wired_device, sample_member):
 
 
 def test_add_device_wireless(
-                api_client, wireless_device, sample_member, sample_member2):
+                api_client, wireless_device, sample_member1, sample_member2):
 
     s = db.get_db().get_session()
     s.add(wireless_device)

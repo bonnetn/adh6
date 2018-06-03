@@ -5,12 +5,12 @@ from adh.model.models import (
 
 
 @pytest.fixture
-def wired_device(sample_member):
+def wired_device(sample_member1):
     yield Ordinateur(
         mac='96:24:F6:D0:48:A7',
         ip='157.159.42.42',
         dns='bonnet_n4651',
-        adherent=sample_member,
+        adherent=sample_member1,
         ipv6='e91f:bd71:56d9:13f3:5499:25b:cc84:f7e4'
     )
 
@@ -79,7 +79,7 @@ def sample_room2(sample_vlan):
 
 
 @pytest.fixture
-def sample_member(sample_room1):
+def sample_member1(sample_room1):
     yield Adherent(
         nom='Dubois',
         prenom='Jean-Louis',

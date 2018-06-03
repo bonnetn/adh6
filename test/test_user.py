@@ -23,7 +23,7 @@ def sample_member2(sample_room2):
 
 
 @pytest.fixture
-def sample_member3(sample_room2):
+def sample_member13(sample_room2):
     """ Membre sans chambre """
     yield Adherent(
         nom='Robert',
@@ -36,24 +36,24 @@ def sample_member3(sample_room2):
 
 
 def prep_db(session,
-            sample_member, sample_member2, sample_member3,
+            sample_member1, sample_member2, sample_member13,
             sample_room1, sample_room2, sample_vlan):
     session.add_all([
         sample_room1, sample_room2,
-        sample_member, sample_member2, sample_member3])
+        sample_member1, sample_member2, sample_member13])
     session.commit()
 
 
 @pytest.fixture
-def api_client(sample_member, sample_member2, sample_member3,
+def api_client(sample_member1, sample_member2, sample_member13,
                sample_room1, sample_room2, sample_vlan):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
         prep_db(db.get_db().get_session(),
-                sample_member,
+                sample_member1,
                 sample_member2,
-                sample_member3,
+                sample_member13,
                 sample_room1,
                 sample_room2,
                 sample_vlan)
@@ -84,7 +84,7 @@ def assert_one_modification_created(username):
     assert q.count() == 1
 
 
-def test_user_to_dict(api_client, sample_member):
+def test_user_to_dict(api_client, sample_member1):
     t = datetime.datetime(2011, 4, 30, 17, 50, 17)
     dict_member = {'email': 'j.dubois@free.fr',
                    'firstName': 'Jean-Louis',
@@ -93,7 +93,7 @@ def test_user_to_dict(api_client, sample_member):
                    'roomNumber': 5110,
                    'associationMode': t}
 
-    assert dict(sample_member) == dict_member
+    assert dict(sample_member1) == dict_member
 
 
 def test_user_filter_all(api_client):
