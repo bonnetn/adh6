@@ -6,7 +6,8 @@ from CONFIGURATION import TEST_DATABASE as db_settings
 from adh.model.models import Ordinateur, Portable
 
 from .resource import (
-    base_url, INVALID_MAC, INVALID_IP, INVALID_IPv6, TEST_HEADERS
+    base_url, INVALID_MAC, INVALID_IP, INVALID_IPv6, TEST_HEADERS,
+    assert_modification_was_created
 )
 
 
@@ -131,6 +132,7 @@ def test_device_put_create_wireless_without_ip(api_client,
                        content_type='application/json',
                        headers=TEST_HEADERS)
     assert r.status_code == 201
+    assert_modification_was_created(db.get_db().get_session())
 
 
 def test_device_put_create_wireless(api_client, wireless_device_dict):
@@ -141,6 +143,7 @@ def test_device_put_create_wireless(api_client, wireless_device_dict):
                        content_type='application/json',
                        headers=TEST_HEADERS)
     assert r.status_code == 201
+    assert_modification_was_created(db.get_db().get_session())
 
 
 def test_device_put_create_wired_without_ip(api_client, wired_device_dict):
@@ -152,6 +155,7 @@ def test_device_put_create_wired_without_ip(api_client, wired_device_dict):
                        content_type='application/json',
                        headers=TEST_HEADERS)
     assert r.status_code == 201
+    assert_modification_was_created(db.get_db().get_session())
 
 
 def test_device_put_create_wired(api_client, wired_device_dict):
@@ -162,6 +166,7 @@ def test_device_put_create_wired(api_client, wired_device_dict):
                        content_type='application/json',
                        headers=TEST_HEADERS)
     assert r.status_code == 201
+    assert_modification_was_created(db.get_db().get_session())
 
 
 def test_device_put_create_different_mac_addresses(api_client,
@@ -239,6 +244,7 @@ def test_device_put_update_wireless(api_client, wireless_device,
         content_type='application/json',
         headers=TEST_HEADERS)
     assert r.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
 
 
 def test_device_put_update_wired(api_client, wired_device, wired_device_dict):
@@ -249,6 +255,7 @@ def test_device_put_update_wired(api_client, wired_device, wired_device_dict):
         content_type='application/json',
         headers=TEST_HEADERS)
     assert r.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
 
 
 def test_device_put_update_wired_to_wireless(api_client, wired_device,
@@ -260,6 +267,7 @@ def test_device_put_update_wired_to_wireless(api_client, wired_device,
         content_type='application/json',
         headers=TEST_HEADERS)
     assert r.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
 
 
 def test_device_put_update_wireless_to_wired(api_client,
@@ -272,6 +280,7 @@ def test_device_put_update_wireless_to_wired(api_client,
         content_type='application/json',
         headers=TEST_HEADERS)
     assert r.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
 
 
 def test_device_put_update_wired_and_wireless_to_wireless(
@@ -299,6 +308,7 @@ def test_device_put_update_wired_and_wireless_to_wireless(
         content_type='application/json',
         headers=TEST_HEADERS)
     assert r.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
 
 
 def test_device_put_update_wired_and_wireless_to_wired(api_client,
@@ -325,6 +335,7 @@ def test_device_put_update_wired_and_wireless_to_wired(api_client,
         content_type='application/json',
         headers=TEST_HEADERS)
     assert r.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
 
 
 def test_device_get_unknown_mac(api_client):
@@ -363,6 +374,7 @@ def test_device_delete_wired(api_client, wired_device):
         headers=TEST_HEADERS,
     )
     assert r.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
 
     s = db.get_db().get_session()
     q = s.query(Ordinateur)
@@ -377,6 +389,7 @@ def test_device_delete_wireless(api_client, wireless_device):
         headers=TEST_HEADERS,
     )
     assert r.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
 
     s = db.get_db().get_session()
     q = s.query(Portable)

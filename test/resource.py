@@ -1,3 +1,6 @@
+from adh.model.models import Modification
+
+
 base_url = "api"
 device_cazal = {
     'mac': 'FF:FF:FF:FF:FF:FF',
@@ -46,3 +49,8 @@ INVALID_MAC = [
 ]
 
 TEST_HEADERS = {"Authorization": "Bearer TEST_TOKEN"}
+
+
+def assert_modification_was_created(s):
+    q = s.query(Modification)
+    assert q.count() >= 1

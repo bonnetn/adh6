@@ -2,7 +2,9 @@ import json
 import pytest
 from adh.model.database import Database as db
 from CONFIGURATION import TEST_DATABASE as db_settings
-from test.resource import base_url, TEST_HEADERS
+from test.resource import (
+        base_url, TEST_HEADERS, assert_modification_was_created
+)
 from adh.model.models import Adherent, Modification
 from dateutil import parser
 from adh.controller.user import ntlm_hash
@@ -248,6 +250,7 @@ def test_user_delete_existant(api_client):
         headers=TEST_HEADERS
     )
     assert r.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
 
     s = db.get_db().get_session()
     q = s.query(Adherent)
@@ -321,6 +324,7 @@ def test_user_put_user_create(api_client):
         headers=TEST_HEADERS
     )
     assert res.status_code == 201
+    assert_modification_was_created(db.get_db().get_session())
 
     assert_user_in_db(body)
     assert_one_modification_created(body["username"])
@@ -344,6 +348,7 @@ def test_user_put_user_update(api_client):
         headers=TEST_HEADERS
     )
     assert res.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
 
     assert_user_in_db(body)
     assert_one_modification_created(body["username"])
@@ -389,6 +394,7 @@ def test_user_change_password_ok(api_client):
         headers=TEST_HEADERS,
     )
     assert result.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
 
     s = db.get_db().get_session()
     q = s.query(Adherent)
