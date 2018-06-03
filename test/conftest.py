@@ -59,7 +59,7 @@ def sample_vlan():
 
 
 @pytest.fixture
-def sample_room(sample_vlan):
+def sample_room1(sample_vlan):
     yield Chambre(
         numero=5110,
         description="Chambre de l'ambiance",
@@ -79,19 +79,19 @@ def sample_room2(sample_vlan):
 
 
 @pytest.fixture
-def sample_member(sample_room):
+def sample_member(sample_room1):
     yield Adherent(
         nom='Dubois',
         prenom='Jean-Louis',
         mail='j.dubois@free.fr',
         login='dubois_j',
         password='a',
-        chambre=sample_room,
+        chambre=sample_room1,
     )
 
 
 @pytest.fixture
-def sample_member2(sample_room):
+def sample_member2(sample_room1):
     yield Adherent(
         nom='Reignier',
         prenom='Edouard',
@@ -99,7 +99,7 @@ def sample_member2(sample_room):
         login='reignier',
         commentaires='Desauthent pour routeur',
         password='a',
-        chambre=sample_room,
+        chambre=sample_room1,
     )
 
 

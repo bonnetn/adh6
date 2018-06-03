@@ -6,27 +6,27 @@ from .resource import base_url, TEST_HEADERS
 
 
 def prep_db(session,
-            sample_room,
+            sample_room1,
             sample_room2):
     session.add_all([
-        sample_room,
+        sample_room1,
         sample_room2,
     ])
     session.commit()
 
 
 @pytest.fixture
-def api_client(sample_room, sample_room2):
+def api_client(sample_room1, sample_room2):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
         prep_db(db.get_db().get_session(),
-                sample_room, sample_room2)
+                sample_room1, sample_room2)
         yield c
 
 
-def test_room_to_dict(sample_room):
-    dict(sample_room)
+def test_room_to_dict(sample_room1):
+    dict(sample_room1)
 
 
 def test_room_filter_all_rooms(api_client):

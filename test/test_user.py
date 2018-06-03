@@ -37,16 +37,16 @@ def sample_member3(sample_room2):
 
 def prep_db(session,
             sample_member, sample_member2, sample_member3,
-            sample_room, sample_room2, sample_vlan):
+            sample_room1, sample_room2, sample_vlan):
     session.add_all([
-        sample_room, sample_room2,
+        sample_room1, sample_room2,
         sample_member, sample_member2, sample_member3])
     session.commit()
 
 
 @pytest.fixture
 def api_client(sample_member, sample_member2, sample_member3,
-               sample_room, sample_room2, sample_vlan):
+               sample_room1, sample_room2, sample_vlan):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
@@ -54,7 +54,7 @@ def api_client(sample_member, sample_member2, sample_member3,
                 sample_member,
                 sample_member2,
                 sample_member3,
-                sample_room,
+                sample_room1,
                 sample_room2,
                 sample_vlan)
         yield c

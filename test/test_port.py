@@ -10,24 +10,24 @@ from .resource import base_url, TEST_HEADERS
 def prep_db(session,
             sample_port1,
             sample_port2,
-            sample_room):
+            sample_room1):
     session.add_all([
         sample_port1,
         sample_port2,
-        sample_room,
+        sample_room1,
     ])
     session.commit()
 
 
 @pytest.fixture
-def api_client(sample_port1, sample_port2, sample_room):
+def api_client(sample_port1, sample_port2, sample_room1):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
         prep_db(db.get_db().get_session(),
                 sample_port1,
                 sample_port2,
-                sample_room)
+                sample_room1)
         yield c
 
 
