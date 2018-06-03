@@ -1,8 +1,19 @@
 import json
 import pytest
 from adh.model.database import Database as db
+from adh.model.models import Chambre
 from CONFIGURATION import TEST_DATABASE as db_settings
 from .resource import base_url, TEST_HEADERS
+
+
+def assert_room_in_db(body):
+    s = db.get_db().get_session()
+    q = s.query(Chambre)
+    q = q.filter(body["roomNumber"] == Chambre.numero)
+    c = q.one()
+    assert body["vlan"] == c.vlan.numero
+    assert str(body["phone"]) == c.telephone
+    assert body["description"] == c.description
 
 
 def prep_db(session,
@@ -115,6 +126,7 @@ def test_room_put_new_room(api_client):
         headers=TEST_HEADERS,
     )
     assert r.status_code == 201
+    assert_room_in_db(room)
 
 
 def test_room_put_update_room(api_client):
@@ -131,6 +143,7 @@ def test_room_put_update_room(api_client):
         headers=TEST_HEADERS,
     )
     assert r.status_code == 204
+    assert_room_in_db(room)
 
 
 def test_room_delete_existant_room(api_client):
@@ -139,6 +152,11 @@ def test_room_delete_existant_room(api_client):
         headers=TEST_HEADERS,
     )
     assert r.status_code == 204
+
+    s = db.get_db().get_session()
+    q = s.query(Chambre)
+    q = q.filter(Chambre.numero == 5110)
+    assert q.count() == 0
 
 
 def test_room_delete_non_existant_room(api_client):
