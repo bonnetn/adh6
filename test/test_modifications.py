@@ -8,8 +8,9 @@ import datetime
 
 
 def prep_db(session, sample_member1, wired_device):
-    session.add_all([sample_member1, wired_device])
+    session.add_all([sample_member1])
     session.commit()
+
     Utilisateur.find_or_create(session, "BadUser")
     Utilisateur.find_or_create(session, "test")
     Utilisateur.find_or_create(session, "BadUser2")
@@ -251,6 +252,162 @@ def test_add_device_wireless(
         "mac:\n"
         "- \n"
         "- 80:65:F3:FC:44:A9\n"
+    )
+    assert m.adherent_id == sample_member2.id
+    now = datetime.datetime.now()
+    one_sec = datetime.timedelta(seconds=1)
+    assert now - m.created_at < one_sec
+    assert now - m.updated_at < one_sec
+    assert m.utilisateur_id == 2
+
+
+def test_update_device_wired(api_client, wired_device, sample_member1,
+                             sample_member2):
+
+    s = db.get_db().get_session()
+    s.add(wired_device)
+    s.flush()
+
+    wired_device.start_modif_tracking()
+    wired_device.adherent = sample_member2
+    wired_device.dns = "hello"
+    wired_device.ip = "8.8.8.8"
+    wired_device.ipv6 = "fe80::1"
+    wired_device.mac = "AB:CD:EF:12:34:56"
+    # Build the corresponding modification
+    Modification.add_and_commit(s, wired_device,
+                                Utilisateur.find_or_create(s, "test"))
+    q = s.query(Modification)
+    m = q.first()
+    assert m.action == (
+        "ordinateurs: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
+        "adherent_id:\n"
+        "- 1\n"
+        "- 2\n"
+        "dns:\n"
+        "- bonnet_n4651\n"
+        "- hello\n"
+        "ip:\n"
+        "- 157.159.42.42\n"
+        "- 8.8.8.8\n"
+        "ipv6:\n"
+        "- e91f:bd71:56d9:13f3:5499:25b:cc84:f7e4\n"
+        "- fe80::1\n"
+        "mac:\n"
+        "- 96:24:F6:D0:48:A7\n"
+        "- AB:CD:EF:12:34:56\n"
+    )
+    assert m.adherent_id == sample_member2.id
+    now = datetime.datetime.now()
+    one_sec = datetime.timedelta(seconds=1)
+    assert now - m.created_at < one_sec
+    assert now - m.updated_at < one_sec
+    assert m.utilisateur_id == 2
+
+
+def test_update_device_wireless(
+                api_client, wireless_device, sample_member1, sample_member2):
+
+    s = db.get_db().get_session()
+    s.add(wireless_device)
+    s.flush()
+
+    wireless_device.start_modif_tracking()
+    wireless_device.adherent = sample_member1
+    wireless_device.mac = "12:34:56:78:9A:BD"
+    # Build the corresponding modification
+    Modification.add_and_commit(s, wireless_device,
+                                Utilisateur.find_or_create(s, "test"))
+    q = s.query(Modification)
+    m = q.first()
+    assert m.action == (
+        "portables: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
+        "adherent_id:\n"
+        "- 2\n"
+        "- 1\n"
+        "mac:\n"
+        "- 80:65:F3:FC:44:A9\n"
+        "- 12:34:56:78:9A:BD\n"
+    )
+    assert m.adherent_id == sample_member1.id
+    now = datetime.datetime.now()
+    one_sec = datetime.timedelta(seconds=1)
+    assert now - m.created_at < one_sec
+    assert now - m.updated_at < one_sec
+    assert m.utilisateur_id == 2
+
+
+def test_delete_device_wired(api_client, wired_device, sample_member1,
+                             sample_member2):
+
+    s = db.get_db().get_session()
+    s.add(wired_device)
+    s.flush()
+
+    wired_device.start_modif_tracking()
+    s.delete(wired_device)
+    s.flush()
+    # Build the corresponding modification
+    Modification.add_and_commit(s, wired_device,
+                                Utilisateur.find_or_create(s, "test"))
+    q = s.query(Modification)
+    m = q.first()
+    assert m.action == (
+        "ordinateurs: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
+        "adherent_id:\n"
+        "- 1\n"
+        "- \n"
+        "dns:\n"
+        "- bonnet_n4651\n"
+        "- \n"
+        "id:\n"
+        "- 1\n"
+        "- \n"
+        "ip:\n"
+        "- 157.159.42.42\n"
+        "- \n"
+        "ipv6:\n"
+        "- e91f:bd71:56d9:13f3:5499:25b:cc84:f7e4\n"
+        "- \n"
+        "mac:\n"
+        "- 96:24:F6:D0:48:A7\n"
+        "- \n"
+    )
+    assert m.adherent_id == sample_member1.id
+    now = datetime.datetime.now()
+    one_sec = datetime.timedelta(seconds=1)
+    assert now - m.created_at < one_sec
+    assert now - m.updated_at < one_sec
+    assert m.utilisateur_id == 2
+
+
+def test_delete_device_wireless(
+                api_client, wireless_device, sample_member1, sample_member2):
+
+    s = db.get_db().get_session()
+    s.add(wireless_device)
+    s.flush()
+
+    wireless_device.start_modif_tracking()
+    s.delete(wireless_device)
+    s.flush()
+
+    # Build the corresponding modification
+    Modification.add_and_commit(s, wireless_device,
+                                Utilisateur.find_or_create(s, "test"))
+    q = s.query(Modification)
+    m = q.first()
+    assert m.action == (
+        "portables: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
+        "adherent_id:\n"
+        "- 2\n"
+        "- \n"
+        "id:\n"
+        "- 1\n"
+        "- \n"
+        "mac:\n"
+        "- 80:65:F3:FC:44:A9\n"
+        "- \n"
     )
     assert m.adherent_id == sample_member2.id
     now = datetime.datetime.now()
