@@ -352,26 +352,10 @@ def test_delete_device_wired(api_client, wired_device, sample_member1,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
+    print(m.action)
     assert m.action == (
-        "ordinateur: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
-        "adherent_id:\n"
-        "- 1\n"
-        "- \n"
-        "dns:\n"
-        "- bonnet_n4651\n"
-        "- \n"
-        "id:\n"
-        "- 1\n"
-        "- \n"
-        "ip:\n"
-        "- 157.159.42.42\n"
-        "- \n"
-        "ipv6:\n"
-        "- e91f:bd71:56d9:13f3:5499:25b:cc84:f7e4\n"
-        "- \n"
-        "mac:\n"
-        "- 96:24:F6:D0:48:A7\n"
-        "- \n"
+        "---\n"
+        "ordinateur: Suppression de l'ordinateur 96-24-F6-D0-48-A7\n"
     )
     assert m.adherent_id == sample_member1.id
     now = datetime.datetime.now()
@@ -397,17 +381,10 @@ def test_delete_device_wireless(
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
+    print(m.action)
     assert m.action == (
-        "portable: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
-        "adherent_id:\n"
-        "- 2\n"
-        "- \n"
-        "id:\n"
-        "- 1\n"
-        "- \n"
-        "mac:\n"
-        "- 80:65:F3:FC:44:A9\n"
-        "- \n"
+        "---\n"
+        "portable: Suppression du portable 80-65-F3-FC-44-A9\n"
     )
     assert m.adherent_id == sample_member2.id
     now = datetime.datetime.now()

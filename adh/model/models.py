@@ -71,7 +71,6 @@ class RubyHashModificationTracker(ModificationTracker):
 
             old = old if old is not None else ""
             new = new if new is not None else ""
-            print(key, old, new)
 
             if old != new:
                 txt += ["{}:\n- {}\n- {}\n".format(key, old, new)]
@@ -356,6 +355,13 @@ class Ordinateur(Base, RubyHashModificationTracker):
         second argument
         """
         modif, adh = super(Ordinateur, self).get_ruby_modif()
+        if not self._new_data:
+            proper_mac = self.mac.upper().replace(":", "-")
+            return (
+                "---\n"
+                "ordinateur: Suppression de l'ordinateur {}\n".format(proper_mac)
+            ), self.adherent
+
         modif = 'ordinateur: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
                 modif
         return modif, self.adherent
@@ -408,6 +414,12 @@ class Portable(Base, RubyHashModificationTracker):
         second argument
         """
         modif, adh = super(Portable, self).get_ruby_modif()
+        if not self._new_data:
+            proper_mac = self.mac.upper().replace(":", "-")
+            return (
+                "---\n"
+                "portable: Suppression du portable {}\n".format(proper_mac)
+            ), self.adherent
         modif = 'portable: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
                 modif
         return modif, self.adherent
