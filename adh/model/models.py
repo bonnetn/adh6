@@ -356,7 +356,7 @@ class Ordinateur(Base, RubyHashModificationTracker):
         second argument
         """
         modif, adh = super(Ordinateur, self).get_ruby_modif()
-        modif = 'ordinateurs: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
+        modif = 'ordinateur: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
                 modif
         return modif, self.adherent
  
@@ -408,7 +408,7 @@ class Portable(Base, RubyHashModificationTracker):
         second argument
         """
         modif, adh = super(Portable, self).get_ruby_modif()
-        modif = 'portables: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
+        modif = 'portable: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
                 modif
         return modif, self.adherent
 

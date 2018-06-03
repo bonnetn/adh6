@@ -201,7 +201,7 @@ def test_add_device_wired(api_client, wired_device, sample_member1):
     q = s.query(Modification)
     m = q.first()
     assert m.action == (
-        "ordinateurs: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
+        "ordinateur: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
         "adherent_id:\n"
         "- \n"
         "- 1\n"
@@ -242,7 +242,7 @@ def test_add_device_wireless(
     q = s.query(Modification)
     m = q.first()
     assert m.action == (
-        "portables: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
+        "portable: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
         "adherent_id:\n"
         "- \n"
         "- 2\n"
@@ -280,7 +280,7 @@ def test_update_device_wired(api_client, wired_device, sample_member1,
     q = s.query(Modification)
     m = q.first()
     assert m.action == (
-        "ordinateurs: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
+        "ordinateur: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
         "adherent_id:\n"
         "- 1\n"
         "- 2\n"
@@ -321,7 +321,7 @@ def test_update_device_wireless(
     q = s.query(Modification)
     m = q.first()
     assert m.action == (
-        "portables: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
+        "portable: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
         "adherent_id:\n"
         "- 2\n"
         "- 1\n"
@@ -353,7 +353,7 @@ def test_delete_device_wired(api_client, wired_device, sample_member1,
     q = s.query(Modification)
     m = q.first()
     assert m.action == (
-        "ordinateurs: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
+        "ordinateur: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
         "adherent_id:\n"
         "- 1\n"
         "- \n"
@@ -398,7 +398,7 @@ def test_delete_device_wireless(
     q = s.query(Modification)
     m = q.first()
     assert m.action == (
-        "portables: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
+        "portable: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n"
         "adherent_id:\n"
         "- 2\n"
         "- \n"
