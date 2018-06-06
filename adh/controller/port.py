@@ -3,7 +3,7 @@ from adh.model.database import Database as db
 from sqlalchemy import or_
 from adh.exceptions import RoomNotFound, SwitchNotFound, PortNotFound
 from adh.model.models import Port, Chambre, Switch
-from adh.auth import auth_simple_user
+from adh.auth import auth_simple_user, auth_admin
 
 
 @auth_simple_user
@@ -42,7 +42,7 @@ def filterPort(admin, limit=100, offset=0,
     return result, 200, headers
 
 
-@auth_simple_user
+@auth_admin
 def createPort(admin, switchID, body):
     """ [API] Create a port in the database """
 
@@ -75,7 +75,7 @@ def getPort(admin, switchID, portID):
     return result, 200
 
 
-@auth_simple_user
+@auth_admin
 def updatePort(admin, switchID, portID, body):
     """ [API] Update a port in the database """
 
@@ -97,7 +97,7 @@ def updatePort(admin, switchID, portID, body):
     return NoContent, 204
 
 
-@auth_simple_user
+@auth_admin
 def deletePort(admin, switchID, portID):
     """ [API] Delete a port from the database """
     session = db.get_db().get_session()

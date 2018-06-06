@@ -51,3 +51,14 @@ def auth_simple_user(f):
             return f(admin, *args, **kwargs)
         return NoContent, 401
     return wrapper
+
+
+def auth_admin(f):
+    def wrapper(*args, user, token_info, **kwargs):
+        if current_app.config["TESTING"] \
+           or "adh6_admin" in token_info["groups"]:
+            s = db.get_db().get_session()
+            admin = Utilisateur.find_or_create(s, user)
+            return f(admin, *args, **kwargs)
+        return NoContent, 401
+    return wrapper

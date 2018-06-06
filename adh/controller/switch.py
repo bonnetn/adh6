@@ -3,7 +3,7 @@ from sqlalchemy import or_
 from adh.model.database import Database as db
 from adh.model.models import Switch
 from adh.exceptions import InvalidIPv4, SwitchNotFound
-from adh.auth import auth_simple_user
+from adh.auth import auth_simple_user, auth_admin
 
 
 def switchExists(session, switchID):
@@ -45,7 +45,7 @@ def filterSwitch(admin, limit=100, offset=0, terms=None):
     return result, 200, headers
 
 
-@auth_simple_user
+@auth_admin
 def createSwitch(admin, body):
     """ [API] Create a switch in the database """
     if "id" in body:
@@ -71,7 +71,7 @@ def getSwitch(admin, switchID):
         return NoContent, 404
 
 
-@auth_simple_user
+@auth_admin
 def updateSwitch(admin, switchID, body):
     """ [API] Update the specified switch from the database """
     if "id" in body:
@@ -93,7 +93,7 @@ def updateSwitch(admin, switchID, body):
     return NoContent, 204
 
 
-@auth_simple_user
+@auth_admin
 def deleteSwitch(admin, switchID):
     """ [API] Delete the specified switch from the database """
     session = db.get_db().get_session()
