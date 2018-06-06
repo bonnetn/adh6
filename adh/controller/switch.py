@@ -1,3 +1,5 @@
+import logging
+import json
 from connexion import NoContent
 from sqlalchemy import or_
 from adh.model.database import Database as db
@@ -42,6 +44,7 @@ def filterSwitch(admin, limit=100, offset=0, terms=None):
         'access-control-expose-headers': 'X-Total-Count',
         'X-Total-Count': str(count)
     }
+    logging.info("%s fetched the switch list", admin.login)
     return result, 200, headers
 
 
@@ -58,6 +61,7 @@ def createSwitch(admin, body):
     session.add(switch)
     session.commit()
 
+    logging.info("%s created a switch\n%s", admin.login, json.dumps(body))
     return NoContent, 201, {'Location': '/switch/{}'.format(switch.id)}
 
 
@@ -66,6 +70,7 @@ def getSwitch(admin, switchID):
     """ [API] Get the specified switch from the database """
     session = db.get_db().get_session()
     try:
+        logging.info("%s fetched the switch %d", admin.login, switchID)
         return dict(Switch.find(session, switchID))
     except SwitchNotFound:
         return NoContent, 404
@@ -90,6 +95,8 @@ def updateSwitch(admin, switchID, body):
     session.merge(switch)
     session.commit()
 
+    logging.info("%s updated the switch %d\n%s",
+                 admin.login, switchID, json.dumps(body))
     return NoContent, 204
 
 
@@ -106,4 +113,5 @@ def deleteSwitch(admin, switchID):
     session.delete(switch)
     session.commit()
 
+    logging.info("%s deleted the switch %d", admin.login, switchID)
     return NoContent, 204

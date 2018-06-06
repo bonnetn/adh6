@@ -1,3 +1,4 @@
+import logging
 import pytest
 import json
 from .resource import base_url
@@ -240,3 +241,35 @@ def test_switch_delete_non_existant_switch(api_client):
         headers=TEST_HEADERS
     )
     assert r.status_code == 404
+
+
+def test_switch_log_create(api_client, caplog):
+    with caplog.at_level(logging.INFO):
+        test_switch_post_valid(api_client)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient created a switch\n{"description": "Test Switch", "ip": '
+        '"192.168.103.128", "community": "myGreatCommunity"}'
+    )
+
+
+def test_switch_log_update(api_client, caplog):
+    with caplog.at_level(logging.INFO):
+        test_switch_update_existant_switch(api_client)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient updated the switch 1\n{"description": "Modified switch"'
+        ', "ip": "192.168.103.132", "community": "communityModified"}'
+    )
+
+
+def test_switch_log_delete(api_client, caplog):
+    with caplog.at_level(logging.INFO):
+        test_switch_delete_existant_switch(api_client)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient deleted the switch 1'
+    )
