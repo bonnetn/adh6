@@ -1,3 +1,5 @@
+import logging
+import json
 from connexion import NoContent
 from sqlalchemy import or_
 from adh.exceptions import RoomNotFound, VlanNotFound
@@ -38,6 +40,8 @@ def filterRoom(admin, limit=100, offset=0, terms=None):
         'access-control-expose-headers': 'X-Total-Count',
         'X-Total-Count': str(count)
     }
+
+    logging.info("%s fetched the room list", admin.login)
     return result, 200, headers
 
 
@@ -59,8 +63,12 @@ def putRoom(admin, roomNumber, body):
     s.commit()
 
     if room_exists:
+        logging.info("%s updated the room %d\n%s",
+                     admin.login, roomNumber, json.dumps(body))
         return NoContent, 204
     else:
+        logging.info("%s created the room %d\n%s",
+                     admin.login, roomNumber, json.dumps(body))
         return NoContent, 201
 
 
@@ -69,6 +77,7 @@ def getRoom(admin, roomNumber):
     """ [API] Get the room specified """
     s = db.get_db().get_session()
     try:
+        logging.info("%s fetched the room %d", admin.login, roomNumber)
         return dict(Chambre.find(s, roomNumber)), 200
     except RoomNotFound:
         return NoContent, 404
@@ -84,4 +93,5 @@ def deleteRoom(admin, roomNumber):
         return NoContent, 404
 
     s.commit()
+    logging.info("%s deleted the room %d", admin.login, roomNumber)
     return NoContent, 204

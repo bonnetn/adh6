@@ -1,3 +1,4 @@
+import logging
 import json
 import pytest
 from adh.model.database import Database as db
@@ -98,10 +99,10 @@ def test_room_get_invalid_room(api_client):
 
 def test_room_put_new_room_invalid_vlan(api_client):
     room = {
-      "roomNumber": 5111,
-      "vlan": 45,
-      "phone": 6842,
-      "description": "Chambre 5111"
+        "roomNumber": 5111,
+        "vlan": 45,
+        "phone": 6842,
+        "description": "Chambre 5111"
     }
     r = api_client.put(
         "{}/room/{}".format(base_url, 5111),
@@ -165,3 +166,38 @@ def test_room_delete_non_existant_room(api_client):
         headers=TEST_HEADERS,
     )
     assert r.status_code == 404
+
+
+def test_room_log_create_room(api_client, caplog):
+
+    with caplog.at_level(logging.INFO):
+        test_room_put_new_room(api_client)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient created the room 5111\n{"roomNumber": 5111, "vlan": '
+        '42, "phone": 6842, "description": "Chambre 5111"}'
+    )
+
+
+def test_room_log_update_room(api_client, caplog):
+
+    with caplog.at_level(logging.INFO):
+        test_room_put_update_room(api_client)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient updated the room 5110\n{"roomNumber": 5111, "vlan": '
+        '42, "phone": 6842, "description": "Chambre 5111"}'
+    )
+
+
+def test_room_log_delete_room(api_client, caplog):
+
+    with caplog.at_level(logging.INFO):
+        test_room_delete_existant_room(api_client)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient deleted the room 5110'
+    )
