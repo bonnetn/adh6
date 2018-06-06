@@ -1,5 +1,6 @@
 import json
 import pytest
+import logging
 from adh.model.database import Database as db
 from CONFIGURATION import TEST_DATABASE as db_settings
 from adh.model.models import Port
@@ -160,7 +161,6 @@ def test_port_post_create_port(api_client, sample_switch1):
         content_type='application/json',
         headers=TEST_HEADERS,
     )
-    print(r.data)
     assert r.status_code == 200
     assert 'Location' in r.headers
 
@@ -279,3 +279,37 @@ def test_port_put_delete_non_existant_port(api_client,
         headers=TEST_HEADERS,
     )
     assert r.status_code == 404
+
+
+def test_port_log_create_port(api_client, sample_switch1, caplog):
+    with caplog.at_level(logging.INFO):
+        test_port_post_create_port(api_client, sample_switch1)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient created the port\n{"roomNumber": 5110, "switchID": 1, '
+        '"portNumber": "1/0/4"}'
+    )
+
+
+def test_port_log_update_port(api_client, sample_switch1,
+                              sample_port1, caplog):
+    with caplog.at_level(logging.INFO):
+        test_port_put_update_port(api_client, sample_switch1, sample_port1)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient updated the port /switch/1/port/1\n{"roomNumber": '
+        '5110, "switchID": 1, "portNumber": "1/2/3"}'
+    )
+
+
+def test_port_log_delete_port(api_client, sample_switch1,
+                              sample_port1, caplog):
+    with caplog.at_level(logging.INFO):
+        test_port_put_delete_port(api_client, sample_switch1, sample_port1)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient deleted the port /switch/1/port/1'
+    )
