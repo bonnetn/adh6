@@ -4,6 +4,8 @@ from sqlalchemy import or_
 from adh.exceptions import RoomNotFound, SwitchNotFound, PortNotFound
 from adh.model.models import Port, Chambre, Switch
 from adh.auth import auth_simple_user, auth_admin
+import logging
+import json
 
 
 @auth_simple_user
@@ -39,6 +41,7 @@ def filterPort(admin, limit=100, offset=0,
         'access-control-expose-headers': 'X-Total-Count',
         'X-Total-Count': str(count)
     }
+    logging.info("%s fetched the port list", admin.login)
     return result, 200, headers
 
 
@@ -59,6 +62,8 @@ def createPort(admin, switchID, body):
     headers = {
         'Location': '/switch/{}/port/{}'.format(port.switch_id, port.id)
     }
+    logging.info("%s created the port\n%s",
+                 admin.login, json.dumps(body))
     return NoContent, 200, headers
 
 
@@ -72,6 +77,8 @@ def getPort(admin, switchID, portID):
         return NoContent, 404
 
     result = dict(result)
+    logging.info("%s fetched the port /switch/%d/port/%d",
+                 admin.login, switchID, portID)
     return result, 200
 
 
@@ -94,6 +101,8 @@ def updatePort(admin, switchID, portID, body):
     s.merge(new_port)
     s.commit()
 
+    logging.info("%s updated the port /switch/%d/port/%d\n%s",
+                 admin.login, switchID, portID, json.dumps(body))
     return NoContent, 204
 
 
@@ -106,4 +115,6 @@ def deletePort(admin, switchID, portID):
     except PortNotFound:
         return NoContent, 404
     session.commit()
+    logging.info("%s deleted the port /switch/%d/port/%d",
+                 admin.login, switchID, portID)
     return NoContent, 204
