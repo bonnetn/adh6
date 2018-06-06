@@ -15,6 +15,7 @@ from adh.controller.device_utils import is_wired, is_wireless, \
         get_all_devices, \
         dev_to_dict
 from adh.auth import auth_simple_user
+import logging
 
 
 @auth_simple_user
@@ -55,6 +56,8 @@ def filterDevice(admin, limit=100, offset=0, username=None, terms=None):
         "X-Total-Count": count,
         "access-control-expose-headers": "X-Total-Count"
     }
+    print(admin.login)
+    logging.info("%s fetched the device list", admin.login)
     return results, 200, headers
 
 
@@ -104,9 +107,11 @@ def putDevice(admin, macAddress, body):
                 create_wireless_device(admin, body, s)
 
             s.commit()
+            logging.info("%s created the device %s", admin.login, macAddress)
             return NoContent, 201
 
         s.commit()
+        logging.info("%s updated the device %s", admin.login, macAddress)
         return NoContent, 204
 
     except UserNotFound:
@@ -133,12 +138,14 @@ def getDevice(admin, macAddress):
         q = s.query(models.Portable)
         q = q.filter(models.Portable.mac == macAddress)
         r = q.one()
+        logging.info("%s fetched the device %s", admin.login, macAddress)
         return dict(r), 200
 
     elif is_wired(macAddress, s):
         q = s.query(models.Ordinateur)
         q = q.filter(models.Ordinateur.mac == macAddress)
         r = q.one()
+        logging.info("%s fetched the device %s", admin.login, macAddress)
         return dict(r), 200
 
     else:
@@ -151,10 +158,12 @@ def deleteDevice(admin, macAddress):
     s = db.get_db().get_session()
     if is_wireless(macAddress, s):
         delete_wireless_device(admin, macAddress, s)
+        logging.info("%s deleted the device %s", admin.login, macAddress)
         return NoContent, 204
 
     elif is_wired(macAddress, s):
         delete_wired_device(admin, macAddress, s)
+        logging.info("%s deleted the device %s", admin.login, macAddress)
         return NoContent, 204
 
     else:
