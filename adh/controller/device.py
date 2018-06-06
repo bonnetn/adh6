@@ -1,5 +1,5 @@
 from connexion import NoContent
-from flask import jsonify
+import json
 from adh.exceptions import UserNotFound
 from adh.model.database import Database as db
 from adh.model import models
@@ -109,12 +109,12 @@ def putDevice(admin, macAddress, body):
 
             s.commit()
             logging.info("%s created the device %s\n%s",
-                         admin.login, macAddress, jsonify(body))
+                         admin.login, macAddress, json.dumps(body))
             return NoContent, 201
 
         s.commit()
         logging.info("%s updated the device %s\n%s",
-                     admin.login, macAddress, jsonify(body))
+                     admin.login, macAddress, json.dumps(body))
         return NoContent, 204
 
     except UserNotFound:
