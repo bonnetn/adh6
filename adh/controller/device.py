@@ -57,7 +57,6 @@ def filterDevice(admin, limit=100, offset=0, username=None, terms=None):
         "X-Total-Count": count,
         "access-control-expose-headers": "X-Total-Count"
     }
-    print(admin.login)
     logging.info("%s fetched the device list", admin.login)
     return results, 200, headers
 
