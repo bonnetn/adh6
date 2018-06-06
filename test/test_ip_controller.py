@@ -18,6 +18,7 @@ def test_assigment_ip(network, taken, expected):
 
 @pytest.mark.parametrize('network,taken', [
     ('192.168.102.0/24', ["192.168.102.{}".format(i) for i in range(256)]),
+    ('192.168.102.0/25', ["192.168.102.{}".format(i) for i in range(128)]),
     ('192.168.102.0/32', []),
 ])
 def test_assigment_ip_no_more_left(network, taken):
