@@ -1,3 +1,4 @@
+import logging
 import json
 import pytest
 from adh.model.database import Database as db
@@ -406,3 +407,62 @@ def test_user_change_password_user_not_exist(api_client):
         headers=TEST_HEADERS,
     )
     assert result.status_code == 404
+
+
+def test_user_log_create(api_client, caplog):
+    with caplog.at_level(logging.INFO):
+        test_user_put_user_create(api_client)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient created the user doe_john\n{"firstName": "John",'
+        ' "lastName": "Doe", "roomNumber": 4592, "comment": "comment", '
+        '"departureDate": "2000-01-23T04:56:07.000+00:00", "associationMode": '
+        '"2000-01-23T04:56:07.000+00:00", "email": "john.doe@gmail.com",'
+        ' "username": "doe_john"}'
+    )
+
+
+def test_user_log_update(api_client, caplog):
+    with caplog.at_level(logging.INFO):
+        test_user_put_user_update(api_client)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient updated the user dubois_j\n{"firstName": "Jean-Louis",'
+        ' "lastName": "Dubois", "roomNumber": 4592, "comment": "comment", '
+        '"departureDate": "2000-01-23T04:56:07.000+00:00", "associationMode": '
+        '"2000-01-23T04:56:07.000+00:00", "email": "john.doe@gmail.com", '
+        '"username": "dubois_j"}'
+    )
+
+
+def test_user_log_delete(api_client, caplog):
+    with caplog.at_level(logging.INFO):
+        test_user_delete_existant(api_client)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient deleted the user dubois_j'
+    )
+
+
+def test_user_log_add_membership(api_client, caplog):
+    with caplog.at_level(logging.INFO):
+        test_user_post_add_membership_ok(api_client)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient created the membership record dubois_j\n{"duration": '
+        '365, "start": "2000-01-23T04:56:07.000+00:00"}'
+    )
+
+
+def test_user_log_update_password(api_client, caplog):
+    with caplog.at_level(logging.INFO):
+        test_user_change_password_ok(api_client)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient updated the password of dubois_j'
+    )

@@ -1,3 +1,5 @@
+import json
+import logging
 from connexion import NoContent
 from adh.model.database import Database as db
 from adh.model.models import Adherent, Chambre, Adhesion, Modification
@@ -53,6 +55,7 @@ def filterUser(admin, limit=100, offset=0, terms=None, roomNumber=None):
         "X-Total-Count": str(count),
         'access-control-expose-headers': 'X-Total-Count'
     }
+    logging.info("%s fetched the user list", admin.login)
     return list(map(dict, r)), 200, headers
 
 
@@ -61,6 +64,7 @@ def getUser(admin, username):
     """ [API] Get the specified user from the database """
     s = db.get_db().get_session()
     try:
+        logging.info("%s fetched the user %s", admin.login, username)
         return dict(Adherent.find(s, username))
     except UserNotFound:
         return NoContent, 404
@@ -90,6 +94,7 @@ def deleteUser(admin, username):
     except Exception:
         s.rollback()
         raise
+    logging.info("%s deleted the user %s", admin.login, username)
     return NoContent, 204
 
 
@@ -128,8 +133,12 @@ def putUser(admin, username, body):
         raise
 
     if update:
+        logging.info("%s updated the user %s\n%s",
+                     admin.login, username, json.dumps(body))
         return NoContent, 204
     else:
+        logging.info("%s created the user %s\n%s",
+                     admin.login, username, json.dumps(body))
         return NoContent, 201
 
 
@@ -155,6 +164,8 @@ def addMembership(admin, username, body):
         return NoContent, 404
 
     s.commit()
+    logging.info("%s created the membership record %s\n%s",
+                 admin.login, username, json.dumps(body))
     return NoContent, 200, {'Location': 'test'}  # TODO: finish that!
 
 
@@ -190,4 +201,6 @@ def updatePassword(admin, username, body):
         s.rollback()
         raise
 
+    logging.info("%s updated the password of %s",
+                 admin.login, username)
     return NoContent, 204
