@@ -5,13 +5,17 @@ API_CONF = {
 }
                               
 # Permanent database, used to store every object
+# PROD_DATABASE = {
+#     'drivername': '',  # if using MySQL: 'mysql+mysqldb'
+#     'host': '',
+#     'port': '',
+#     'username': '',
+#     'password': '',
+#     'database': ''
+# }
 PROD_DATABASE = {
-    'drivername': '',  # if using MySQL: 'mysql+mysqldb'
-    'host': '',
-    'port': '',
-    'username': '',
-    'password': '',
-    'database': ''
+    'drivername': 'sqlite',
+    'database': ':memory:',
 }
 
 # Temporary database, that will be clear at every test, used when you launch
