@@ -5,4 +5,4 @@ test:
   - pip3 install -r requirements.txt
   - cp CONFIGURATION.py{.example,}
   script:
-  - pytest
+  - pytest -vv
