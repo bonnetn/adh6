@@ -287,8 +287,8 @@ def test_port_log_create_port(api_client, sample_switch1, caplog):
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient created the port\n{"roomNumber": 5110, "switchID": 1, '
-        '"portNumber": "1/0/4"}'
+        'TestingClient created the port\n{"portNumber": "1/0/4", '
+        '"roomNumber": 5110, "switchID": 1}'
     )
 
 
@@ -299,8 +299,8 @@ def test_port_log_update_port(api_client, sample_switch1,
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient updated the port /switch/1/port/1\n{"roomNumber": '
-        '5110, "switchID": 1, "portNumber": "1/2/3"}'
+        'TestingClient updated the port /switch/1/port/1\n{"portNumber": '
+        '"1/2/3", "roomNumber": 5110, "switchID": 1}'
     )
 
 

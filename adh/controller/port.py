@@ -63,7 +63,7 @@ def createPort(admin, switchID, body):
         'Location': '/switch/{}/port/{}'.format(port.switch_id, port.id)
     }
     logging.info("%s created the port\n%s",
-                 admin.login, json.dumps(body))
+                 admin.login, json.dumps(body, sort_keys=True))
     return NoContent, 200, headers
 
 
@@ -102,7 +102,7 @@ def updatePort(admin, switchID, portID, body):
     s.commit()
 
     logging.info("%s updated the port /switch/%d/port/%d\n%s",
-                 admin.login, switchID, portID, json.dumps(body))
+                 admin.login, switchID, portID, json.dumps(body, sort_keys=True))
     return NoContent, 204
 
 
