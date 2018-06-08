@@ -413,10 +413,10 @@ def test_device_log_create_wired(api_client, caplog, wired_device_dict):
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient created the device 01:23:45:67:89:AD\n{"mac": '
-        '"01:23:45:67:89:AD", "ipAddress": "127.0.0.1", "ipv6Address": '
-        '"dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166", "connectionType": '
-        '"wired", "username": "dubois_j"}'
+        'TestingClient created the device 01:23:45:67:89:AD\n{"connectionType"'
+        ': "wired", "ipAddress": "127.0.0.1", "ipv6Address":'
+        ' "dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166", "mac": "01:23:45:67:89:AD"'
+        ', "username": "dubois_j"}'
     )
 
 
@@ -427,10 +427,10 @@ def test_device_log_create_wireless(api_client, caplog, wireless_device_dict):
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient created the device 01:23:45:67:89:AC\n{"mac": '
-        '"01:23:45:67:89:AC", "ipAddress": "127.0.0.1", "ipv6Address": '
-        '"c69f:6c5:754c:d301:df05:ba81:76a8:ddc4", "connectionType": '
-        '"wireless", "username": "dubois_j"}'
+        'TestingClient created the device 01:23:45:67:89:AC\n{"connectionType"'
+        ': "wireless", "ipAddress": "127.0.0.1", "ipv6Address": '
+        '"c69f:6c5:754c:d301:df05:ba81:76a8:ddc4", "mac": "01:23:45:67:89:AC",'
+        ' "username": "dubois_j"}'
     )
 
 
@@ -444,10 +444,10 @@ def test_device_log_update_wired(api_client, caplog, wired_device,
     print(caplog.record_tuples)
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient updated the device 96:24:F6:D0:48:A7\n{"mac": '
-        '"01:23:45:67:89:AD", "ipAddress": "127.0.0.1", "ipv6Address": '
-        '"dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166", "connectionType": "wired", '
-        '"username": "dubois_j"}'
+        'TestingClient updated the device 96:24:F6:D0:48:A7\n{"connectionType"'
+        ': "wired", "ipAddress": "127.0.0.1", "ipv6Address": '
+        '"dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166", "mac": "01:23:45:67:89:AD",'
+        ' "username": "dubois_j"}'
     )
 
 
@@ -460,10 +460,10 @@ def test_device_log_update_wireless(api_client, caplog, wireless_device,
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient updated the device 80:65:F3:FC:44:A9\n{"mac": '
-        '"01:23:45:67:89:AC", "ipAddress": "127.0.0.1", "ipv6Address": '
-        '"c69f:6c5:754c:d301:df05:ba81:76a8:ddc4", "connectionType": '
-        '"wireless", "username": "dubois_j"}'
+        'TestingClient updated the device 80:65:F3:FC:44:A9\n{"'
+        'connectionType": "wireless", "ipAddress": "127.0.0.1", '
+        '"ipv6Address": "c69f:6c5:754c:d301:df05:ba81:76a8:ddc4", "mac": '
+        '"01:23:45:67:89:AC", "username": "dubois_j"}'
     )
 
 

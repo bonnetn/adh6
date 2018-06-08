@@ -415,11 +415,11 @@ def test_user_log_create(api_client, caplog):
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient created the user doe_john\n{"firstName": "John",'
-        ' "lastName": "Doe", "roomNumber": 4592, "comment": "comment", '
-        '"departureDate": "2000-01-23T04:56:07.000+00:00", "associationMode": '
-        '"2000-01-23T04:56:07.000+00:00", "email": "john.doe@gmail.com",'
-        ' "username": "doe_john"}'
+        'TestingClient created the user doe_john\n{"associationMode": '
+        '"2000-01-23T04:56:07.000+00:00", "comment": "comment", '
+        '"departureDate": "2000-01-23T04:56:07.000+00:00", "email": '
+        '"john.doe@gmail.com", "firstName": "John", "lastName": "Doe", '
+        '"roomNumber": 4592, "username": "doe_john"}'
     )
 
 
@@ -429,11 +429,11 @@ def test_user_log_update(api_client, caplog):
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient updated the user dubois_j\n{"firstName": "Jean-Louis",'
-        ' "lastName": "Dubois", "roomNumber": 4592, "comment": "comment", '
-        '"departureDate": "2000-01-23T04:56:07.000+00:00", "associationMode": '
-        '"2000-01-23T04:56:07.000+00:00", "email": "john.doe@gmail.com", '
-        '"username": "dubois_j"}'
+        'TestingClient updated the user dubois_j\n{"associationMode": '
+        '"2000-01-23T04:56:07.000+00:00", "comment": "comment", '
+        '"departureDate": "2000-01-23T04:56:07.000+00:00", "email": '
+        '"john.doe@gmail.com", "firstName": "Jean-Louis", "lastName": '
+        '"Dubois", "roomNumber": 4592, "username": "dubois_j"}'
     )
 
 

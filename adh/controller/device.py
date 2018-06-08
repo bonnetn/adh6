@@ -108,12 +108,13 @@ def putDevice(admin, macAddress, body):
 
             s.commit()
             logging.info("%s created the device %s\n%s",
-                         admin.login, macAddress, json.dumps(body))
+                         admin.login, macAddress, json.dumps(body,
+                                                             sort_keys=True))
             return NoContent, 201
 
         s.commit()
         logging.info("%s updated the device %s\n%s",
-                     admin.login, macAddress, json.dumps(body))
+                     admin.login, macAddress, json.dumps(body, sort_keys=True))
         return NoContent, 204
 
     except UserNotFound:

@@ -175,8 +175,8 @@ def test_room_log_create_room(api_client, caplog):
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient created the room 5111\n{"roomNumber": 5111, "vlan": '
-        '42, "phone": 6842, "description": "Chambre 5111"}'
+        'TestingClient created the room 5111\n{"description": "Chambre 5111", '
+        '"phone": 6842, "roomNumber": 5111, "vlan": 42}'
     )
 
 
@@ -187,8 +187,8 @@ def test_room_log_update_room(api_client, caplog):
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient updated the room 5110\n{"roomNumber": 5111, "vlan": '
-        '42, "phone": 6842, "description": "Chambre 5111"}'
+        'TestingClient updated the room 5110\n{"description": "Chambre 5111", '
+        '"phone": 6842, "roomNumber": 5111, "vlan": 42}'
     )
 
 

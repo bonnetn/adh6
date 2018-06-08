@@ -61,7 +61,8 @@ def createSwitch(admin, body):
     session.add(switch)
     session.commit()
 
-    logging.info("%s created a switch\n%s", admin.login, json.dumps(body))
+    logging.info("%s created a switch\n%s", admin.login, json.dumps(body,
+                                                                    sort_keys=True))
     return NoContent, 201, {'Location': '/switch/{}'.format(switch.id)}
 
 
@@ -96,7 +97,7 @@ def updateSwitch(admin, switchID, body):
     session.commit()
 
     logging.info("%s updated the switch %d\n%s",
-                 admin.login, switchID, json.dumps(body))
+                 admin.login, switchID, json.dumps(body, sort_keys=True))
     return NoContent, 204
 
 

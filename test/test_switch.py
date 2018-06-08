@@ -249,8 +249,8 @@ def test_switch_log_create(api_client, caplog):
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient created a switch\n{"description": "Test Switch", "ip": '
-        '"192.168.103.128", "community": "myGreatCommunity"}'
+        'TestingClient created a switch\n{"community": "myGreatCommunity", '
+        '"description": "Test Switch", "ip": "192.168.103.128"}'
     )
 
 
@@ -260,8 +260,9 @@ def test_switch_log_update(api_client, caplog):
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient updated the switch 1\n{"description": "Modified switch"'
-        ', "ip": "192.168.103.132", "community": "communityModified"}'
+        'TestingClient updated the switch 1\n{"community": '
+        '"communityModified", "description": "Modified switch", "ip": '
+        '"192.168.103.132"}'
     )
 
 

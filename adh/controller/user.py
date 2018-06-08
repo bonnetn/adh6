@@ -134,11 +134,11 @@ def putUser(admin, username, body):
 
     if update:
         logging.info("%s updated the user %s\n%s",
-                     admin.login, username, json.dumps(body))
+                     admin.login, username, json.dumps(body, sort_keys=True))
         return NoContent, 204
     else:
         logging.info("%s created the user %s\n%s",
-                     admin.login, username, json.dumps(body))
+                     admin.login, username, json.dumps(body, sort_keys=True))
         return NoContent, 201
 
 
@@ -165,7 +165,7 @@ def addMembership(admin, username, body):
 
     s.commit()
     logging.info("%s created the membership record %s\n%s",
-                 admin.login, username, json.dumps(body))
+                 admin.login, username, json.dumps(body, sort_keys=True))
     return NoContent, 200, {'Location': 'test'}  # TODO: finish that!
 
 

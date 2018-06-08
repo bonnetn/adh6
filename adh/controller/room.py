@@ -64,11 +64,11 @@ def putRoom(admin, roomNumber, body):
 
     if room_exists:
         logging.info("%s updated the room %d\n%s",
-                     admin.login, roomNumber, json.dumps(body))
+                     admin.login, roomNumber, json.dumps(body, sort_keys=True))
         return NoContent, 204
     else:
         logging.info("%s created the room %d\n%s",
-                     admin.login, roomNumber, json.dumps(body))
+                     admin.login, roomNumber, json.dumps(body, sort_keys=True))
         return NoContent, 201
 
 
