@@ -1,5 +1,7 @@
+from adh.model.models import Ordinateur
 from adh.ip_controller import (
-    get_available_ip, NoMoreIPAvailable, get_all_used_ip, get_expired_devices
+    get_available_ip, NoMoreIPAvailable, get_all_used_ip, get_expired_devices,
+    free_expired_devices
 )
 from adh.model.database import Database as db
 from CONFIGURATION import TEST_DATABASE as db_settings
@@ -55,6 +57,14 @@ def test_get_expired_devices(api_client):
     expired = get_expired_devices(s)
     expired = list(map(lambda x: x.mac, expired))
     assert expired == ['96:24:F6:D0:48:A7']
+
+
+def test_free_expired_devices(api_client):
+    s = db.get_db().get_session()
+    free_expired_devices(s)
+    q = s.query(Ordinateur)
+    q = q.filter(Ordinateur.mac == '96:24:F6:D0:48:A7')
+    assert q.one().ip == "En Attente"
 
 
 def test_get_used_all_ip(api_client):

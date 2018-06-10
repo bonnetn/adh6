@@ -375,13 +375,13 @@ class Ordinateur(Base, RubyHashModificationTracker):
 
     @validates('ip')
     def valid_ip(self, key, addr):
-        if not addr or not checks.isIPv4(addr):
+        if not addr or (not checks.isIPv4(addr) and addr != "En Attente"):
             raise InvalidIPv4()
         return addr
 
     @validates('ipv6')
     def valid_ipv6(self, key, addr):
-        if not addr or not checks.isIPv6(addr):
+        if not addr or (not checks.isIPv6(addr) and addr != "En Attente"):
             raise InvalidIPv6()
         return addr
 

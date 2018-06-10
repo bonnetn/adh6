@@ -33,3 +33,9 @@ def get_expired_devices(session):
     for i in q.all():
         print(i.adherent.date_de_depart < datetime.datetime.now())
     return list(q.all())
+
+
+def free_expired_devices(session):
+    for dev in get_expired_devices(session):
+        dev.ip = "En Attente"
+    session.flush()
