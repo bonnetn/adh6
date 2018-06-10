@@ -1,4 +1,5 @@
 import pytest
+import datetime
 from adh.model.models import (
     Adherent, Chambre, Vlan, Ordinateur, Portable, Switch, Port
 )
@@ -87,6 +88,7 @@ def sample_member1(sample_room1):
         login='dubois_j',
         password='a',
         chambre=sample_room1,
+        date_de_depart=datetime.datetime(2005, 7, 14, 12, 30),
     )
 
 

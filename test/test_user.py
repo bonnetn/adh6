@@ -88,7 +88,8 @@ def test_user_to_dict(api_client, sample_member1):
                    'lastName': 'Dubois',
                    'username': 'dubois_j',
                    'roomNumber': 5110,
-                   'associationMode': t}
+                   'associationMode': t,
+                   'departureDate': datetime.datetime(2005, 7, 14, 12, 30)}
 
     assert dict(sample_member1) == dict_member
 
