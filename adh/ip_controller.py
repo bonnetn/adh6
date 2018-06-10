@@ -1,4 +1,6 @@
 import ipaddress
+import datetime
+from adh.model.models import Ordinateur, Adherent
 
 
 class NoMoreIPAvailable(Exception):
@@ -15,3 +17,19 @@ def get_available_ip(network, ip_taken):
         raise NoMoreIPAvailable
 
     return str(ip)
+
+
+def get_all_used_ip(session):
+    q = session.query(Ordinateur)
+    q.filter(Ordinateur.ip != "En Attente")
+    return list(map(lambda x: x.ip, q.all()))
+
+
+def get_expired_devices(session):
+    q = session.query(Ordinateur)
+    q.filter(Ordinateur.ip != "En Attente")
+    q.join(Adherent)
+    q.filter(Adherent.date_de_depart < datetime.datetime.now())
+    for i in q.all():
+        print(i.adherent.date_de_depart)
+    return list(q.all())
