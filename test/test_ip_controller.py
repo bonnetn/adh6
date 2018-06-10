@@ -7,20 +7,22 @@ import pytest
 
 
 def prep_db(session,
-            wired_device):
+            wired_device,
+            wired_device2):
     session.add_all([
         wired_device,
+        wired_device2,
     ])
     session.commit()
 
 
 @pytest.fixture
-def api_client(wired_device):
+def api_client(wired_device, wired_device2):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
         prep_db(db.get_db().get_session(),
-                wired_device)
+                wired_device, wired_device2)
         yield c
 
 
@@ -57,4 +59,4 @@ def test_get_expired_devices(api_client):
 
 def test_get_used_all_ip(api_client):
     s = db.get_db().get_session()
-    assert get_all_used_ip(s) == ['157.159.42.42']
+    assert sorted(get_all_used_ip(s)) == ['157.159.42.42', '157.159.43.43']

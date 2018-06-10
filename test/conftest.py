@@ -17,6 +17,17 @@ def wired_device(sample_member1):
 
 
 @pytest.fixture
+def wired_device2(sample_member3):
+    yield Ordinateur(
+        mac='96:24:F6:D0:48:A8',
+        ip='157.159.43.43',
+        dns='test',
+        adherent=sample_member3,
+        ipv6='f91f:bd71:56d9:13f3:5499:25b:cc84:f7e4'
+    )
+
+
+@pytest.fixture
 def wireless_device(sample_member2):
     yield Portable(
         mac='80:65:F3:FC:44:A9',
@@ -102,6 +113,20 @@ def sample_member2(sample_room1):
         commentaires='Desauthent pour routeur',
         password='a',
         chambre=sample_room1,
+    )
+
+
+@pytest.fixture
+def sample_member3(sample_room1):
+    yield Adherent(
+        nom='Dupont',
+        prenom='Jean',
+        mail='test@oyopmail.fr',
+        login='dupontje',
+        commentaires='abcdef',
+        password='b',
+        chambre=sample_room1,
+        date_de_depart=datetime.datetime(2105, 7, 14, 12, 30),
     )
 
 
