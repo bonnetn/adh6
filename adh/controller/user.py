@@ -9,6 +9,7 @@ import datetime
 import sqlalchemy
 from adh.auth import auth_simple_user
 import hashlib
+from CONFIGURATION import PRICES
 
 
 def adherentExists(session, username):
@@ -148,22 +149,30 @@ def addMembership(admin, username, body):
 
     s = db.get_db().get_session()
 
-    start = string_to_date(body["start"])
-    end = None
-    if start and "duration" in body:
-        duration = body["duration"]
-        end = start + datetime.timedelta(days=duration)
+    start = datetime.datetime.now().date()
+    if "start" in body:
+        start = string_to_date(body["start"])
+
+    duration = body["duration"]
+    end = start + datetime.timedelta(days=duration)
+
+    if duration not in PRICES:
+        return "There is no price assigned to that duration", 400
 
     try:
+        adh = Adherent.find(s, username)
         s.add(Adhesion(
-            adherent=Adherent.find(s, username),
+            adherent=adh,
             depart=start,
             fin=end
         ))
+        adh.start_modif_tracking()
+        adh.date_de_depart = end
+
     except UserNotFound:
         return NoContent, 404
 
-    s.commit()
+    Modification.add_and_commit(s, adh, admin)
     logging.info("%s created the membership record %s\n%s",
                  admin.login, username, json.dumps(body, sort_keys=True))
     return NoContent, 200, {'Location': 'test'}  # TODO: finish that!

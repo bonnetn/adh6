@@ -350,7 +350,7 @@ def test_user_put_user_update(api_client):
 
 def test_user_post_add_membership_not_found(api_client):
     body = {
-        "duration": 365,
+        "duration": 31,
         "start": "2000-01-23T04:56:07.000+00:00"
     }
     result = api_client.post(
@@ -362,9 +362,27 @@ def test_user_post_add_membership_not_found(api_client):
     assert result.status_code == 404
 
 
+def test_user_post_add_membership_undefined_price(api_client):
+    '''
+    Add a membership record for a duration that does not exist in the price
+    chart
+    '''
+    body = {
+      "duration": 1337,
+      "start": "2000-01-23T04:56:07.000+00:00"
+    }
+    result = api_client.post(
+        '{}/user/{}/membership'.format(base_url, "dubois_j"),
+        data=json.dumps(body),
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
+    assert result.status_code == 400
+
+
 def test_user_post_add_membership_ok(api_client):
     body = {
-      "duration": 365,
+      "duration": 360,
       "start": "2000-01-23T04:56:07.000+00:00"
     }
     result = api_client.post(
@@ -374,6 +392,12 @@ def test_user_post_add_membership_ok(api_client):
         headers=TEST_HEADERS,
     )
     assert result.status_code == 200
+    assert_modification_was_created(db.get_db().get_session())
+
+    s = db.get_db().get_session()
+    q = s.query(Adherent)
+    q = q.filter(Adherent.login == "dubois_j")
+    assert q.one().date_de_depart == datetime.date(2001, 1, 17)
 
 
 def test_user_change_password_ok(api_client):
@@ -455,7 +479,7 @@ def test_user_log_add_membership(api_client, caplog):
     assert caplog.record_tuples[1] == (
         'root', 20,
         'TestingClient created the membership record dubois_j\n{"duration": '
-        '365, "start": "2000-01-23T04:56:07.000+00:00"}'
+        '360, "start": "2000-01-23T04:56:07.000+00:00"}'
     )
 
 
