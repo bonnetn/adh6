@@ -4,7 +4,7 @@ import json
 from adh.exceptions import UserNotFound
 from adh.model.database import Database as db
 from adh.model import models
-from adh.model.models import Adherent
+from adh.model.models import Adherent, Modification
 from sqlalchemy.orm.exc import MultipleResultsFound
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidMac
 from adh import ip_controller
@@ -63,12 +63,11 @@ def filterDevice(admin, limit=100, offset=0, username=None, terms=None):
     return results, 200, headers
 
 
-def allocate_ip_for_device(s, dev):
+def allocate_ip_for_device(s, dev, admin):
     if dev.adherent.date_de_depart < datetime.datetime.now().date():
-        dev.ip = "En Attente"
-        dev.ipv6 = "En Attente"
         return  # No need to allocate ip for someone who is not a member
 
+    dev.start_modif_tracking()
     if dev.ipv6 == "En Attente":
         network = dev.adherent.chambre.vlan.adressesv6
 
@@ -91,6 +90,8 @@ def allocate_ip_for_device(s, dev):
 
         dev.ip = next_ip
 
+    Modification.add_and_commit(s, dev, admin)
+
 
 @auth_simple_user
 def putDevice(admin, macAddress, body):
@@ -107,7 +108,7 @@ def putDevice(admin, macAddress, body):
             if wanted_type == "wired":
                 delete_wireless_device(admin, macAddress, s)
                 device = update_wired_device(admin, macAddress, body, s)
-                allocate_ip_for_device(s, device)
+                allocate_ip_for_device(s, device, admin)
             else:
                 delete_wired_device(admin, macAddress, s)
                 update_wireless_device(admin, macAddress, body, s)
@@ -119,14 +120,14 @@ def putDevice(admin, macAddress, body):
                 create_wireless_device(admin, body, s)
             else:
                 device = update_wired_device(admin, macAddress, body, s)
-                allocate_ip_for_device(s, device)
+                allocate_ip_for_device(s, device, admin)
             returnCode = 204
 
         elif wireless:
             if wanted_type == "wired":
                 delete_wireless_device(admin, macAddress, s)
                 device = create_wired_device(admin, body, s)
-                allocate_ip_for_device(s, device)
+                allocate_ip_for_device(s, device, admin)
             else:
                 update_wireless_device(admin, macAddress, body, s)
             returnCode = 204
@@ -138,7 +139,7 @@ def putDevice(admin, macAddress, body):
 
             if wanted_type == "wired":
                 device = create_wired_device(admin, body, s)
-                allocate_ip_for_device(s, device)
+                allocate_ip_for_device(s, device, admin)
             else:
                 create_wireless_device(admin, body, s)
             returnCode = 201
@@ -153,7 +154,6 @@ def putDevice(admin, macAddress, body):
                          admin.login, macAddress, json.dumps(body,
                                                              sort_keys=True))
 
-        s.commit()
         return NoContent, returnCode
 
     except ip_controller.NoMoreIPAvailable:

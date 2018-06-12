@@ -151,8 +151,9 @@ def test_device_put_create_wireless(api_client, wireless_device_dict):
 
 
 def test_device_put_create_wired_without_ip(api_client, wired_device_dict):
-    ''' Can create a valid wired device ? '''
-    s = db.get_db().get_session()
+    '''
+    Can create a valid wired device? Create two devices and check the IP
+    '''
 
     del wired_device_dict['ipAddress']
     del wired_device_dict['ipv6Address']
@@ -162,13 +163,7 @@ def test_device_put_create_wired_without_ip(api_client, wired_device_dict):
                        content_type='application/json',
                        headers=TEST_HEADERS)
     assert r.status_code == 201
-    assert_modification_was_created(s)
-
-    q = s.query(Ordinateur)
-    q = q.filter(Ordinateur.mac == wired_device_dict["mac"])
-    dev = q.one()
-    assert dev.ip == "192.168.42.2"
-    assert dev.ipv6 == 'fe80::2'
+    assert_modification_was_created(db.get_db().get_session())
 
     wired_device_dict["mac"] = "AB:CD:EF:01:23:45"
     r = api_client.put('{}/device/{}'.format(base_url,
@@ -177,8 +172,9 @@ def test_device_put_create_wired_without_ip(api_client, wired_device_dict):
                        content_type='application/json',
                        headers=TEST_HEADERS)
     assert r.status_code == 201
-    assert_modification_was_created(s)
+    assert_modification_was_created(db.get_db().get_session())
 
+    s = db.get_db().get_session()
     q = s.query(Ordinateur)
     q = q.filter(Ordinateur.mac == wired_device_dict["mac"])
     dev = q.one()
