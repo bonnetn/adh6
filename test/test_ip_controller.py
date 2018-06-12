@@ -1,7 +1,7 @@
 from adh.model.models import Ordinateur
 from adh.ip_controller import (
-    get_available_ip, NoMoreIPAvailable, get_all_used_ip, get_expired_devices,
-    free_expired_devices
+    get_available_ip, NoMoreIPAvailable, get_all_used_ipv4,
+    get_expired_devices, free_expired_devices
 )
 from adh.model.database import Database as db
 from CONFIGURATION import TEST_DATABASE as db_settings
@@ -69,4 +69,4 @@ def test_free_expired_devices(api_client):
 
 def test_get_used_all_ip(api_client):
     s = db.get_db().get_session()
-    assert sorted(get_all_used_ip(s)) == ['157.159.42.42', '157.159.43.43']
+    assert sorted(get_all_used_ipv4(s)) == ['157.159.42.42', '157.159.43.43']

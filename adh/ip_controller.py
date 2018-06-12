@@ -19,7 +19,7 @@ def get_available_ip(network, ip_taken):
     return str(ip)
 
 
-def get_all_used_ip(session):
+def get_all_used_ipv4(session):
     q = session.query(Ordinateur)
     q = q.filter(Ordinateur.ip != "En Attente")
     return list(map(lambda x: x.ip, q.all()))

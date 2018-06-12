@@ -64,15 +64,18 @@ def filterDevice(admin, limit=100, offset=0, username=None, terms=None):
 
 
 def allocate_ip_for_device(s, dev):
-    if dev.ip == "En Attente" and \
-       dev.adherent.date_de_depart > datetime.datetime.now().date():
+    if dev.adherent.date_de_depart < datetime.datetime.now().date():
+        dev.ip = "En Attente"
+        dev.ipv6 = "En Attente"
+        return  # No need to allocate ip for someone who is not a member
 
+    if dev.ip == "En Attente":
         network = dev.adherent.chambre.vlan.adresses
 
         ip_controller.free_expired_devices(s)
         next_ip = ip_controller.get_available_ip(
                     network,
-                    ip_controller.get_all_used_ip(s)
+                    ip_controller.get_all_used_ipv4(s)
         )
 
         dev.ip = next_ip
