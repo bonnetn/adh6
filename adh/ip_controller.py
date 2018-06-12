@@ -12,6 +12,9 @@ def get_available_ip(network, ip_taken):
     ip_taken = set(map(lambda x: ipaddress.ip_address(x), ip_taken))
     available = filter(lambda x: x not in ip_taken, network.hosts())
     try:
+        # two times "next()" because we want to skip the first address, which
+        # is the gateway address
+        next(available)
         ip = next(available)
     except StopIteration:
         raise NoMoreIPAvailable
