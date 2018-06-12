@@ -126,19 +126,6 @@ def test_device_filter_hit_limit(api_client, sample_member1):
     assert len(response) == LIMIT
 
 
-def test_device_put_create_wireless_without_ip(api_client,
-                                               wireless_device_dict):
-    ''' Can create a valid wireless device ? '''
-    del wireless_device_dict['ipAddress']
-    addr = '{}/device/{}'.format(base_url, wireless_device_dict['mac'])
-    r = api_client.put(addr,
-                       data=json.dumps(wireless_device_dict),
-                       content_type='application/json',
-                       headers=TEST_HEADERS)
-    assert r.status_code == 201
-    assert_modification_was_created(db.get_db().get_session())
-
-
 def test_device_put_create_wireless(api_client, wireless_device_dict):
     ''' Can create a valid wireless device ? '''
     addr = '{}/device/{}'.format(base_url, wireless_device_dict['mac'])
@@ -457,10 +444,9 @@ def test_device_log_create_wireless(api_client, caplog, wireless_device_dict):
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient created the device 01:23:45:67:89:AC\n{"connectionType"'
-        ': "wireless", "ipAddress": "127.0.0.1", "ipv6Address": '
-        '"c69f:6c5:754c:d301:df05:ba81:76a8:ddc4", "mac": "01:23:45:67:89:AC",'
-        ' "username": "dubois_j"}'
+        'TestingClient created the device 01:23:45:67:89:AC\n{"'
+        'connectionType": "wireless", "mac": "01:23:45:67:89:AC", "'
+        'username": "dubois_j"}'
     )
 
 
@@ -491,9 +477,8 @@ def test_device_log_update_wireless(api_client, caplog, wireless_device,
     assert caplog.record_tuples[1] == (
         'root', 20,
         'TestingClient updated the device 80:65:F3:FC:44:A9\n{"'
-        'connectionType": "wireless", "ipAddress": "127.0.0.1", '
-        '"ipv6Address": "c69f:6c5:754c:d301:df05:ba81:76a8:ddc4", "mac": '
-        '"01:23:45:67:89:AC", "username": "dubois_j"}'
+        'connectionType": "wireless", "mac": "01:23:45:67:89:AC", "'
+        'username": "dubois_j"}'
     )
 
 

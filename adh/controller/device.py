@@ -102,6 +102,10 @@ def putDevice(admin, macAddress, body):
         wireless = is_wireless(macAddress, s)
         wanted_type = body["connectionType"]
 
+        if body["connectionType"] == "wireless" \
+           and ('ipAddress' in body or 'ipv6Address' in body):
+            return "You cannot assign an IP address to a wireless device", 400
+
         returnCode = None
 
         if wired and wireless:

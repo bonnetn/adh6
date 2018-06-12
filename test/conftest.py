@@ -43,8 +43,6 @@ def wireless_device_dict():
     '''
     yield {
       'mac': '01:23:45:67:89:AC',
-      'ipAddress': '127.0.0.1',
-      'ipv6Address': 'c69f:6c5:754c:d301:df05:ba81:76a8:ddc4',
       'connectionType': 'wireless',
       'username': 'dubois_j'
     }
