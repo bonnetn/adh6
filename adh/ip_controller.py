@@ -30,8 +30,6 @@ def get_expired_devices(session):
     q = q.filter(Ordinateur.ip != "En Attente")
     q = q.join(Adherent)
     q = q.filter(Adherent.date_de_depart < datetime.datetime.now())
-    for i in q.all():
-        print(i.adherent.date_de_depart < datetime.datetime.now())
     return list(q.all())
 
 
