@@ -30,14 +30,15 @@ def create_wireless_device(admin, body, s):
     s.flush()
 
     Modification.add_and_commit(s, dev, admin)
+    return dev
 
 
 def create_wired_device(admin, body, s):
     """ Create a wired device in the database """
     dev = Ordinateur(
         mac=body['mac'],
-        ip=body['ipAddress'],
-        ipv6=body['ipv6Address'],
+        ip=body.get('ipAddress', 'En Attente'),
+        ipv6=body.get('ipv6Address', 'En Attente'),
         adherent=Adherent.find(s, body['username']),
     )
 
@@ -45,6 +46,7 @@ def create_wired_device(admin, body, s):
     s.flush()
 
     Modification.add_and_commit(s, dev, admin)
+    return dev
 
 
 def update_wireless_device(admin, macAddress, body, s):
@@ -58,6 +60,7 @@ def update_wireless_device(admin, macAddress, body, s):
     s.flush()
 
     Modification.add_and_commit(s, dev, admin)
+    return dev
 
 
 def update_wired_device(admin, macAddress, body, s):
@@ -73,6 +76,7 @@ def update_wired_device(admin, macAddress, body, s):
     s.flush()
 
     Modification.add_and_commit(s, dev, admin)
+    return dev
 
 
 def delete_wired_device(admin, macAddress, s):

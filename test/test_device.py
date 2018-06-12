@@ -13,23 +13,27 @@ from .resource import (
 
 def prep_db(session,
             wired_device,
-            wireless_device):
+            wireless_device,
+            sample_member3):
     session.add_all([
         wired_device,
-        wireless_device
+        wireless_device,
+        sample_member3,
     ])
     session.commit()
 
 
 @pytest.fixture
 def api_client(wired_device,
-               wireless_device):
+               wireless_device,
+               sample_member3):
     from .context import app
     with app.app.test_client() as c:
         db.init_db(db_settings, testing=True)
         prep_db(db.get_db().get_session(),
                 wired_device,
-                wireless_device)
+                wireless_device,
+                sample_member3)
         yield c
 
 
@@ -148,6 +152,8 @@ def test_device_put_create_wireless(api_client, wireless_device_dict):
 
 def test_device_put_create_wired_without_ip(api_client, wired_device_dict):
     ''' Can create a valid wired device ? '''
+    s = db.get_db().get_session()
+
     del wired_device_dict['ipAddress']
     r = api_client.put('{}/device/{}'.format(base_url,
                                              wired_device_dict['mac']),
@@ -155,7 +161,26 @@ def test_device_put_create_wired_without_ip(api_client, wired_device_dict):
                        content_type='application/json',
                        headers=TEST_HEADERS)
     assert r.status_code == 201
-    assert_modification_was_created(db.get_db().get_session())
+    assert_modification_was_created(s)
+
+    q = s.query(Ordinateur)
+    q = q.filter(Ordinateur.mac == wired_device_dict["mac"])
+    dev = q.one()
+    assert dev.ip == "192.168.42.1"
+
+    wired_device_dict["mac"] = "AB:CD:EF:01:23:45"
+    r = api_client.put('{}/device/{}'.format(base_url,
+                                             wired_device_dict['mac']),
+                       data=json.dumps(wired_device_dict),
+                       content_type='application/json',
+                       headers=TEST_HEADERS)
+    assert r.status_code == 201
+    assert_modification_was_created(s)
+
+    q = s.query(Ordinateur)
+    q = q.filter(Ordinateur.mac == wired_device_dict["mac"])
+    dev = q.one()
+    assert dev.ip == "192.168.42.2"
 
 
 def test_device_put_create_wired(api_client, wired_device_dict):
@@ -167,6 +192,12 @@ def test_device_put_create_wired(api_client, wired_device_dict):
                        headers=TEST_HEADERS)
     assert r.status_code == 201
     assert_modification_was_created(db.get_db().get_session())
+
+    s = db.get_db().get_session()
+    q = s.query(Ordinateur)
+    q = q.filter(Ordinateur.mac == wired_device_dict["mac"])
+    dev = q.one()
+    assert dev.ip == "127.0.0.1"
 
 
 def test_device_put_create_different_mac_addresses(api_client,
@@ -416,7 +447,7 @@ def test_device_log_create_wired(api_client, caplog, wired_device_dict):
         'TestingClient created the device 01:23:45:67:89:AD\n{"connectionType"'
         ': "wired", "ipAddress": "127.0.0.1", "ipv6Address":'
         ' "dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166", "mac": "01:23:45:67:89:AD"'
-        ', "username": "dubois_j"}'
+        ', "username": "dupontje"}'
     )
 
 
@@ -447,7 +478,7 @@ def test_device_log_update_wired(api_client, caplog, wired_device,
         'TestingClient updated the device 96:24:F6:D0:48:A7\n{"connectionType"'
         ': "wired", "ipAddress": "127.0.0.1", "ipv6Address": '
         '"dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166", "mac": "01:23:45:67:89:AD",'
-        ' "username": "dubois_j"}'
+        ' "username": "dupontje"}'
     )
 
 

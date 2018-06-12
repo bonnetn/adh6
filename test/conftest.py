@@ -57,7 +57,7 @@ def wired_device_dict():
       'ipAddress': '127.0.0.1',
       'ipv6Address': 'dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166',
       'connectionType': 'wired',
-      'username': 'dubois_j'
+      'username': 'dupontje'
     }
 
 
@@ -65,8 +65,8 @@ def wired_device_dict():
 def sample_vlan():
     yield Vlan(
         numero=42,
-        adresses="192.168.42.1",
-        adressesv6="fe80::1",
+        adresses="192.168.42.0/24",
+        adressesv6="fe80::0/64",
     )
 
 
