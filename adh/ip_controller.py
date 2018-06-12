@@ -25,6 +25,12 @@ def get_all_used_ipv4(session):
     return list(map(lambda x: x.ip, q.all()))
 
 
+def get_all_used_ipv6(session):
+    q = session.query(Ordinateur)
+    q = q.filter(Ordinateur.ipv6 != "En Attente")
+    return list(map(lambda x: x.ipv6, q.all()))
+
+
 def get_expired_devices(session):
     q = session.query(Ordinateur)
     q = q.filter(Ordinateur.ip != "En Attente")
@@ -36,4 +42,5 @@ def get_expired_devices(session):
 def free_expired_devices(session):
     for dev in get_expired_devices(session):
         dev.ip = "En Attente"
+        dev.ipv6 = "En Attente"
     session.flush()

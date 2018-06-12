@@ -1,6 +1,6 @@
 from adh.model.models import Ordinateur
 from adh.ip_controller import (
-    get_available_ip, NoMoreIPAvailable, get_all_used_ipv4,
+    get_available_ip, NoMoreIPAvailable, get_all_used_ipv4, get_all_used_ipv6,
     get_expired_devices, free_expired_devices
 )
 from adh.model.database import Database as db
@@ -67,6 +67,14 @@ def test_free_expired_devices(api_client):
     assert q.one().ip == "En Attente"
 
 
-def test_get_used_all_ip(api_client):
+def test_get_used_all_ipv4(api_client):
     s = db.get_db().get_session()
     assert sorted(get_all_used_ipv4(s)) == ['157.159.42.42', '157.159.43.43']
+
+
+def test_get_used_all_ipv6(api_client):
+    s = db.get_db().get_session()
+    assert sorted(get_all_used_ipv6(s)) == [
+        'e91f:bd71:56d9:13f3:5499:25b:cc84:f7e4',
+        'f91f:bd71:56d9:13f3:5499:25b:cc84:f7e4'
+    ]

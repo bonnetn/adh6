@@ -155,6 +155,7 @@ def test_device_put_create_wired_without_ip(api_client, wired_device_dict):
     s = db.get_db().get_session()
 
     del wired_device_dict['ipAddress']
+    del wired_device_dict['ipv6Address']
     r = api_client.put('{}/device/{}'.format(base_url,
                                              wired_device_dict['mac']),
                        data=json.dumps(wired_device_dict),
@@ -167,6 +168,7 @@ def test_device_put_create_wired_without_ip(api_client, wired_device_dict):
     q = q.filter(Ordinateur.mac == wired_device_dict["mac"])
     dev = q.one()
     assert dev.ip == "192.168.42.1"
+    assert dev.ipv6 == 'fe80::1'
 
     wired_device_dict["mac"] = "AB:CD:EF:01:23:45"
     r = api_client.put('{}/device/{}'.format(base_url,
@@ -181,6 +183,7 @@ def test_device_put_create_wired_without_ip(api_client, wired_device_dict):
     q = q.filter(Ordinateur.mac == wired_device_dict["mac"])
     dev = q.one()
     assert dev.ip == "192.168.42.2"
+    assert dev.ipv6 == 'fe80::2'
 
 
 def test_device_put_create_wired(api_client, wired_device_dict):

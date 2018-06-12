@@ -69,6 +69,17 @@ def allocate_ip_for_device(s, dev):
         dev.ipv6 = "En Attente"
         return  # No need to allocate ip for someone who is not a member
 
+    if dev.ipv6 == "En Attente":
+        network = dev.adherent.chambre.vlan.adressesv6
+
+        ip_controller.free_expired_devices(s)
+        next_ip = ip_controller.get_available_ip(
+                    network,
+                    ip_controller.get_all_used_ipv6(s)
+        )
+
+        dev.ipv6 = next_ip
+
     if dev.ip == "En Attente":
         network = dev.adherent.chambre.vlan.adresses
 
