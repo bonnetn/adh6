@@ -18,10 +18,7 @@ import { NotificationsService } from 'angular2-notifications/dist';
 export class DeviceEditComponent implements OnInit, OnDestroy {
 
   disabled: boolean = false;
-  private alive: boolean = true;
   deviceForm: FormGroup;
-  username: string;
-  private sub: any;
   private device: Device;
   
   constructor(
@@ -53,7 +50,7 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
     }
           
     this.deviceService.putDeviceResponse( { "macAddress": mac, body: device })
-      .takeWhile( ()=> this.alive )
+      .first()
       .subscribe( (response : HttpResponse<void>) => {
         this.notif.success(response.status + ": Success");
         this.router.navigate(["member/view", v.username ]);
@@ -62,16 +59,14 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.paramMap
-    .switchMap((params: ParamMap) =>
-      this.deviceService.getDevice(params.get('mac')))
-        .takeWhile( () => this.alive )
-        .subscribe( device => {
-          this.device = device;
-          this.deviceForm.patchValue(device);
-        });
+      .switchMap((params: ParamMap) => this.deviceService.getDevice(params.get('mac')))
+      .first()
+      .subscribe( device => {
+        this.device = device;
+        this.deviceForm.patchValue(device);
+      });
   }
   
   ngOnDestroy() {
-    this.alive=false;
   }
 }
