@@ -3,9 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map'
+import { scan } from 'rxjs/operators';
 import 'rxjs/add/operator/concat'
 import 'rxjs/add/operator/merge';
 import 'rxjs/add/observable/of';
+import { from } from 'rxjs/observable/from';
 
 import { UserService } from '../api/services/user.service';
 import { User } from '../api/models/user';
@@ -22,7 +24,7 @@ import { Switch } from '../api/models/switch';
 import { PortService } from '../api/services/port.service';
 import { Port } from '../api/models/port';
 
-import { debounceTime, distinctUntilChanged, switchMap, flatMap, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, mergeMap, map } from 'rxjs/operators';
 
 
 export class SearchResult {
@@ -53,9 +55,8 @@ export class SearchResult {
 })
 export class GlobalSearchComponent implements OnInit {
 
-  searchResults: SearchResult[] = [];
   searchResult$: Observable<SearchResult[]>;
-  private searchTerms = new Subject<string>();
+  private searchTerm$ = new Subject<string>();
 
   constructor(
     private userService: UserService,
@@ -66,81 +67,71 @@ export class GlobalSearchComponent implements OnInit {
   ) { }
 
   search( terms: string ) {
-    this.searchTerms.next(terms);
+    this.searchTerm$.next(terms);
   }
 
 
   ngOnInit() {
-    this.searchResult$ = this.searchTerms.pipe( 
+
+    // This is a stream of what the user types debounced
+    var debouncedSearchTerm$ = this.searchTerm$.pipe(
       debounceTime(300),
-      distinctUntilChanged(),
+      distinctUntilChanged()
+    )
+
+    // This returns a stream of object matching to what the user has typed
+    var result$ = debouncedSearchTerm$.pipe( 
       switchMap( (terms:string) => {
 
         if( terms.length < 2 ) {
-          this.searchResults = [];
           return Observable.of( [ ] );
         }
 
-        let LIMIT = 5;
+        let LIMIT = 20;
+        let args = {'terms':terms, 'limit':LIMIT}
 
-        let user$ = this.userService.filterUser( {'terms':terms, 'limit':LIMIT} )
-          .map( (values) => {
-            let res = [];
-            values.forEach( (obj) => {
-              res.push( new SearchResult( "user", obj.firstName + " " + obj.lastName ) );
-            });
+        let user$ = this.userService.filterUser(args).pipe(
+          mergeMap((array) => from(array)),
+          map( (obj) => new SearchResult( "user", obj.firstName + " " + obj.lastName )),
+        )
 
-            return res;
-          });
-        let device$ = this.deviceService.filterDevice( {'terms':terms, 'limit':LIMIT} )
-          .map( (values) => {
-            let res = [];
-            values.forEach( (obj) => {
-              res.push( new SearchResult( "device", obj.mac ) );
-            });
+        let device$ = this.deviceService.filterDevice(args).pipe(
+          mergeMap((array) => from(array)),
+          map( (obj) => new SearchResult( "device", obj.mac)),
+        )
 
-            return res;
-          });
-        let room$ = this.roomService.filterRoom( {'terms':terms, 'limit':LIMIT} )
-          .map( (values) => {
-            let res = [];
-            values.forEach( (obj) => {
-              res.push( new SearchResult( "room", obj.description ) );
-            });
+        let room$ = this.roomService.filterRoom(args).pipe(
+          mergeMap((array) => from(array)),
+          map( (obj) => new SearchResult( "room", obj.description)),
+        )
+        let switch$ = this.switchService.filterSwitch(args).pipe(
+          mergeMap((array) => from(array)),
+          map( (obj) => new SearchResult( "switch", obj.description)),
+        )
 
-            return res;
-          });
-        let switch$ = this.switchService.filterSwitch( {'terms':terms, 'limit':LIMIT} )
-          .map( (values) => {
-            let res = [];
-            values.forEach( (obj) => {
-              res.push( new SearchResult( "switch", obj.description ) );
-            });
+        let port$ = this.portService.filterPort(args).pipe(
+          mergeMap((array) => from(array)),
+          map( (obj) => new SearchResult( "port", "Switch " + obj.switchID + " " + obj.portNumber)),
+        )
 
-            return res;
-          });
-        
-        let port$ = this.portService.filterPort( {'terms':terms, 'limit':LIMIT} )
-          .map( (values) => {
-            let res = [];
-            values.forEach( (obj) => {
-              res.push( new SearchResult( "port", "Switch " + obj.switchID + " " + obj.portNumber ) );
-            });
-
-            return res;
-          });
-        
-
-
-        this.searchResults = [];
         return user$.merge(device$).merge(room$).merge(switch$).merge(port$);
 
       }),
-      map( (value : SearchResult[]) => {
-        this.searchResults = this.searchResults.concat( value );
-        return this.searchResults;
-      })
     );
+
+    // This stream emits Arrays of results growing as the searchResults are
+    // found. The Arrays are cleared everytime the user changes the text in the
+    // textbox.
+    this.searchResult$ = result$.map(x => [x]).merge(
+        debouncedSearchTerm$.map(ignored => null)
+      ).pipe(
+        scan( (acc, value, index) => {
+          if(!value) // if it is null then we clear the array
+            return []
+          return acc.concat(value[0]) // we keep adding elements
+        }, [])
+      )
+
   }
 
 }
