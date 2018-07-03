@@ -114,7 +114,7 @@ export class GlobalSearchComponent implements OnInit {
           map( (obj) => new SearchResult( "port", "Switch " + obj.switchID + " " + obj.portNumber)),
         )
 
-        return user$.merge(device$).merge(room$).merge(switch$).merge(port$);
+        return user$.concat(device$).concat(room$).concat(switch$).concat(port$);
 
       }),
     );
