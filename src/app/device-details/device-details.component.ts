@@ -16,7 +16,6 @@ import { Router, ActivatedRoute } from '@angular/router'
 export class DeviceDetailsComponent implements OnInit, OnDestroy {
 
   device$: Observable<Device>
-  mac: string
 
   constructor( 
     public deviceService: DeviceService, 
@@ -30,10 +29,9 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.device$ = this.route.params.switchMap( params => {
-      this.mac = params["mac"]
-      return this.deviceService.getDevice( this.mac )
-    })
+    this.device$ = this.route.params.switchMap( params => 
+      this.deviceService.getDevice(params["mac"])
+    )
   }
 
   ngOnDestroy() {
