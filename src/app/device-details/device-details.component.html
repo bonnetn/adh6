@@ -4,8 +4,7 @@
     <ul>
      <div class="four columns">
        <li><strong>Propriétaire:</strong><br /> <a
-            [routerLink]="['../../../member/view/',device.username]"> {{ device.username
-        }} </a></li>
+            [routerLink]="['../../../member/view/',device.username]"> {{ device.username }} </a></li>
         <li *ngIf="device.connectionType == 'wired'"><strong>Adresse IPv4:</strong><br /> {{ device.ipAddress }}</li>
      </div>
      <div class="four columns">

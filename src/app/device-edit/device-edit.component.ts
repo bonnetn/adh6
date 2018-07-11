@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/takeWhile';
 import { DeviceService } from '../api/services/device.service';
@@ -17,17 +16,17 @@ import { NotificationsService } from 'angular2-notifications/dist';
 
 export class DeviceEditComponent implements OnInit, OnDestroy {
 
-  disabled: boolean = false;
+  disabled = false;
   deviceForm: FormGroup;
   private device: Device;
-  
+
   constructor(
     public deviceService: DeviceService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private notif: NotificationsService,
-  ) { 
+    private notificationService: NotificationsService,
+  ) {
   this.createForm();
   }
 
@@ -38,7 +37,7 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
       connectionType: ['', Validators.required ],
     });
   }
- 
+
   onSubmit() {
     this.disabled = true;
     const v = this.deviceForm.value;
@@ -47,13 +46,13 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
       mac: v.mac,
       connectionType: v.connectionType,
       username: v.username
-    }
-          
-    this.deviceService.putDeviceResponse( { "macAddress": mac, body: device })
+    };
+
+    this.deviceService.putDeviceResponse( { 'macAddress': mac, body: device })
       .first()
-      .subscribe( (response : HttpResponse<void>) => {
-        this.notif.success(response.status + ": Success");
-        this.router.navigate(["member/view", v.username ]);
+      .subscribe( (response: HttpResponse<void>) => {
+        this.notificationService.success(response.status + ': Success');
+        this.router.navigate(['member/view', v.username ]);
       });
   }
 
@@ -66,7 +65,7 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
         this.deviceForm.patchValue(device);
       });
   }
-  
+
   ngOnDestroy() {
   }
 }

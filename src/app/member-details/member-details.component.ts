@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { of }         from 'rxjs/observable/of';
+// import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { UserService } from '../api/services/user.service';
 import { DeviceService } from '../api/services/device.service';
-import { RoomService } from '../api/services/room.service';
 import { User } from '../api/models/user';
 import { Device } from '../api/models/device';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -17,67 +16,56 @@ import { NotificationsService } from 'angular2-notifications/dist';
 })
 export class MemberDetailsComponent implements OnInit, OnDestroy {
 
-  disabled: boolean = false;
-  private alive: boolean = true;
- 
+  disabled = false;
+  private alive = true;
+
   member$: Observable<User>;
-  subDevices: any;
+  // refreshInfo$ = new BehaviorSubject<null>(null);
   all_devices$: Observable<Device[]>;
-  wired_devices$: Observable<Device[]>;
-  wireless_devices$: Observable<Device[]>;
   username: string;
   public MAB: string;
   public MABdisabled: boolean;
-  public cotisation: boolean = false;
+  public cotisation = false;
   private sub: any;
   private commentForm: FormGroup;
-  private commentSubmitDisabled: boolean = false;
+  private commentSubmitDisabled = false;
   private deviceForm: FormGroup;
 
   constructor(
-    public userService: UserService, 
-    public deviceService: DeviceService, 
-    public roomService: RoomService, 
+    public userService: UserService,
+    public deviceService: DeviceService,
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
     private notif: NotificationsService,
-  ) { 
+  ) {
     this.createForm();
   }
 
   onMAB() {
-    this.MABdisabled = false
+    this.MABdisabled = false;
     const v = this.deviceForm.value;
-    const device: Device = {
-      mac: v.mac,
-      connectionType: v.connectionType,
-      username: this.username
-    }
-    if ( v.connectionType == "wired") {
-      if (this.MAB == 'on') { 
-        this.MAB = 'off' 
+    if ( v.connectionType === 'wired') {
+      if (this.MAB === 'on') {
+        this.MAB = 'off';
+      } else {
+        this.MAB = 'on';
       }
-      else { 
-        this.MAB = 'on' 
-      }
-    }
-    else { 
-      this.MAB = 'wifi'
-      this.MABdisabled = true 
+    } else {
+      this.MAB = 'wifi';
+      this.MABdisabled = true;
     }
   }
 
   onCotisation() {
-    this.cotisation = !this.cotisation
+    this.cotisation = !this.cotisation;
   }
 
   IfRoomExists(roomNumber) {
     if (roomNumber == null) {
-      this.notif.error("This user is not assigned to a room");
-    }
-    else {
-      this.router.navigate(["/room/view", roomNumber])
+      this.notif.error('This user is not assigned to a room');
+    } else {
+      this.router.navigate(['/room/view', roomNumber]);
     }
   }
 
@@ -92,48 +80,48 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   }
 
   onSubmitComment() {
-    this.disabled=true
+    this.disabled = true;
     const newComment = this.commentForm.value.comment;
     this.commentSubmitDisabled = true;
     this.userService.getUser(this.username)
       .takeWhile( () => this.alive )
       .subscribe( (user) => {
         user.comment = newComment;
-        this.userService.putUserResponse( { 
-                  "username": this.username,
-                  "body": user,
+        this.userService.putUserResponse( {
+                  'username': this.username,
+                  'body': user,
                 })
         .takeWhile( () => this.alive )
         .subscribe( (response) => {
-          this.commentSubmitDisabled = false 
+          this.commentSubmitDisabled = false;
           this.refreshInfo();
-          this.notif.success(response.status + ": Success")
+          this.notif.success(response.status + ': Success');
         });
     });
-    this.disabled=false
+    this.disabled = false;
   }
-  
+
   onSubmitDevice() {
-    this.disabled=true
+    this.disabled = true;
     const v = this.deviceForm.value;
     const device: Device = {
       mac: v.mac,
       connectionType: v.connectionType,
       username: this.username
-    }
+    };
     this.deviceService.getDeviceResponse(v.mac)
-      .takeWhile( ()=> this.alive )
-      .subscribe( (response)=> { 
-        this.notif.error("Device already exists")
-      }, (reponse)=> {
-        this.deviceService.putDeviceResponse( { "macAddress": v.mac, body: device })
-          .takeWhile( ()=> this.alive )
-          .subscribe( (response)=> { 
-            this.refreshInfo() 
-            this.notif.success(response.status + ": Success")
+      .takeWhile( () => this.alive )
+      .subscribe( () => {
+        this.notif.error('Device already exists');
+      }, () => {
+        this.deviceService.putDeviceResponse( { 'macAddress': v.mac, body: device })
+          .takeWhile( () => this.alive )
+          .subscribe( (response) => {
+            this.refreshInfo();
+            this.notif.success(response.status + ': Success');
           });
       });
-    this.disabled=false
+    this.disabled = false;
   }
 
   onDelete(mac: string) {
@@ -142,27 +130,8 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  fetch_and_sort_devices() {
-    // Get all devices of a user and split them into two observables.
-    // One for wireless devices and one for wired
-    this.subDevices = this.deviceService.filterDevice( { 'username': this.username } ).subscribe( (devices: Device[]) => {
-      var w = [];
-      var wl = [];
-      devices.forEach(function(device) {
-        if(device.connectionType == "wired") {
-          w.push( device );
-        } else { 
-          wl.push( device );
-        }
-      });
-      this.wired_devices$ = of( w );
-      this.wireless_devices$ = of( wl );
-    });
-  }
-
   refreshInfo() {
     this.member$ = this.userService.getUser(this.username);
-    //this.fetch_and_sort_devices();
 
     this.member$
       .takeWhile( () => this.alive )
@@ -177,13 +146,12 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.onMAB();
     this.sub = this.route.params.subscribe(params => {
-      this.username = params['username']; 
+      this.username = params['username'];
       this.refreshInfo();
     });
   }
   ngOnDestroy() {
     this.sub.unsubscribe();
-    //this.subDevices.unsubscribe();
     this.alive = false;
   }
 

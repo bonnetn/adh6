@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Observable } from 'rxjs/Observable'
+import { Observable } from 'rxjs/Observable';
 
-import { DeviceService } from '../api/services/device.service'
-import { Device } from '../api/models/device'
+import { DeviceService } from '../api/services/device.service';
+import { Device } from '../api/models/device';
 
-import { Router, ActivatedRoute } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -15,23 +15,23 @@ import { Router, ActivatedRoute } from '@angular/router'
 })
 export class DeviceDetailsComponent implements OnInit, OnDestroy {
 
-  device$: Observable<Device>
+  device$: Observable<Device>;
 
-  constructor( 
-    public deviceService: DeviceService, 
+  constructor(
+    public deviceService: DeviceService,
     private route: ActivatedRoute,
     private router: Router) { }
 
   onDelete( mac: string ) {
     this.deviceService.deleteDevice( mac ).first().subscribe( () => {
-      this.router.navigate(["device/search"])
-    })
+      this.router.navigate(['device/search']);
+    });
   }
 
   ngOnInit() {
-    this.device$ = this.route.params.switchMap( params => 
-      this.deviceService.getDevice(params["mac"])
-    )
+    this.device$ = this.route.params.switchMap( params =>
+      this.deviceService.getDevice(params['mac'])
+    );
   }
 
   ngOnDestroy() {
