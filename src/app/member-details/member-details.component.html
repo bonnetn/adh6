@@ -80,7 +80,7 @@
           <td>{{ device.ipAddress }}</td>
           <td><button
                       style="width: 90px; height: 38px;"
-                      (click)="onMAB()" 
+                      (click)="onMAB()"
                       class="u-max-full-width"
                       [disabled]='MABdisabled'
                       [ngClass]="{
@@ -108,7 +108,7 @@
         </div>
         <div class="five columns">
           <button type="submit"
-                  [disabled]="disabled || deviceForm.status == 'INVALID'"
+                  [disabled]="submitDisabled || deviceForm.status == 'INVALID'"
                   class="u-full-width button-primary">Ajouter l'appareil</button>
         </div>
       </form>
@@ -121,7 +121,7 @@
       <textarea class="u-full-width" formControlName="comment"></textarea>
       <div class="row">
         <button type="submit" class="u-full-width button-primary"
-                              [disabled]="commentSubmitDisabled">Envoyer</button>
+                              [disabled]="submitDisabled">Envoyer</button>
       </div>
     </form>
   </div>

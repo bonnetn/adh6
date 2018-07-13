@@ -1,13 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-// import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { UserService } from '../api/services/user.service';
 import { DeviceService } from '../api/services/device.service';
 import { User } from '../api/models/user';
 import { Device } from '../api/models/device';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications/dist';
+import 'rxjs/add/operator/last';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/combineLatest';
 
 @Component({
   selector: 'app-member-details',
@@ -16,19 +19,16 @@ import { NotificationsService } from 'angular2-notifications/dist';
 })
 export class MemberDetailsComponent implements OnInit, OnDestroy {
 
-  disabled = false;
-  private alive = true;
+  submitDisabled = false;
 
   member$: Observable<User>;
-  // refreshInfo$ = new BehaviorSubject<null>(null);
+  refreshInfo$ = new BehaviorSubject<null>(null);
   all_devices$: Observable<Device[]>;
   username: string;
   public MAB: string;
   public MABdisabled: boolean;
   public cotisation = false;
-  private sub: any;
   private commentForm: FormGroup;
-  private commentSubmitDisabled = false;
   private deviceForm: FormGroup;
 
   constructor(
@@ -40,6 +40,11 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     private notif: NotificationsService,
   ) {
     this.createForm();
+  }
+
+  refreshInfo() {
+    this.refreshInfo$.next(null);
+    return this.member$;
   }
 
   onMAB() {
@@ -80,79 +85,96 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   }
 
   onSubmitComment() {
-    this.disabled = true;
+    this.submitDisabled = true;
     const newComment = this.commentForm.value.comment;
-    this.commentSubmitDisabled = true;
-    this.userService.getUser(this.username)
-      .takeWhile( () => this.alive )
-      .subscribe( (user) => {
+
+    this.member$
+      .last()
+      .map(user => {
         user.comment = newComment;
-        this.userService.putUserResponse( {
-                  'username': this.username,
-                  'body': user,
-                })
-        .takeWhile( () => this.alive )
-        .subscribe( (response) => {
-          this.commentSubmitDisabled = false;
-          this.refreshInfo();
-          this.notif.success(response.status + ': Success');
-        });
-    });
-    this.disabled = false;
+        return user;
+      })
+      .flatMap(user => this.userService.putUserResponse(
+        {
+          'username': user.username,
+          'body': user,
+        }))
+      .first()
+      .subscribe(() => {
+        this.submitDisabled = false;
+        this.refreshInfo();
+      });
+
   }
 
   onSubmitDevice() {
-    this.disabled = true;
+    this.submitDisabled = true;
+
     const v = this.deviceForm.value;
     const device: Device = {
       mac: v.mac,
       connectionType: v.connectionType,
       username: this.username
     };
-    this.deviceService.getDeviceResponse(v.mac)
-      .takeWhile( () => this.alive )
-      .subscribe( () => {
+
+    // Make an observable that will return True if the device already exists
+    const deviceExists$ = this.deviceService.getDeviceResponse(v.mac)
+      .first()
+      .map(() => true)
+      .catch(() => Observable.of(false))
+      .publish();
+
+    // If the device already exists then notify the user
+    deviceExists$
+      .filter(exists => exists)
+      .subscribe(() => {
         this.notif.error('Device already exists');
-      }, () => {
-        this.deviceService.putDeviceResponse( { 'macAddress': v.mac, body: device })
-          .takeWhile( () => this.alive )
-          .subscribe( (response) => {
-            this.refreshInfo();
-            this.notif.success(response.status + ': Success');
-          });
+        this.submitDisabled = false;
       });
-    this.disabled = false;
+
+    // If the device does not then create it, and refresh the info
+    deviceExists$
+      .filter(exists => !exists)
+      .flatMap(() => this.deviceService.putDeviceResponse( { 'macAddress': v.mac, body: device }))
+      .first()
+      .subscribe(() => {
+        this.submitDisabled = false;
+        this.refreshInfo();
+      });
+
+    // "Launch" the stream
+    deviceExists$.connect();
+
   }
 
   onDelete(mac: string) {
-    this.deviceService.deleteDevice(mac).subscribe( () => {
-      this.refreshInfo();
-    });
-  }
-
-  refreshInfo() {
-    this.member$ = this.userService.getUser(this.username);
-
-    this.member$
-      .takeWhile( () => this.alive )
-      .subscribe( (user) => {
-      this.commentForm.setValue( {
-        comment: user.comment,
-      });
-    });
-    this.all_devices$ = this.deviceService.filterDevice( { 'username': this.username } );
+    this.deviceService.deleteDevice(mac)
+      .first()
+      .subscribe(() => this.refreshInfo());
   }
 
   ngOnInit() {
     this.onMAB();
-    this.sub = this.route.params.subscribe(params => {
-      this.username = params['username'];
-      this.refreshInfo();
-    });
+    const username$ = this.route.params
+      .map(params => params['username'])
+      .combineLatest(this.refreshInfo$)
+      .map(([x]) => x);
+
+    this.member$ = username$
+      .switchMap(username => this.userService.getUser(username));
+
+    this.all_devices$ = username$
+      .switchMap(username => this.deviceService.filterDevice({'username': username}));
+
+    // TODO: fill the comment form
+    // subscribe( (user) => {
+    //  this.commentForm.setValue( {
+    //    comment: user.comment,
+    //  });
+
   }
+
   ngOnDestroy() {
-    this.sub.unsubscribe();
-    this.alive = false;
   }
 
 }
