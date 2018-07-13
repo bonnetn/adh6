@@ -19,7 +19,7 @@ export class MacVendorComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.http.get( "https://api.macvendors.com/" + this.mac, {
+    /*this.http.get( "https://api.macvendors.com/" + this.mac, {
       responseType: "text"
     })
       .takeWhile( () => this.alive )
@@ -28,7 +28,7 @@ export class MacVendorComponent implements OnInit, OnDestroy {
       },
         ( err : HttpErrorResponse) => {
           this.vendor = "Unknown";
-        });
+        });*/
   }
 
   ngOnDestroy() {
