@@ -11,6 +11,8 @@ import { NotificationsService } from 'angular2-notifications/dist';
 import 'rxjs/add/operator/last';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/combineLatest';
+import 'rxjs/add/operator/finally';
+import 'rxjs/add/operator/share';
 
 @Component({
   selector: 'app-member-details',
@@ -21,10 +23,11 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
 
   submitDisabled = false;
 
+  username$: Observable<string>;
   member$: Observable<User>;
-  refreshInfo$ = new BehaviorSubject<null>(null);
   all_devices$: Observable<Device[]>;
-  username: string;
+  refreshInfo$ = new BehaviorSubject<null>(null);
+
   public MAB: string;
   public MABdisabled: boolean;
   public cotisation = false;
@@ -44,7 +47,6 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
 
   refreshInfo() {
     this.refreshInfo$.next(null);
-    return this.member$;
   }
 
   onMAB() {
@@ -89,7 +91,6 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     const newComment = this.commentForm.value.comment;
 
     this.member$
-      .last()
       .map(user => {
         user.comment = newComment;
         return user;
@@ -99,52 +100,67 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
           'username': user.username,
           'body': user,
         }))
-      .first()
-      .subscribe(() => {
-        this.submitDisabled = false;
+      .flatMap(() => {
         this.refreshInfo();
-      });
+        return this.member$;
+      })
+      .finally(() => this.submitDisabled = false)
+      .first()
+      .subscribe(() => {});
+
+      // will trigger the refresh of member$ and thus the update of the comment
+      this.refreshInfo();
 
   }
 
   onSubmitDevice() {
+    // First we fetch the username of the current user...
     this.submitDisabled = true;
+    this.updateDevice()
+      .first()
+      // No matter what, submit will be re-enable (even if there is an error)
+      .finally(() => this.submitDisabled = false)
+      .subscribe(() => {});
+
+  }
+
+  updateDevice();
+  updateDevice(username: string);
+  updateDevice(username: string, alreadyExists: boolean);
+  updateDevice(username?: string, alreadyExists?: boolean) {
+
+    if (username == undefined) {
+      return this.username$
+        .flatMap((username) => this.updateDevice(username));
+    }
 
     const v = this.deviceForm.value;
+    if (alreadyExists === undefined) {
+      return this.deviceService.getDeviceResponse(v.mac)
+        .map(() => true)
+        .catch(() => Observable.of(false))
+        .flatMap((exists) => this.updateDevice(username, exists));
+    }
+
     const device: Device = {
       mac: v.mac,
       connectionType: v.connectionType,
-      username: this.username
+      username: username
     };
 
     // Make an observable that will return True if the device already exists
-    const deviceExists$ = this.deviceService.getDeviceResponse(v.mac)
-      .first()
-      .map(() => true)
-      .catch(() => Observable.of(false))
-      .publish();
-
-    // If the device already exists then notify the user
-    deviceExists$
-      .filter(exists => exists)
-      .subscribe(() => {
-        this.notif.error('Device already exists');
-        this.submitDisabled = false;
-      });
-
-    // If the device does not then create it, and refresh the info
-    deviceExists$
-      .filter(exists => !exists)
-      .flatMap(() => this.deviceService.putDeviceResponse( { 'macAddress': v.mac, body: device }))
-      .first()
-      .subscribe(() => {
-        this.submitDisabled = false;
-        this.refreshInfo();
-      });
-
-    // "Launch" the stream
-    deviceExists$.connect();
-
+    if (!alreadyExists) {
+      // If the device does not then create it, and refresh the info
+      return this.deviceService.putDeviceResponse({'macAddress': v.mac, body: device})
+        .flatMap(() => {
+          this.refreshInfo();
+          return this.all_devices$;
+        })
+        .map(() => null);
+    } else {
+      this.notif.error('Device already exists');
+      return Observable.of(null);
+    }
   }
 
   onDelete(mac: string) {
@@ -155,16 +171,24 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.onMAB();
-    const username$ = this.route.params
-      .map(params => params['username'])
+
+    // username of the owner of the profile
+    this.username$ = this.route.params
+      .map(params => params['username']);
+
+    // stream, which will emit the username every time the profile needs to be refreshed
+    const refresh$ = this.username$
       .combineLatest(this.refreshInfo$)
       .map(([x]) => x);
 
-    this.member$ = username$
-      .switchMap(username => this.userService.getUser(username));
+    this.member$ = refresh$
+      .switchMap(username => this.userService.getUser(username))
+      .do((user) => this.commentForm.setValue({ comment: (user.comment === undefined) ? '' : user.comment, }))
+      .share();
 
-    this.all_devices$ = username$
-      .switchMap(username => this.deviceService.filterDevice({'username': username}));
+    this.all_devices$ = refresh$
+      .switchMap(username => this.deviceService.filterDevice({'username': username}))
+      .share();
 
     // TODO: fill the comment form
     // subscribe( (user) => {
