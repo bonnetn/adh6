@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { SwitchService } from '../api/services/switch.service';
-import { Switch } from '../api/models/switch';
-import { Port } from '../api/models/port';
-import { PortService } from '../api/services/port.service';
+import { SwitchService } from '../api/api/switch.service';
+import { ModelSwitch } from '../api/model/modelSwitch';
+import { Port } from '../api/model/port';
+import { PortService } from '../api/api/port.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -13,8 +13,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SwitchLocalComponent implements OnInit, OnDestroy {
 
-  switch$: Observable<Switch>;
-  ports$: Observable<Port[]>;
+  switch$: Observable<ModelSwitch>;
+  ports$: Observable<Array<Port>>;
   switchID: number = 8;
 
   constructor(public switchService: SwitchService, private route: ActivatedRoute, public portService: PortService) { }
@@ -22,7 +22,7 @@ export class SwitchLocalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.switchID = 8;
     this.switch$ = this.switchService.getSwitch(this.switchID);
-    this.ports$ = this.portService.filterPort( { 'switchID': this.switchID } );
+    this.ports$ = this.portService.filterPort(undefined, undefined, this.switchID);
   }
 
   ngOnDestroy() {

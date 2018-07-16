@@ -9,16 +9,16 @@ import 'rxjs/add/operator/merge';
 import 'rxjs/add/observable/of';
 import { from } from 'rxjs/observable/from';
 
-import { UserService } from '../api/services/user.service';
+import { UserService } from '../api/api/user.service';
 
-import { DeviceService } from '../api/services/device.service';
+import { DeviceService } from '../api/api/device.service';
 
-import { RoomService } from '../api/services/room.service';
+import { RoomService } from '../api/api/room.service';
 
-import { SwitchService } from '../api/services/switch.service';
-import { Switch } from '../api/models/switch';
+import { SwitchService } from '../api/api/switch.service';
+import { Switch } from '../api/model/switch';
 
-import { PortService } from '../api/services/port.service';
+import { PortService } from '../api/api/port.service';
 
 import { debounceTime, distinctUntilChanged, switchMap, mergeMap, map } from 'rxjs/operators';
 

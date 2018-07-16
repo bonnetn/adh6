@@ -5,9 +5,9 @@ import { Router } from '@angular/router';
 
 import 'rxjs/add/operator/takeWhile';
 
-import { UserService } from '../api/services/user.service';
-import { User } from '../api/models/user';
-import { NotificationsService } from 'angular2-notifications/dist';
+import { UserService } from '../api/api/user.service';
+import { User } from '../api/model/user';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-member-form',

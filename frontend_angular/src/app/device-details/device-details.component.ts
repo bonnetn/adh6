@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
-import { DeviceService } from '../api/services/device.service';
-import { Device } from '../api/models/device';
+import { DeviceService } from '../api/api/device.service';
+import { Device } from '../api/model/device';
 
 import { Router, ActivatedRoute } from '@angular/router';
 

@@ -12,8 +12,8 @@ import {
 
 import 'rxjs/add/operator/takeWhile';
 
-import { DeviceService } from '../api/services/device.service';
-import { Device } from '../api/models/device';
+import { DeviceService } from '../api/api/device.service';
+import { Device } from '../api/model/device';
 
 import { PagingConf } from '../paging.config';
 

@@ -5,13 +5,13 @@ import 'rxjs/add/operator/takeWhile';
 import { HttpResponse } from '@angular/common/http';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { RoomService } from '../api/services/room.service';
-import { PortService } from '../api/services/port.service';
-import { Room } from '../api/models/room';
-import { Port } from '../api/models/port';
-import { User } from '../api/models/user';
-import { UserService } from '../api/services/user.service';
-import { NotificationsService } from 'angular2-notifications/dist';
+import { RoomService } from '../api/api/room.service';
+import { PortService } from '../api/api/port.service';
+import { Room } from '../api/model/room';
+import { Port } from '../api/model/port';
+import { User } from '../api/model/user';
+import { UserService } from '../api/api/user.service';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-room-details',

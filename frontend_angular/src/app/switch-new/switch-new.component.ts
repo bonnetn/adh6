@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SwitchService } from '../api/services/switch.service';
-import { Switch } from '../api/models/switch';
+import { SwitchService } from '../api/api/switch.service';
+import { ModelSwitch } from '../api/model/modelSwitch';
 
 @Component({
   selector: 'app-switch-new',
@@ -11,7 +11,7 @@ import { Switch } from '../api/models/switch';
 })
 export class SwitchNewComponent implements OnInit {
 
-  switches$: Observable<Switch[]>;
+  switches$: Observable<Array<ModelSwitch>>;
   switchForm: FormGroup;
 
   constructor(
@@ -28,7 +28,7 @@ export class SwitchNewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.switches$ = this.switchService.filterSwitch({});
+    this.switches$ = this.switchService.filterSwitch();
   }
 
 }

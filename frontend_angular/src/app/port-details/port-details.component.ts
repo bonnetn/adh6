@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { PortService } from '../api/services/port.service';
-import { Port } from '../api/models/port';
+import { PortService } from '../api/api/port.service';
+import { Port } from '../api/model/port';
 import { Router, ActivatedRoute } from '@angular/router';
-import { NotificationsService } from 'angular2-notifications/dist';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-port-details',

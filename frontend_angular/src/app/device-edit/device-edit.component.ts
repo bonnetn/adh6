@@ -4,9 +4,9 @@ import { HttpResponse } from '@angular/common/http';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/takeWhile';
-import { DeviceService } from '../api/services/device.service';
-import { Device } from '../api/models/device';
-import { NotificationsService } from 'angular2-notifications/dist';
+import { DeviceService } from '../api/api/device.service';
+import { Device } from '../api/model/device';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-device-edit',

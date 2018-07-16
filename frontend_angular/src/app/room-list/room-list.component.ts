@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import "rxjs/add/operator/takeWhile";
 
-import { RoomService } from '../api/services/room.service';
-import { Room } from '../api/models/room';
+import { RoomService } from '../api/api/room.service';
+import { Room } from '../api/model/room';
 
 import { BehaviorSubject }    from 'rxjs/BehaviorSubject';
 import { NgxPaginationModule } from 'ngx-pagination';

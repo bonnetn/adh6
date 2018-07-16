@@ -6,9 +6,9 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import 'rxjs/add/operator/takeWhile';
 import 'rxjs/add/operator/switchMap';
 
-import { RoomService } from '../api/services/room.service';
-import { Room } from '../api/models/room';
-import { NotificationsService } from 'angular2-notifications/dist';
+import { RoomService } from '../api/api/room.service';
+import { Room } from '../api/model/room';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-room-edit',

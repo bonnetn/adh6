@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 
-import { PortService } from '../api/services/port.service';
-import { Port } from '../api/models/port';
+import { PortService } from '../api/api/port.service';
+import { Port } from '../api/model/port';
 
 import { BehaviorSubject }    from 'rxjs/BehaviorSubject';
 import { NgxPaginationModule } from 'ngx-pagination';

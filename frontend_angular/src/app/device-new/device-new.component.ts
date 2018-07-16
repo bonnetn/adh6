@@ -8,9 +8,9 @@ import 'rxjs/add/operator/switchMap';
 import { empty } from 'rxjs/observable/empty';
 import { catchError, flatMap, finalize } from 'rxjs/operators';
 
-import { DeviceService } from '../api/services/device.service';
-import { Device } from '../api/models/device';
-import { NotificationsService } from 'angular2-notifications/dist';
+import { DeviceService } from '../api/api/device.service';
+import { Device } from '../api/model/device';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-device-new',

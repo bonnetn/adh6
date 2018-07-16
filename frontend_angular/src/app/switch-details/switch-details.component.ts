@@ -3,11 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { Switch } from '../api/models/switch';
-import { SwitchService } from '../api/services/switch.service';
+import { Switch } from '../api/model/switch';
+import { SwitchService } from '../api/api/switch.service';
 
-import { PortService } from '../api/services/port.service';
-import { Port } from '../api/models/port';
+import { PortService } from '../api/api/port.service';
+import { Port } from '../api/model/port';
 
 import { BehaviorSubject }    from 'rxjs/BehaviorSubject';
 import { NgxPaginationModule } from 'ngx-pagination';

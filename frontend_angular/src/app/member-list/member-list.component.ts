@@ -5,8 +5,8 @@ import { BehaviorSubject }    from 'rxjs/BehaviorSubject';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 
-import { UserService } from '../api/services/user.service'
-import { User } from '../api/models/user'
+import { UserService } from '../api/api/user.service'
+import { User } from '../api/model/user'
 import { PagingConf } from '../paging.config'
 
 import {

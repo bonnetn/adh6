@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SwitchService } from '../api/services/switch.service';
-import { Switch } from '../api/models/switch';
+import { SwitchService } from '../api/api/switch.service';
+import { Switch } from '../api/model/switch';
 
 @Component({
   selector: 'app-switch-edit',
