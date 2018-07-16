@@ -1,0 +1,32 @@
+<h2>Liste des chambres</h2>
+<div class="row">
+  <div class="seven columns">
+    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="u-full-width" type="text"/>
+  </div>
+  <div class="five columns">
+    <a [routerLink]="['/room/add']"><button class="u-full-width
+        button-primary">Nouvelle chambre</button></a>
+  </div>
+</div>
+<div style="overflow-x:auto;" class="u-max-full-width">
+  <table class="u-full-width">
+    <tr>
+      <th class="center">Numéro</th>
+      <th class="center">Description</th>
+      <th class="center">VLAN</th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let room of rooms$ | async | paginate: { itemsPerPage:
+      items_per_page, currentPage: page_number, totalItems: item_count}">
+      <td class="center">{{ room.roomNumber }}</td>
+      <td class="center">{{ room.description }}</td>
+      <td class="center">{{ room.vlan }}</td>
+      <td class="center"><a [routerLink]="['/room/view',room.roomNumber]"><button>Consulter</button></a></td>
+    </tr>
+  </table>
+  <pagination-controls 
+    class="pagination" 
+    (pageChange)="refreshRooms($event)"
+    previousLabel="" nextLabel=""
+    ></pagination-controls>
+</div>

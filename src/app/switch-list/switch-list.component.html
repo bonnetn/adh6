@@ -1,0 +1,33 @@
+<h2>Liste des switchs</h2>
+<div class="row">
+  <div class="seven columns">
+    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="u-full-width" type="text"/>
+  </div>
+  <div class="five columns">
+    <a [routerLink]="['../add']"><button class="u-full-width
+        button-primary">Nouveau switch</button></a>
+  </div>
+</div>
+<div style="overflow-x:auto;" class="u-max-full-width">
+  <table class="u-full-width">
+    <tr>
+      <th>Description</th>
+      <th class="center">Adresse IP</th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let switchResult of switches$ | async | paginate: { itemsPerPage:
+      items_per_page, currentPage: page_number, totalItems: item_count}">
+      <td>
+        <a [routerLink]="['/switch/edit', switchResult.switch.id]">{{ switchResult.switch.description }}</a></td>
+      <td class="center">{{ switchResult.switch.ip }}</td>
+      <td
+        class="center"><a [routerLink]="['/switch/view',
+          switchResult.switchID]"><button>Liste des Ports</button></a></td>
+    </tr>
+  </table>
+  <pagination-controls 
+    class="pagination" 
+    (pageChange)="refreshSwitchs($event)"
+    previousLabel="" nextLabel=""
+    ></pagination-controls>
+</div>

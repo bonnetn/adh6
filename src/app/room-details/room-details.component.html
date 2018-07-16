@@ -1,0 +1,125 @@
+<div *ngIf="(room$ | async) as room">
+  <h2>{{ room.description }}</h2>
+  <ul>
+    <h3>Adhérent·e·s</h3>
+    <button 
+      class="u-full-width button-warning"
+      (click)="onEmmenager()" 
+      >Emménagement</button>
+    <br /><br />
+    <div *ngIf="isEmmenager">
+      <h3>Emménager</h3>
+      <strong>Login DISI du nouvel adhérent</strong><br /><br />
+       <form [formGroup]="EmmenagerForm" (ngSubmit)="onSubmitComeInRoom()" novalidate>
+        <div class="row">
+          <div class="six columns">
+            <input 
+               class="u-full-width"
+               type="text"
+               formControlName="username" 
+            > 
+          </div>
+          <div class="six columns">
+            <button 
+              class="u-full-width"
+              [disabled]="disabled || EmmenagerForm.status == 'INVALID'">
+              Valider</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <li *ngFor="let member of members$ | async">
+      <strong>{{ member.firstName }} {{ member.lastName }}</strong><br /><br />
+      <div class="row">
+        <div class="four columns">
+          <a [routerLink]="['/member/view', member.username]"><button 
+              class="u-full-width button-primary"
+              [disabled]="enabled">
+              Consulter le profile</button>
+          </a>
+        </div>
+        <div class="four columns">
+          <button 
+            class="u-full-width button-primary"
+            (click)="onDemenager(member.username)"
+            [disabled]="enabled">
+            Déménager</button>
+        </div>
+        <div class="four columns">
+        <a (click)="onRemoveFromRoom(member.username)"><button
+            class="u-full-width button-danger"
+            [disabled]="enabled">
+            Supprimer de la chambre</button>
+        </a>
+        </div>
+      </div>
+      <div *ngIf="isDemenager">
+      <div *ngIf="ref == member.username">
+        <h3>Déménager</h3>
+        <strong>Nouveau numéro de chambre</strong><br /><br />
+         <form [formGroup]="roomForm" (ngSubmit)="onSubmitMoveRoom(member.username)" novalidate>
+          <div class="row">
+            <div class="six columns">
+              <input 
+                 class="u-full-width"
+                 type="number"
+                 formControlName="roomNumberNew" 
+              > 
+            </div>
+            <div class="six columns">
+              <button 
+                class="u-full-width"
+                [disabled]="disabled || roomForm.status == 'INVALID'">
+                Valider</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      </div>
+    </li>
+  </ul>
+  <ul><h3 id="port">Ports</h3>
+    <li *ngFor="let portRes of ports$ | async">
+      <div *ngIf="portRes.roomNumber==this.roomNumber">
+        <strong>Switch {{ portRes.switchID }} port {{ portRes.portNumber }}</strong>
+        <br /><br />
+        <div class="row">
+          <div class="four columns">
+            <button class="u-full-width button-success"
+                    (click)="etat()"
+            >Etat
+            </button>
+          </div>
+          <div class="four columns">
+            <button class="u-full-width"
+                    (click)="auth()"
+            >Authentification
+            </button>
+          </div>
+          <div class="four columns">
+            <a [routerLink]="['/switch/view', portRes.switchID, 'port', portRes.id]">
+            <button class="u-full-width button-primary"
+            >Configurer
+            </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <ul><h3>Informations</h3>
+    <li><strong>Numéro de chambre: </strong>{{ room.roomNumber }}</li>
+    <li><strong>VLAN assigné: </strong>{{ room.vlan }}</li>
+  </ul>
+  <div class="row">
+    <div class="six columns">
+      <a [routerLink]='["/room/edit", room.roomNumber]'>
+        <button class="u-full-width button-primary">Éditer</button>
+      </a>
+    </div>
+    <div class="six columns">
+      <button class="u-full-width button-danger" (click)="onDelete()">Supprimer</button>
+    </div>
+  </div>
+</div>
+<br /><br /><br />

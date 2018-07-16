@@ -1,0 +1,11 @@
+<title>{{ titre }}</title>
+<div *ngIf="isAuthenticated(); else elseBlock">
+  <app-navbar></app-navbar>
+  <div class="container">
+      <router-outlet></router-outlet>
+  </div>
+  <simple-notifications></simple-notifications>
+</div>
+<ng-template #elseBlock>
+  <app-login></app-login>
+</ng-template>

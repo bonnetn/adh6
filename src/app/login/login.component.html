@@ -1,0 +1,30 @@
+<a [routerLink]="['dashboard']">
+<h1>{{ titre }}</h1>
+</a>
+<nav [class.responsive]="navBarStatus">
+  <div class="container">
+    <div class="row">
+      <div class="twelve columns">
+        <ul>
+          <li>&nbsp;</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+<br />
+<div class="container">
+  <div class="dashboard">
+    <img class="u-full-width" src="../assets/logoMiNET.png">
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="twelve columns">
+      <button class="u-full-width button-primary" (click)="login()">
+          Se connecter
+      </button>
+      <br />
+    </div>
+  </div>
+</div>

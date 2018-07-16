@@ -1,0 +1,140 @@
+<div *ngIf="(member$ | async) as member" class="row">
+  <div class="nine columns">
+    <h2>{{ member.firstName }} {{ member.lastName }}</h2>
+    <ul>
+      <div class="row">
+        <div class="four columns">
+          <li><strong>Identifiant DISI:</strong><br /> {{ member.username }}</li>
+          <li><strong>Envoyer un mail:</strong><br /> <a href="mailto:{{ member.email }}">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <font size="5">&#9993;</font></a></li>
+          <li><strong>Date de départ:</strong><br /> {{ member.departureDate }}</li>
+        </div>
+        <div class="eight columns">
+          <button class="u-full-width" [disabled]="member.roomNumber == null"
+            (click)="IfRoomExists(member.roomNumber)">Chambre {{ member.roomNumber }}</button>
+        </div>
+        <div class="four columns">
+          <a [routerLink]="['']">
+            <button class="u-full-width">Historique</button>
+          </a>
+        </div>
+        <div class="four columns">
+          <button class="u-full-width" (click)="onCotisation()">Cotiser</button>
+        </div>
+        <div class="eight columns">
+          <a [routerLink]="['/member/edit/', member.username ]">
+            <button class="u-full-width">Éditer le profile</button>
+          </a>
+        </div>
+      </div>
+    </ul>
+    <div *ngIf="cotisation">
+    <h3>Cotisation</h3>
+      <div class="row">
+        <div class="six columns">
+          <select class="u-full-width" type="text" formControlName=""
+            placeholder="Renouvellement">
+            <option value="">Renouvellement</option>
+            <option value="1">1 mois (9€) - date</option>
+            <option value="2">2 mois (18€) - date</option>
+            <option value="3">3 mois (27€) - date</option>
+            <option value="4">4 mois (36€) - date</option>
+            <option value="5">5 mois (45€) - date</option>
+            <option value="6">1 an (50€) - date</option>
+          </select>
+          <select class="u-full-width" type="text" formControlName=""
+            placeholder="Matériel">
+            <option value="">Matériel</option>
+            <option value="3m">Câble 3m</option>
+            <option value="5m">Câble 5m</option>
+          </select>
+        </div>
+        <div class="six columns">
+          <select class="u-full-width" type="text" formControlName=""
+            placeholder="Payé par">
+            <option value="">Payé par</option>
+            <option value="liq">Liquide</option>
+            <option value="cb">Carte Bancaire</option>
+            <option value="chq">Chèque</option>
+            <option value="smsch">Summer School</option>
+          </select>
+          <button class="u-full-width button-primary">Valider</button>
+        </div>
+      </div>
+    </div>
+    <h3>Appareils</h3>
+    <div style="overflow-x:auto;" class="u-max-full-width">
+      <table class="u-max-full-width">
+        <tr>
+          <th class="center">Adresse MAC</th>
+          <th>Fabricant</th>
+          <th class="center">Adresse IPv4</th>
+          <th class="center">MAB</th>
+          <th></th>
+          <th></th>
+        </tr>
+        <tr *ngFor="let device of all_devices$ | async">
+          <td><a [routerLink]="['/device/view', device.mac ]">{{ device.mac }}</a></td>
+          <td><app-mac-vendor mac="{{device.mac}}"></app-mac-vendor></td>
+          <td>{{ device.ipAddress }}</td>
+          <td><button
+                      style="width: 90px; height: 38px;"
+                      (click)="onMAB()"
+                      class="u-max-full-width"
+                      [disabled]='MABdisabled'
+                      [ngClass]="{
+                      'off':'button-warning',
+                      'on':'button-success',
+                      'wifi':'button-primary'
+                      }[MAB]"
+                      >{{ MAB }}</button></td>
+          <td><a [routerLink]="['/device/edit', device.mac]"><button>Éditer</button></a></td>
+          <td><a (click)="onDelete(device.mac)"><button class="button-danger">X</button></a></td>
+        </tr>
+      </table>
+    </div>
+    <div class="row">
+      <form [formGroup]="deviceForm" (ngSubmit)="onSubmitDevice()" novalidate>
+        <div class="four columns">
+          <input class="u-full-width" type="text" formControlName="mac">
+        </div>
+        <div class="three columns">
+          <select class="u-full-width" type="text"
+            formControlName="connectionType">
+            <option value="wired">Filaire</option>
+            <option value="wireless">Wi-Fi</option>
+          </select>
+        </div>
+        <div class="five columns">
+          <button type="submit"
+                  [disabled]="submitDisabled || deviceForm.status == 'INVALID'"
+                  class="u-full-width button-primary">Ajouter l'appareil</button>
+        </div>
+      </form>
+    </div>
+    <h3>Journal</h3>
+    <p>Afficher les logs DHCP</p>
+
+    <h3>Commentaire</h3>
+    <form [formGroup]="commentForm" (ngSubmit)="onSubmitComment()" novalidate>
+      <textarea class="u-full-width" formControlName="comment"></textarea>
+      <div class="row">
+        <button type="submit" class="u-full-width button-primary"
+                              [disabled]="submitDisabled">Envoyer</button>
+      </div>
+    </form>
+  </div>
+  <div class="three columns">
+    <ul>
+      <li class=u-full-width [ngClass]="{'commentaire': member.comment!=null}">{{ member.comment }}</li>
+      <img src="https://trombi.imtbs-tsp.eu/photo.php?uid={{ member.username }}&h=320&w=240"/>
+      <br />
+      <li>
+        <button class="u-full-width button-primary bigbutton">
+          Association des <br/>périphériques</button>
+      </li>
+      <li>Dernières modifications:</li>
+    </ul>
+  </div>
+</div>
