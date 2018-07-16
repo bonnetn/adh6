@@ -1,0 +1,11 @@
+pytest
+flask
+connexion
+gevent
+SQLAlchemy
+mysqlclient
+pip
+pytest-cov
+python-dateutil
+pysnmp
+uwsgi

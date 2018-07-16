@@ -1,0 +1,14 @@
+**/__pycache__
+.cache/
+.coverage
+.pytest_cache/
+.swagger-codegen/
+bin/
+include/
+lib/
+htmlcov/*
+**.pyc
+**.idea
+pip-selfcheck.json
+certs/
+CONFIGURATION.py
