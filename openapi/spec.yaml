@@ -30,7 +30,7 @@ paths:
       tags:
       - "user"
       summary: "Filter users"
-      operationId: "filterUser"
+      operationId: "filter_user"
       produces:
       - "application/json"
       parameters:
@@ -52,7 +52,7 @@ paths:
         description: "The generic search terms (will search in any field)"
         required: false
         type: "string"
-      - name: "roomNumber"
+      - name: "room_number"
         in: "query"
         description: "Filter by room number"
         required: false
@@ -78,7 +78,7 @@ paths:
       tags:
       - "user"
       summary: "Retrieve an user"
-      operationId: "getUser"
+      operationId: "get_user"
       produces:
       - "application/json"
       parameters:
@@ -102,7 +102,7 @@ paths:
       - "user"
       summary: "Update/create an user"
       description: "This can only be done by the logged in user."
-      operationId: "putUser"
+      operationId: "put_user"
       produces:
       - "application/json"
       parameters:
@@ -131,7 +131,7 @@ paths:
       - "user"
       summary: "Partially update an user"
       description: "This can only be done by the logged in user."
-      operationId: "patchUser"
+      operationId: "patch_user"
       produces:
       - "application/json"
       parameters:
@@ -161,7 +161,7 @@ paths:
       - "user"
       summary: "Delete an user"
       description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
+      operationId: "delete_user"
       produces:
       - "application/json"
       parameters:
@@ -184,7 +184,7 @@ paths:
       - "user"
       summary: "Update an user's password"
       description: "This can only be done by the logged in user."
-      operationId: "updatePassword"
+      operationId: "update_password"
       produces:
       - "application/json"
       parameters:
@@ -218,7 +218,7 @@ paths:
       tags:
       - "membership"
       summary: "Add a membership record for an user"
-      operationId: "addMembership"
+      operationId: "add_membership"
       produces:
       - "application/json"
       parameters:

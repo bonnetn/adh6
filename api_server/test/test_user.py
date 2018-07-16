@@ -126,7 +126,7 @@ def test_user_filter_all_with_limit(api_client):
 
 def test_user_filter_by_room_number(api_client):
     r = api_client.get(
-        '{}/user/?roomNumber={}'.format(base_url, 5110),
+        '{}/user/?room_number={}'.format(base_url, 5110),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -137,7 +137,7 @@ def test_user_filter_by_room_number(api_client):
 
 def test_user_filter_by_non_existant_room_number(api_client):
     r = api_client.get(
-        '{}/user/?roomNumber={}'.format(base_url, 6666),
+        '{}/user/?room_number={}'.format(base_url, 6666),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200

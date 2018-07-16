@@ -1,7 +1,7 @@
 import json
 import logging
 from connexion import NoContent
-from adh.model.database import Database as db
+from adh.model.database import Database as Db
 from adh.model.models import Adherent, Chambre, Adhesion, Modification
 from adh.util.date import string_to_date
 from adh.exceptions import InvalidEmail, RoomNotFound, UserNotFound
@@ -12,7 +12,7 @@ import hashlib
 from CONFIGURATION import PRICES
 
 
-def adherentExists(session, username):
+def adherent_exists(session, username):
     """ Returns true if the user exists """
     try:
         Adherent.find(session, username)
@@ -22,18 +22,18 @@ def adherentExists(session, username):
 
 
 @auth_simple_user
-def filterUser(admin, limit=100, offset=0, terms=None, roomNumber=None):
+def filter_user(admin, limit=100, offset=0, terms=None, room_number=None):
     """ [API] Filter the list of users from the the database """
     if limit < 0:
         return "Limit must be positive", 400
 
-    s = db.get_db().get_session()
+    s = Db.get_db().get_session()
 
     q = s.query(Adherent)
-    if roomNumber:
+    if room_number:
         try:
             q2 = s.query(Chambre)
-            q2 = q2.filter(Chambre.numero == roomNumber)
+            q2 = q2.filter(Chambre.numero == room_number)
             result = q2.one()
         except sqlalchemy.orm.exc.NoResultFound:
             return [], 200, {"X-Total-Count": '0'}
@@ -61,9 +61,9 @@ def filterUser(admin, limit=100, offset=0, terms=None, roomNumber=None):
 
 
 @auth_simple_user
-def getUser(admin, username):
+def get_user(admin, username):
     """ [API] Get the specified user from the database """
-    s = db.get_db().get_session()
+    s = Db.get_db().get_session()
     try:
         logging.info("%s fetched the user %s", admin.login, username)
         return dict(Adherent.find(s, username))
@@ -72,9 +72,9 @@ def getUser(admin, username):
 
 
 @auth_simple_user
-def deleteUser(admin, username):
+def delete_user(admin, username):
     """ [API] Delete the specified User from the database """
-    s = db.get_db().get_session()
+    s = Db.get_db().get_session()
 
     # Find the soon-to-be deleted user
     try:
@@ -100,7 +100,7 @@ def deleteUser(admin, username):
 
 
 @auth_simple_user
-def patchUser(admin, username, body):
+def patch_user(admin, username, body):
     """ [API] Partially update a user from the database """
     # s = db.get_db().get_session()
 
@@ -117,7 +117,7 @@ def patchUser(admin, username, body):
 
     # try:
     #     # Check if it already exists
-    #     update = adherentExists(s, username)
+    #     update = adherent_exists(s, username)
 
     #     if update:
     #         current_adh = Adherent.find(s, username)
@@ -144,11 +144,10 @@ def patchUser(admin, username, body):
     #     return NoContent, 201
 
 
-
 @auth_simple_user
-def putUser(admin, username, body):
+def put_user(admin, username, body):
     """ [API] Create/Update user from the database """
-    s = db.get_db().get_session()
+    s = Db.get_db().get_session()
 
     # Create a valid object
     try:
@@ -162,7 +161,7 @@ def putUser(admin, username, body):
 
     try:
         # Check if it already exists
-        update = adherentExists(s, username)
+        update = adherent_exists(s, username)
 
         if update:
             current_adh = Adherent.find(s, username)
@@ -190,10 +189,10 @@ def putUser(admin, username, body):
 
 
 @auth_simple_user
-def addMembership(admin, username, body):
+def add_membership(admin, username, body):
     """ [API] Add a membership record in the database """
 
-    s = db.get_db().get_session()
+    s = Db.get_db().get_session()
 
     start = datetime.datetime.now().date()
     if "start" in body:
@@ -236,9 +235,9 @@ def ntlm_hash(txt):
 
 
 @auth_simple_user
-def updatePassword(admin, username, body):
+def update_password(admin, username, body):
     password = body["password"]
-    s = db.get_db().get_session()
+    s = Db.get_db().get_session()
 
     try:
         a = Adherent.find(s, username)
