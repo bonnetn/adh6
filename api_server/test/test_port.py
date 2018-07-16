@@ -140,7 +140,7 @@ def test_port_post_create_port_invalid_switch_id(api_client, sample_switch1):
     }
 
     r = api_client.post(
-        "{}/switch/{}/port/".format(base_url, sample_switch1.id),
+        "{}/port/".format(base_url),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -156,7 +156,7 @@ def test_port_post_create_port(api_client, sample_switch1):
     }
 
     r = api_client.post(
-        "{}/switch/{}/port/".format(base_url, sample_switch1.id),
+        "{}/port/".format(base_url),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -167,9 +167,7 @@ def test_port_post_create_port(api_client, sample_switch1):
 
 def test_port_get_existant_port(api_client, sample_switch1, sample_port1):
     r = api_client.get(
-        "{}/switch/{}/port/{}".format(base_url,
-                                      sample_switch1.id,
-                                      sample_port1.id),
+        "{}/port/{}".format(base_url, sample_port1.id),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -179,9 +177,7 @@ def test_port_get_existant_port(api_client, sample_switch1, sample_port1):
 
 def test_port_get_non_existant_port(api_client, sample_switch1, sample_port1):
     r = api_client.get(
-        "{}/switch/{}/port/{}".format(base_url,
-                                      sample_switch1.id,
-                                      4242),
+        "{}/port/{}".format(base_url, 4242),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 404
@@ -199,9 +195,7 @@ def test_port_put_update_port_invalid_switch(api_client,
     }
 
     r = api_client.put(
-        "{}/switch/{}/port/{}".format(base_url,
-                                      sample_switch1.id,
-                                      sample_port1.id),
+        "{}/port/{}".format(base_url, sample_port1.id),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -220,9 +214,7 @@ def test_port_put_update_port(api_client, sample_switch1, sample_port1):
 
     assert sample_port1.numero != portNumber
     r = api_client.put(
-        "{}/switch/{}/port/{}".format(base_url,
-                                      sample_switch1.id,
-                                      sample_port1.id),
+        "{}/port/{}".format(base_url, sample_port1.id),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -243,9 +235,7 @@ def test_port_put_update_non_existant_port(api_client,
     }
 
     r = api_client.put(
-        "{}/switch/{}/port/{}".format(base_url,
-                                      sample_switch1.id,
-                                      4242),
+        "{}/port/{}".format(base_url, 4242),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -256,9 +246,7 @@ def test_port_put_update_non_existant_port(api_client,
 def test_port_put_delete_port(api_client, sample_switch1, sample_port1):
 
     r = api_client.delete(
-        "{}/switch/{}/port/{}".format(base_url,
-                                      sample_switch1.id,
-                                      sample_port1.id),
+        "{}/port/{}".format(base_url, sample_port1.id),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 204
@@ -273,9 +261,7 @@ def test_port_put_delete_non_existant_port(api_client,
                                            sample_switch1):
 
     r = api_client.delete(
-        "{}/switch/{}/port/{}".format(base_url,
-                                      sample_switch1.id,
-                                      4242),
+        "{}/port/{}".format(base_url, 4242),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 404
@@ -299,7 +285,7 @@ def test_port_log_update_port(api_client, sample_switch1,
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient updated the port /switch/1/port/1\n{"portNumber": '
+        'TestingClient updated the port /port/1\n{"portNumber": '
         '"1/2/3", "roomNumber": 5110, "switchID": 1}'
     )
 
@@ -311,5 +297,5 @@ def test_port_log_delete_port(api_client, sample_switch1,
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient deleted the port /switch/1/port/1'
+        'TestingClient deleted the port /port/1'
     )

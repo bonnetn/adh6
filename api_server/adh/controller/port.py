@@ -46,7 +46,7 @@ def filterPort(admin, limit=100, offset=0,
 
 
 @auth_admin
-def createPort(admin, switchID, body):
+def createPort(admin, body):
     """ [API] Create a port in the database """
 
     session = db.get_db().get_session()
@@ -60,7 +60,7 @@ def createPort(admin, switchID, body):
     session.add(port)
     session.commit()
     headers = {
-        'Location': '/switch/{}/port/{}'.format(port.switch_id, port.id)
+        'Location': '/port/{}'.format(port.id)
     }
     logging.info("%s created the port\n%s",
                  admin.login, json.dumps(body, sort_keys=True))
@@ -68,7 +68,7 @@ def createPort(admin, switchID, body):
 
 
 @auth_simple_user
-def getPort(admin, switchID, portID):
+def getPort(admin, portID):
     """ [API] Get a port from the database """
     s = db.get_db().get_session()
     try:
@@ -77,13 +77,13 @@ def getPort(admin, switchID, portID):
         return NoContent, 404
 
     result = dict(result)
-    logging.info("%s fetched the port /switch/%d/port/%d",
-                 admin.login, switchID, portID)
+    logging.info("%s fetched the port /port/%d",
+                 admin.login, portID)
     return result, 200
 
 
 @auth_admin
-def updatePort(admin, switchID, portID, body):
+def updatePort(admin, portID, body):
     """ [API] Update a port in the database """
 
     s = db.get_db().get_session()
@@ -101,13 +101,13 @@ def updatePort(admin, switchID, portID, body):
     s.merge(new_port)
     s.commit()
 
-    logging.info("%s updated the port /switch/%d/port/%d\n%s",
-                 admin.login, switchID, portID, json.dumps(body, sort_keys=True))
+    logging.info("%s updated the port /port/%d\n%s",
+                 admin.login, portID, json.dumps(body, sort_keys=True))
     return NoContent, 204
 
 
 @auth_admin
-def deletePort(admin, switchID, portID):
+def deletePort(admin, portID):
     """ [API] Delete a port from the database """
     session = db.get_db().get_session()
     try:
@@ -115,6 +115,6 @@ def deletePort(admin, switchID, portID):
     except PortNotFound:
         return NoContent, 404
     session.commit()
-    logging.info("%s deleted the port /switch/%d/port/%d",
-                 admin.login, switchID, portID)
+    logging.info("%s deleted the port /port/%d",
+                 admin.login, portID)
     return NoContent, 204

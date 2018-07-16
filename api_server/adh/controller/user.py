@@ -100,6 +100,52 @@ def deleteUser(admin, username):
 
 
 @auth_simple_user
+def patchUser(admin, username, body):
+    """ [API] Partially update a user from the database """
+    # s = db.get_db().get_session()
+
+    return NoContent, 404
+    # # Create a valid object
+    # try:
+    #     new_user = Adherent.from_dict(s, body)
+    # except InvalidEmail:
+    #     return "Invalid email", 400
+    # except RoomNotFound:
+    #     return "No room found", 400
+    # except ValueError:
+    #     return "String must not be empty", 400
+
+    # try:
+    #     # Check if it already exists
+    #     update = adherentExists(s, username)
+
+    #     if update:
+    #         current_adh = Adherent.find(s, username)
+    #         new_user.id = current_adh.id
+    #         current_adh.start_modif_tracking()
+
+    #     # Merge the object (will create a new if it doesn't exist)
+    #     new_user = s.merge(new_user)
+    #     s.flush()
+
+    #     # Create the corresponding modification
+    #     Modification.add_and_commit(s, new_user, admin)
+    # except Exception:
+    #     s.rollback()
+    #     raise
+
+    # if update:
+    #     logging.info("%s updated the user %s\n%s",
+    #                  admin.login, username, json.dumps(body, sort_keys=True))
+    #     return NoContent, 204
+    # else:
+    #     logging.info("%s created the user %s\n%s",
+    #                  admin.login, username, json.dumps(body, sort_keys=True))
+    #     return NoContent, 201
+
+
+
+@auth_simple_user
 def putUser(admin, username, body):
     """ [API] Create/Update user from the database """
     s = db.get_db().get_session()
@@ -170,6 +216,7 @@ def addMembership(admin, username, body):
         adh.date_de_depart = end
 
     except UserNotFound:
+        s.rollback()
         return NoContent, 404
 
     Modification.add_and_commit(s, adh, admin)
