@@ -1,0 +1,4 @@
+Flask
+Flask-SQLAlchemy
+Authlib==0.6
+python-ldap

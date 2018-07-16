@@ -1,0 +1,48 @@
+# Configuration related to Flask
+FLASK_CONF = {
+
+    # Set it to /oauth if you mount it in /oauth in uwsgi. Otherwise it should
+    # be pretty straightforward.
+    'APPLICATION_ROOT': '/oauth',
+
+    # CHANGE ME!!! The secret key that is used to sign session cookies. You
+    # have to change it and pick a secure string.
+    'SECRET_KEY': 'Se&y5Vf@3n{heH-Rt-bwQha%g``B>doJbiw2}^3R+A^.!HtZ',
+
+    # Don't track modifications...
+    'SQLALCHEMY_TRACK_MODIFICATIONS': False,
+
+    # Where SQLAlchemy will store tokens
+    'SQLALCHEMY_DATABASE_URI': 'sqlite:///db.sqlite',
+}
+
+
+# Configuration related to LDAP
+LDAP_CONF = {
+
+    # Path of the CA's certificate, it is used to make sure we connect to the
+    # right LDAP.
+    'ca_file': 'certs/ca.crt',
+
+    # Address of the LDAP (please use LDAP over TLS [ldaps])
+    'host': 'ldaps://ldap-master.priv.minet.net',
+
+    # common name of the anonymous user that will connect to the LDAP server to
+    # get the uid of the users.
+    'cn_anonymous': 'anonymous_user',
+
+    # Password of this anonymous user...
+    'pass_anonymous': 'superpassword',
+
+    # Base distinguished name where it will look for users
+    'base_dn': 'ou=equipe,dc=minet,dc=net',
+}
+
+# Configuration related to OAuth
+OAUTH2_CONF = {
+    # Client ID of ADH6. A client is an application that can request tokens to
+    # the authentication server. This value is NOT secret (it is embedded in
+    # the angular app). If you modify it here, don't forget to modify it in the
+    # angular app.
+    'client_id': 'H4XcptJlYAWAqyxTJxybMXfi',
+}

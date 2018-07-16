@@ -1,0 +1,24 @@
+{% include 'head.html' %}
+<div class"container">
+  <div class="row">
+    <div class="twelve columns">
+      <p>{{grant.client.client_name}} is requesting:
+      <strong>{{ grant.request.scope }}</strong>
+      </p>
+      <form action="" method="post">
+        <label>
+          <input type="checkbox" name="confirm">
+          <span>Consent?</span>
+        </label>
+        {% if not user %}
+        <p>You haven't logged in. Log in with:</p>
+        <div>
+          <input type="text" name="username">
+        </div>
+        {% endif %}
+        <br>
+        <button class="button-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>

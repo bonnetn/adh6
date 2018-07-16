@@ -1,0 +1,4 @@
+*.sqlite
+*.pyc
+certs_local/
+CONFIGURATION.py
