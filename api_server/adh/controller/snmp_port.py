@@ -3,20 +3,20 @@ from adh.auth import auth_simple_user
 
 
 @auth_simple_user
-def getPortStatus(switchID, portID):
+def get_port_status(switch_id, port_id):
     return 204, NoContent, True
 
 
 @auth_simple_user
-def setPortStatus(switchID, portID, state):
+def set_port_status(switch_id, port_id, state):
     return 200, NoContent
 
 
 @auth_simple_user
-def getPortVlan(switchID, portID):
+def get_port_vlan(switch_id, port_id):
     return 200, NoContent, 42
 
 
 @auth_simple_user
-def setPortVlan(switchID, portID, vlan):
+def set_port_vlan(switch_id, port_id, vlan):
     return 204, NoContent

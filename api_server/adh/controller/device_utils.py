@@ -3,20 +3,20 @@ from sqlalchemy.sql.expression import literal
 from sqlalchemy.types import String
 
 
-def is_wired(macAddress, s):
+def is_wired(mac_address, s):
     """ Return true if the mac address corresponds to a wired device """
-    queryWired = s.query(Ordinateur)
-    queryWired = queryWired.filter(Ordinateur.mac == macAddress)
+    query_wired = s.query(Ordinateur)
+    query_wired = query_wired.filter(Ordinateur.mac == mac_address)
 
-    return s.query(queryWired.exists()).scalar()
+    return s.query(query_wired.exists()).scalar()
 
 
-def is_wireless(macAddress, s):
+def is_wireless(mac_address, s):
     """ Return true if the mac address corresponds to a wireless device """
-    queryWireless = s.query(Portable)
-    queryWireless = queryWireless.filter(Portable.mac == macAddress)
+    query_wireless = s.query(Portable)
+    query_wireless = query_wireless.filter(Portable.mac == mac_address)
 
-    return s.query(queryWireless.exists()).scalar()
+    return s.query(query_wireless.exists()).scalar()
 
 
 def create_wireless_device(admin, body, s):
@@ -49,9 +49,9 @@ def create_wired_device(admin, body, s):
     return dev
 
 
-def update_wireless_device(admin, macAddress, body, s):
+def update_wireless_device(admin, mac_address, body, s):
     """ Update a wireless device in the database """
-    q = s.query(Portable).filter(Portable.mac == macAddress)
+    q = s.query(Portable).filter(Portable.mac == mac_address)
     dev = q.one()
 
     dev.start_modif_tracking()
@@ -63,9 +63,9 @@ def update_wireless_device(admin, macAddress, body, s):
     return dev
 
 
-def update_wired_device(admin, macAddress, body, s):
+def update_wired_device(admin, mac_address, body, s):
     """ Update a wired device in the database """
-    q = s.query(Ordinateur).filter(Ordinateur.mac == macAddress)
+    q = s.query(Ordinateur).filter(Ordinateur.mac == mac_address)
     dev = q.one()
 
     dev.start_modif_tracking()
@@ -79,9 +79,9 @@ def update_wired_device(admin, macAddress, body, s):
     return dev
 
 
-def delete_wired_device(admin, macAddress, s):
+def delete_wired_device(admin, mac_address, s):
     """ Delete a wired device from the databse """
-    q = s.query(Ordinateur).filter(Ordinateur.mac == macAddress)
+    q = s.query(Ordinateur).filter(Ordinateur.mac == mac_address)
     dev = q.one()
 
     dev.start_modif_tracking()
@@ -91,9 +91,9 @@ def delete_wired_device(admin, macAddress, s):
     Modification.add_and_commit(s, dev, admin)
 
 
-def delete_wireless_device(admin, macAddress, s):
+def delete_wireless_device(admin, mac_address, s):
     """ Delete a wireless device from the database """
-    q = s.query(Portable).filter(Portable.mac == macAddress)
+    q = s.query(Portable).filter(Portable.mac == mac_address)
     dev = q.one()
 
     dev.start_modif_tracking()

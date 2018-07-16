@@ -19,7 +19,7 @@ def sample_switch():
 
 
 def prep_db(session, sample_switch1):
-    """ Insert the test objects in the db """
+    """ Insert the test objects in the Db """
     session.add(sample_switch1)
     session.commit()
 

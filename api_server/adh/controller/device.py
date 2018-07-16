@@ -2,7 +2,7 @@ from connexion import NoContent
 import datetime
 import json
 from adh.exceptions import UserNotFound
-from adh.model.database import Database as db
+from adh.model.database import Database as Db
 from adh.model import models
 from adh.model.models import Adherent, Modification
 from sqlalchemy.orm.exc import MultipleResultsFound
@@ -22,9 +22,9 @@ import logging
 
 
 @auth_simple_user
-def filterDevice(admin, limit=100, offset=0, username=None, terms=None):
+def filter_device(admin, limit=100, offset=0, username=None, terms=None):
     """ [API] Filter the list of the devices according to some criterias """
-    s = db.get_db().get_session()
+    s = Db.get_db().get_session()
 
     if limit < 0:
         return 'Limit must be a positive number', 400
@@ -94,50 +94,48 @@ def allocate_ip_for_device(s, dev, admin):
 
 
 @auth_simple_user
-def putDevice(admin, macAddress, body):
+def put_device(admin, mac_address, body):
     """ [API] Put (update or create) a new device in the database """
-    s = db.get_db().get_session()
+    s = Db.get_db().get_session()
     try:
-        wired = is_wired(macAddress, s)
-        wireless = is_wireless(macAddress, s)
+        wired = is_wired(mac_address, s)
+        wireless = is_wireless(mac_address, s)
         wanted_type = body["connectionType"]
 
         if body["connectionType"] == "wireless" \
            and ('ipAddress' in body or 'ipv6Address' in body):
             return "You cannot assign an IP address to a wireless device", 400
 
-        returnCode = None
-
         if wired and wireless:
             if wanted_type == "wired":
-                delete_wireless_device(admin, macAddress, s)
-                device = update_wired_device(admin, macAddress, body, s)
+                delete_wireless_device(admin, mac_address, s)
+                device = update_wired_device(admin, mac_address, body, s)
                 allocate_ip_for_device(s, device, admin)
             else:
-                delete_wired_device(admin, macAddress, s)
-                update_wireless_device(admin, macAddress, body, s)
-            returnCode = 204
+                delete_wired_device(admin, mac_address, s)
+                update_wireless_device(admin, mac_address, body, s)
+            return_code = 204
 
         elif wired:
             if wanted_type == "wireless":
-                delete_wired_device(admin, macAddress, s)
+                delete_wired_device(admin, mac_address, s)
                 create_wireless_device(admin, body, s)
             else:
-                device = update_wired_device(admin, macAddress, body, s)
+                device = update_wired_device(admin, mac_address, body, s)
                 allocate_ip_for_device(s, device, admin)
-            returnCode = 204
+            return_code = 204
 
         elif wireless:
             if wanted_type == "wired":
-                delete_wireless_device(admin, macAddress, s)
+                delete_wireless_device(admin, mac_address, s)
                 device = create_wired_device(admin, body, s)
                 allocate_ip_for_device(s, device, admin)
             else:
-                update_wireless_device(admin, macAddress, body, s)
-            returnCode = 204
+                update_wireless_device(admin, mac_address, body, s)
+            return_code = 204
 
         else:  # Create device
-            if body["mac"] != macAddress:
+            if body["mac"] != mac_address:
                 return 'The MAC address in the query ' + \
                        'and in the body don\'t match', 400
 
@@ -146,19 +144,19 @@ def putDevice(admin, macAddress, body):
                 allocate_ip_for_device(s, device, admin)
             else:
                 create_wireless_device(admin, body, s)
-            returnCode = 201
+            return_code = 201
 
-        if returnCode == 204:
+        if return_code == 204:
             logging.info("%s updated the device %s\n%s",
-                         admin.login, macAddress, json.dumps(body,
-                                                             sort_keys=True))
+                         admin.login, mac_address, json.dumps(body,
+                                                              sort_keys=True))
 
-        elif returnCode == 201:
+        elif return_code == 201:
             logging.info("%s created the device %s\n%s",
-                         admin.login, macAddress, json.dumps(body,
-                                                             sort_keys=True))
+                         admin.login, mac_address, json.dumps(body,
+                                                              sort_keys=True))
 
-        return NoContent, returnCode
+        return NoContent, return_code
 
     except ip_controller.NoMoreIPAvailable:
         s.rollback()
@@ -182,21 +180,21 @@ def putDevice(admin, macAddress, body):
 
 
 @auth_simple_user
-def getDevice(admin, macAddress):
+def get_device(admin, mac_address):
     """ [API] Return the device specified by the macAddress """
-    s = db.get_db().get_session()
-    if is_wireless(macAddress, s):
+    s = Db.get_db().get_session()
+    if is_wireless(mac_address, s):
         q = s.query(models.Portable)
-        q = q.filter(models.Portable.mac == macAddress)
+        q = q.filter(models.Portable.mac == mac_address)
         r = q.one()
-        logging.info("%s fetched the device %s", admin.login, macAddress)
+        logging.info("%s fetched the device %s", admin.login, mac_address)
         return dict(r), 200
 
-    elif is_wired(macAddress, s):
+    elif is_wired(mac_address, s):
         q = s.query(models.Ordinateur)
-        q = q.filter(models.Ordinateur.mac == macAddress)
+        q = q.filter(models.Ordinateur.mac == mac_address)
         r = q.one()
-        logging.info("%s fetched the device %s", admin.login, macAddress)
+        logging.info("%s fetched the device %s", admin.login, mac_address)
         return dict(r), 200
 
     else:
@@ -204,17 +202,17 @@ def getDevice(admin, macAddress):
 
 
 @auth_simple_user
-def deleteDevice(admin, macAddress):
+def delete_device(admin, mac_address):
     """ [API] Delete the specified device from the database """
-    s = db.get_db().get_session()
-    if is_wireless(macAddress, s):
-        delete_wireless_device(admin, macAddress, s)
-        logging.info("%s deleted the device %s", admin.login, macAddress)
+    s = Db.get_db().get_session()
+    if is_wireless(mac_address, s):
+        delete_wireless_device(admin, mac_address, s)
+        logging.info("%s deleted the device %s", admin.login, mac_address)
         return NoContent, 204
 
-    elif is_wired(macAddress, s):
-        delete_wired_device(admin, macAddress, s)
-        logging.info("%s deleted the device %s", admin.login, macAddress)
+    elif is_wired(mac_address, s):
+        delete_wired_device(admin, mac_address, s)
+        logging.info("%s deleted the device %s", admin.login, mac_address)
         return NoContent, 204
 
     else:

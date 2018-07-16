@@ -102,7 +102,7 @@ def delete_user(admin, username):
 @auth_simple_user
 def patch_user(admin, username, body):
     """ [API] Partially update a user from the database """
-    # s = db.get_db().get_session()
+    # s = Db.get_db().get_session()
 
     return NoContent, 404
     # # Create a valid object

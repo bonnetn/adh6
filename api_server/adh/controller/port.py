@@ -1,5 +1,5 @@
 from connexion import NoContent
-from adh.model.database import Database as db
+from adh.model.database import Database as Db
 from sqlalchemy import or_
 from adh.exceptions import RoomNotFound, SwitchNotFound, PortNotFound
 from adh.model.models import Port, Chambre, Switch
@@ -9,20 +9,20 @@ import json
 
 
 @auth_simple_user
-def filterPort(admin, limit=100, offset=0,
-               switchID=None, roomNumber=None, terms=None):
+def filter_port(admin, limit=100, offset=0,
+                switch_id=None, room_number=None, terms=None):
     """ [API] Filter the port list according to some criteria """
     if limit < 0:
         return 'Limit must be a positive number', 400
 
-    s = db.get_db().get_session()
+    s = Db.get_db().get_session()
     q = s.query(Port)
-    if switchID:
+    if switch_id:
         q = q.join(Switch)
-        q = q.filter(Switch.id == switchID)
-    if roomNumber:
+        q = q.filter(Switch.id == switch_id)
+    if room_number:
         q = q.join(Chambre)
-        q = q.filter(Chambre.numero == roomNumber)
+        q = q.filter(Chambre.numero == room_number)
     if terms:
         q = q.filter(or_(
             Port.numero.contains(terms),
@@ -46,10 +46,10 @@ def filterPort(admin, limit=100, offset=0,
 
 
 @auth_admin
-def createPort(admin, body):
+def create_port(admin, body):
     """ [API] Create a port in the database """
 
-    session = db.get_db().get_session()
+    session = Db.get_db().get_session()
     try:
         port = Port.from_dict(session, body)
     except SwitchNotFound:
@@ -68,25 +68,25 @@ def createPort(admin, body):
 
 
 @auth_simple_user
-def getPort(admin, portID):
+def get_port(admin, port_id):
     """ [API] Get a port from the database """
-    s = db.get_db().get_session()
+    s = Db.get_db().get_session()
     try:
-        result = Port.find(s, portID)
+        result = Port.find(s, port_id)
     except PortNotFound:
         return NoContent, 404
 
     result = dict(result)
     logging.info("%s fetched the port /port/%d",
-                 admin.login, portID)
+                 admin.login, port_id)
     return result, 200
 
 
 @auth_admin
-def updatePort(admin, portID, body):
+def update_port(admin, port_id, body):
     """ [API] Update a port in the database """
 
-    s = db.get_db().get_session()
+    s = Db.get_db().get_session()
 
     try:
         new_port = Port.from_dict(s, body)
@@ -94,7 +94,7 @@ def updatePort(admin, portID, body):
         return "Switch not found", 400
 
     try:
-        new_port.id = Port.find(s, portID).id
+        new_port.id = Port.find(s, port_id).id
     except PortNotFound:
         return "Port not found", 404
 
@@ -102,19 +102,19 @@ def updatePort(admin, portID, body):
     s.commit()
 
     logging.info("%s updated the port /port/%d\n%s",
-                 admin.login, portID, json.dumps(body, sort_keys=True))
+                 admin.login, port_id, json.dumps(body, sort_keys=True))
     return NoContent, 204
 
 
 @auth_admin
-def deletePort(admin, portID):
+def delete_port(admin, port_id):
     """ [API] Delete a port from the database """
-    session = db.get_db().get_session()
+    session = Db.get_db().get_session()
     try:
-        session.delete(Port.find(session, portID))
+        session.delete(Port.find(session, port_id))
     except PortNotFound:
         return NoContent, 404
     session.commit()
     logging.info("%s deleted the port /port/%d",
-                 admin.login, portID)
+                 admin.login, port_id)
     return NoContent, 204

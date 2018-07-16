@@ -252,7 +252,7 @@ paths:
       tags:
       - "device"
       summary: "Filter devices"
-      operationId: "filterDevice"
+      operationId: "filter_device"
       produces:
       - "application/json"
       parameters:
@@ -297,16 +297,16 @@ paths:
       x-swagger-router-controller: "adh.controller.device"
       security:
         - oauth2: ["profile"]
-  /device/{macAddress}:
+  /device/{mac_address}:
     get:
       tags:
       - "device"
       summary: "Retrieve a device"
-      operationId: "getDevice"
+      operationId: "get_device"
       produces:
       - "application/json"
       parameters:
-      - name: "macAddress"
+      - name: "mac_address"
         in: "path"
         description: "The mac address of the device that will be fetched"
         required: true
@@ -325,11 +325,11 @@ paths:
       tags:
       - "device"
       summary: "Update/create a device"
-      operationId: "putDevice"
+      operationId: "put_device"
       produces:
       - "application/json"
       parameters:
-      - name: "macAddress"
+      - name: "mac_address"
         in: "path"
         description: "The mac address of the device that will be update"
         required: true
@@ -355,11 +355,11 @@ paths:
       tags:
       - "device"
       summary: "Delete a device"
-      operationId: "deleteDevice"
+      operationId: "delete_device"
       produces:
       - "application/json"
       parameters:
-      - name: "macAddress"
+      - name: "mac_address"
         in: "path"
         description: "The mac address of the device that will be deleted"
         required: true
@@ -377,7 +377,7 @@ paths:
       tags:
       - "room"
       summary: "Filter rooms"
-      operationId: "filterRoom"
+      operationId: "filter_room"
       produces:
       - "application/json"
       parameters:
@@ -415,16 +415,16 @@ paths:
       x-swagger-router-controller: "adh.controller.room"
       security:
         - oauth2: ["profile"]
-  /room/{roomNumber}:
+  /room/{room_number}:
     get:
       tags:
       - "room"
       summary: "Retrieve a room"
-      operationId: "getRoom"
+      operationId: "get_room"
       produces:
       - "application/json"
       parameters:
-      - name: "roomNumber"
+      - name: "room_number"
         in: "path"
         required: true
         type: "integer"
@@ -442,11 +442,11 @@ paths:
       tags:
       - "room"
       summary: "Update/create a room"
-      operationId: "putRoom"
+      operationId: "put_room"
       produces:
       - "application/json"
       parameters:
-      - name: "roomNumber"
+      - name: "room_number"
         in: "path"
         required: true
         type: "integer"
@@ -470,11 +470,11 @@ paths:
       tags:
       - "room"
       summary: "Delete a room"
-      operationId: "deleteRoom"
+      operationId: "delete_room"
       produces:
       - "application/json"
       parameters:
-      - name: "roomNumber"
+      - name: "room_number"
         in: "path"
         required: true
         type: "integer"
@@ -491,7 +491,7 @@ paths:
       tags:
       - "switch"
       summary: "Get all switches"
-      operationId: "filterSwitch"
+      operationId: "filter_switch"
       produces:
       - "application/json"
       parameters:
@@ -533,7 +533,7 @@ paths:
       tags:
       - "switch"
       summary: "Create a switch"
-      operationId: "createSwitch"
+      operationId: "create_switch"
       produces:
       - "application/json"
       parameters:
@@ -555,16 +555,16 @@ paths:
       x-swagger-router-controller: "adh.controller.switch"
       security:
         - oauth2: ["profile"]
-  /switch/{switchID}:
+  /switch/{switch_id}:
     get:
       tags:
       - "switch"
       summary: "Retrieve a switch"
-      operationId: "getSwitch"
+      operationId: "get_switch"
       produces:
       - "application/json"
       parameters:
-      - name: "switchID"
+      - name: "switch_id"
         in: "path"
         required: true
         type: "integer"
@@ -582,11 +582,11 @@ paths:
       tags:
       - "switch"
       summary: "Update a switch"
-      operationId: "updateSwitch"
+      operationId: "update_switch"
       produces:
       - "application/json"
       parameters:
-      - name: "switchID"
+      - name: "switch_id"
         in: "path"
         required: true
         type: "integer"
@@ -610,11 +610,11 @@ paths:
       tags:
       - "switch"
       summary: "Delete a switch"
-      operationId: "deleteSwitch"
+      operationId: "delete_switch"
       produces:
       - "application/json"
       parameters:
-      - name: "switchID"
+      - name: "switch_id"
         in: "path"
         required: true
         type: "integer"
@@ -631,7 +631,7 @@ paths:
       tags:
       - "port"
       summary: "Filter ports"
-      operationId: "filterPort"
+      operationId: "filter_port"
       produces:
       - "application/json"
       parameters:
@@ -648,12 +648,12 @@ paths:
         required: false
         type: "integer"
         default: 0
-      - name: "switchID"
+      - name: "switch_id"
         in: "query"
         description: "Filter only ports that belongs to that switch"
         required: false
         type: "integer"
-      - name: "roomNumber"
+      - name: "room_number"
         in: "query"
         description: "Filter only ports that that room"
         required: false
@@ -684,7 +684,7 @@ paths:
       tags:
       - "port"
       summary: "Create a port"
-      operationId: "createPort"
+      operationId: "create_port"
       produces:
       - "application/json"
       parameters:
@@ -706,16 +706,16 @@ paths:
       x-swagger-router-controller: "adh.controller.port"
       security:
         - oauth2: ["profile"]
-  /port/{portID}:
+  /port/{port_id}:
     get:
       tags:
       - "port"
       summary: "Retrieve a port"
-      operationId: "getPort"
+      operationId: "get_port"
       produces:
       - "application/json"
       parameters:
-      - name: "portID"
+      - name: "port_id"
         in: "path"
         required: true
         type: "integer"
@@ -733,11 +733,11 @@ paths:
       tags:
       - "port"
       summary: "Update a port"
-      operationId: "updatePort"
+      operationId: "update_port"
       produces:
       - "application/json"
       parameters:
-      - name: "portID"
+      - name: "port_id"
         in: "path"
         required: true
         type: "integer"
@@ -761,11 +761,11 @@ paths:
       tags:
       - "port"
       summary: "Delete a port"
-      operationId: "deletePort"
+      operationId: "delete_port"
       produces:
       - "application/json"
       parameters:
-      - name: "portID"
+      - name: "port_id"
         in: "path"
         required: true
         type: "integer"
@@ -777,16 +777,16 @@ paths:
       x-swagger-router-controller: "adh.controller.port"
       security:
         - oauth2: ["profile"]
-  /port/{portID}/state/:
+  /port/{port_id}/state/:
     get:
       tags:
       - "port"
       summary: "Retrieve the status of a port."
-      operationId: "getPortStatus"
+      operationId: "get_port_status"
       produces:
       - "application/json"
       parameters:
-      - name: "portID"
+      - name: "port_id"
         in: "path"
         required: true
         type: "integer"
@@ -804,15 +804,15 @@ paths:
       tags:
       - "port"
       summary: "Shutdown/enable a port"
-      operationId: "setPortStatus"
+      operationId: "set_port_status"
       produces:
       - "application/json"
       parameters:
-      - name: "switchID"
+      - name: "switch_id"
         in: "path"
         required: true
         type: "integer"
-      - name: "portID"
+      - name: "port_id"
         in: "path"
         required: true
         type: "integer"
@@ -833,16 +833,16 @@ paths:
       security:
         - oauth2: ["profile"]
         
-  /port/{portID}/vlan/:
+  /port/{port_id}/vlan/:
     get:
       tags:
       - "port"
       summary: "Retrieve the VLAN assigned to the port."
-      operationId: "getPortVlan"
+      operationId: "get_port_vlan"
       produces:
       - "application/json"
       parameters:
-      - name: "portID"
+      - name: "port_id"
         in: "path"
         required: true
         type: "integer"
@@ -861,11 +861,11 @@ paths:
       tags:
       - "port"
       summary: "Change the VLAN assigned a to port"
-      operationId: "setPortVlan"
+      operationId: "set_port_vlan"
       produces:
       - "application/json"
       parameters:
-      - name: "portID"
+      - name: "port_id"
         in: "path"
         required: true
         type: "integer"
@@ -924,14 +924,14 @@ definitions:
       associationMode:
         type: "string"
         format: "date-time"
-      roomNumber:
+      room_number:
         type: "integer"
         format: "int32"
         example: 5012
     example:
       firstName: "John"
       lastName: "Doe"
-      roomNumber: 5012
+      room_number: 5012
       comment: "comment"
       departureDate: "2000-01-23T04:56:07.000+00:00"
       associationMode: "2000-01-23T04:56:07.000+00:00"
@@ -960,14 +960,14 @@ definitions:
       associationMode:
         type: "string"
         format: "date-time"
-      roomNumber:
+      room_number:
         type: "integer"
         format: "int32"
         example: 5012
     example:
       firstName: "John"
       lastName: "Doe"
-      roomNumber: 5012
+      room_number: 5012
       comment: "comment"
       departureDate: "2000-01-23T04:56:07.000+00:00"
       associationMode: "2000-01-23T04:56:07.000+00:00"
@@ -1004,12 +1004,12 @@ definitions:
   Room:
     type: "object"
     required:
-    - "roomNumber"
+    - "room_number"
     properties:
       description:
         type: "string"
         example: "Chambre 5110"
-      roomNumber:
+      room_number:
         type: "integer"
         example: 5110
       phone:
@@ -1019,31 +1019,31 @@ definitions:
         type: "integer"
         example: 45
     example:
-      roomNumber: 5110
+      room_number: 5110
       vlan: 45
       phone: 6842
       description: "Chambre 5110"
   Port:
     type: "object"
     required:
-    - "portNumber"
+    - "port_number"
     properties:
       id:
         type: "integer"
         example: 1
-      portNumber:
+      port_number:
         type: "string"
         example: "1/0/4"
-      roomNumber:
+      room_number:
         type: "integer"
         example: 5110
-      switchID:
+      switch_id:
         type: "integer"
         example: 6
     example:
-      roomNumber: 5110
-      switchID: 6
-      portNumber: "1/0/4"
+      room_number: 5110
+      switch_id: 6
+      port_number: "1/0/4"
   Switch:
     type: "object"
     required:

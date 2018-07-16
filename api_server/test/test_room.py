@@ -10,7 +10,7 @@ from .resource import base_url, TEST_HEADERS
 def assert_room_in_db(body):
     s = db.get_db().get_session()
     q = s.query(Chambre)
-    q = q.filter(body["roomNumber"] == Chambre.numero)
+    q = q.filter(body["room_number"] == Chambre.numero)
     c = q.one()
     assert body["vlan"] == c.vlan.numero
     assert str(body["phone"]) == c.telephone
@@ -99,7 +99,7 @@ def test_room_get_invalid_room(api_client):
 
 def test_room_put_new_room_invalid_vlan(api_client):
     room = {
-        "roomNumber": 5111,
+        "room_number": 5111,
         "vlan": 45,
         "phone": 6842,
         "description": "Chambre 5111"
@@ -115,7 +115,7 @@ def test_room_put_new_room_invalid_vlan(api_client):
 
 def test_room_put_new_room(api_client):
     room = {
-      "roomNumber": 5111,
+      "room_number": 5111,
       "vlan": 42,
       "phone": 6842,
       "description": "Chambre 5111"
@@ -132,7 +132,7 @@ def test_room_put_new_room(api_client):
 
 def test_room_put_update_room(api_client):
     room = {
-      "roomNumber": 5111,
+      "room_number": 5111,
       "vlan": 42,
       "phone": 6842,
       "description": "Chambre 5111"
@@ -176,7 +176,7 @@ def test_room_log_create_room(api_client, caplog):
     assert caplog.record_tuples[1] == (
         'root', 20,
         'TestingClient created the room 5111\n{"description": "Chambre 5111", '
-        '"phone": 6842, "roomNumber": 5111, "vlan": 42}'
+        '"phone": 6842, "room_number": 5111, "vlan": 42}'
     )
 
 
@@ -188,7 +188,7 @@ def test_room_log_update_room(api_client, caplog):
     assert caplog.record_tuples[1] == (
         'root', 20,
         'TestingClient updated the room 5110\n{"description": "Chambre 5111", '
-        '"phone": 6842, "roomNumber": 5111, "vlan": 42}'
+        '"phone": 6842, "room_number": 5111, "vlan": 42}'
     )
 
 
