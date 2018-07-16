@@ -13,6 +13,7 @@ api_server/htmlcov/*
 api_server/pip-selfcheck.json
 api_server/certs/
 api_server/CONFIGURATION.py
+api_server/venv
 
 # FRONTEND (ANGULAR)
 # See http://help.github.com/ignore-files/ for more about ignoring files.
