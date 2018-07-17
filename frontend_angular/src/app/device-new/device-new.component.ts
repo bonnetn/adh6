@@ -5,12 +5,12 @@ import { Router, ActivatedRoute} from '@angular/router';
 
 import 'rxjs/add/operator/takeWhile';
 import 'rxjs/add/operator/switchMap';
-import { empty } from 'rxjs/observable/empty';
-import { catchError, flatMap, finalize } from 'rxjs/operators';
+import {catchError, flatMap, finalize, first} from 'rxjs/operators';
 
 import { DeviceService } from '../api/api/device.service';
 import { Device } from '../api/model/device';
 import { NotificationsService } from 'angular2-notifications';
+import {EMPTY} from 'rxjs';
 
 @Component({
   selector: 'app-device-new',
@@ -50,15 +50,15 @@ export class DeviceNewComponent implements OnInit, OnDestroy {
       connectionType: v.connectionType
     };
 
-    this.deviceService.getDeviceResponse(v.mac).first().pipe(
+    this.deviceService.getDevice(v.mac, 'response').pipe(
+        first(),
         flatMap( () => {
           // if there is a response then you should not create a new device
           this.notif.error('Device already exists in database.');
-          return empty<HttpResponse<void>>();
+          return EMPTY;
         }),
-        catchError( () => {
-          return this.deviceService.putDeviceResponse( { 'macAddress': v.mac, body: device }).first();
-        }),
+        catchError(() => this.deviceService.putDevice(v.mac, device, 'response')),
+        first(),
         finalize( () => {
           this.disabled = false;
         }),

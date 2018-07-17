@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { SwitchService } from '../api/api/switch.service';
-import { Switch } from '../api/model/switch';
+import { ModelSwitch } from '../api/model/modelSwitch';
 
 import { BehaviorSubject }    from 'rxjs/BehaviorSubject';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -20,7 +20,7 @@ import {
 })
 export class SwitchListComponent implements OnInit {
 
-  switches$: Observable<Switch[]>;
+  switches$: Observable<Array<ModelSwitch>>;
 
   page_number : number = 1;
   item_count : number = 1;
@@ -43,10 +43,10 @@ export class SwitchListComponent implements OnInit {
       distinctUntilChanged(),
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.switchService.filterSwitchResponse( { 'terms':term, 'limit':this.items_per_page, 'offset':(page-1)*this.items_per_page} )),
+      switchMap((term: string) => this.switchService.filterSwitch(this.items_per_page, (page-1)*this.items_per_page, term, 'response')),
       switchMap((response) => {
         this.item_count = +response.headers.get("x-total-count")
-        this.page_number = page;  
+        this.page_number = page;
         return Observable.of(response.body)
       }),
     );

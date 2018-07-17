@@ -17,19 +17,19 @@ import { NotificationsService } from 'angular2-notifications';
 })
 
 export class RoomNewComponent implements OnInit, OnDestroy {
-  
+
   disabled: boolean = false;
   private alive: boolean = true;
-  
+
   roomForm: FormGroup;
-  
+
   constructor(
     public roomService: RoomService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private notif: NotificationsService,
-  ) { 
+  ) {
   this.createForm();
   }
 
@@ -40,7 +40,7 @@ export class RoomNewComponent implements OnInit, OnDestroy {
       description: ['', Validators.required ],
     });
   }
- 
+
   onSubmit() {
     this.disabled = true;
     const v = this.roomForm.value;
@@ -49,13 +49,13 @@ export class RoomNewComponent implements OnInit, OnDestroy {
       vlan: v.vlan,
       description: v.description
     }
-          
-    this.roomService.getRoomResponse(v.roomNumber)
+
+    this.roomService.getRoom(v.roomNumber, 'response')
       .takeWhile( ()=> this.alive )
       .subscribe( (response) => {
-        this.notif.error("Room already exists"); 
+        this.notif.error("Room already exists");
       }, (response) => {
-        this.roomService.putRoomResponse( { "roomNumber": v.roomNumber, body: room })
+        this.roomService.putRoom(v.roomNumber, room)
           .takeWhile( ()=> this.alive )
           .subscribe( (response) => {
             this.router.navigate(["/room/view", v.roomNumber ])
@@ -67,7 +67,7 @@ export class RoomNewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
   }
-  
+
   ngOnDestroy() {
     this.alive=false;
   }

@@ -11,7 +11,7 @@ import { NotificationsService } from 'angular2-notifications';
   styleUrls: ['./port-details.component.css']
 })
 export class PortDetailsComponent implements OnInit, OnDestroy {
-  
+
   port$: Observable<Port>;
   portID: number;
   switchID: number;
@@ -22,7 +22,7 @@ export class PortDetailsComponent implements OnInit, OnDestroy {
   isportauthenth: boolean = false;
 
   constructor(
-    public portService: PortService, 
+    public portService: PortService,
     private route: ActivatedRoute,
     private router: Router,
     private notif: NotificationsService,
@@ -48,8 +48,8 @@ export class PortDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.route.params.subscribe( params => {
       this.switchID = +params["switchID"];
-      this.portID = +params["portID"];  
-      this.port$ = this.portService.getPort( { 'switchID': this.switchID, 'portID': this.portID } );
+      this.portID = +params["portID"];
+      this.port$ = this.portService.getPort(this.portID);
     });
   }
 

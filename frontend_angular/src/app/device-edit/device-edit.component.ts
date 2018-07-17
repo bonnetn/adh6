@@ -7,6 +7,7 @@ import 'rxjs/add/operator/takeWhile';
 import { DeviceService } from '../api/api/device.service';
 import { Device } from '../api/model/device';
 import { NotificationsService } from 'angular2-notifications';
+import {first, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-device-edit',
@@ -48,22 +49,22 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
       username: v.username
     };
 
-    this.deviceService.putDeviceResponse( { 'macAddress': mac, body: device })
-      .first()
-      .subscribe( (response: HttpResponse<void>) => {
+    this.deviceService.putDevice(mac, device, 'response').pipe(
+      first()
+    ).subscribe( (response: HttpResponse<void>) => {
         this.notificationService.success(response.status + ': Success');
         this.router.navigate(['member/view', v.username ]);
       });
   }
 
   ngOnInit() {
-    this.route.paramMap
-      .switchMap((params: ParamMap) => this.deviceService.getDevice(params.get('mac')))
-      .first()
-      .subscribe( device => {
-        this.device = device;
-        this.deviceForm.patchValue(device);
-      });
+    this.route.paramMap.pipe(
+      switchMap((params: ParamMap) => this.deviceService.getDevice(params.get('mac'))),
+      first(),
+    ).subscribe( device => {
+      this.device = device;
+      this.deviceForm.patchValue(device);
+    });
   }
 
   ngOnDestroy() {

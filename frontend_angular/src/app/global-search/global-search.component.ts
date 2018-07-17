@@ -16,11 +16,12 @@ import { DeviceService } from '../api/api/device.service';
 import { RoomService } from '../api/api/room.service';
 
 import { SwitchService } from '../api/api/switch.service';
-import { Switch } from '../api/model/switch';
+import { ModelSwitch } from '../api/model/modelSwitch';
 
 import { PortService } from '../api/api/port.service';
 
 import { debounceTime, distinctUntilChanged, switchMap, mergeMap, map } from 'rxjs/operators';
+import {Port} from '../api';
 
 
 export class SearchResult {
@@ -84,30 +85,29 @@ export class GlobalSearchComponent implements OnInit {
         }
 
         const LIMIT = 20;
-        const args = {'terms': terms, 'limit': LIMIT};
 
-        const user$ = this.userService.filterUser(args).pipe(
+        const user$ = this.userService.filterUser(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
           map( (obj) => new SearchResult( 'user', obj.firstName + ' ' + obj.lastName )),
         );
 
-        const device$ = this.deviceService.filterDevice(args).pipe(
+        const device$ = this.deviceService.filterDevice(LIMIT, undefined, undefined, terms).pipe(
           mergeMap((array) => from(array)),
           map( (obj) => new SearchResult( 'device', obj.mac)),
         );
 
-        const room$ = this.roomService.filterRoom(args).pipe(
+        const room$ = this.roomService.filterRoom(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
           map( (obj) => new SearchResult( 'room', obj.description)),
         );
-        const switch$ = this.switchService.filterSwitch(args).pipe(
+        const switch$ = this.switchService.filterSwitch(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
           map( (obj) => new SearchResult( 'switch', obj.description)),
         );
 
-        const port$ = this.portService.filterPort(args).pipe(
-          mergeMap((array) => from(array)),
-          map( (obj) => new SearchResult( 'port', 'Switch ' + obj.switchID + ' ' + obj.portNumber)),
+        const port$ = this.portService.filterPort(LIMIT, undefined, undefined, undefined, terms).pipe(
+          mergeMap((array: Array<Port>) => from(array)),
+          map( (obj: Port) => new SearchResult( 'port', 'Switch ' + obj.switchId+ ' ' + obj.portNumber)),
         );
 
         return user$.concat(device$).concat(room$).concat(switch$).concat(port$);

@@ -17,21 +17,21 @@ import { NotificationsService } from 'angular2-notifications';
 })
 
 export class RoomEditComponent implements OnInit, OnDestroy {
-  
+
   disabled: boolean = false;
   private alive: boolean = true;
-  
+
   roomNumber: number;
   roomEdit: FormGroup;
   private room: Room;
-  
+
   constructor(
     public roomService: RoomService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private notif: NotificationsService,
-  ) { 
+  ) {
   this.createForm();
   }
 
@@ -43,7 +43,7 @@ export class RoomEditComponent implements OnInit, OnDestroy {
       description: ['', Validators.required ],
     });
   }
- 
+
   onSubmit() {
     this.disabled = true;
     const v = this.roomEdit.value;
@@ -52,7 +52,7 @@ export class RoomEditComponent implements OnInit, OnDestroy {
       vlan: v.vlan,
       description: v.description
     }
-    this.roomService.putRoomResponse( { "roomNumber": v.roomNumber, body: room })
+    this.roomService.putRoom(v.roomNumber, room, 'response')
       .takeWhile( ()=> this.alive )
       .subscribe( (response) => {
         this.router.navigate(["/room/view", v.roomNumber ])
@@ -63,7 +63,7 @@ export class RoomEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.paramMap
-      .switchMap((params: ParamMap) => 
+      .switchMap((params: ParamMap) =>
         this.roomService.getRoom( +params.get("roomNumber") ))
       .takeWhile( () => this.alive )
       .subscribe( (room: Room) => {

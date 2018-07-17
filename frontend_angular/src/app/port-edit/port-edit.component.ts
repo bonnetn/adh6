@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SwitchService } from '../api/api/switch.service';
-import { Switch } from '../api/model/switch';
+import { ModelSwitch } from '../api/model/modelSwitch';
 
 @Component({
   selector: 'app-port-edit',
@@ -11,14 +11,14 @@ import { Switch } from '../api/model/switch';
 })
 export class PortEditComponent implements OnInit {
 
-  switches$: Observable<Switch[]>;
+  switches$: Observable<Array<ModelSwitch>>;
   switchForm: FormGroup;
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     public switchService: SwitchService,
-  ) { 
-    this.createForm(); 
+  ) {
+    this.createForm();
   }
 
   createForm() {
@@ -28,7 +28,7 @@ export class PortEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.switches$ = this.switchService.filterSwitch({});
+    this.switches$ = this.switchService.filterSwitch();
   }
 
 }

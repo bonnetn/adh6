@@ -59,17 +59,13 @@ export class DeviceListComponent implements OnInit {
           const page: number = data[1];
           this.currentPage = page;
 
-          return this.deviceService.filterDeviceResponse( {
-            'terms': term,
-            'limit': this.items_per_page,
-            'offset': (page - 1) * this.items_per_page}
-          );
+          return this.deviceService.filterDevice(this.items_per_page, (page - 1) * this.items_per_page, undefined, term, 'response');
         }),
 
         map(response => {
           this.item_count = +response.headers.get('x-total-count');
           return response.body;
-        })
+        }),
       ),
       this.pageNumber$.map( ignored => {
         // Clear page when changing page

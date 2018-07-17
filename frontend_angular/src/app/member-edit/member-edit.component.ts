@@ -28,9 +28,9 @@ export class MemberEditComponent implements OnInit, OnDestroy {
   memberEdit: FormGroup;
 
   constructor(
-    public userService: UserService, 
+    public userService: UserService,
     private route: ActivatedRoute,
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private router: Router,
     private notif: NotificationsService,
   ) {
@@ -39,10 +39,10 @@ export class MemberEditComponent implements OnInit, OnDestroy {
 
   createForm() {
     this.memberEdit = this.fb.group({
-      firstName: ['', Validators.required ], 
-      lastName: ['', Validators.required ], 
+      firstName: ['', Validators.required ],
+      lastName: ['', Validators.required ],
       username: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(8)] ],
-      email: ['', [Validators.required, Validators.email] ], 
+      email: ['', [Validators.required, Validators.email] ],
       roomNumber: [0, [Validators.min(1000), Validators.max(9999), Validators.required ]],
     });
 
@@ -58,10 +58,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
       username: v.username,
       roomNumber: v.roomNumber
     }
-    this.userService.putUserResponse( { 
-              "username": this.originalUsername,
-              "body": user,
-            })
+    this.userService.putUser(this.originalUsername, user, 'response')
       .takeWhile( () => this.alive )
       .subscribe( (response) => {
         this.router.navigate(["member/view", user.username ])
@@ -71,7 +68,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
   }
 
   onDelete() {
-    this.userService.deleteUserResponse( this.originalUsername )
+    this.userService.deleteUser(this.originalUsername, 'response')
       .takeWhile( () => this.alive )
       .subscribe( (response) => {
         this.router.navigate(["member/search"])
@@ -81,7 +78,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.paramMap
-      .switchMap((params: ParamMap) => 
+      .switchMap((params: ParamMap) =>
         this.userService.getUser( params.get("username") ))
       .takeWhile( () => this.alive )
       .subscribe( (member: User) => {

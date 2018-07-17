@@ -24,7 +24,7 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
     private router: Router) { }
 
   onDelete( mac: string ) {
-    this.deviceService.deleteDevice( mac ).first().subscribe( () => {
+    this.deviceService.deleteDevice( mac ).pipe(first()).subscribe( () => {
       this.router.navigate(['device/search']);
     });
   }

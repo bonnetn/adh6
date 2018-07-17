@@ -21,7 +21,7 @@ import {
 })
 export class PortListComponent implements OnInit {
 
-  ports$: Observable<Port[]>;
+  ports$: Observable<Array<Port>>;
 
   page_number : number = 1;
   item_count : number = 1;
@@ -43,10 +43,11 @@ export class PortListComponent implements OnInit {
       distinctUntilChanged(),
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.portService.filterPortResponse( { 'terms':term, 'limit':this.items_per_page, 'offset':(page-1)*this.items_per_page} )),
+      switchMap((term: string) => this.portService.filterPort(this.items_per_page, (page-1)*this.items_per_page,
+                                                              undefined, undefined, term, 'response')),
       switchMap((response) => {
         this.item_count = +response.headers.get("x-total-count")
-        this.page_number = page;  
+        this.page_number = page;
         return Observable.of(response.body)
       }),
     );

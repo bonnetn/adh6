@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { Switch } from '../api/model/switch';
+import { ModelSwitch } from '../api/model/modelSwitch';
 import { SwitchService } from '../api/api/switch.service';
 
 import { PortService } from '../api/api/port.service';
@@ -25,8 +25,8 @@ import {
 })
 export class SwitchDetailsComponent implements OnInit {
 
-  switch$: Observable<Switch>;
-  ports$: Observable<Port[]>;
+  switch$: Observable<ModelSwitch>;
+  ports$: Observable<Array<Port>>;
   switchID: number;
   private sub: any;
 
@@ -50,10 +50,11 @@ export class SwitchDetailsComponent implements OnInit {
       distinctUntilChanged(),
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.portService.filterPortResponse( { 'terms':term, 'limit':this.items_per_page, 'offset':(page-1)*this.items_per_page, 'switchID': this.switchID} )),
+      switchMap((term: string) => this.portService.filterPort(this.items_per_page, (page-1)*this.items_per_page,
+                                                                       this.switchID, undefined, term, 'response')),
       switchMap((response) => {
         this.item_count = +response.headers.get("x-total-count")
-        this.page_number = page;  
+        this.page_number = page;
         return Observable.of(response.body)
       }),
     );

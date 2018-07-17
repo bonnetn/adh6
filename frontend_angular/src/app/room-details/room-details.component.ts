@@ -19,14 +19,14 @@ import { NotificationsService } from 'angular2-notifications';
   styleUrls: ['./room-details.component.css']
 })
 export class RoomDetailsComponent implements OnInit, OnDestroy {
-  
+
   disabled: boolean = false;
   private alive: boolean = true;
   authenth: boolean = false;
 
   room$: Observable<Room>;
-  ports$: Observable<Port[]>;
-  members$: Observable<User[]>;
+  ports$: Observable<Array<Port>>;
+  members$: Observable<Array<User>>;
   roomNumber: number;
   private sub: any;
 
@@ -39,12 +39,12 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private notif: NotificationsService,
     private router: Router,
-    public roomService: RoomService, 
-    public portService: PortService, 
-    public userService: UserService, 
+    public roomService: RoomService,
+    public portService: PortService,
+    public userService: UserService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
-  ) { 
+  ) {
   this.createForm();
   }
 
@@ -65,7 +65,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   onEmmenager() {
     this.isEmmenager = !this.isEmmenager
   }
- 
+
   onDemenager(username) {
     this.ref = username
     this.isDemenager = !this.isDemenager
@@ -73,20 +73,17 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
 
   refreshInfo() {
     this.room$ = this.roomService.getRoom( this.roomNumber );
-    this.ports$ = this.portService.filterPort( { 'roomNumber': this.roomNumber } );
-    this.members$ = this.userService.filterUser( { 'roomNumber': this.roomNumber } );
+    this.ports$ = this.portService.filterPort(undefined, undefined, undefined, this.roomNumber);
+    this.members$ = this.userService.filterUser(undefined, undefined, undefined, this.roomNumber);
   }
-  
+
   onSubmitComeInRoom() {
     const v = this.EmmenagerForm.value;
     this.userService.getUser(v.username)
       .takeWhile( () => this.alive )
       .subscribe( (user) => {
         user["roomNumber"]=this.roomNumber
-        this.userService.putUserResponse( { 
-                  "username": v.username,
-                  "body": user,
-                })
+        this.userService.putUser(v.username, user, 'response')
         .takeWhile( () => this.alive )
         .subscribe( (response) => {
           this.refreshInfo();
@@ -107,10 +104,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
       .takeWhile( () => this.alive )
       .subscribe( (user) => {
         user["roomNumber"]=v.roomNumberNew
-        this.userService.putUserResponse( { 
-                  "username": username,
-                  "body": user,
-                })
+        this.userService.putUser(username, user, 'response')
         .takeWhile( () => this.alive )
         .subscribe( (response) => {
           this.refreshInfo();
@@ -126,10 +120,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
       .takeWhile( () => this.alive )
       .subscribe( (user) => {
         delete user['roomNumber'];
-        this.userService.putUserResponse( { 
-                  "username": username,
-                  "body": user,
-                })
+        this.userService.putUser(username, user, 'response')
 
         .takeWhile( () => this.alive )
         .subscribe( (response) => {
@@ -141,7 +132,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
 
   onDelete() {
     const v = this.roomNumber;
-    this.roomService.deleteRoomResponse( v )
+    this.roomService.deleteRoom(v, 'response')
       .takeWhile( () => this.alive )
       .subscribe( (response) => {
         this.router.navigate(["room"])
@@ -156,7 +147,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
       this.refreshInfo();
     });
   }
-  
+
   ngOnDestroy() {
     this.sub.unsubscribe();
   }

@@ -20,12 +20,12 @@ import {
 })
 export class MemberListComponent implements OnInit {
 
-  members$: Observable<User[]>;
+  members$: Observable<Array<User>>;
   page_number : number = 1;
   item_count : number = 1;
   items_per_page : number = +PagingConf.item_count;
   private searchTerms = new BehaviorSubject<string>("");
-  
+
   constructor(public userService: UserService) { }
 
   search(term: string): void {
@@ -41,10 +41,11 @@ export class MemberListComponent implements OnInit {
       distinctUntilChanged(),
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.userService.filterUserResponse( { 'terms':term, 'limit':this.items_per_page, 'offset':(page-1)*this.items_per_page} )),
+      switchMap((term: string) => this.userService.filterUser(this.items_per_page, (page-1)*this.items_per_page, term,
+                                                           undefined, 'response')),
       switchMap((response) => {
         this.item_count = +response.headers.get("x-total-count")
-        this.page_number = page;  
+        this.page_number = page;
         return Observable.of(response.body)
       }),
     );

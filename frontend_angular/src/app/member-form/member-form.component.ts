@@ -22,8 +22,8 @@ export class MemberFormComponent implements OnInit, OnDestroy {
   memberForm: FormGroup;
 
   constructor(
-    public userService: UserService, 
-    private fb: FormBuilder, 
+    public userService: UserService,
+    private fb: FormBuilder,
     private router: Router,
     private notif: NotificationsService,
   ) {
@@ -39,10 +39,10 @@ export class MemberFormComponent implements OnInit, OnDestroy {
 
   createForm() {
     this.memberForm = this.fb.group({
-      firstName: ['', Validators.required ], 
-      lastName: ['', Validators.required ], 
+      firstName: ['', Validators.required ],
+      lastName: ['', Validators.required ],
       username: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(8)] ],
-      email: ['', [Validators.required, Validators.email] ], 
+      email: ['', [Validators.required, Validators.email] ],
       roomNumber: [0, [Validators.min(1000), Validators.max(9999), Validators.required ]],
       passwords: this.fb.group( { password: ['', [Validators.required]],
                   confirmPassword: ['', [Validators.required]],
@@ -62,12 +62,12 @@ export class MemberFormComponent implements OnInit, OnDestroy {
       roomNumber: v.roomNumber
     }
 
-    this.userService.getUserResponse(v.username)
+    this.userService.getUser(v.username, 'response')
       .takeWhile( () => this.alive )
       .subscribe( (response) => {
         this.notif.error("Error: User already exists")
       }, (response) => {
-        this.userService.putUserResponse( { "username": v.username, body: user } )
+        this.userService.putUser(v.username, user, 'response')
             .takeWhile( () => this.alive )
             .subscribe( (response) => {
               this.router.navigate(["member/view", user.username ])
@@ -76,7 +76,7 @@ export class MemberFormComponent implements OnInit, OnDestroy {
       });
     this.disabled = false;
   }
-   
+
 
   ngOnInit() {
   }

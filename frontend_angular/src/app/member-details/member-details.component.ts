@@ -13,6 +13,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/finally';
 import 'rxjs/add/operator/share';
+import {catchError, finalize, first, flatMap, map, share, switchMap, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-member-details',
@@ -90,23 +91,19 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     this.submitDisabled = true;
     const newComment = this.commentForm.value.comment;
 
-    this.member$
-      .map(user => {
+    this.member$.pipe(
+      map(user => {
         user.comment = newComment;
         return user;
-      })
-      .flatMap(user => this.userService.putUserResponse(
-        {
-          'username': user.username,
-          'body': user,
-        }))
-      .flatMap(() => {
+      }),
+      flatMap(user => this.userService.putUser(user.username, user)),
+      flatMap(() => {
         this.refreshInfo();
         return this.member$;
-      })
-      .finally(() => this.submitDisabled = false)
-      .first()
-      .subscribe(() => {});
+      }),
+      finalize(() => this.submitDisabled = false),
+      first(),
+     ).subscribe(() => {});
 
       // will trigger the refresh of member$ and thus the update of the comment
       this.refreshInfo();
@@ -136,10 +133,11 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
 
     const v = this.deviceForm.value;
     if (alreadyExists === undefined) {
-      return this.deviceService.getDeviceResponse(v.mac)
-        .map(() => true)
-        .catch(() => Observable.of(false))
-        .flatMap((exists) => this.updateDevice(username, exists));
+      return this.deviceService.getDevice(v.mac).pipe(
+        map(() => true),
+        catchError(() => Observable.of(false)),
+        flatMap((exists) => this.updateDevice(username, exists)),
+      );
     }
 
     const device: Device = {
@@ -151,7 +149,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     // Make an observable that will return True if the device already exists
     if (!alreadyExists) {
       // If the device does not then create it, and refresh the info
-      return this.deviceService.putDeviceResponse({'macAddress': v.mac, body: device})
+      return this.deviceService.putDevice(v.mac, device)
         .flatMap(() => {
           this.refreshInfo();
           return this.all_devices$;
@@ -164,9 +162,9 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   }
 
   onDelete(mac: string) {
-    this.deviceService.deleteDevice(mac)
-      .first()
-      .subscribe(() => this.refreshInfo());
+    this.deviceService.deleteDevice(mac).pipe(
+      first()
+    ).subscribe(() => this.refreshInfo());
   }
 
   ngOnInit() {
@@ -181,13 +179,14 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
       .combineLatest(this.refreshInfo$)
       .map(([x]) => x);
 
-    this.member$ = refresh$
-      .switchMap(username => this.userService.getUser(username))
-      .do((user) => this.commentForm.setValue({ comment: (user.comment === undefined) ? '' : user.comment, }))
-      .share();
+    this.member$ = refresh$.pipe(
+      switchMap(username => this.userService.getUser(username)),
+      tap((user) => this.commentForm.setValue({ comment: (user.comment === undefined) ? '' : user.comment, })),
+      share(),
+     );
 
     this.all_devices$ = refresh$
-      .switchMap(username => this.deviceService.filterDevice({'username': username}))
+      .switchMap(username => this.deviceService.filterDevice(undefined, undefined, username))
       .share();
 
     // TODO: fill the comment form
