@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import 'rxjs/add/operator/takeWhile';
@@ -16,8 +15,8 @@ import { NotificationsService } from 'angular2-notifications';
 })
 export class MemberFormComponent implements OnInit, OnDestroy {
 
-  disabled: boolean = false;
-  private alive: boolean = true;
+  disabled = false;
+  private alive = true;
 
   memberForm: FormGroup;
 
@@ -60,18 +59,18 @@ export class MemberFormComponent implements OnInit, OnDestroy {
       lastName: v.lastName,
       username: v.username,
       roomNumber: v.roomNumber
-    }
+    };
 
     this.userService.getUser(v.username, 'response')
       .takeWhile( () => this.alive )
       .subscribe( (response) => {
-        this.notif.error("Error: User already exists")
+        this.notif.error('Error: User already exists');
       }, (response) => {
         this.userService.putUser(v.username, user, 'response')
             .takeWhile( () => this.alive )
             .subscribe( (response) => {
-              this.router.navigate(["member/view", user.username ])
-              this.notif.success(response.status + ": Success")
+              this.router.navigate(['member/view', user.username ]);
+              this.notif.success(response.status + ': Success');
             });
       });
     this.disabled = false;

@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { HttpResponse } from '@angular/common/http';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute} from '@angular/router';
 
 import 'rxjs/add/operator/takeWhile';
 import 'rxjs/add/operator/switchMap';
@@ -18,8 +17,8 @@ import { NotificationsService } from 'angular2-notifications';
 
 export class RoomNewComponent implements OnInit, OnDestroy {
 
-  disabled: boolean = false;
-  private alive: boolean = true;
+  disabled = false;
+  private alive = true;
 
   roomForm: FormGroup;
 
@@ -48,18 +47,18 @@ export class RoomNewComponent implements OnInit, OnDestroy {
       roomNumber: v.roomNumber,
       vlan: v.vlan,
       description: v.description
-    }
+    };
 
     this.roomService.getRoom(v.roomNumber, 'response')
-      .takeWhile( ()=> this.alive )
+      .takeWhile( () => this.alive )
       .subscribe( (response) => {
-        this.notif.error("Room already exists");
+        this.notif.error('Room already exists');
       }, (response) => {
         this.roomService.putRoom(v.roomNumber, room)
-          .takeWhile( ()=> this.alive )
+          .takeWhile( () => this.alive )
           .subscribe( (response) => {
-            this.router.navigate(["/room/view", v.roomNumber ])
-            this.notif.success(response.status + ": Success")
+            this.router.navigate(['/room/view', v.roomNumber ]);
+            this.notif.success(response.status + ': Success');
           });
       });
     this.disabled = false;
@@ -69,7 +68,7 @@ export class RoomNewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.alive=false;
+    this.alive = false;
   }
 
 }

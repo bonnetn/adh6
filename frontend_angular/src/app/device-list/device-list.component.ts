@@ -33,7 +33,7 @@ export class DeviceListComponent implements OnInit {
   private searchTerm$ = new BehaviorSubject<string>('');
   private pageNumber$ = new BehaviorSubject<number>(1);
 
-  constructor(public deviceService: DeviceService, private router: Router) { }
+  constructor(public deviceService: DeviceService) { }
 
   search(term: string): void {
     this.searchTerm$.next(term);

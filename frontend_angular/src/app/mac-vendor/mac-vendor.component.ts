@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-mac-vendor',
@@ -11,8 +11,8 @@ export class MacVendorComponent implements OnInit, OnDestroy {
 
   @Input() mac: string;
 
-  vendor: string = "Searching...";
-  private alive: boolean = true;
+  //vendor: string = "Searching...";
+  private alive = true;
 
   constructor(
     private http: HttpClient,

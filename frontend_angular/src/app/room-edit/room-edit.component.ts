@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { HttpResponse } from '@angular/common/http';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import 'rxjs/add/operator/takeWhile';
@@ -18,8 +17,8 @@ import { NotificationsService } from 'angular2-notifications';
 
 export class RoomEditComponent implements OnInit, OnDestroy {
 
-  disabled: boolean = false;
-  private alive: boolean = true;
+  disabled = false;
+  private alive = true;
 
   roomNumber: number;
   roomEdit: FormGroup;
@@ -36,7 +35,7 @@ export class RoomEditComponent implements OnInit, OnDestroy {
   }
 
   createForm() {
-    this.disabled = false
+    this.disabled = false;
     this.roomEdit = this.fb.group({
       roomNumber: ['', [Validators.min(1000), Validators.max(9999), Validators.required ]],
       vlan: ['', [Validators.min(0), Validators.max(100), Validators.required ]],
@@ -51,12 +50,12 @@ export class RoomEditComponent implements OnInit, OnDestroy {
       roomNumber: v.roomNumber,
       vlan: v.vlan,
       description: v.description
-    }
+    };
     this.roomService.putRoom(v.roomNumber, room, 'response')
-      .takeWhile( ()=> this.alive )
+      .takeWhile( () => this.alive )
       .subscribe( (response) => {
-        this.router.navigate(["/room/view", v.roomNumber ])
-        this.notif.success(response.status + ": Success")
+        this.router.navigate(['/room/view', v.roomNumber ]);
+        this.notif.success(response.status + ': Success');
       });
     this.disabled = false;
   }
@@ -64,7 +63,7 @@ export class RoomEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.paramMap
       .switchMap((params: ParamMap) =>
-        this.roomService.getRoom( +params.get("roomNumber") ))
+        this.roomService.getRoom( +params.get('roomNumber') ))
       .takeWhile( () => this.alive )
       .subscribe( (room: Room) => {
         this.room = room;

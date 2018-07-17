@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
@@ -19,8 +18,8 @@ import { NotificationsService } from 'angular2-notifications';
 })
 export class MemberEditComponent implements OnInit, OnDestroy {
 
-  disabled: boolean = false;
-  private alive: boolean = true;
+  disabled = false;
+  private alive = true;
   private originalUsername;
 
   private member$: Observable<User>;
@@ -57,12 +56,12 @@ export class MemberEditComponent implements OnInit, OnDestroy {
       lastName: v.lastName,
       username: v.username,
       roomNumber: v.roomNumber
-    }
+    };
     this.userService.putUser(this.originalUsername, user, 'response')
       .takeWhile( () => this.alive )
       .subscribe( (response) => {
-        this.router.navigate(["member/view", user.username ])
-        this.notif.success(response.status + ": Success")
+        this.router.navigate(['member/view', user.username ]);
+        this.notif.success(response.status + ': Success');
       });
 
   }
@@ -71,15 +70,15 @@ export class MemberEditComponent implements OnInit, OnDestroy {
     this.userService.deleteUser(this.originalUsername, 'response')
       .takeWhile( () => this.alive )
       .subscribe( (response) => {
-        this.router.navigate(["member/search"])
-        this.notif.success(response.status + ": Success")
+        this.router.navigate(['member/search']);
+        this.notif.success(response.status + ': Success');
       });
   }
 
   ngOnInit() {
     this.route.paramMap
       .switchMap((params: ParamMap) =>
-        this.userService.getUser( params.get("username") ))
+        this.userService.getUser( params.get('username') ))
       .takeWhile( () => this.alive )
       .subscribe( (member: User) => {
         this.originalUsername = member.username;

@@ -12,19 +12,17 @@ import { authConfig } from '../auth.config';
 })
 export class NavbarComponent implements OnInit {
 
-  public titre: string = this.appcomponent.titre
+  public titre: string = this.appcomponent.titre;
 
   constructor(private oauthService: OAuthService,
-    private appcomponent: AppComponent,
-    private router: Router
-  ) { }
+    private appcomponent: AppComponent) { }
 
   logout(){
-    this.oauthService.logOut()
-    window.location.href=authConfig.logoutUrl;
+    this.oauthService.logOut();
+    window.location.href = authConfig.logoutUrl;
   }
 
-  navBarStatus: boolean = false;
+  navBarStatus = false;
 
   ngOnInit() {
   }

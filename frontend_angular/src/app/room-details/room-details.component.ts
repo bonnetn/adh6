@@ -2,9 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/takeWhile';
-import { HttpResponse } from '@angular/common/http';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute} from '@angular/router';
 import { RoomService } from '../api/api/room.service';
 import { PortService } from '../api/api/port.service';
 import { Room } from '../api/model/room';
@@ -20,9 +19,9 @@ import { NotificationsService } from 'angular2-notifications';
 })
 export class RoomDetailsComponent implements OnInit, OnDestroy {
 
-  disabled: boolean = false;
-  private alive: boolean = true;
-  authenth: boolean = false;
+  disabled = false;
+  private alive = true;
+  authenth = false;
 
   room$: Observable<Room>;
   ports$: Observable<Array<Port>>;
@@ -32,8 +31,8 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
 
   roomForm: FormGroup;
   EmmenagerForm: FormGroup;
-  public isEmmenager: boolean = false;
-  public isDemenager: boolean = false;
+  public isEmmenager = false;
+  public isDemenager = false;
   public ref: string;
 
   constructor(
@@ -49,7 +48,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   }
 
   createForm() {
-    this.ngOnInit()
+    this.ngOnInit();
     this.roomForm = this.fb.group({
       roomNumberNew: [this.roomNumber, [Validators.min(1000), Validators.max(9999), Validators.required ]],
     });
@@ -59,16 +58,16 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   }
 
   auth() {
-    this.authenth = !this.authenth
+    this.authenth = !this.authenth;
   }
 
   onEmmenager() {
-    this.isEmmenager = !this.isEmmenager
+    this.isEmmenager = !this.isEmmenager;
   }
 
   onDemenager(username) {
-    this.ref = username
-    this.isDemenager = !this.isDemenager
+    this.ref = username;
+    this.isDemenager = !this.isDemenager;
   }
 
   refreshInfo() {
@@ -82,16 +81,16 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
     this.userService.getUser(v.username)
       .takeWhile( () => this.alive )
       .subscribe( (user) => {
-        user["roomNumber"]=this.roomNumber
+        user['roomNumber'] = this.roomNumber;
         this.userService.putUser(v.username, user, 'response')
         .takeWhile( () => this.alive )
         .subscribe( (response) => {
           this.refreshInfo();
-          this.notif.success(response.status + ": Success")
-          this.onEmmenager()
+          this.notif.success(response.status + ': Success');
+          this.onEmmenager();
         });
       }, (user) => {
-          this.notif.error("User "+v.username+" does not exists");
+          this.notif.error('User ' + v.username + ' does not exists');
       });
   }
 
@@ -99,18 +98,18 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
     const v = this.roomForm.value;
     const room: Room = {
       roomNumber: v.roomNumberNew
-    }
+    };
     this.userService.getUser(username)
       .takeWhile( () => this.alive )
       .subscribe( (user) => {
-        user["roomNumber"]=v.roomNumberNew
+        user['roomNumber'] = v.roomNumberNew;
         this.userService.putUser(username, user, 'response')
         .takeWhile( () => this.alive )
         .subscribe( (response) => {
           this.refreshInfo();
-          this.onDemenager(username)
-          this.router.navigate(["room", v.roomNumberNew ])
-          this.notif.success(response.status + ": Success")
+          this.onDemenager(username);
+          this.router.navigate(['room', v.roomNumberNew ]);
+          this.notif.success(response.status + ': Success');
         });
     });
   }
@@ -125,7 +124,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
         .takeWhile( () => this.alive )
         .subscribe( (response) => {
           this.refreshInfo();
-          this.notif.success(response.status + ": Success")
+          this.notif.success(response.status + ': Success');
         });
     });
   }
@@ -135,15 +134,15 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
     this.roomService.deleteRoom(v, 'response')
       .takeWhile( () => this.alive )
       .subscribe( (response) => {
-        this.router.navigate(["room"])
-        this.notif.success(response.status + ": Success")
+        this.router.navigate(['room']);
+        this.notif.success(response.status + ': Success');
       });
   }
 
 
   ngOnInit() {
     this.sub = this.route.params.subscribe( params => {
-      this.roomNumber = +params["roomNumber"];
+      this.roomNumber = +params['roomNumber'];
       this.refreshInfo();
     });
   }

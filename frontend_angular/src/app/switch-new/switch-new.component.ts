@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SwitchService } from '../api/api/switch.service';
 import { ModelSwitch } from '../api/model/modelSwitch';
 
@@ -15,10 +15,10 @@ export class SwitchNewComponent implements OnInit {
   switchForm: FormGroup;
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     public switchService: SwitchService,
-  ) { 
-    this.createForm(); 
+  ) {
+    this.createForm();
   }
 
   createForm() {

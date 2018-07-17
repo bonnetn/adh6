@@ -16,7 +16,6 @@ import { DeviceService } from '../api/api/device.service';
 import { RoomService } from '../api/api/room.service';
 
 import { SwitchService } from '../api/api/switch.service';
-import { ModelSwitch } from '../api/model/modelSwitch';
 
 import { PortService } from '../api/api/port.service';
 
@@ -107,7 +106,7 @@ export class GlobalSearchComponent implements OnInit {
 
         const port$ = this.portService.filterPort(LIMIT, undefined, undefined, undefined, terms).pipe(
           mergeMap((array: Array<Port>) => from(array)),
-          map( (obj: Port) => new SearchResult( 'port', 'Switch ' + obj.switchId+ ' ' + obj.portNumber)),
+          map( (obj: Port) => new SearchResult( 'port', 'Switch ' + obj.switchId + ' ' + obj.portNumber)),
         );
 
         return user$.concat(device$).concat(room$).concat(switch$).concat(port$);
