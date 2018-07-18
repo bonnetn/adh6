@@ -128,18 +128,18 @@ class Chambre(Base):
     @staticmethod
     def from_dict(session, d):
         return Chambre(
-            numero=d.get("room_number"),
+            numero=d.get("roomNumber"),
             description=d.get("description"),
             telephone=d.get("phone"),
             vlan=Vlan.find(session, d.get("vlan")),
         )
 
     @staticmethod
-    def find(session, room_number):
-        if not room_number:
+    def find(session, roomNumber):
+        if not roomNumber:
             return None
         q = session.query(Chambre)
-        q = q.filter(Chambre.numero == room_number)
+        q = q.filter(Chambre.numero == roomNumber)
         try:
             return q.one()
         except NoResultFound:
@@ -152,7 +152,7 @@ class Chambre(Base):
         return s
 
     def __iter__(self):
-        yield "room_number", self.numero
+        yield "roomNumber", self.numero
         if self.description:
             yield "description", self.description
         if self.telephone:
@@ -215,7 +215,7 @@ class Adherent(Base, RubyHashModificationTracker):
             date_de_depart=string_to_date(d.get('departureDate')),
             commentaires=d.get('comment'),
             mode_association=string_to_date(d.get('associationMode')),
-            chambre=Chambre.find(session, d.get("room_number")),
+            chambre=Chambre.find(session, d.get("roomNumber")),
         )
 
     @validates('nom', 'prenom', 'login', 'password')
@@ -239,7 +239,7 @@ class Adherent(Base, RubyHashModificationTracker):
             yield "comment", self.commentaires
 
         if self.chambre:
-            yield "room_number", self.chambre.numero
+            yield "roomNumber", self.chambre.numero
 
         if self.date_de_depart:
             yield "departureDate", self.date_de_depart
@@ -448,11 +448,11 @@ class Switch(Base):
     updated_at = Column(DateTime)
 
     @staticmethod
-    def find(session, switch_id):
+    def find(session, switchID):
         """ [API] Get the specified switch from the database """
         try:
             q = session.query(Switch)
-            q = q.filter(Switch.id == switch_id)
+            q = q.filter(Switch.id == switchID)
             return q.one()
         except NoResultFound:
             raise SwitchNotFound
@@ -487,7 +487,7 @@ class Port(Base):
     rcom = Column(Integer)
     numero = Column(String(255))
     oid = Column(String(255))
-    switch_id = Column(Integer, ForeignKey(Switch.id), nullable=False)
+    switchID = Column(Integer, ForeignKey(Switch.id), nullable=False)
     switch = relationship(Switch)
     chambre_id = Column(Integer, ForeignKey(Chambre.id), nullable=False)
     chambre = relationship(Chambre)
@@ -508,9 +508,9 @@ class Port(Base):
     def from_dict(session, d):
         """ Creates a Port object from a request """
         return Port(
-            chambre=Chambre.find(session, d.get("room_number")),
-            switch=Switch.find(session, d.get("switch_id")),
-            numero=d.get("port_number"),
+            chambre=Chambre.find(session, d.get("roomNumber")),
+            switch=Switch.find(session, d.get("switchID")),
+            numero=d.get("portNumber"),
         )
 
     @validates('numero')
@@ -521,11 +521,11 @@ class Port(Base):
 
     def __iter__(self):
         yield "id", self.id
-        yield "port_number", self.numero
+        yield "portNumber", self.numero
         if self.chambre:
-            yield "room_number", self.chambre.numero
-        if self.switch_id:
-            yield "switch_id", self.switch_id
+            yield "roomNumber", self.chambre.numero
+        if self.switchID:
+            yield "switchID", self.switchID
 
 
 class Utilisateur(Base):

@@ -76,7 +76,7 @@ def assert_user_in_db(body):
     assert r.date_de_depart == parser.parse(body["departureDate"]).date()
     asso_time = parser.parse(body["associationMode"]).replace(tzinfo=None)
     assert r.mode_association == asso_time
-    assert r.chambre.numero == body["room_number"]
+    assert r.chambre.numero == body["roomNumber"]
     assert r.commentaires == body["comment"]
     assert r.login == body["username"]
 
@@ -87,7 +87,7 @@ def test_user_to_dict(sample_member1):
                    'firstName': 'Jean-Louis',
                    'lastName': 'Dubois',
                    'username': 'dubois_j',
-                   'room_number': 5110,
+                   'roomNumber': 5110,
                    'departureDate': datetime.datetime(2005, 7, 14, 12, 30)}
 
     assert dict(sample_member1) == dict_member
@@ -123,9 +123,9 @@ def test_user_filter_all_with_limit(api_client):
     assert len(response) == 1
 
 
-def test_user_filter_by_room_number(api_client):
+def test_user_filter_by_roomNumber(api_client):
     r = api_client.get(
-        '{}/user/?room_number={}'.format(base_url, 5110),
+        '{}/user/?roomNumber={}'.format(base_url, 5110),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -134,9 +134,9 @@ def test_user_filter_by_room_number(api_client):
     assert len(response) == 1
 
 
-def test_user_filter_by_non_existant_room_number(api_client):
+def test_user_filter_by_non_existant_roomNumber(api_client):
     r = api_client.get(
-        '{}/user/?room_number={}'.format(base_url, 6666),
+        '{}/user/?roomNumber={}'.format(base_url, 6666),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -265,7 +265,7 @@ def test_user_put_user_create_invalid_email(api_client):
     body = {
         "firstName": "John",
         "lastName": "Doe",
-        "room_number": 4592,
+        "roomNumber": 4592,
         "comment": "comment",
         "departureDate": "2000-01-23T04:56:07.000+00:00",
         "associationMode": "2000-01-23T04:56:07.000+00:00",
@@ -285,7 +285,7 @@ def test_user_put_user_create_unknown_room(api_client):
     body = {
         "firstName": "John",
         "lastName": "Doe",
-        "room_number": 9999,
+        "roomNumber": 9999,
         "comment": "comment",
         "departureDate": "2000-01-23T04:56:07.000+00:00",
         "associationMode": "2000-01-23T04:56:07.000+00:00",
@@ -305,7 +305,7 @@ def test_user_put_user_create(api_client):
     body = {
         "firstName": "John",
         "lastName": "Doe",
-        "room_number": 4592,
+        "roomNumber": 4592,
         "comment": "comment",
         "departureDate": "2000-01-23T04:56:07.000+00:00",
         "associationMode": "2000-01-23T04:56:07.000+00:00",
@@ -328,7 +328,7 @@ def test_user_put_user_update(api_client):
     body = {
         "firstName": "Jean-Louis",
         "lastName": "Dubois",
-        "room_number": 4592,
+        "roomNumber": 4592,
         "comment": "comment",
         "departureDate": "2000-01-23T04:56:07.000+00:00",
         "associationMode": "2000-01-23T04:56:07.000+00:00",
@@ -443,7 +443,7 @@ def test_user_log_create(api_client, caplog):
         '"2000-01-23T04:56:07.000+00:00", "comment": "comment", '
         '"departureDate": "2000-01-23T04:56:07.000+00:00", "email": '
         '"john.doe@gmail.com", "firstName": "John", "lastName": "Doe", '
-        '"room_number": 4592, "username": "doe_john"}'
+        '"roomNumber": 4592, "username": "doe_john"}'
     )
 
 
@@ -457,7 +457,7 @@ def test_user_log_update(api_client, caplog):
         '"2000-01-23T04:56:07.000+00:00", "comment": "comment", '
         '"departureDate": "2000-01-23T04:56:07.000+00:00", "email": '
         '"john.doe@gmail.com", "firstName": "Jean-Louis", "lastName": '
-        '"Dubois", "room_number": 4592, "username": "dubois_j"}'
+        '"Dubois", "roomNumber": 4592, "username": "dubois_j"}'
     )
 
 

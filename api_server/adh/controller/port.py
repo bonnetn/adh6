@@ -10,19 +10,19 @@ import json
 
 @auth_simple_user
 def filter_port(admin, limit=100, offset=0,
-                switch_id=None, room_number=None, terms=None):
+                switchID=None, roomNumber=None, terms=None):
     """ [API] Filter the port list according to some criteria """
     if limit < 0:
         return 'Limit must be a positive number', 400
 
     s = Db.get_db().get_session()
     q = s.query(Port)
-    if switch_id:
+    if switchID:
         q = q.join(Switch)
-        q = q.filter(Switch.id == switch_id)
-    if room_number:
+        q = q.filter(Switch.id == switchID)
+    if roomNumber:
         q = q.join(Chambre)
-        q = q.filter(Chambre.numero == room_number)
+        q = q.filter(Chambre.numero == roomNumber)
     if terms:
         q = q.filter(or_(
             Port.numero.contains(terms),
@@ -30,7 +30,7 @@ def filter_port(admin, limit=100, offset=0,
         ))
 
     count = q.count()
-    q = q.order_by(Port.switch_id.asc(), Port.numero.asc())
+    q = q.order_by(Port.switchID.asc(), Port.numero.asc())
     q = q.offset(offset)
     q = q.limit(limit)
     result = q.all()

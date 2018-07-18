@@ -22,7 +22,7 @@ def adherent_exists(session, username):
 
 
 @auth_simple_user
-def filter_user(admin, limit=100, offset=0, terms=None, room_number=None):
+def filter_user(admin, limit=100, offset=0, terms=None, roomNumber=None):
     """ [API] Filter the list of users from the the database """
     if limit < 0:
         return "Limit must be positive", 400
@@ -30,10 +30,10 @@ def filter_user(admin, limit=100, offset=0, terms=None, room_number=None):
     s = Db.get_db().get_session()
 
     q = s.query(Adherent)
-    if room_number:
+    if roomNumber:
         try:
             q2 = s.query(Chambre)
-            q2 = q2.filter(Chambre.numero == room_number)
+            q2 = q2.filter(Chambre.numero == roomNumber)
             result = q2.one()
         except sqlalchemy.orm.exc.NoResultFound:
             return [], 200, {"X-Total-Count": '0'}

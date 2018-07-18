@@ -8,10 +8,10 @@ from adh.exceptions import InvalidIPv4, SwitchNotFound
 from adh.auth import auth_simple_user, auth_admin
 
 
-def switch_exists(session, switch_id):
+def switch_exists(session, switchID):
     """ Return true if the switch exists """
     try:
-        Switch.find(session, switch_id)
+        Switch.find(session, switchID)
     except SwitchNotFound:
         return False
     return True
@@ -37,7 +37,7 @@ def filter_switch(admin, limit=100, offset=0, terms=None):
     q = q.all()
 
     # Convert the qs into data suited for the API
-    q = map(lambda x: {'switch_id': x.id, 'switch': dict(x)}, q)
+    q = map(lambda x: {'switchID': x.id, 'switch': dict(x)}, q)
     result = list(q)  # Cast generator as list
 
     headers = {
@@ -67,29 +67,29 @@ def create_switch(admin, body):
 
 
 @auth_simple_user
-def get_switch(admin, switch_id):
+def get_switch(admin, switchID):
     """ [API] Get the specified switch from the database """
     session = Db.get_db().get_session()
     try:
-        logging.info("%s fetched the switch %d", admin.login, switch_id)
-        return dict(Switch.find(session, switch_id))
+        logging.info("%s fetched the switch %d", admin.login, switchID)
+        return dict(Switch.find(session, switchID))
     except SwitchNotFound:
         return NoContent, 404
 
 
 @auth_admin
-def update_switch(admin, switch_id, body):
+def update_switch(admin, switchID, body):
     """ [API] Update the specified switch from the database """
     if "id" in body:
         return "You cannot update the id", 400
 
     session = Db.get_db().get_session()
-    if not switch_exists(session, switch_id):
+    if not switch_exists(session, switchID):
         return NoContent, 404
 
     try:
         switch = Switch.from_dict(session, body)
-        switch.id = switch_id
+        switch.id = switchID
     except InvalidIPv4:
         return "Invalid IPv4", 400
 
@@ -97,22 +97,22 @@ def update_switch(admin, switch_id, body):
     session.commit()
 
     logging.info("%s updated the switch %d\n%s",
-                 admin.login, switch_id, json.dumps(body, sort_keys=True))
+                 admin.login, switchID, json.dumps(body, sort_keys=True))
     return NoContent, 204
 
 
 @auth_admin
-def delete_switch(admin, switch_id):
+def delete_switch(admin, switchID):
     """ [API] Delete the specified switch from the database """
     session = Db.get_db().get_session()
 
     try:
-        switch = Switch.find(session, switch_id)
+        switch = Switch.find(session, switchID)
     except SwitchNotFound:
         return NoContent, 404
 
     session.delete(switch)
     session.commit()
 
-    logging.info("%s deleted the switch %d", admin.login, switch_id)
+    logging.info("%s deleted the switch %d", admin.login, switchID)
     return NoContent, 204

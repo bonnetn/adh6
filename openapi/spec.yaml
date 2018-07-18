@@ -52,7 +52,7 @@ paths:
         description: "The generic search terms (will search in any field)"
         required: false
         type: "string"
-      - name: "room_number"
+      - name: "roomNumber"
         in: "query"
         description: "Filter by room number"
         required: false
@@ -415,7 +415,7 @@ paths:
       x-swagger-router-controller: "adh.controller.room"
       security:
         - oauth2: ["profile"]
-  /room/{room_number}:
+  /room/{roomNumber}:
     get:
       tags:
       - "room"
@@ -424,7 +424,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "room_number"
+      - name: "roomNumber"
         in: "path"
         required: true
         type: "integer"
@@ -446,7 +446,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "room_number"
+      - name: "roomNumber"
         in: "path"
         required: true
         type: "integer"
@@ -474,7 +474,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "room_number"
+      - name: "roomNumber"
         in: "path"
         required: true
         type: "integer"
@@ -555,7 +555,7 @@ paths:
       x-swagger-router-controller: "adh.controller.switch"
       security:
         - oauth2: ["profile"]
-  /switch/{switch_id}:
+  /switch/{switchID}:
     get:
       tags:
       - "switch"
@@ -564,7 +564,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "switch_id"
+      - name: "switchID"
         in: "path"
         required: true
         type: "integer"
@@ -586,7 +586,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "switch_id"
+      - name: "switchID"
         in: "path"
         required: true
         type: "integer"
@@ -614,7 +614,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "switch_id"
+      - name: "switchID"
         in: "path"
         required: true
         type: "integer"
@@ -648,12 +648,12 @@ paths:
         required: false
         type: "integer"
         default: 0
-      - name: "switch_id"
+      - name: "switchID"
         in: "query"
         description: "Filter only ports that belongs to that switch"
         required: false
         type: "integer"
-      - name: "room_number"
+      - name: "roomNumber"
         in: "query"
         description: "Filter only ports that that room"
         required: false
@@ -808,7 +808,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "switch_id"
+      - name: "switchID"
         in: "path"
         required: true
         type: "integer"
@@ -924,14 +924,14 @@ definitions:
       associationMode:
         type: "string"
         format: "date-time"
-      room_number:
+      roomNumber:
         type: "integer"
         format: "int32"
         example: 5012
     example:
       firstName: "John"
       lastName: "Doe"
-      room_number: 5012
+      roomNumber: 5012
       comment: "comment"
       departureDate: "2000-01-23T04:56:07.000+00:00"
       associationMode: "2000-01-23T04:56:07.000+00:00"
@@ -960,14 +960,14 @@ definitions:
       associationMode:
         type: "string"
         format: "date-time"
-      room_number:
+      roomNumber:
         type: "integer"
         format: "int32"
         example: 5012
     example:
       firstName: "John"
       lastName: "Doe"
-      room_number: 5012
+      roomNumber: 5012
       comment: "comment"
       departureDate: "2000-01-23T04:56:07.000+00:00"
       associationMode: "2000-01-23T04:56:07.000+00:00"
@@ -1004,12 +1004,12 @@ definitions:
   Room:
     type: "object"
     required:
-    - "room_number"
+    - "roomNumber"
     properties:
       description:
         type: "string"
         example: "Chambre 5110"
-      room_number:
+      roomNumber:
         type: "integer"
         example: 5110
       phone:
@@ -1019,31 +1019,31 @@ definitions:
         type: "integer"
         example: 45
     example:
-      room_number: 5110
+      roomNumber: 5110
       vlan: 45
       phone: 6842
       description: "Chambre 5110"
   Port:
     type: "object"
     required:
-    - "port_number"
+    - "portNumber"
     properties:
       id:
         type: "integer"
         example: 1
-      port_number:
+      portNumber:
         type: "string"
         example: "1/0/4"
-      room_number:
+      roomNumber:
         type: "integer"
         example: 5110
-      switch_id:
+      switchId:
         type: "integer"
         example: 6
     example:
-      room_number: 5110
-      switch_id: 6
-      port_number: "1/0/4"
+      roomNumber: 5110
+      switchId: 6
+      portNumber: "1/0/4"
   Switch:
     type: "object"
     required:
