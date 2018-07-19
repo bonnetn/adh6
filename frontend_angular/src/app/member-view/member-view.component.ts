@@ -1,37 +1,32 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { UserService } from '../api/api/user.service';
-import { DeviceService } from '../api/api/device.service';
-import { User } from '../api/model/user';
-import { Device } from '../api/model/device';
-import { Router, ActivatedRoute } from '@angular/router';
-import { NotificationsService } from 'angular2-notifications';
-import 'rxjs/add/operator/last';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/combineLatest';
-import 'rxjs/add/operator/finally';
-import 'rxjs/add/operator/share';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {UserService} from '../api/api/user.service';
+import {DeviceService} from '../api/api/device.service';
+import {User} from '../api/model/user';
+import {Device} from '../api/model/device';
+import {ActivatedRoute, Router} from '@angular/router';
+import {NotificationsService} from 'angular2-notifications';
 import {catchError, finalize, first, flatMap, map, share, switchMap, tap} from 'rxjs/operators';
+import {combineLatest} from 'rxjs';
 
 @Component({
   selector: 'app-member-details',
-  templateUrl: './member-details.component.html',
-  styleUrls: ['./member-details.component.css']
+  templateUrl: './member-view.component.html',
+  styleUrls: ['./member-view.component.css']
 })
-export class MemberDetailsComponent implements OnInit, OnDestroy {
+export class MemberViewComponent implements OnInit, OnDestroy {
 
   submitDisabled = false;
 
-  username$: Observable<string>;
   member$: Observable<User>;
   all_devices$: Observable<Device[]>;
-  refreshInfo$ = new BehaviorSubject<null>(null);
-
   public MAB: string;
   public MABdisabled: boolean;
   public cotisation = false;
+  private refreshInfo$ = new BehaviorSubject<null>(null);
+  private username$: Observable<string>;
   private commentForm: FormGroup;
   private deviceForm: FormGroup;
 
@@ -53,7 +48,7 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   onMAB() {
     this.MABdisabled = false;
     const v = this.deviceForm.value;
-    if ( v.connectionType === 'wired') {
+    if (v.connectionType === 'wired') {
       if (this.MAB === 'on') {
         this.MAB = 'off';
       } else {
@@ -78,12 +73,12 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   }
 
   createForm() {
-    this.commentForm = this.fb.group( {
+    this.commentForm = this.fb.group({
       comment: [''],
     });
     this.deviceForm = this.fb.group({
       mac: ['01:23:45:76:89:AB', [Validators.required, Validators.minLength(17), Validators.maxLength(17)]],
-      connectionType: ['wired', Validators.required ],
+      connectionType: ['wired', Validators.required],
     });
   }
 
@@ -103,10 +98,11 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
       }),
       finalize(() => this.submitDisabled = false),
       first(),
-     ).subscribe(() => {});
+    ).subscribe(() => {
+    });
 
-      // will trigger the refresh of member$ and thus the update of the comment
-      this.refreshInfo();
+    // will trigger the refresh of member$ and thus the update of the comment
+    this.refreshInfo();
 
   }
 
@@ -114,10 +110,13 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     // First we fetch the username of the current user...
     this.submitDisabled = true;
     this.updateDevice()
-      .first()
-      // No matter what, submit will be re-enable (even if there is an error)
-      .finally(() => this.submitDisabled = false)
-      .subscribe(() => {});
+      .pipe(
+        first(),
+        // No matter what, submit will be re-enable (even if there is an error)
+        finalize(() => this.submitDisabled = false),
+      )
+      .subscribe(() => {
+      });
 
   }
 
@@ -128,7 +127,9 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
 
     if (username == undefined) {
       return this.username$
-        .flatMap((username) => this.updateDevice(username));
+        .pipe(
+          flatMap((username) => this.updateDevice(username))
+        );
     }
 
     const v = this.deviceForm.value;
@@ -150,11 +151,13 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
     if (!alreadyExists) {
       // If the device does not then create it, and refresh the info
       return this.deviceService.putDevice(v.mac, device)
-        .flatMap(() => {
-          this.refreshInfo();
-          return this.all_devices$;
-        })
-        .map(() => null);
+        .pipe(
+          flatMap(() => {
+            this.refreshInfo();
+            return this.all_devices$;
+          }),
+          map(() => null)
+        );
     } else {
       this.notif.error('Device already exists');
       return Observable.of(null);
@@ -162,38 +165,37 @@ export class MemberDetailsComponent implements OnInit, OnDestroy {
   }
 
   onDelete(mac: string) {
-    this.deviceService.deleteDevice(mac).pipe(
-      first()
-    ).subscribe(() => this.refreshInfo());
+    this.deviceService.deleteDevice(mac)
+      .pipe(
+        first()
+      )
+      .subscribe(() => this.refreshInfo());
   }
 
   ngOnInit() {
     this.onMAB();
 
     // username of the owner of the profile
-    this.username$ = this.route.params
-      .map(params => params['username']);
+    this.username$ = this.route.params.pipe(
+      map(params => params['username'])
+    );
 
     // stream, which will emit the username every time the profile needs to be refreshed
-    const refresh$ = this.username$
-      .combineLatest(this.refreshInfo$)
-      .map(([x]) => x);
+    const refresh$ = combineLatest(this.username$, this.refreshInfo$)
+      .pipe(
+        map(([x]) => x)
+      );
 
     this.member$ = refresh$.pipe(
       switchMap(username => this.userService.getUser(username)),
-      tap((user) => this.commentForm.setValue({ comment: (user.comment === undefined) ? '' : user.comment, })),
+      tap((user) => this.commentForm.setValue({comment: (user.comment === undefined) ? '' : user.comment,})),
       share(),
-     );
+    );
 
-    this.all_devices$ = refresh$
-      .switchMap(username => this.deviceService.filterDevice(undefined, undefined, username))
-      .share();
-
-    // TODO: fill the comment form
-    // subscribe( (user) => {
-    //  this.commentForm.setValue( {
-    //    comment: user.comment,
-    //  });
+    this.all_devices$ = refresh$.pipe(
+      switchMap(username => this.deviceService.filterDevice(undefined, undefined, username)),
+      share(),
+    );
 
   }
 

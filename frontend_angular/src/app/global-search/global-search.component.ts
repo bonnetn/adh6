@@ -1,25 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
-import { scan } from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map, mergeMap, scan, switchMap} from 'rxjs/operators';
 import 'rxjs/add/operator/concat';
 import 'rxjs/add/operator/merge';
 import 'rxjs/add/observable/of';
-import { from } from 'rxjs/observable/from';
+import {from} from 'rxjs/observable/from';
 
-import { UserService } from '../api/api/user.service';
+import {UserService} from '../api/api/user.service';
 
-import { DeviceService } from '../api/api/device.service';
+import {DeviceService} from '../api/api/device.service';
 
-import { RoomService } from '../api/api/room.service';
+import {RoomService} from '../api/api/room.service';
 
-import { SwitchService } from '../api/api/switch.service';
+import {SwitchService} from '../api/api/switch.service';
 
-import { PortService } from '../api/api/port.service';
-
-import { debounceTime, distinctUntilChanged, switchMap, mergeMap, map } from 'rxjs/operators';
+import {PortService} from '../api/api/port.service';
 import {Port} from '../api';
 
 
@@ -27,7 +25,8 @@ export class SearchResult {
   objType: string;
   name: string;
   color = 'grey';
-  constructor( t: string, n: string ) {
+
+  constructor(t: string, n: string) {
     this.objType = t;
     this.name = n;
     if (t === 'user') {
@@ -51,7 +50,7 @@ export class SearchResult {
 })
 export class GlobalSearchComponent implements OnInit {
 
-  searchResult$: Observable<SearchResult[]>;
+  searchResult$: Observable<Array<SearchResult>>;
   private searchTerm$ = new Subject<string>();
 
   constructor(
@@ -60,9 +59,10 @@ export class GlobalSearchComponent implements OnInit {
     private roomService: RoomService,
     private switchService: SwitchService,
     private portService: PortService,
-  ) { }
+  ) {
+  }
 
-  search( terms: string ) {
+  search(terms: string) {
     this.searchTerm$.next(terms);
   }
 
@@ -77,39 +77,43 @@ export class GlobalSearchComponent implements OnInit {
 
     // This returns a stream of object matching to what the user has typed
     const result$ = debouncedSearchTerm$.pipe(
-      switchMap( (terms: string) => {
+      switchMap((terms: string) => {
 
-        if ( terms.length < 2 ) {
-          return Observable.of( [ ] );
+        if (terms.length < 2) {
+          return Observable.of([]);
         }
 
         const LIMIT = 20;
 
         const user$ = this.userService.filterUser(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
-          map( (obj) => new SearchResult( 'user', obj.firstName + ' ' + obj.lastName )),
+          map((obj) => new SearchResult('user', obj.firstName + ' ' + obj.lastName)),
         );
 
         const device$ = this.deviceService.filterDevice(LIMIT, undefined, undefined, terms).pipe(
           mergeMap((array) => from(array)),
-          map( (obj) => new SearchResult( 'device', obj.mac)),
+          map((obj) => new SearchResult('device', obj.mac)),
         );
 
         const room$ = this.roomService.filterRoom(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
-          map( (obj) => new SearchResult( 'room', obj.description)),
+          map((obj) => new SearchResult('room', obj.description)),
         );
         const switch$ = this.switchService.filterSwitch(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
-          map( (obj) => new SearchResult( 'switch', obj.description)),
+          map((obj) => new SearchResult('switch', obj.description)),
         );
 
         const port$ = this.portService.filterPort(LIMIT, undefined, undefined, undefined, terms).pipe(
           mergeMap((array: Array<Port>) => from(array)),
-          map( (obj: Port) => new SearchResult( 'port', 'Switch ' + obj.switchId + ' ' + obj.portNumber)),
+          map((obj: Port) => new SearchResult('port', 'Switch ' + obj.switchId + ' ' + obj.portNumber)),
         );
 
-        return user$.concat(device$).concat(room$).concat(switch$).concat(port$);
+        return user$
+          .concat(device$)
+          .concat(room$)
+          .concat(switch$)
+          .concat(port$);
 
       }),
     );
@@ -118,15 +122,15 @@ export class GlobalSearchComponent implements OnInit {
     // found. The Arrays are cleared every time the user changes the text in the
     // text box.
     this.searchResult$ = result$.map(x => [x]).merge(
-        debouncedSearchTerm$.map(ignored => null)
-      ).pipe(
-        scan( (acc, value) => {
-          if (!value) {// if it is null then we clear the array
-            return [];
-          }
-          return acc.concat(value[0]); // we keep adding elements
-        }, [])
-      );
+      debouncedSearchTerm$.map(ignored => null)
+    ).pipe(
+      scan((acc, value) => {
+        if (!value) {// if it is null then we clear the array
+          return [];
+        }
+        return acc.concat(value[0]); // we keep adding elements
+      }, [])
+    );
 
   }
 

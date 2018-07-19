@@ -5,8 +5,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SwitchLocalComponent } from './switch-local/switch-local.component';
-import { MemberListComponent } from './member-list/member-list.component';
-import { MemberDetailsComponent } from './member-details/member-details.component';
+import { MemberSearchComponent } from './member-search/member-search.component';
+import { MemberViewComponent } from './member-view/member-view.component';
 import { ApiModule } from './api/api.module';
 import { RoomListComponent } from './room-list/room-list.component';
 import { RoomDetailsComponent } from './room-details/room-details.component';
@@ -22,10 +22,9 @@ import { SwitchEditComponent } from './switch-edit/switch-edit.component';
 import { SwitchNewComponent } from './switch-new/switch-new.component';
 import { DeviceListComponent } from './device-list/device-list.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
-import { MemberFormComponent } from './member-form/member-form.component';
 import { DeviceNewComponent } from './device-new/device-new.component';
 import { DeviceEditComponent } from './device-edit/device-edit.component';
-import { MemberEditComponent } from './member-edit/member-edit.component';
+import { MemberCreateOrEditComponent } from './member-create-or-edit/member-create-or-edit.component';
 import { MacVendorComponent } from './mac-vendor/mac-vendor.component';
 import { GlobalSearchComponent } from './global-search/global-search.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -44,8 +43,8 @@ import { NotifInterceptor } from './http-interceptor/notif-interceptor';
     AppComponent,
     DashboardComponent,
     SwitchLocalComponent,
-    MemberListComponent,
-    MemberDetailsComponent,
+    MemberSearchComponent,
+    MemberViewComponent,
     RoomListComponent,
     RoomDetailsComponent,
     RoomEditComponent,
@@ -60,11 +59,10 @@ import { NotifInterceptor } from './http-interceptor/notif-interceptor';
     SwitchNewComponent,
     DeviceListComponent,
     DeviceDetailsComponent,
-    MemberFormComponent,
-    MemberEditComponent,
+    MemberCreateOrEditComponent,
     DeviceNewComponent,
     DeviceEditComponent,
-    MemberEditComponent,
+    MemberCreateOrEditComponent,
     DeviceEditComponent,
     MacVendorComponent,
     GlobalSearchComponent,
@@ -87,7 +85,7 @@ import { NotifInterceptor } from './http-interceptor/notif-interceptor';
     OAuthModule.forRoot(),
     NgxPaginationModule,
   ],
-  providers: [ 
+  providers: [
     AppComponent,
     {
       provide: HTTP_INTERCEPTORS,

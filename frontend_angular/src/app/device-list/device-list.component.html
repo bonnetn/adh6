@@ -4,12 +4,15 @@
     <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="u-full-width" type="text"/>
   </div>
   <div class="five columns">
-    <a [routerLink]="['../add']"><button class="u-full-width
-        button-primary">Nouvel appareil</button></a>
+    <a [routerLink]="['../add']">
+      <button class="u-full-width
+        button-primary">Nouvel appareil
+      </button>
+    </a>
   </div>
 </div>
 <div style="overflow-x:auto;" class="u-max-full-width">
-  <table class="u-full-width"> 
+  <table class="u-full-width" *ngIf="result$ | async as result">
     <tr>
       <th>Utilisateur</th>
       <th class="center">MAC de l'appareil</th>
@@ -18,17 +21,19 @@
       <th></th>
       <th></th>
     </tr>
-    <tr *ngFor="let device of devices$ | async | paginate: { itemsPerPage:
-      items_per_page, currentPage: currentPage, totalItems: item_count}">
+    <tr *ngFor="let device of result.devices | paginate: { itemsPerPage:
+      ITEMS_PER_PAGE, currentPage: result.current_page, totalItems: result.item_count}">
       <td><a [routerLink]="['../../member/view', device.username]">{{ device.username }}</a></td>
       <td class="center">{{ device.mac }}</td>
       <td class="center">{{ device.connectionType }}</td>
-      <td><a [routerLink]="['../view' , device.mac]"><button>Consulter</button></a></td>
+      <td><a [routerLink]="['../view' , device.mac]">
+        <button>Consulter</button>
+      </a></td>
     </tr>
   </table>
-  <pagination-controls 
-    class="pagination" 
+  <pagination-controls
+    class="pagination"
     (pageChange)="refreshDevices($event)"
     previousLabel="" nextLabel=""
-    ></pagination-controls>
+  ></pagination-controls>
 </div>

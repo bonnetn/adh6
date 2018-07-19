@@ -1,5 +1,6 @@
-<h2>Édition d'un membre</h2>
-<form [formGroup]="memberEdit" (ngSubmit)="onSubmit()" novalidate>
+<h2 *ngIf="!create">Édition d'un membre</h2>
+<h2 *ngIf="create">Création d'un membre</h2>
+<form [formGroup]="memberEdit" (ngSubmit)="editMember()" novalidate>
   <div class="row">
     <div class="six columns">
       <label>Last name / Nom:</label>
@@ -22,13 +23,17 @@
   <label>Room number / Numéro de chambre:</label>
   <input class="u-full-width" type="text" formControlName="roomNumber" type="number">
 
-  <br /><br />
+  <br/><br/>
   <button type="submit"
-    [disabled]="disabled || memberEdit.status == 'INVALID'"
-    class="u-full-width button-primary"
-    >Éditer</button>
+          [disabled]="disabled || memberEdit.status == 'INVALID'"
+          class="u-full-width button-primary"
+  ><span *ngIf="!create">Éditer</span><span *ngIf="create">Créer</span>
+  </button>
 </form>
- <a (click)="onDelete()"><button
-    [disabled]="enabled"
+<a (click)="deleteMember()" *ngIf="!create">
+  <button
+    [disabled]="disabled"
     class="u-full-width button-danger">
-    Supprimer</button></a>
+    Supprimer
+  </button>
+</a>

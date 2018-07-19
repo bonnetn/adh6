@@ -1,14 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute} from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import 'rxjs/add/operator/takeWhile';
 import 'rxjs/add/operator/switchMap';
-import {catchError, flatMap, finalize, first} from 'rxjs/operators';
+import {catchError, finalize, first, flatMap} from 'rxjs/operators';
 
-import { DeviceService } from '../api/api/device.service';
-import { Device } from '../api/model/device';
-import { NotificationsService } from 'angular2-notifications';
+import {DeviceService} from '../api/api/device.service';
+import {Device} from '../api/model/device';
+import {NotificationsService} from 'angular2-notifications';
 import {EMPTY} from 'rxjs';
 
 @Component({
@@ -29,14 +29,14 @@ export class DeviceNewComponent implements OnInit, OnDestroy {
     private router: Router,
     private notif: NotificationsService,
   ) {
-  this.createForm();
+    this.createForm();
   }
 
   createForm() {
     this.deviceForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)] ],
-      mac: ['', [Validators.required, Validators.minLength(17), Validators.maxLength(17)] ],
-      connectionType: ['', Validators.required ],
+      username: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
+      mac: ['', [Validators.required, Validators.minLength(17), Validators.maxLength(17)]],
+      connectionType: ['', Validators.required],
     });
   }
 
@@ -50,19 +50,19 @@ export class DeviceNewComponent implements OnInit, OnDestroy {
     };
 
     this.deviceService.getDevice(v.mac, 'response').pipe(
-        first(),
-        flatMap( () => {
-          // if there is a response then you should not create a new device
-          this.notif.error('Device already exists in database.');
-          return EMPTY;
-        }),
-        catchError(() => this.deviceService.putDevice(v.mac, device, 'response')),
-        first(),
-        finalize( () => {
-          this.disabled = false;
-        }),
-    ).subscribe( () => {
-      this.router.navigate(['device/view', v.mac ]);
+      first(),
+      flatMap(() => {
+        // if there is a response then you should not create a new device
+        this.notif.error('Device already exists in database.');
+        return EMPTY;
+      }),
+      catchError(() => this.deviceService.putDevice(v.mac, device, 'response')),
+      first(),
+      finalize(() => {
+        this.disabled = false;
+      }),
+    ).subscribe(() => {
+      this.router.navigate(['device/view', v.mac]);
     });
 
   }

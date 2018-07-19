@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
+import {Observable} from 'rxjs/Observable';
+import {first, switchMap} from 'rxjs/operators';
 
-import { DeviceService } from '../api/api/device.service';
-import { Device } from '../api/model/device';
+import {DeviceService} from '../api/api/device.service';
+import {Device} from '../api/model/device';
 
-import { Router, ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 
 @Component({
@@ -21,17 +21,22 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
   constructor(
     public deviceService: DeviceService,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router) {
+  }
 
-  onDelete( mac: string ) {
-    this.deviceService.deleteDevice( mac ).pipe(first()).subscribe( () => {
-      this.router.navigate(['device/search']);
-    });
+  onDelete(mac: string) {
+    this.deviceService.deleteDevice(mac)
+      .pipe(first())
+      .subscribe(() => {
+        this.router.navigate(['device/search']);
+      });
   }
 
   ngOnInit() {
-    this.device$ = this.route.params.switchMap( params =>
-      this.deviceService.getDevice(params['mac'])
+    this.device$ = this.route.params.pipe(
+      switchMap(params =>
+        this.deviceService.getDevice(params['mac'])
+      ),
     );
   }
 

@@ -8,7 +8,7 @@
   </div>
 </div>
 <div style="overflow-x:auto;" class="u-max-full-width">
-  <table class="u-full-width">
+  <table class="u-full-width" *ngIf="result$ | async as result">
     <tr>
       <th>Nom</th>
       <th>Prénom</th>
@@ -17,8 +17,8 @@
       <th></th>
       <th></th>
     </tr>
-    <tr *ngFor="let member of members$ | async | paginate: { itemsPerPage:
-      items_per_page, currentPage: page_number, totalItems: item_count}">
+    <tr *ngFor="let member of result.members | paginate: { itemsPerPage:
+      ITEMS_PER_PAGE, currentPage: page_number, totalItems: item_count}">
       <td>{{member.firstName}}</td>
       <td>{{member.lastName}}</td>
       <td>{{member.username}}</td>
@@ -26,8 +26,8 @@
       <td><a [routerLink]="['../view', member.username]"><button>Consulter</button></a></td>
     </tr><br />
   </table>
-  <pagination-controls 
-    class="pagination" 
+  <pagination-controls
+    class="pagination"
     (pageChange)="refreshMembers($event)"
     previousLabel="" nextLabel=""
     ></pagination-controls>
