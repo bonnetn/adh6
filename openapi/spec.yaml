@@ -648,11 +648,6 @@ paths:
         required: false
         type: "integer"
         default: 0
-      - name: "switchID"
-        in: "query"
-        description: "Filter only ports that belongs to that switch"
-        required: false
-        type: "integer"
       - name: "roomNumber"
         in: "query"
         description: "Filter only ports that that room"
@@ -808,10 +803,6 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "switchID"
-        in: "path"
-        required: true
-        type: "integer"
       - name: "port_id"
         in: "path"
         required: true
