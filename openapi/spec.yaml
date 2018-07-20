@@ -655,7 +655,7 @@ paths:
         type: "integer"
       - name: "roomNumber"
         in: "query"
-        description: "Filter only ports that that room"
+        description: "Filter only ports from that room"
         required: false
         type: "integer"
       - name: "terms"
