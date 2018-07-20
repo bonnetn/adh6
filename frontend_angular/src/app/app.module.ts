@@ -22,7 +22,6 @@ import { SwitchEditComponent } from './switch-edit/switch-edit.component';
 import { SwitchNewComponent } from './switch-new/switch-new.component';
 import { DeviceListComponent } from './device-list/device-list.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
-import { DeviceNewComponent } from './device-new/device-new.component';
 import { DeviceEditComponent } from './device-edit/device-edit.component';
 import { MemberCreateOrEditComponent } from './member-create-or-edit/member-create-or-edit.component';
 import { MacVendorComponent } from './mac-vendor/mac-vendor.component';
@@ -60,7 +59,6 @@ import { NotifInterceptor } from './http-interceptor/notif-interceptor';
     DeviceListComponent,
     DeviceDetailsComponent,
     MemberCreateOrEditComponent,
-    DeviceNewComponent,
     DeviceEditComponent,
     MemberCreateOrEditComponent,
     DeviceEditComponent,

@@ -19,7 +19,6 @@ import { SwitchDetailsComponent } from './switch-details/switch-details.componen
 import { SwitchEditComponent } from './switch-edit/switch-edit.component';
 import { SwitchNewComponent } from './switch-new/switch-new.component';
 import { DeviceListComponent } from './device-list/device-list.component';
-import { DeviceNewComponent } from './device-new/device-new.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
 import { DeviceEditComponent } from './device-edit/device-edit.component';
 
@@ -50,7 +49,6 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'search', pathMatch: 'full' },
       { path: 'search', component: DeviceListComponent },
-      { path: 'add', component: DeviceNewComponent },
       { path: 'view/:mac', component: DeviceDetailsComponent },
       { path: 'edit/:mac', component: DeviceEditComponent },
     ],
