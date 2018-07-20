@@ -648,6 +648,11 @@ paths:
         required: false
         type: "integer"
         default: 0
+      - name: "switchId"
+        in: "query"
+        description: "Filter only ports from that switch"
+        required: false
+        type: "integer"
       - name: "roomNumber"
         in: "query"
         description: "Filter only ports that that room"
