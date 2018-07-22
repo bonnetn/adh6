@@ -106,7 +106,7 @@ export class GlobalSearchComponent implements OnInit {
 
         const port$ = this.portService.filterPort(LIMIT, undefined, undefined, undefined, terms).pipe(
           mergeMap((array: Array<Port>) => from(array)),
-          map((obj: Port) => new SearchResult('port', 'Switch ' + obj.switchId + ' ' + obj.portNumber)),
+          map((obj: Port) => new SearchResult('port', 'Switch ' + obj.switchID + ' ' + obj.portNumber)),
         );
 
         return user$
