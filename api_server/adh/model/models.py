@@ -524,8 +524,8 @@ class Port(Base):
         yield "portNumber", self.numero
         if self.chambre:
             yield "roomNumber", self.chambre.numero
-        if self.switchID:
-            yield "switchID", self.switchID
+        if self.switch_id:
+            yield "switchID", self.switch_id
 
 
 class Utilisateur(Base):
