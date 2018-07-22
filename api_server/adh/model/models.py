@@ -487,7 +487,7 @@ class Port(Base):
     rcom = Column(Integer)
     numero = Column(String(255))
     oid = Column(String(255))
-    switchID = Column(Integer, ForeignKey(Switch.id), nullable=False)
+    switch_id = Column(Integer, ForeignKey(Switch.id), nullable=False)
     switch = relationship(Switch)
     chambre_id = Column(Integer, ForeignKey(Chambre.id), nullable=False)
     chambre = relationship(Chambre)
