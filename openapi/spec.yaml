@@ -648,7 +648,7 @@ paths:
         required: false
         type: "integer"
         default: 0
-      - name: "switchId"
+      - name: "switchID"
         in: "query"
         description: "Filter only ports from that switch"
         required: false
@@ -1033,12 +1033,12 @@ definitions:
       roomNumber:
         type: "integer"
         example: 5110
-      switchId:
+      switchID:
         type: "integer"
         example: 6
     example:
       roomNumber: 5110
-      switchId: 6
+      switchID: 6
       portNumber: "1/0/4"
   Switch:
     type: "object"
