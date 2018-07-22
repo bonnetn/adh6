@@ -1,3 +1,4 @@
+
 # ADH6
 ## Présentation
 ADH est le système de gestion d'adhérent de l'association [MiNET](https://minet.net). Ce document a pour but de présenter la huitième version de notre outil.
@@ -10,15 +11,14 @@ Pour atteindre ses objectifs, nous essayons de **réduire le boilerplate code** 
 
 La **fiabilité** de notre outil est aussi un concept important à nos yeux. C'est pour cela que nous faisons beaucoup appels à des **tests d'intégration** (*200+ pour la partie backend pour l'instant*). Nous visons un taux de *code coverage* le plus haut possible.
 
-# Communication client/serveur
+## Choix des technos
+### Communication client/serveur
 
-Pour communiquer entre le client et le serveur, nous avons décidé d'utiliser une
-API.
+Pour communiquer entre le client et le serveur, nous avons décidé d'utiliser une API.
 En terme de techno, on a décidé de prendre la techno la plus stable et
 universelle (compatible avec tous les futurs projets), HTTP.
 
-Nous avons décidé de ne pas reprogrammer à la main tout un client/serveur pour
-notre API. Ca aurait était faisable, mais trop error-prone et on risque de
+Nous avons décidé de ne pas reprogrammer à la main tout un client/serveur pour notre API. Ca aurait était faisable, mais trop error-prone et on risque de
 perdre en flexibilité (un changement dans l'API devrait être réfléchi dans le
 code du client ET du serveur). Nous avons donc décidé d'utiliser un système de
 "generation" de code automatique à partir d'une spec.
@@ -28,15 +28,91 @@ swagger, oui, oui...).
 
 Pour générer le code serveur, on utilise d'un côté connexion, qui est une
 libary python développée par Zalando. https://github.com/zalando/connexion
-Allez voir le repo, il est assez actif. C'est aussi la bibliothèque de
-génération de code prise comme référence par Swagger (l'organisme qui fait
+Allez voir le repo, il est assez actif. C'est aussi la bibliothèque de génération de code prise comme référence par Swagger (l'organisme qui fait
 OpenAPI).
 
 Pour le côté client, on utilise directement swagger-codegen, édité directement
-par Swagger. https://github.com/swagger-api/swagger-codegen Pareil, allez voir
-leur repo, il est "assez" actif... (10 228 commits à l'heure où j'écris ces
+par Swagger. https://github.com/swagger-api/swagger-codegen Pareil, allez voir leur repo, il est "assez" actif... (10 228 commits à l'heure où j'écris ces
 lignes, et plus de 900 contributeurs...)
 Ca semble donc aussi être un assez bon choix pour produire un code stable.
 
 En résumé, on a pris le parti prix d'ajouter deux dépendances au projet, mais
 on a gagné en flexibilité et en maintenabilité.
+
+
+## Backend
+
+### Le choix des technos
+
+### How to setup the project
+- Create a virtualenv ```virtualenv ./```
+- Enter the virtualenv ```source bin/activate```
+- Install the requirements ```pip3 install -r requirements.txt```
+- Fill the setting file ``` cp CONFIGURATION.py{.example,} && vim CONFIGURATION.py ``` 
+- Install the UWSGI server ``` apt install uwsgi uwsgi-plugin-python3 ```
+- You can use the example configuration file provided for the UWSGI configuration ``` cp adh6-api.ini /etc/uwsgi/sites-available ```
+- Activate the site``` ln -s /etc/uwsgi/sites-available /etc/uwsgi/sites-enabled ```
+- Restart UWSGI ``` systemctl restart uwsgi ```
+
+A UWSGI server is now running on your machine. To access the API, install a webserver (such as NGINX) and configure it to use the UWSGI server.
+
+###  Je suis perdu, qu'est-ce que c'est que tous ces dossiers ?
+Ce projet consiste juste en l'implémentation des différents méthodes définies
+dans la spécification de l'API. 
+
+Si vous êtes un PGM et que vous voulez juste lire le code, sachez juste que tout le code est dans le dossier *adh/*.
+
+Pour que python se comporte en serveur Web on utilise *Flask*, et pour pas 
+avoir à faire de trucs compliqués on utilise *connexion* qui fait le binding 
+entre *Flask* et les fonctions en python qui sont appelées presque magiquement.
+
+La spécification de l'API est stockée dans swagger.yaml à la racine du projet,
+ce fichier est automatiquement exporté de swaggerhub.
+https://app.swaggerhub.com/apis/insolentbacon/adherents/
+** Si vous voulez modifier l'API, ne modifiez pas sur ce site (de toute façon vous n'aurez sûrement pas les droits), modifiez le fichier openapi/spec.yaml.** 
+Le site permet just d'avoir une jolie représentation de l'API.
+
+*En gros*, les fonctions importantes sont juste celles dans *adh/controller/*, 
+qui sont appelées quand on fait des requêtes vers le serveur web.
+
+Maintenant, parce qu'on veut pas faire de requêtes directement dans la BDD SQL (pour des raisons de sécurité et de flemme), on utilise *SQLAlchemy*. C'est en fait une bibliothèque qui permet de manipuler des objets dans la BDD comme des objets python (allez chercher ce qu'est un *ORM*).
+
+En résumé on a:
+
+- **controller/**: Le plus important, c'est là où sont les fonctions qui sont
+appelées lorsque une requête HTTP est effectuée sur l'API.
+- **model/**: C'est là où on définit ce qu'il y a dans la base de données (c'est
+à dire les noms des tables, des colonnes, les contraintes qu'il y a sur les
+champs [genre une IP doit être valide]). On importe ensuite les modèles dans les controllers pour manipuler la BDD
+- **exceptions/**: c'est là où on met les erreurs custom qu'on a défini, c'est
+peu important
+- **test/**: c'est là où il y a des les tests. C'est super important. On teste
+chacune des lignes de code des fichiers .py (on vise un *code coverage* de 95%)
+Les cas normaux et extrêmes doivent être testés. C'est ce qui est executé
+lorsque on lance pytest.
+
+### Notes au futurs devs:
+#### Comment lancer les tests ?
+Lancez ```pytest``` dans la console, ou utilisez votre IDE... 
+
+#### Comment obtenir une analyse du "code coverage" ?
+```pytest --cov=adh --cov-report html``` dans la console.
+
+#### A propos des sessions d'SQLAlchemy...
+Quand vous implémentez une fonction de l'API dans controller, ne faites qu'UNE session SQLAlchemy, créée DANS votre fonction de controller. Ca évite les nested transactions qui sont pas toujours supportées. (et c'est plus propre, moins
+error-prone)
+
+*Extrait de la doc d'SQLALchemy:*
+> As a general rule, keep the lifecycle of the session separate and external 
+> from functions and objects that access and/or manipulate database data. 
+> This will greatly help with achieving a predictable and consistent 
+> transactional scope.
+
+#### Petites fonctions utiles
+
+J'ai défini quelques fonctions utiles dans les modèles des objets de la BDD.
+
+- dict(obj) permet de retourner un dict du format de l'api
+- Obj.from_dict(dict) permet de retourner un obj en utilisant un dict de l'API
+- Obj.find(session, value) permet de retourner l'objet qui est associé par l'API
+
