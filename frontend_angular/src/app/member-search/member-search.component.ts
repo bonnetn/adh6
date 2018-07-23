@@ -4,15 +4,15 @@ import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 
-import {UserService} from '../api/api/user.service';
-import {User} from '../api/model/user';
+import {MemberService} from '../api/api/member.service';
+import {Member} from '../api/model/member';
 import {PagingConf} from '../paging.config';
 
 import {map, tap} from 'rxjs/operators';
 import {PagingUtils} from '../paging-utils';
 
 class MemberListResponse {
-  members?: Array<User>;
+  members?: Array<Member>;
   page_number?: number;
   item_count?: number;
 }
@@ -30,7 +30,7 @@ export class MemberSearchComponent implements OnInit {
   private searchTerm$ = new BehaviorSubject<string>('');
   private pageNumber$ = new BehaviorSubject<number>(1);
 
-  constructor(public userService: UserService) {
+  constructor(public memberService: MemberService) {
   }
 
   search(term: string): void {
@@ -47,7 +47,7 @@ export class MemberSearchComponent implements OnInit {
   }
 
   private buildRequest(terms: string, page: number) {
-    return this.userService.filterUser(this.ITEMS_PER_PAGE, (page - 1) * this.ITEMS_PER_PAGE, terms, undefined, 'response')
+    return this.memberService.filterMember(this.ITEMS_PER_PAGE, (page - 1) * this.ITEMS_PER_PAGE, terms, undefined, 'response')
       .pipe(
         // switch to new search observable each time the term changes
         map((response) => <MemberListResponse>{

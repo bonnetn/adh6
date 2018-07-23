@@ -1,7 +1,7 @@
 from connexion import NoContent
 import datetime
 import json
-from adh.exceptions import UserNotFound
+from adh.exceptions import MemberNotFound
 from adh.model.database import Database as Db
 from adh.model import models
 from adh.model.models import Adherent, Modification
@@ -17,11 +17,11 @@ from adh.controller.device_utils import is_wired, is_wireless, \
         create_wired_device, \
         get_all_devices, \
         dev_to_dict
-from adh.auth import auth_simple_user
+from adh.auth import auth_regular_admin
 import logging
 
 
-@auth_simple_user
+@auth_regular_admin
 def filter_device(admin, limit=100, offset=0, username=None, terms=None):
     """ [API] Filter the list of the devices according to some criterias """
     s = Db.get_db().get_session()
@@ -93,7 +93,7 @@ def allocate_ip_for_device(s, dev, admin):
     Modification.add_and_commit(s, dev, admin)
 
 
-@auth_simple_user
+@auth_regular_admin
 def put_device(admin, mac_address, body):
     """ [API] Put (update or create) a new device in the database """
     s = Db.get_db().get_session()
@@ -162,7 +162,7 @@ def put_device(admin, mac_address, body):
         s.rollback()
         return 'No more ip available', 400
 
-    except UserNotFound:
+    except MemberNotFound:
         return 'User not found', 400
 
     except InvalidMac:
@@ -179,7 +179,7 @@ def put_device(admin, mac_address, body):
                'A MAC address should be unique. Fix your database.', 500
 
 
-@auth_simple_user
+@auth_regular_admin
 def get_device(admin, mac_address):
     """ [API] Return the device specified by the macAddress """
     s = Db.get_db().get_session()
@@ -201,7 +201,7 @@ def get_device(admin, mac_address):
         return NoContent, 404
 
 
-@auth_simple_user
+@auth_regular_admin
 def delete_device(admin, mac_address):
     """ [API] Delete the specified device from the database """
     s = Db.get_db().get_session()

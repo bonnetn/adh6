@@ -9,7 +9,7 @@ import 'rxjs/add/operator/merge';
 import 'rxjs/add/observable/of';
 import {from} from 'rxjs/observable/from';
 
-import {UserService} from '../api/api/user.service';
+import {MemberService} from '../api/api/member.service';
 
 import {DeviceService} from '../api/api/device.service';
 
@@ -54,7 +54,7 @@ export class GlobalSearchComponent implements OnInit {
   private searchTerm$ = new Subject<string>();
 
   constructor(
-    private userService: UserService,
+    private memberService: MemberService,
     private deviceService: DeviceService,
     private roomService: RoomService,
     private switchService: SwitchService,
@@ -85,7 +85,7 @@ export class GlobalSearchComponent implements OnInit {
 
         const LIMIT = 20;
 
-        const user$ = this.userService.filterUser(LIMIT, undefined, terms).pipe(
+        const user$ = this.memberService.filterMember(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
           map((obj) => new SearchResult('user', obj.firstName + ' ' + obj.lastName)),
         );

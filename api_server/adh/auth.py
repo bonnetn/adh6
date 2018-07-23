@@ -42,7 +42,7 @@ def token_info(access_token) -> dict:
     }
 
 
-def auth_simple_user(f):
+def auth_regular_admin(f):
     def wrapper(*args, user, token_info, **kwargs):
         if current_app.config["TESTING"] \
            or "adh6_user" in token_info["groups"]:
@@ -53,7 +53,7 @@ def auth_simple_user(f):
     return wrapper
 
 
-def auth_admin(f):
+def auth_super_admin(f):
     def wrapper(*args, user, token_info, **kwargs):
         if current_app.config["TESTING"] \
            or "adh6_admin" in token_info["groups"]:

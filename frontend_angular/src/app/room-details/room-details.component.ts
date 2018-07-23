@@ -8,8 +8,8 @@ import { RoomService } from '../api/api/room.service';
 import { PortService } from '../api/api/port.service';
 import { Room } from '../api/model/room';
 import { Port } from '../api/model/port';
-import { User } from '../api/model/user';
-import { UserService } from '../api/api/user.service';
+import { Member } from '../api/model/member';
+import { MemberService } from '../api/api/member.service';
 import { NotificationsService } from 'angular2-notifications';
 
 @Component({
@@ -25,7 +25,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
 
   room$: Observable<Room>;
   ports$: Observable<Array<Port>>;
-  members$: Observable<Array<User>>;
+  members$: Observable<Array<Member>>;
   roomNumber: number;
   private sub: any;
 
@@ -40,7 +40,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
     private router: Router,
     public roomService: RoomService,
     public portService: PortService,
-    public userService: UserService,
+    public memberService: MemberService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
   ) {
@@ -73,16 +73,16 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   refreshInfo() {
     this.room$ = this.roomService.getRoom( this.roomNumber );
     this.ports$ = this.portService.filterPort(undefined, undefined, undefined, this.roomNumber);
-    this.members$ = this.userService.filterUser(undefined, undefined, undefined, this.roomNumber);
+    this.members$ = this.memberService.filterMember(undefined, undefined, undefined, this.roomNumber);
   }
 
   onSubmitComeInRoom() {
     const v = this.EmmenagerForm.value;
-    this.userService.getUser(v.username)
+    this.memberService.getMember(v.username)
       .takeWhile( () => this.alive )
       .subscribe( (user) => {
         user['roomNumber'] = this.roomNumber;
-        this.userService.putUser(v.username, user, 'response')
+        this.memberService.putMember(v.username, user, 'response')
         .takeWhile( () => this.alive )
         .subscribe( (response) => {
           this.refreshInfo();
@@ -90,7 +90,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
           this.onEmmenager();
         });
       }, (user) => {
-          this.notif.error('User ' + v.username + ' does not exists');
+          this.notif.error('Member ' + v.username + ' does not exists');
       });
   }
 
@@ -99,11 +99,11 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
     const room: Room = {
       roomNumber: v.roomNumberNew
     };
-    this.userService.getUser(username)
+    this.memberService.getMember(username)
       .takeWhile( () => this.alive )
       .subscribe( (user) => {
         user['roomNumber'] = v.roomNumberNew;
-        this.userService.putUser(username, user, 'response')
+        this.memberService.putMember(username, user, 'response')
         .takeWhile( () => this.alive )
         .subscribe( (response) => {
           this.refreshInfo();
@@ -115,11 +115,11 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   }
 
   onRemoveFromRoom(username) {
-    this.userService.getUser(username)
+    this.memberService.getMember(username)
       .takeWhile( () => this.alive )
       .subscribe( (user) => {
         delete user['roomNumber'];
-        this.userService.putUser(username, user, 'response')
+        this.memberService.putMember(username, user, 'response')
 
         .takeWhile( () => this.alive )
         .subscribe( (response) => {

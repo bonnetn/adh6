@@ -4,26 +4,26 @@ from connexion import NoContent
 from adh.model.database import Database as Db
 from adh.model.models import Adherent, Chambre, Adhesion, Modification
 from adh.util.date import string_to_date
-from adh.exceptions import InvalidEmail, RoomNotFound, UserNotFound
+from adh.exceptions import InvalidEmail, RoomNotFound, MemberNotFound
 import datetime
 import sqlalchemy
-from adh.auth import auth_simple_user
+from adh.auth import auth_regular_admin
 import hashlib
 from CONFIGURATION import PRICES
 
 
 def adherent_exists(session, username):
-    """ Returns true if the user exists """
+    """ Returns true if the member exists """
     try:
         Adherent.find(session, username)
-    except UserNotFound:
+    except MemberNotFound:
         return False
     return True
 
 
-@auth_simple_user
-def filter_user(admin, limit=100, offset=0, terms=None, roomNumber=None):
-    """ [API] Filter the list of users from the the database """
+@auth_regular_admin
+def filter_member(admin, limit=100, offset=0, terms=None, roomNumber=None):
+    """ [API] Filter the list of members from the the database """
     if limit < 0:
         return "Limit must be positive", 400
 
@@ -56,30 +56,30 @@ def filter_user(admin, limit=100, offset=0, terms=None, roomNumber=None):
         "X-Total-Count": str(count),
         'access-control-expose-headers': 'X-Total-Count'
     }
-    logging.info("%s fetched the user list", admin.login)
+    logging.info("%s fetched the member list", admin.login)
     return list(map(dict, r)), 200, headers
 
 
-@auth_simple_user
-def get_user(admin, username):
-    """ [API] Get the specified user from the database """
+@auth_regular_admin
+def get_member(admin, username):
+    """ [API] Get the specified member from the database """
     s = Db.get_db().get_session()
     try:
-        logging.info("%s fetched the user %s", admin.login, username)
+        logging.info("%s fetched the member %s", admin.login, username)
         return dict(Adherent.find(s, username))
-    except UserNotFound:
+    except MemberNotFound:
         return NoContent, 404
 
 
-@auth_simple_user
-def delete_user(admin, username):
+@auth_regular_admin
+def delete_member(admin, username):
     """ [API] Delete the specified User from the database """
     s = Db.get_db().get_session()
 
     # Find the soon-to-be deleted user
     try:
         a = Adherent.find(s, username)
-    except UserNotFound:
+    except MemberNotFound:
         return NoContent, 404
 
     try:
@@ -95,63 +95,26 @@ def delete_user(admin, username):
     except Exception:
         s.rollback()
         raise
-    logging.info("%s deleted the user %s", admin.login, username)
+    logging.info("%s deleted the member %s", admin.login, username)
     return NoContent, 204
 
 
-@auth_simple_user
-def patch_user(admin, username, body):
-    """ [API] Partially update a user from the database """
+@auth_regular_admin
+def patch_member(admin, username, body):
+    """ [API] Partially update a member from the database """
     # s = Db.get_db().get_session()
 
     return NoContent, 404
-    # # Create a valid object
-    # try:
-    #     new_user = Adherent.from_dict(s, body)
-    # except InvalidEmail:
-    #     return "Invalid email", 400
-    # except RoomNotFound:
-    #     return "No room found", 400
-    # except ValueError:
-    #     return "String must not be empty", 400
-
-    # try:
-    #     # Check if it already exists
-    #     update = adherent_exists(s, username)
-
-    #     if update:
-    #         current_adh = Adherent.find(s, username)
-    #         new_user.id = current_adh.id
-    #         current_adh.start_modif_tracking()
-
-    #     # Merge the object (will create a new if it doesn't exist)
-    #     new_user = s.merge(new_user)
-    #     s.flush()
-
-    #     # Create the corresponding modification
-    #     Modification.add_and_commit(s, new_user, admin)
-    # except Exception:
-    #     s.rollback()
-    #     raise
-
-    # if update:
-    #     logging.info("%s updated the user %s\n%s",
-    #                  admin.login, username, json.dumps(body, sort_keys=True))
-    #     return NoContent, 204
-    # else:
-    #     logging.info("%s created the user %s\n%s",
-    #                  admin.login, username, json.dumps(body, sort_keys=True))
-    #     return NoContent, 201
 
 
-@auth_simple_user
-def put_user(admin, username, body):
-    """ [API] Create/Update user from the database """
+@auth_regular_admin
+def put_member(admin, username, body):
+    """ [API] Create/Update member from the database """
     s = Db.get_db().get_session()
 
     # Create a valid object
     try:
-        new_user = Adherent.from_dict(s, body)
+        new_member = Adherent.from_dict(s, body)
     except InvalidEmail:
         return "Invalid email", 400
     except RoomNotFound:
@@ -165,30 +128,30 @@ def put_user(admin, username, body):
 
         if update:
             current_adh = Adherent.find(s, username)
-            new_user.id = current_adh.id
+            new_member.id = current_adh.id
             current_adh.start_modif_tracking()
 
         # Merge the object (will create a new if it doesn't exist)
-        new_user = s.merge(new_user)
+        new_member = s.merge(new_member)
         s.flush()
 
         # Create the corresponding modification
-        Modification.add_and_commit(s, new_user, admin)
+        Modification.add_and_commit(s, new_member, admin)
     except Exception:
         s.rollback()
         raise
 
     if update:
-        logging.info("%s updated the user %s\n%s",
+        logging.info("%s updated the member %s\n%s",
                      admin.login, username, json.dumps(body, sort_keys=True))
         return NoContent, 204
     else:
-        logging.info("%s created the user %s\n%s",
+        logging.info("%s created the member %s\n%s",
                      admin.login, username, json.dumps(body, sort_keys=True))
         return NoContent, 201
 
 
-@auth_simple_user
+@auth_regular_admin
 def add_membership(admin, username, body):
     """ [API] Add a membership record in the database """
 
@@ -214,7 +177,7 @@ def add_membership(admin, username, body):
         adh.start_modif_tracking()
         adh.date_de_depart = end
 
-    except UserNotFound:
+    except MemberNotFound:
         s.rollback()
         return NoContent, 404
 
@@ -234,14 +197,14 @@ def ntlm_hash(txt):
     return hashlib.new('md4', txt.encode('utf-16le')).hexdigest()
 
 
-@auth_simple_user
+@auth_regular_admin
 def update_password(admin, username, body):
     password = body["password"]
     s = Db.get_db().get_session()
 
     try:
         a = Adherent.find(s, username)
-    except UserNotFound:
+    except MemberNotFound:
         return NoContent, 404
 
     try:

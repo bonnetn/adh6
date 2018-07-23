@@ -8,7 +8,7 @@ from test.resource import (
 )
 from adh.model.models import Adherent
 from dateutil import parser
-from adh.controller.user import ntlm_hash
+from adh.controller.member import ntlm_hash
 import datetime
 
 
@@ -63,7 +63,7 @@ def api_client(sample_member1, sample_member2, sample_member13,
         yield c
 
 
-def assert_user_in_db(body):
+def assert_member_in_db(body):
     # Actually check that the object was inserted
     s = db.get_db().get_session()
     q = s.query(Adherent)
@@ -81,7 +81,7 @@ def assert_user_in_db(body):
     assert r.login == body["username"]
 
 
-def test_user_to_dict(sample_member1):
+def test_member_to_dict(sample_member1):
     t = datetime.datetime(2011, 4, 30, 17, 50, 17)
     dict_member = {'email': 'j.dubois@free.fr',
                    'firstName': 'Jean-Louis',
@@ -93,9 +93,9 @@ def test_user_to_dict(sample_member1):
     assert dict(sample_member1) == dict_member
 
 
-def test_user_filter_all(api_client):
+def test_member_filter_all(api_client):
     r = api_client.get(
-        '{}/user/'.format(base_url),
+        '{}/member/'.format(base_url),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -104,17 +104,17 @@ def test_user_filter_all(api_client):
     assert len(response) == 3
 
 
-def test_user_filter_all_with_invalid_limit(api_client):
+def test_member_filter_all_with_invalid_limit(api_client):
     r = api_client.get(
-        '{}/user/?limit={}'.format(base_url, -1),
+        '{}/member/?limit={}'.format(base_url, -1),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 400
 
 
-def test_user_filter_all_with_limit(api_client):
+def test_member_filter_all_with_limit(api_client):
     r = api_client.get(
-        '{}/user/?limit={}'.format(base_url, 1),
+        '{}/member/?limit={}'.format(base_url, 1),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -123,9 +123,9 @@ def test_user_filter_all_with_limit(api_client):
     assert len(response) == 1
 
 
-def test_user_filter_by_roomNumber(api_client):
+def test_member_filter_by_roomNumber(api_client):
     r = api_client.get(
-        '{}/user/?roomNumber={}'.format(base_url, 5110),
+        '{}/member/?roomNumber={}'.format(base_url, 5110),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -134,9 +134,9 @@ def test_user_filter_by_roomNumber(api_client):
     assert len(response) == 1
 
 
-def test_user_filter_by_non_existant_roomNumber(api_client):
+def test_member_filter_by_non_existant_roomNumber(api_client):
     r = api_client.get(
-        '{}/user/?roomNumber={}'.format(base_url, 6666),
+        '{}/member/?roomNumber={}'.format(base_url, 6666),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -145,9 +145,9 @@ def test_user_filter_by_non_existant_roomNumber(api_client):
     assert len(response) == 0
 
 
-def test_user_filter_terms_first_name(api_client):
+def test_member_filter_terms_first_name(api_client):
     r = api_client.get(
-        '{}/user/?terms={}'.format(base_url, "Jean"),
+        '{}/member/?terms={}'.format(base_url, "Jean"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -156,9 +156,9 @@ def test_user_filter_terms_first_name(api_client):
     assert len(response) == 1
 
 
-def test_user_filter_terms_last_name(api_client):
+def test_member_filter_terms_last_name(api_client):
     r = api_client.get(
-        '{}/user/?terms={}'.format(base_url, "ubois"),
+        '{}/member/?terms={}'.format(base_url, "ubois"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -167,9 +167,9 @@ def test_user_filter_terms_last_name(api_client):
     assert len(response) == 1
 
 
-def test_user_filter_terms_email(api_client):
+def test_member_filter_terms_email(api_client):
     r = api_client.get(
-        '{}/user/?terms={}'.format(base_url, "bgdu78"),
+        '{}/member/?terms={}'.format(base_url, "bgdu78"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -178,9 +178,9 @@ def test_user_filter_terms_email(api_client):
     assert len(response) == 1
 
 
-def test_user_filter_terms_login(api_client):
+def test_member_filter_terms_login(api_client):
     r = api_client.get(
-        '{}/user/?terms={}'.format(base_url, "dubois_j"),
+        '{}/member/?terms={}'.format(base_url, "dubois_j"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -189,9 +189,9 @@ def test_user_filter_terms_login(api_client):
     assert len(response) == 1
 
 
-def test_user_filter_terms_comment(api_client):
+def test_member_filter_terms_comment(api_client):
     r = api_client.get(
-        '{}/user/?terms={}'.format(base_url, "routeur"),
+        '{}/member/?terms={}'.format(base_url, "routeur"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -200,9 +200,9 @@ def test_user_filter_terms_comment(api_client):
     assert len(response) == 1
 
 
-def test_user_filter_terms_nonexistant(api_client):
+def test_member_filter_terms_nonexistant(api_client):
     r = api_client.get(
-        '{}/user/?terms={}'.format(base_url, "azerty"),
+        '{}/member/?terms={}'.format(base_url, "azerty"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -211,9 +211,9 @@ def test_user_filter_terms_nonexistant(api_client):
     assert len(response) == 0
 
 
-def test_user_filter_terms_test_upper_case(api_client):
+def test_member_filter_terms_test_upper_case(api_client):
     r = api_client.get(
-        '{}/user/?terms={}'.format(base_url, "DUBOIS_J"),
+        '{}/member/?terms={}'.format(base_url, "DUBOIS_J"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -222,26 +222,26 @@ def test_user_filter_terms_test_upper_case(api_client):
     assert len(response) == 1
 
 
-def test_user_get_existant(api_client):
+def test_member_get_existant(api_client):
     r = api_client.get(
-        '{}/user/{}'.format(base_url, "dubois_j"),
+        '{}/member/{}'.format(base_url, "dubois_j"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
     assert json.loads(r.data.decode('utf-8'))
 
 
-def test_user_get_nonexistant(api_client):
+def test_member_get_nonexistant(api_client):
     r = api_client.get(
-        '{}/user/{}'.format(base_url, "bond_jam"),
+        '{}/member/{}'.format(base_url, "bond_jam"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 404
 
 
-def test_user_delete_existant(api_client):
+def test_member_delete_existant(api_client):
     r = api_client.delete(
-        '{}/user/{}'.format(base_url, "dubois_j"),
+        '{}/member/{}'.format(base_url, "dubois_j"),
         headers=TEST_HEADERS
     )
     assert r.status_code == 204
@@ -253,15 +253,15 @@ def test_user_delete_existant(api_client):
     assert not s.query(q.exists()).scalar()
 
 
-def test_user_delete_non_existant(api_client):
+def test_member_delete_non_existant(api_client):
     r = api_client.delete(
-        '{}/user/{}'.format(base_url, "azerty"),
+        '{}/member/{}'.format(base_url, "azerty"),
         headers=TEST_HEADERS
     )
     assert r.status_code == 404
 
 
-def test_user_put_user_create_invalid_email(api_client):
+def test_member_put_member_create_invalid_email(api_client):
     body = {
         "firstName": "John",
         "lastName": "Doe",
@@ -273,7 +273,7 @@ def test_user_put_user_create_invalid_email(api_client):
         "username": "doe_john"
     }
     res = api_client.put(
-        '{}/user/{}'.format(base_url, body["username"]),
+        '{}/member/{}'.format(base_url, body["username"]),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS
@@ -281,7 +281,7 @@ def test_user_put_user_create_invalid_email(api_client):
     assert res.status_code == 400
 
 
-def test_user_put_user_create_unknown_room(api_client):
+def test_member_put_member_create_unknown_room(api_client):
     body = {
         "firstName": "John",
         "lastName": "Doe",
@@ -293,7 +293,7 @@ def test_user_put_user_create_unknown_room(api_client):
         "username": "doe_john"
     }
     res = api_client.put(
-        '{}/user/{}'.format(base_url, body["username"]),
+        '{}/member/{}'.format(base_url, body["username"]),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS
@@ -301,7 +301,7 @@ def test_user_put_user_create_unknown_room(api_client):
     assert res.status_code == 400
 
 
-def test_user_put_user_create(api_client):
+def test_member_put_member_create(api_client):
     body = {
         "firstName": "John",
         "lastName": "Doe",
@@ -313,7 +313,7 @@ def test_user_put_user_create(api_client):
         "username": "doe_john"
     }
     res = api_client.put(
-        '{}/user/{}'.format(base_url, body["username"]),
+        '{}/member/{}'.format(base_url, body["username"]),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS
@@ -321,10 +321,10 @@ def test_user_put_user_create(api_client):
     assert res.status_code == 201
     assert_modification_was_created(db.get_db().get_session())
 
-    assert_user_in_db(body)
+    assert_member_in_db(body)
 
 
-def test_user_put_user_update(api_client):
+def test_member_put_member_update(api_client):
     body = {
         "firstName": "Jean-Louis",
         "lastName": "Dubois",
@@ -336,7 +336,7 @@ def test_user_put_user_update(api_client):
         "username": "dubois_j"
     }
     res = api_client.put(
-        '{}/user/{}'.format(base_url, body["username"]),
+        '{}/member/{}'.format(base_url, body["username"]),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS
@@ -344,16 +344,16 @@ def test_user_put_user_update(api_client):
     assert res.status_code == 204
     assert_modification_was_created(db.get_db().get_session())
 
-    assert_user_in_db(body)
+    assert_member_in_db(body)
 
 
-def test_user_post_add_membership_not_found(api_client):
+def test_member_post_add_membership_not_found(api_client):
     body = {
         "duration": 31,
         "start": "2000-01-23T04:56:07.000+00:00"
     }
     result = api_client.post(
-        '{}/user/{}/membership'.format(base_url, "charlie"),
+        '{}/member/{}/membership'.format(base_url, "charlie"),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -361,7 +361,7 @@ def test_user_post_add_membership_not_found(api_client):
     assert result.status_code == 404
 
 
-def test_user_post_add_membership_undefined_price(api_client):
+def test_member_post_add_membership_undefined_price(api_client):
     '''
     Add a membership record for a duration that does not exist in the price
     chart
@@ -371,7 +371,7 @@ def test_user_post_add_membership_undefined_price(api_client):
       "start": "2000-01-23T04:56:07.000+00:00"
     }
     result = api_client.post(
-        '{}/user/{}/membership'.format(base_url, "dubois_j"),
+        '{}/member/{}/membership'.format(base_url, "dubois_j"),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -379,13 +379,13 @@ def test_user_post_add_membership_undefined_price(api_client):
     assert result.status_code == 400
 
 
-def test_user_post_add_membership_ok(api_client):
+def test_member_post_add_membership_ok(api_client):
     body = {
       "duration": 360,
       "start": "2000-01-23T04:56:07.000+00:00"
     }
     result = api_client.post(
-        '{}/user/{}/membership'.format(base_url, "dubois_j"),
+        '{}/member/{}/membership'.format(base_url, "dubois_j"),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -399,13 +399,13 @@ def test_user_post_add_membership_ok(api_client):
     assert q.one().date_de_depart == datetime.date(2001, 1, 17)
 
 
-def test_user_change_password_ok(api_client):
+def test_member_change_password_ok(api_client):
     USERNAME = "dubois_j"
     body = {
         "password": "on;X\\${QG55Bd\"#NyL#+k:_xEdJrEDT7",
     }
     result = api_client.put(
-        '{}/user/{}/password/'.format(base_url, USERNAME),
+        '{}/member/{}/password/'.format(base_url, USERNAME),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -420,12 +420,12 @@ def test_user_change_password_ok(api_client):
     assert r.password == ntlm_hash(body["password"])
 
 
-def test_user_change_password_user_not_exist(api_client):
+def test_member_change_password_member_not_exist(api_client):
     body = {
         "password": "on;X\\${QG55Bd\"#NyL#+k:_xEdJrEDT7",
     }
     result = api_client.put(
-        '{}/user/{}/password/'.format(base_url, "sherlock"),
+        '{}/member/{}/password/'.format(base_url, "sherlock"),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -433,13 +433,13 @@ def test_user_change_password_user_not_exist(api_client):
     assert result.status_code == 404
 
 
-def test_user_log_create(api_client, caplog):
+def test_member_log_create(api_client, caplog):
     with caplog.at_level(logging.INFO):
-        test_user_put_user_create(api_client)
+        test_member_put_member_create(api_client)
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient created the user doe_john\n{"associationMode": '
+        'TestingClient created the member doe_john\n{"associationMode": '
         '"2000-01-23T04:56:07.000+00:00", "comment": "comment", '
         '"departureDate": "2000-01-23T04:56:07.000+00:00", "email": '
         '"john.doe@gmail.com", "firstName": "John", "lastName": "Doe", '
@@ -447,13 +447,13 @@ def test_user_log_create(api_client, caplog):
     )
 
 
-def test_user_log_update(api_client, caplog):
+def test_member_log_update(api_client, caplog):
     with caplog.at_level(logging.INFO):
-        test_user_put_user_update(api_client)
+        test_member_put_member_update(api_client)
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient updated the user dubois_j\n{"associationMode": '
+        'TestingClient updated the member dubois_j\n{"associationMode": '
         '"2000-01-23T04:56:07.000+00:00", "comment": "comment", '
         '"departureDate": "2000-01-23T04:56:07.000+00:00", "email": '
         '"john.doe@gmail.com", "firstName": "Jean-Louis", "lastName": '
@@ -461,19 +461,19 @@ def test_user_log_update(api_client, caplog):
     )
 
 
-def test_user_log_delete(api_client, caplog):
+def test_member_log_delete(api_client, caplog):
     with caplog.at_level(logging.INFO):
-        test_user_delete_existant(api_client)
+        test_member_delete_existant(api_client)
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient deleted the user dubois_j'
+        'TestingClient deleted the member dubois_j'
     )
 
 
-def test_user_log_add_membership(api_client, caplog):
+def test_member_log_add_membership(api_client, caplog):
     with caplog.at_level(logging.INFO):
-        test_user_post_add_membership_ok(api_client)
+        test_member_post_add_membership_ok(api_client)
 
     assert caplog.record_tuples[1] == (
         'root', 20,
@@ -482,9 +482,9 @@ def test_user_log_add_membership(api_client, caplog):
     )
 
 
-def test_user_log_update_password(api_client, caplog):
+def test_member_log_update_password(api_client, caplog):
     with caplog.at_level(logging.INFO):
-        test_user_change_password_ok(api_client)
+        test_member_change_password_ok(api_client)
 
     assert caplog.record_tuples[1] == (
         'root', 20,

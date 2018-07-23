@@ -2,9 +2,9 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {UserService} from '../api/api/user.service';
+import {MemberService} from '../api/api/member.service';
 import {DeviceService} from '../api/api/device.service';
-import {User} from '../api/model/user';
+import {Member} from '../api/model/member';
 import {Device} from '../api/model/device';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
@@ -20,7 +20,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
   submitDisabled = false;
 
-  member$: Observable<User>;
+  member$: Observable<Member>;
   all_devices$: Observable<Device[]>;
   public MAB: string;
   public MABdisabled: boolean;
@@ -31,7 +31,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
   private deviceForm: FormGroup;
 
   constructor(
-    public userService: UserService,
+    public memberService: MemberService,
     public deviceService: DeviceService,
     private route: ActivatedRoute,
     private router: Router,
@@ -91,7 +91,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
         user.comment = newComment;
         return user;
       }),
-      flatMap(user => this.userService.putUser(user.username, user)),
+      flatMap(user => this.memberService.putMember(user.username, user)),
       flatMap(() => {
         this.refreshInfo();
         return this.member$;
@@ -187,7 +187,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
       );
 
     this.member$ = refresh$.pipe(
-      switchMap(username => this.userService.getUser(username)),
+      switchMap(username => this.memberService.getMember(username)),
       tap((user) => this.commentForm.setValue({comment: (user.comment === undefined) ? '' : user.comment,})),
       share(),
     );

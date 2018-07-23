@@ -6,7 +6,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from adh.util import checks
 from adh.model.database import Base
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
-from adh.exceptions import UserNotFound, RoomNotFound, SwitchNotFound
+from adh.exceptions import MemberNotFound, RoomNotFound, SwitchNotFound
 from adh.exceptions import VlanNotFound, PortNotFound
 from adh.util.date import string_to_date
 import datetime
@@ -203,7 +203,7 @@ class Adherent(Base, RubyHashModificationTracker):
         try:
             return q.one()
         except NoResultFound:
-            raise UserNotFound()
+            raise MemberNotFound()
 
     @staticmethod
     def from_dict(session, d):

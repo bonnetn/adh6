@@ -2,8 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 
-import {UserService} from '../api/api/user.service';
-import {User} from '../api/model/user';
+import {MemberService} from '../api/api/member.service';
+import {Member} from '../api/model/member';
 import {NotificationsService} from 'angular2-notifications';
 import {finalize, first, flatMap} from 'rxjs/operators';
 import {EMPTY, Observable} from 'rxjs';
@@ -23,7 +23,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
   private originalUsername;
 
   constructor(
-    public userService: UserService,
+    public memberService: MemberService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private router: Router,
@@ -50,7 +50,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
     Observable.of(this.create)
       .pipe(
         flatMap((create) => {
-          const has404 = Utils.hasReturned404(this.userService.getUser(v.username));
+          const has404 = Utils.hasReturned404(this.memberService.getMember(v.username));
           if (!create && this.originalUsername === v.username) {
             // Update and no change of the username, then OK
             return Observable.of(true);
@@ -63,7 +63,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
           if (!allowed) {
             return EMPTY;
           }
-          return this.userService.getUser(this.originalUsername);
+          return this.memberService.getMember(this.originalUsername);
         }),
         flatMap( (member) => {
 
@@ -82,7 +82,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
           if (!this.create) {
             username = this.originalUsername;
           }
-          return this.userService.putUser(username, member, 'response')
+          return this.memberService.putMember(username, member, 'response')
             .pipe(
               first(),
               finalize(() => this.disabled = false),
@@ -98,7 +98,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
 
   deleteMember() {
     this.disabled = true;
-    this.userService.deleteUser(this.originalUsername, 'response')
+    this.memberService.deleteMember(this.originalUsername, 'response')
       .pipe(
         first(),
         finalize(() => this.disabled = false),
@@ -122,10 +122,10 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
             return EMPTY;
           }
         }),
-        flatMap((username) => this.userService.getUser(username)),
+        flatMap((username) => this.memberService.getMember(username)),
         first(),
       )
-      .subscribe((member: User) => {
+      .subscribe((member: Member) => {
         this.originalUsername = member.username;
         this.memberEdit.patchValue(member);
         this.disabled = false;

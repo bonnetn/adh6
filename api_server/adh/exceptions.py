@@ -14,7 +14,7 @@ class InvalidMac(ValueError):
     pass
 
 
-class UserNotFound(ValueError):
+class MemberNotFound(ValueError):
     pass
 
 

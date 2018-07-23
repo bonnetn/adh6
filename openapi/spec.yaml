@@ -10,8 +10,8 @@ info:
 host: "adh6.minet.net"
 basePath: "/api"
 tags:
-- name: "user"
-  description: "Operations on users"
+- name: "member"
+  description: "Operations on members"
 - name: "membership"
   description: "Manage membership records"
 - name: "device"
@@ -25,18 +25,18 @@ tags:
 schemes:
 - "https"
 paths:
-  /user/:
+  /member/:
     get:
       tags:
-      - "user"
-      summary: "Filter users"
-      operationId: "filter_user"
+      - "member"
+      summary: "Filter members"
+      operationId: "filter_member"
       produces:
       - "application/json"
       parameters:
       - name: "limit"
         in: "query"
-        description: "Limit the number of users returned in the result. Default is\
+        description: "Limit the number of members returned in the result. Default is\
           \ 100"
         required: false
         type: "integer"
@@ -67,85 +67,83 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/User"
+              $ref: "#/definitions/Member"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.user"
+      x-swagger-router-controller: "adh.controller.member"
       security:
         - oauth2: ["profile"]
-  /user/{username}:
+  /member/{username}:
     get:
       tags:
-      - "user"
-      summary: "Retrieve an user"
-      operationId: "get_user"
+      - "member"
+      summary: "Retrieve an member"
+      operationId: "get_member"
       produces:
       - "application/json"
       parameters:
       - name: "username"
         in: "path"
-        description: "The username of the user that needs to be fetched."
+        description: "The username of the member that needs to be fetched."
         required: true
         type: "string"
       responses:
         200:
           description: "Success"
           schema:
-            $ref: "#/definitions/User"
+            $ref: "#/definitions/Member"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.user"
+      x-swagger-router-controller: "adh.controller.member"
       security:
         - oauth2: ["profile"]
     put:
       tags:
-      - "user"
-      summary: "Update/create an user"
-      description: "This can only be done by the logged in user."
-      operationId: "put_user"
+      - "member"
+      summary: "Update/create an member"
+      operationId: "put_member"
       produces:
       - "application/json"
       parameters:
       - name: "username"
         in: "path"
-        description: "username of the user will be updated"
+        description: "username of the member will be updated"
         required: true
         type: "string"
       - in: "body"
         name: "body"
-        description: "New values of the user"
+        description: "New values of the member"
         required: true
         schema:
-          $ref: "#/definitions/User"
+          $ref: "#/definitions/Member"
           
       responses:
         204:
           description: "Updated"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.user"
+      x-swagger-router-controller: "adh.controller.member"
       security:
         - oauth2: ["profile"]
     patch:
       tags:
-      - "user"
-      summary: "Partially update an user"
-      description: "This can only be done by the logged in user."
-      operationId: "patch_user"
+      - "member"
+      summary: "Partially update an member"
+      operationId: "patch_member"
       produces:
       - "application/json"
       parameters:
       - name: "username"
         in: "path"
-        description: "username of the user will be updated"
+        description: "username of the member will be updated"
         required: true
         type: "string"
       - in: "body"
         name: "body"
-        description: "New values of the user"
+        description: "New values of the member"
         required: true
         schema:
-          $ref: "#/definitions/UserPatchRequest"
+          $ref: "#/definitions/MemberPatchRequest"
       responses:
         404:
           description: "Not found"
@@ -153,21 +151,20 @@ paths:
           description: "Updated"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.user"
+      x-swagger-router-controller: "adh.controller.member"
       security:
         - oauth2: ["profile"]
     delete:
       tags:
-      - "user"
-      summary: "Delete an user"
-      description: "This can only be done by the logged in user."
-      operationId: "delete_user"
+      - "member"
+      summary: "Delete an member"
+      operationId: "delete_member"
       produces:
       - "application/json"
       parameters:
       - name: "username"
         in: "path"
-        description: "The username of the user that will be deleted"
+        description: "The username of the member that will be deleted"
         required: true
         type: "string"
       responses:
@@ -175,27 +172,26 @@ paths:
           description: "Deleted"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.user"
+      x-swagger-router-controller: "adh.controller.member"
       security:
         - oauth2: ["profile"]
-  /user/{username}/password/:
+  /member/{username}/password/:
     put:
       tags:
-      - "user"
-      summary: "Update an user's password"
-      description: "This can only be done by the logged in user."
+      - "member"
+      summary: "Update an member's password"
       operationId: "update_password"
       produces:
       - "application/json"
       parameters:
       - name: "username"
         in: "path"
-        description: "username of the user will be updated"
+        description: "username of the member will be updated"
         required: true
         type: "string"
       - in: "body"
         name: "body"
-        description: "New values of the user"
+        description: "New values of the member"
         required: true
         schema:
           type: "object"
@@ -210,21 +206,21 @@ paths:
             description: "Modified"
           404:
             description: "Not found"
-      x-swagger-router-controller: "adh.controller.user"
+      x-swagger-router-controller: "adh.controller.member"
       security:
         - oauth2: ["profile"]
-  /user/{username}/membership:
+  /member/{username}/membership:
     post:
       tags:
       - "membership"
-      summary: "Add a membership record for an user"
+      summary: "Add a membership record for an member"
       operationId: "add_membership"
       produces:
       - "application/json"
       parameters:
       - name: "username"
         in: "path"
-        description: "The username of the user"
+        description: "The username of the member"
         required: true
         type: "string"
 
@@ -244,7 +240,7 @@ paths:
           description: "Success"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.user"
+      x-swagger-router-controller: "adh.controller.member"
       security:
         - oauth2: ["profile"]
   /device/:
@@ -890,9 +886,9 @@ securityDefinitions:
     flow: "implicit"
     x-tokenInfoFunc: adh.auth.token_info
     scopes:
-      profile: "access username & adh groups of user from LDAP"
+      profile: "access username & adh groups of admins from LDAP"
 definitions:
-  User:
+  Member:
     type: "object"
     required:
     - email
@@ -933,7 +929,7 @@ definitions:
       associationMode: "2000-01-23T04:56:07.000+00:00"
       email: "john.doe@gmail.com"
       username: "doe_john"
-  UserPatchRequest:
+  MemberPatchRequest:
     type: "object"
     properties:
       email:

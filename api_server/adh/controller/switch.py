@@ -5,7 +5,7 @@ from sqlalchemy import or_
 from adh.model.database import Database as Db
 from adh.model.models import Switch
 from adh.exceptions import InvalidIPv4, SwitchNotFound
-from adh.auth import auth_simple_user, auth_admin
+from adh.auth import auth_regular_admin, auth_super_admin
 
 
 def switch_exists(session, switchID):
@@ -17,7 +17,7 @@ def switch_exists(session, switchID):
     return True
 
 
-@auth_simple_user
+@auth_regular_admin
 def filter_switch(admin, limit=100, offset=0, terms=None):
     """ [API] Filter the switch list """
     if limit < 0:
@@ -48,7 +48,7 @@ def filter_switch(admin, limit=100, offset=0, terms=None):
     return result, 200, headers
 
 
-@auth_admin
+@auth_super_admin
 def create_switch(admin, body):
     """ [API] Create a switch in the database """
     if "id" in body:
@@ -66,7 +66,7 @@ def create_switch(admin, body):
     return NoContent, 201, {'Location': '/switch/{}'.format(switch.id)}
 
 
-@auth_simple_user
+@auth_regular_admin
 def get_switch(admin, switchID):
     """ [API] Get the specified switch from the database """
     session = Db.get_db().get_session()
@@ -77,7 +77,7 @@ def get_switch(admin, switchID):
         return NoContent, 404
 
 
-@auth_admin
+@auth_super_admin
 def update_switch(admin, switchID, body):
     """ [API] Update the specified switch from the database """
     if "id" in body:
@@ -101,7 +101,7 @@ def update_switch(admin, switchID, body):
     return NoContent, 204
 
 
-@auth_admin
+@auth_super_admin
 def delete_switch(admin, switchID):
     """ [API] Delete the specified switch from the database """
     session = Db.get_db().get_session()

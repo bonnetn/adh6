@@ -5,7 +5,7 @@ from sqlalchemy import or_
 from adh.exceptions import RoomNotFound, VlanNotFound
 from adh.model.database import Database as Db
 from adh.model.models import Chambre
-from adh.auth import auth_simple_user, auth_admin
+from adh.auth import auth_regular_admin, auth_super_admin
 
 
 def room_exists(session, roomNumber):
@@ -17,7 +17,7 @@ def room_exists(session, roomNumber):
     return True
 
 
-@auth_simple_user
+@auth_regular_admin
 def filter_room(admin, limit=100, offset=0, terms=None):
     """ [API] Filter the list of the rooms """
     if limit < 0:
@@ -45,7 +45,7 @@ def filter_room(admin, limit=100, offset=0, terms=None):
     return result, 200, headers
 
 
-@auth_admin
+@auth_super_admin
 def put_room(admin, roomNumber, body):
     """ [API] Update/create a room in the database """
     s = Db.get_db().get_session()
@@ -72,7 +72,7 @@ def put_room(admin, roomNumber, body):
         return NoContent, 201
 
 
-@auth_simple_user
+@auth_regular_admin
 def get_room(admin, roomNumber):
     """ [API] Get the room specified """
     s = Db.get_db().get_session()
@@ -83,7 +83,7 @@ def get_room(admin, roomNumber):
         return NoContent, 404
 
 
-@auth_admin
+@auth_super_admin
 def delete_room(admin, roomNumber):
     """ [API] Delete room from the database """
     s = Db.get_db().get_session()
