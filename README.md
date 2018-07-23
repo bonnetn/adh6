@@ -1,5 +1,14 @@
 
+
 # ADH6
+Auteur original: *Nicolas Bonnet*
+Liste des contributeurs:
+* Aurélien Duboc
+## Notes
+Je vous invite **vivement** à aller lire [la page sur le wiki](https://wiki.minet.net/wiki/services/adh6) avant de vous plonger dans l'exploration de ce repo.
+
+Si vous voyez une modification à apporter (correction de faute, éclaircissement d'un point, ajout d'instructions supplémentaire, mise à jour d'anciennes information, etc.) **n'hésitez pas à faire un commit et à vous ajouter dans la liste des contributeurs**. Toute aide est la bienvenue !
+
 ## Présentation
 ADH est le système de gestion d'adhérent de l'association [MiNET](https://minet.net). Ce document a pour but de présenter la sixième version de notre outil.
 ## Motivations
@@ -44,6 +53,8 @@ En résumé, on a pris le parti prix d'ajouter deux dépendances au projet, mais
 - Restart UWSGI ``` systemctl restart uwsgi ```
 
 A UWSGI server is now running on your machine. To access the API, install a webserver (such as NGINX) and configure it to use the UWSGI server.
+
+Note: this is not the easiest way to develop. Do not hesitate to ask an access of the test VMs. The whole environment is already setup.
 
 ###  Je suis perdu, qu'est-ce que c'est que tous ces dossiers ?
 Ce projet consiste juste en l'implémentation des différents méthodes définies dans la spécification de l'API. 
@@ -100,4 +111,34 @@ J'ai défini quelques fonctions utiles dans les modèles des objets de la BDD.
 - dict(obj) permet de retourner un dict du format de l'api
 - Obj.from_dict(dict) permet de retourner un obj en utilisant un dict de l'API
 - Obj.find(session, value) permet de retourner l'objet qui est associé par l'API
+
+## Frontend - Angular
+
+### Pour installer:
+> Installez NodeJS ([voir le site](https://nodejs.org/en/download/)). (pas la version 10, celle LTS en dessous)
+> ```sudo npm install --unsafe-perms -g @angular/cli@^6.0.0```
+> ```npm install```
+> Éditez éventuellement ```src/app/auth.config.ts``` si vous voulez changer le serveur d'authentification.
+> ``` npm start ```
+
+*NOTE: nous utilisons la version 6 d'Angular*
+*NOTE2: Si vous trouver que c'est trop compliqué de configurer tout l'environnement de test, demandez à un des developpeurs un accès sur les machines virtuelles de test! Tout est déjà préparé dessus.*
+
+## Authentication server
+### Introduction
+Ce serveur un est un serveur OAuth2 qui a été implémenté en python grâce à la bibliothèque Authlib. Il est voué à être remplacé par une solution de [SSO](https://en.wikipedia.org/wiki/Single_sign-on) qui serait plus adaptée (On pourrait utiliser OpenID Connect).
+
+On utilise le flow *Implicit grant* d'OAuth2.
+
+
+### Comment lancer ?
+- Install required packages ```sudo apt install libpcre3 libpcre3-dev uwsgi uwsgi-plugin-python3```
+- Create a virtualenv ```virtualenv ./```
+- Enter the virtualenv ```source bin/activate```
+- Install the requirements ```pip3 install -r requirements.txt```
+- Fill the setting file ``` cp CONFIGURATION.py{.example,} && vim CONFIGURATION.py ``` 
+- You can use the example configuration file provided for the UWSGI configuration ``` cp adh6-api.ini /etc/uwsgi/sites-available ```
+- Activate the site``` ln -s /etc/uwsgi/sites-available /etc/uwsgi/sites-enabled ```
+- Restart UWSGI ``` systemctl restart uwsgi ```
+
 
