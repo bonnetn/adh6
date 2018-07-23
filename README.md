@@ -15,29 +15,18 @@ La **fiabilité** de notre outil est aussi un concept important à nos yeux. C'e
 ### Communication client/serveur
 
 Pour communiquer entre le client et le serveur, nous avons décidé d'utiliser une API.
-En terme de techno, on a décidé de prendre la techno la plus stable et
-universelle (compatible avec tous les futurs projets), HTTP.
+En terme de techno, on a décidé de prendre la techno la plus stable et universelle (compatible avec tous les futurs projets), HTTP.
 
-Nous avons décidé de ne pas reprogrammer à la main tout un client/serveur pour notre API. Ca aurait était faisable, mais trop error-prone et on risque de
-perdre en flexibilité (un changement dans l'API devrait être réfléchi dans le
-code du client ET du serveur). Nous avons donc décidé d'utiliser un système de
-"generation" de code automatique à partir d'une spec.
+Nous avons décidé de ne pas reprogrammer à la main tout un client/serveur pour notre API. Ca aurait était faisable, mais trop error-prone et on risque de perdre en flexibilité (un changement dans l'API devrait être réfléchi dans le code du client ET du serveur). Nous avons donc décidé d'utiliser un système de "generation" de code automatique à partir d'une spec.
 
-Pour définir la specification de notre API nous utilisons OpenAPI (aussi appelé
-swagger, oui, oui...).
+Pour définir la specification de notre API nous utilisons OpenAPI (aussi appelé swagger, oui, oui...).
 
-Pour générer le code serveur, on utilise d'un côté connexion, qui est une
-libary python développée par Zalando. https://github.com/zalando/connexion
-Allez voir le repo, il est assez actif. C'est aussi la bibliothèque de génération de code prise comme référence par Swagger (l'organisme qui fait
-OpenAPI).
+Pour générer le code serveur, on utilise d'un côté connexion, qui est une libary python développée par Zalando. https://github.com/zalando/connexion Allez voir le repo, il est assez actif. C'est aussi la bibliothèque de génération de code prise comme référence par Swagger (l'organisme qui fait OpenAPI).
 
-Pour le côté client, on utilise directement swagger-codegen, édité directement
-par Swagger. https://github.com/swagger-api/swagger-codegen Pareil, allez voir leur repo, il est "assez" actif... (10 228 commits à l'heure où j'écris ces
-lignes, et plus de 900 contributeurs...)
+Pour le côté client, on utilise directement swagger-codegen, édité directement par Swagger. https://github.com/swagger-api/swagger-codegen Pareil, allez voir leur repo, il est "assez" actif... (10 228 commits à l'heure où j'écris ces lignes, et plus de 900 contributeurs...)
 Ca semble donc aussi être un assez bon choix pour produire un code stable.
 
-En résumé, on a pris le parti prix d'ajouter deux dépendances au projet, mais
-on a gagné en flexibilité et en maintenabilité.
+En résumé, on a pris le parti prix d'ajouter deux dépendances au projet, mais on a gagné en flexibilité et en maintenabilité.
 
 
 ## Backend
@@ -57,14 +46,11 @@ on a gagné en flexibilité et en maintenabilité.
 A UWSGI server is now running on your machine. To access the API, install a webserver (such as NGINX) and configure it to use the UWSGI server.
 
 ###  Je suis perdu, qu'est-ce que c'est que tous ces dossiers ?
-Ce projet consiste juste en l'implémentation des différents méthodes définies
-dans la spécification de l'API. 
+Ce projet consiste juste en l'implémentation des différents méthodes définies dans la spécification de l'API. 
 
 Si vous êtes un PGM et que vous voulez juste lire le code, sachez juste que tout le code est dans le dossier *adh/*.
 
-Pour que python se comporte en serveur Web on utilise *Flask*, et pour pas 
-avoir à faire de trucs compliqués on utilise *connexion* qui fait le binding 
-entre *Flask* et les fonctions en python qui sont appelées presque magiquement.
+Pour que python se comporte en serveur Web on utilise *Flask*, et pour pas avoir à faire de trucs compliqués on utilise *connexion* qui fait le binding entre *Flask* et les fonctions en python qui sont appelées presque magiquement.
 
 La spécification de l'API est stockée dans swagger.yaml à la racine du projet,
 ce fichier est automatiquement exporté de swaggerhub.
@@ -99,8 +85,7 @@ Lancez ```pytest``` dans la console, ou utilisez votre IDE...
 ```pytest --cov=adh --cov-report html``` dans la console.
 
 #### A propos des sessions d'SQLAlchemy...
-Quand vous implémentez une fonction de l'API dans controller, ne faites qu'UNE session SQLAlchemy, créée DANS votre fonction de controller. Ca évite les nested transactions qui sont pas toujours supportées. (et c'est plus propre, moins
-error-prone)
+Quand vous implémentez une fonction de l'API dans controller, ne faites qu'UNE session SQLAlchemy, créée DANS votre fonction de controller. Ca évite les nested transactions qui sont pas toujours supportées. (et c'est plus propre, moins error-prone)
 
 *Extrait de la doc d'SQLALchemy:*
 > As a general rule, keep the lifecycle of the session separate and external 
