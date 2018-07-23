@@ -2,8 +2,10 @@
 
 # ADH6
 Auteur original: *Nicolas Bonnet*
+
 Liste des contributeurs:
 * Aurélien Duboc
+
 ## Notes
 Je vous invite **vivement** à aller lire [la page sur le wiki](https://wiki.minet.net/wiki/services/adh6) avant de vous plonger dans l'exploration de ce repo.
 
