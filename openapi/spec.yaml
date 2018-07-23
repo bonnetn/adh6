@@ -238,7 +238,7 @@ paths:
           \ current date. Duration is expressed in days. WARNING: DO NOT set the start date to be in the future, it is not implemented for the moment."
         required: true
         schema:
-          $ref: "#/definitions/MembershipRecord"
+          $ref: "#/definitions/MembershipRequest"
       responses:
         200:
           description: "Success"
@@ -1063,14 +1063,11 @@ definitions:
       ip: "192.168.102.211"
       description: "Switch U5"
       community: "ghWgpQvHRkrYuqpMLWYkstS3"
-  MembershipRecord:
+  MembershipRequest:
     type: "object"
     required:
     - "duration"
     properties:
-      start:
-        type: "string"
-        format: "date-time"
       duration:
         type: "integer"
         example: 365
@@ -1081,3 +1078,4 @@ definitions:
 externalDocs:
   description: "Find out more about MiNET"
   url: "http://minet.net"
+
