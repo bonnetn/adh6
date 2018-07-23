@@ -22,6 +22,10 @@ Pour atteindre ses objectifs, nous essayons de **réduire le boilerplate code** 
 
 La **fiabilité** de notre outil est aussi un concept important à nos yeux. C'est pour cela que nous faisons beaucoup appels à des **tests d'intégration** (*200+ pour la partie backend pour l'instant*). Nous visons un taux de *code coverage* le plus haut possible.
 
+## Comment contribuer ?
+
+Allez sur gitlab.minet.net sur [la page du projet](https://gitlab.minet.net/adh6/core/). Si vous n'avez pas les accès, n'hésitez pas à les demander à zTeeed ou InsolentBacon (vous pouvez les contacter tous les deux dans la vraie vie ou sur mattermost/IRC). Une fois que vous y êtes, allez voir dans les issues, trouvez une qui vous plaît et assignez la vous! N'hésitez pas à demander des précisions sur les issues (aux deux mêmes zigotos), nous nous ferons un plaisir de tout vous expliquer!
+
 ## Choix des technos
 ### Communication client/serveur
 
