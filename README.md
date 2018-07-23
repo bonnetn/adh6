@@ -117,11 +117,11 @@ J'ai défini quelques fonctions utiles dans les modèles des objets de la BDD.
 ## Frontend - Angular
 
 ### Pour installer:
-> Installez NodeJS ([voir le site](https://nodejs.org/en/download/)). (pas la version 10, celle LTS en dessous)
-> ```sudo npm install --unsafe-perms -g @angular/cli@^6.0.0```
-> ```npm install```
-> Éditez éventuellement ```src/app/auth.config.ts``` si vous voulez changer le serveur d'authentification.
-> ``` npm start ```
+- Installez NodeJS ([voir le site](https://nodejs.org/en/download/)). (pas la version 10, celle LTS en dessous)
+- ```sudo npm install --unsafe-perms -g @angular/cli@^6.0.0```
+- ```npm install```
+- Éditez éventuellement ```src/app/auth.config.ts``` si vous voulez changer le serveur d'authentification.
+- ``` npm start ```
 
 *NOTE: nous utilisons la version 6 d'Angular*
 *NOTE2: Si vous trouver que c'est trop compliqué de configurer tout l'environnement de test, demandez à un des developpeurs un accès sur les machines virtuelles de test! Tout est déjà préparé dessus.*
