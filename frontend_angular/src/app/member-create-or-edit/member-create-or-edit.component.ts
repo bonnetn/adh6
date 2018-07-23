@@ -46,21 +46,12 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
   editMember() {
     this.disabled = true;
     const v = this.memberEdit.value;
-    let user: User = {
-      email: v.email,
-      firstName: v.firstName,
-      lastName: v.lastName,
-      username: v.username,
-    };
-    if (v.roomNumber) {
-      user.roomNumber = v.roomNumber;
-    }
-    //
+
     Observable.of(this.create)
       .pipe(
         flatMap((create) => {
-          const has404 = Utils.hasReturned404(this.userService.getUser(user.username));
-          if (!create && this.originalUsername === user.username) {
+          const has404 = Utils.hasReturned404(this.userService.getUser(v.username));
+          if (!create && this.originalUsername === v.username) {
             // Update and no change of the username, then OK
             return Observable.of(true);
           }
@@ -72,15 +63,26 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
           if (!allowed) {
             return EMPTY;
           }
+          return this.userService.getUser(this.originalUsername);
+        }),
+        flatMap( (member) => {
+
+          member.email = v.email;
+          member.firstName = v.firstName;
+          member.lastName = v.lastName;
+          member.username = v.username;
+          if (v.roomNumber) {
+            member.roomNumber = v.roomNumber;
+          }
 
           // If you create a user, then use the username from the form.
           // If you update a user, since the admin might have modified their username, you better use the original one (the one loaded at
           // initialization of the page).
-          let username = user.username;
+          let username = v.username;
           if (!this.create) {
             username = this.originalUsername;
           }
-          return this.userService.putUser(username, user, 'response')
+          return this.userService.putUser(username, member, 'response')
             .pipe(
               first(),
               finalize(() => this.disabled = false),
@@ -88,7 +90,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((response) => {
-        this.router.navigate(['member/view', user.username]);
+        this.router.navigate(['member/view', v.username]);
         this.notif.success(response.status + ': Success');
       });
 
