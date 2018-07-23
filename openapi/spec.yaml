@@ -25,7 +25,7 @@ tags:
 schemes:
 - "https"
 paths:
-  /member/:
+  /members/:
     get:
       tags:
       - "member"
