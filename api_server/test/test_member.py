@@ -4,7 +4,7 @@ import pytest
 from adh.model.database import Database as db
 from CONFIGURATION import TEST_DATABASE as db_settings
 from test.resource import (
-        base_url, TEST_HEADERS, assert_modification_was_created
+    base_url, TEST_HEADERS, assert_modification_was_created
 )
 from adh.model.models import Adherent
 from dateutil import parser
@@ -324,6 +324,212 @@ def test_member_put_member_create(api_client):
     assert_member_in_db(body)
 
 
+def test_member_patch_username(api_client):
+    body = {
+        "username": "TEST",
+    }
+    res = api_client.patch(
+        '{}/member/{}'.format(base_url, "dubois_j"),
+        data=json.dumps(body),
+        content_type='application/json',
+        headers=TEST_HEADERS
+    )
+    assert res.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
+    assert_member_in_db({
+        "firstName": "Jean-Louis",
+        "lastName": "Dubois",
+        "roomNumber": 5110,
+        "comment": None,
+        "departureDate": "2005-07-14",
+        "associationMode": "2011-04-30T17:50:17",
+        "email": "j.dubois@free.fr",
+        "username": "TEST"
+    })
+
+
+def test_member_patch_email(api_client):
+    body = {
+        "email": "TEST@TEST.FR",
+    }
+    res = api_client.patch(
+        '{}/member/{}'.format(base_url, "dubois_j"),
+        data=json.dumps(body),
+        content_type='application/json',
+        headers=TEST_HEADERS
+    )
+    assert res.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
+    assert_member_in_db({
+        "firstName": "Jean-Louis",
+        "lastName": "Dubois",
+        "roomNumber": 5110,
+        "comment": None,
+        "departureDate": "2005-07-14",
+        "associationMode": "2011-04-30T17:50:17",
+        "email": "TEST@TEST.FR",
+        "username": "dubois_j"
+    })
+
+
+def test_member_patch_associationmode(api_client):
+    body = {
+        "associationMode": "1996-01-01T00:00:00",
+    }
+    res = api_client.patch(
+        '{}/member/{}'.format(base_url, "dubois_j"),
+        data=json.dumps(body),
+        content_type='application/json',
+        headers=TEST_HEADERS
+    )
+    assert res.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
+    assert_member_in_db({
+        "firstName": "Jean-Louis",
+        "lastName": "Dubois",
+        "roomNumber": 5110,
+        "comment": None,
+        "departureDate": "2005-07-14",
+        "associationMode": "1996-01-01T00:00:00",
+        "email": "j.dubois@free.fr",
+        "username": "dubois_j"
+    })
+
+
+def test_member_patch_departuredate(api_client):
+    body = {
+        "departureDate": "1996-01-01",
+    }
+    res = api_client.patch(
+        '{}/member/{}'.format(base_url, "dubois_j"),
+        data=json.dumps(body),
+        content_type='application/json',
+        headers=TEST_HEADERS
+    )
+    assert res.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
+    assert_member_in_db({
+        "firstName": "Jean-Louis",
+        "lastName": "Dubois",
+        "roomNumber": 5110,
+        "comment": None,
+        "departureDate": "1996-01-01",
+        "associationMode": "2011-04-30T17:50:17",
+        "email": "j.dubois@free.fr",
+        "username": "dubois_j"
+    })
+
+
+def test_member_patch_comment(api_client):
+    body = {
+        "comment": "TEST",
+    }
+    res = api_client.patch(
+        '{}/member/{}'.format(base_url, "dubois_j"),
+        data=json.dumps(body),
+        content_type='application/json',
+        headers=TEST_HEADERS
+    )
+    assert res.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
+    assert_member_in_db({
+        "firstName": "Jean-Louis",
+        "lastName": "Dubois",
+        "roomNumber": 5110,
+        "comment": "TEST",
+        "departureDate": "2005-07-14",
+        "associationMode": "2011-04-30T17:50:17",
+        "email": "j.dubois@free.fr",
+        "username": "dubois_j"
+    })
+
+
+def test_member_patch_roomnumber(api_client):
+    body = {
+        "roomNumber": 4592,
+    }
+    res = api_client.patch(
+        '{}/member/{}'.format(base_url, "dubois_j"),
+        data=json.dumps(body),
+        content_type='application/json',
+        headers=TEST_HEADERS
+    )
+    assert res.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
+    assert_member_in_db({
+        "firstName": "Jean-Louis",
+        "lastName": "Dubois",
+        "roomNumber": 4592,
+        "comment": None,
+        "departureDate": "2005-07-14",
+        "associationMode": "2011-04-30T17:50:17",
+        "email": "j.dubois@free.fr",
+        "username": "dubois_j"
+    })
+
+
+def test_member_patch_lastname(api_client):
+    body = {
+        "lastName": "TEST",
+    }
+    res = api_client.patch(
+        '{}/member/{}'.format(base_url, "dubois_j"),
+        data=json.dumps(body),
+        content_type='application/json',
+        headers=TEST_HEADERS
+    )
+    assert res.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
+    assert_member_in_db({
+        "firstName": "Jean-Louis",
+        "lastName": "TEST",
+        "roomNumber": 5110,
+        "comment": None,
+        "departureDate": "2005-07-14",
+        "associationMode": "2011-04-30T17:50:17",
+        "email": "j.dubois@free.fr",
+        "username": "dubois_j"
+    })
+
+
+def test_member_patch_firstname(api_client):
+    body = {
+        "firstName": "TEST",
+    }
+    res = api_client.patch(
+        '{}/member/{}'.format(base_url, "dubois_j"),
+        data=json.dumps(body),
+        content_type='application/json',
+        headers=TEST_HEADERS
+    )
+    assert res.status_code == 204
+    assert_modification_was_created(db.get_db().get_session())
+    assert_member_in_db({
+        "firstName": "TEST",
+        "lastName": "Dubois",
+        "roomNumber": 5110,
+        "comment": None,
+        "departureDate": "2005-07-14",
+        "associationMode": "2011-04-30T17:50:17",
+        "email": "j.dubois@free.fr",
+        "username": "dubois_j"
+    })
+
+
+def test_member_post_add_membership_not_found(api_client):
+    body = {
+        "duration": 31,
+        "start": "2000-01-23T04:56:07.000+00:00"
+    }
+    result = api_client.post(
+        '{}/member/{}/membership'.format(base_url, "charlie"),
+        data=json.dumps(body),
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
+    assert result.status_code == 404
+
+
 def test_member_put_member_update(api_client):
     body = {
         "firstName": "Jean-Louis",
@@ -367,8 +573,8 @@ def test_member_post_add_membership_undefined_price(api_client):
     chart
     '''
     body = {
-      "duration": 1337,
-      "start": "2000-01-23T04:56:07.000+00:00"
+        "duration": 1337,
+        "start": "2000-01-23T04:56:07.000+00:00"
     }
     result = api_client.post(
         '{}/member/{}/membership'.format(base_url, "dubois_j"),
@@ -381,8 +587,8 @@ def test_member_post_add_membership_undefined_price(api_client):
 
 def test_member_post_add_membership_ok(api_client):
     body = {
-      "duration": 360,
-      "start": "2000-01-23T04:56:07.000+00:00"
+        "duration": 360,
+        "start": "2000-01-23T04:56:07.000+00:00"
     }
     result = api_client.post(
         '{}/member/{}/membership'.format(base_url, "dubois_j"),

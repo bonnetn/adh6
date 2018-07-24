@@ -102,9 +102,48 @@ def delete_member(admin, username):
 @auth_regular_admin
 def patch_member(admin, username, body):
     """ [API] Partially update a member from the database """
-    # s = Db.get_db().get_session()
+    s = Db.get_db().get_session()
 
-    return NoContent, 404
+    # Create a valid object
+    try:
+        # Check if it already exists
+        update = adherent_exists(s, username)
+
+        if not update:
+            return NoContent, 404
+
+        member = Adherent.find(s, username)
+        member.start_modif_tracking()
+        try:
+            member.nom = body.get("lastName", member.nom)
+            member.prenom = body.get("firstName", member.prenom)
+            member.mail = body.get("email", member.mail)
+            member.commentaires = body.get("comment", member.commentaires)
+            member.login = body.get("username", member.login)
+            if "departureDate" in body:
+                member.date_de_depart = string_to_date(body["departureDate"])
+            if "associationMode" in body:
+                member.mode_association = string_to_date(body["associationMode"])
+            if "roomNumber" in body:
+                member.chambre = Chambre.find(s, body["roomNumber"])
+        except InvalidEmail:
+            return "Invalid email", 400
+        except RoomNotFound:
+            return "No room found", 400
+        except ValueError:
+            return "String must not be empty", 400
+
+        s.flush()
+
+        # Create the corresponding modification
+        Modification.add_and_commit(s, member, admin)
+    except Exception:
+        s.rollback()
+        raise
+
+    logging.info("%s updated the member %s\n%s",
+                 admin.login, username, json.dumps(body, sort_keys=True))
+    return NoContent, 204
 
 
 @auth_regular_admin
