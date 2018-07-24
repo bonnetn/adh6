@@ -8,6 +8,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {finalize, first, flatMap} from 'rxjs/operators';
 import {EMPTY, Observable} from 'rxjs';
 import {Utils} from '../utils';
+import {MemberPatchRequest} from '../api';
 
 
 @Component({
@@ -44,8 +45,43 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
   }
 
   editMember() {
+    /*
+    FLOW:
+                +-------------+ update username  +-------------+ is allowed to +--------------------+
+                |             | or create member |             |   put member  |                    |
+    editMember-->  A) create  +------------------>  B) has404  +--------+------>  C) PATCH request  |
+                |             |                  |             |        ^      |                    |
+                +------+------+                  +-------------+        |      +--------------------+
+                       |                                                |
+                       +--------------------(true)----------------------+
+                          regular update (does not update username)
+
+     A) create value is transformed into an observable
+        create = True means the form is for creation of a member
+        create = False is to update a member
+     B) has404 checks that a member with that username does not exist already.
+     */
+
+
     this.disabled = true;
     const v = this.memberEdit.value;
+
+    let req: MemberPatchRequest = {
+      email: v.email,
+      firstName: v.firstName,
+      lastName: v.lastName,
+      username: v.username,
+    };
+    if (v.roomNumber) {
+      req.roomNumber = v.roomNumber;
+    }
+    // If you create a user, then use the username from the form.
+    // If you update a user, since the admin might have modified their username, you better use the original one (the one loaded at
+    // initialization of the page).
+    let username = v.username;
+    if (!this.create) {
+      username = this.originalUsername;
+    }
 
     Observable.of(this.create)
       .pipe(
@@ -63,31 +99,11 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
           if (!allowed) {
             return EMPTY;
           }
-          return this.memberService.getMember(this.originalUsername);
+          return Observable.of(null);
         }),
-        flatMap( (member) => {
-
-          member.email = v.email;
-          member.firstName = v.firstName;
-          member.lastName = v.lastName;
-          member.username = v.username;
-          if (v.roomNumber) {
-            member.roomNumber = v.roomNumber;
-          }
-
-          // If you create a user, then use the username from the form.
-          // If you update a user, since the admin might have modified their username, you better use the original one (the one loaded at
-          // initialization of the page).
-          let username = v.username;
-          if (!this.create) {
-            username = this.originalUsername;
-          }
-          return this.memberService.putMember(username, member, 'response')
-            .pipe(
-              first(),
-              finalize(() => this.disabled = false),
-            );
-        })
+        flatMap(() => this.memberService.patchMember(username, req, 'response')),
+        first(),
+        finalize(() => this.disabled = false),
       )
       .subscribe((response) => {
         this.router.navigate(['member/view', v.username]);
