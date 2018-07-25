@@ -77,7 +77,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
       comment: [''],
     });
     this.deviceForm = this.fb.group({
-      mac: ['01:23:45:76:89:AB', [Validators.required, Validators.minLength(17), Validators.maxLength(17)]],
+      mac: ['01-23-45-76-89-AB', [Validators.required, Validators.minLength(17), Validators.maxLength(17)]],
       connectionType: ['wired', Validators.required],
     });
   }
