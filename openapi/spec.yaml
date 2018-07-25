@@ -973,7 +973,7 @@ definitions:
     properties:
       mac:
         type: "string"
-        example: "01:23:45:67:89:AB"
+        example: "01-23-45-67-89-AB"
       ipAddress:
         type: "string"
         example: "127.0.0.1"
@@ -991,7 +991,7 @@ definitions:
       ipv6Address: "ipv6Address"
       ipAddress: "127.0.0.1"
       connectionType: "wired"
-      mac: "01:23:45:67:89:AB"
+      mac: "01-23-45-67-89-AB"
       username: "doe_john"
   Room:
     type: "object"
