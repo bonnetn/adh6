@@ -52,7 +52,7 @@ def test_device_filter_all_devices(api_client):
     ('reignier', 1),
     ('dubois_j', 1),
     ('gates_bi', 0),  # Non existant user
-    ('dubois', 0),    # Exact match
+    ('dubois', 0),  # Exact match
 ])
 def test_device_filter_wired_by_username(
         api_client, user, expected):
@@ -70,14 +70,14 @@ def test_device_filter_wired_by_username(
 
 
 @pytest.mark.parametrize('terms,expected', [
-    ('96:24:F6:D0:48:A7', 1),   # Should find sample wired device
-    ('96:', 1),
+    ('96-24-F6-D0-48-A7', 1),  # Should find sample wired device
+    ('96-', 1),
     ('e91f', 1),
     ('157.159', 1),
-    ('80:65:F3:FC:44:A9', 1),  # Should find sample wireless device
-    ('F3:FC', 1),
-    (':', 2),                  # Should find everything
-    ('00:', 0),                # Should find nothing
+    ('80-65-F3-FC-44-A9', 1),  # Should find sample wireless device
+    ('F3-FC', 1),
+    ('-', 2),  # Should find everything
+    ('00-', 0),  # Should find nothing
 ])
 def test_device_filter_by_terms(
         api_client, wired_device, terms, expected):
@@ -107,11 +107,11 @@ def test_device_filter_hit_limit(api_client, sample_member1):
     LIMIT = 10
 
     # Create a lot of devices
-    for i in range(LIMIT*2):
+    for i in range(LIMIT * 2):
         suffix = "{0:04X}".format(i)
         dev = Portable(
             adherent=sample_member1,
-            mac='00:00:00:00:'+suffix[:2]+":"+suffix[2:]
+            mac='00-00-00-00-' + suffix[:2] + "-" + suffix[2:]
         )
         s.add(dev)
     s.commit()
@@ -152,7 +152,7 @@ def test_device_put_create_wired_without_ip(api_client, wired_device_dict):
     assert r.status_code == 201
     assert_modification_was_created(db.get_db().get_session())
 
-    wired_device_dict["mac"] = "AB:CD:EF:01:23:45"
+    wired_device_dict["mac"] = "AB-CD-EF-01-23-45"
     r = api_client.put('{}/device/{}'.format(base_url,
                                              wired_device_dict['mac']),
                        data=json.dumps(wired_device_dict),
@@ -189,8 +189,8 @@ def test_device_put_create_wired(api_client, wired_device_dict):
 def test_device_put_create_different_mac_addresses(api_client,
                                                    wired_device_dict):
     ''' Create with invalid mac address '''
-    wired_device_dict['mac'] = "11:11:11:11:11:11"
-    r = api_client.put('{}/device/{}'.format(base_url, "22:22:22:22:22:22"),
+    wired_device_dict['mac'] = "11-11-11-11-11-11"
+    r = api_client.put('{}/device/{}'.format(base_url, "22-22-22-22-22-22"),
                        data=json.dumps(wired_device_dict),
                        content_type='application/json',
                        headers=TEST_HEADERS)
@@ -356,7 +356,7 @@ def test_device_put_update_wired_and_wireless_to_wired(api_client,
 
 
 def test_device_get_unknown_mac(api_client):
-    mac = '00:00:00:00:00:00'
+    mac = '00-00-00-00-00-00'
     r = api_client.get(
         '{}/device/{}'.format(base_url, mac),
         headers=TEST_HEADERS,
@@ -415,7 +415,7 @@ def test_device_delete_wireless(api_client, wireless_device):
 
 
 def test_device_delete_unexistant(api_client):
-    mac = '00:00:00:00:00:00'
+    mac = '00-00-00-00-00-00'
     r = api_client.delete(
         '{}/device/{}'.format(base_url, mac),
         headers=TEST_HEADERS,
@@ -424,35 +424,32 @@ def test_device_delete_unexistant(api_client):
 
 
 def test_device_log_create_wired(api_client, caplog, wired_device_dict):
-
     with caplog.at_level(logging.INFO):
         test_device_put_create_wired(api_client, wired_device_dict)
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient created the device 01:23:45:67:89:AD\n{"connectionType"'
-        ': "wired", "ipAddress": "127.0.0.1", "ipv6Address":'
-        ' "dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166", "mac": "01:23:45:67:89:AD"'
-        ', "username": "dupontje"}'
+        'TestingClient created the device 01-23-45-67-89-AD\n{"connectionType": '
+        '"wired", "ipAddress": "127.0.0.1", "ipv6Address": '
+        '"dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166", "mac": "01-23-45-67-89-AD", '
+        '"username": "dupontje"}'
     )
 
 
 def test_device_log_create_wireless(api_client, caplog, wireless_device_dict):
-
     with caplog.at_level(logging.INFO):
         test_device_put_create_wireless(api_client, wireless_device_dict)
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient created the device 01:23:45:67:89:AC\n{"'
-        'connectionType": "wireless", "mac": "01:23:45:67:89:AC", "'
+        'TestingClient created the device 01-23-45-67-89-AC\n{"'
+        'connectionType": "wireless", "mac": "01-23-45-67-89-AC", "'
         'username": "dubois_j"}'
     )
 
 
 def test_device_log_update_wired(api_client, caplog, wired_device,
                                  wired_device_dict):
-
     with caplog.at_level(logging.INFO):
         test_device_put_update_wired(api_client, wired_device,
                                      wired_device_dict)
@@ -460,47 +457,44 @@ def test_device_log_update_wired(api_client, caplog, wired_device,
     print(caplog.record_tuples)
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient updated the device 96:24:F6:D0:48:A7\n{"connectionType"'
+        'TestingClient updated the device 96-24-F6-D0-48-A7\n{"connectionType"'
         ': "wired", "ipAddress": "127.0.0.1", "ipv6Address": '
-        '"dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166", "mac": "01:23:45:67:89:AD",'
+        '"dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166", "mac": "01-23-45-67-89-AD",'
         ' "username": "dupontje"}'
     )
 
 
 def test_device_log_update_wireless(api_client, caplog, wireless_device,
                                     wireless_device_dict):
-
     with caplog.at_level(logging.INFO):
         test_device_put_update_wireless(api_client, wireless_device,
                                         wireless_device_dict)
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient updated the device 80:65:F3:FC:44:A9\n{"'
-        'connectionType": "wireless", "mac": "01:23:45:67:89:AC", "'
+        'TestingClient updated the device 80-65-F3-FC-44-A9\n{"'
+        'connectionType": "wireless", "mac": "01-23-45-67-89-AC", "'
         'username": "dubois_j"}'
     )
 
 
 def test_device_log_delete_wired(api_client, caplog, wired_device,
                                  wired_device_dict):
-
     with caplog.at_level(logging.INFO):
         test_device_delete_wired(api_client, wired_device)
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient deleted the device 96:24:F6:D0:48:A7'
+        'TestingClient deleted the device 96-24-F6-D0-48-A7'
     )
 
 
 def test_device_log_delete_wireless(api_client, caplog, wireless_device,
                                     wireless_device_dict):
-
     with caplog.at_level(logging.INFO):
         test_device_delete_wireless(api_client, wireless_device)
 
     assert caplog.record_tuples[1] == (
         'root', 20,
-        'TestingClient deleted the device 80:65:F3:FC:44:A9'
+        'TestingClient deleted the device 80-65-F3-FC-44-A9'
     )

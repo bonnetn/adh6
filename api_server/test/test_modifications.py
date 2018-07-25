@@ -222,7 +222,7 @@ def test_add_device_wired(api_client, wired_device, sample_member1):
         "- e91f:bd71:56d9:13f3:5499:25b:cc84:f7e4\n"
         "mac:\n"
         "- \n"
-        "- 96:24:F6:D0:48:A7\n"
+        "- 96-24-F6-D0-48-A7\n"
     )
     assert m.adherent_id == sample_member1.id
     now = datetime.datetime.now()
@@ -254,7 +254,7 @@ def test_add_device_wireless(
         "- 1\n"
         "mac:\n"
         "- \n"
-        "- 80:65:F3:FC:44:A9\n"
+        "- 80-65-F3-FC-44-A9\n"
     )
     assert m.adherent_id == sample_member2.id
     now = datetime.datetime.now()
@@ -276,7 +276,7 @@ def test_update_device_wired(api_client, wired_device, sample_member1,
     wired_device.dns = "hello"
     wired_device.ip = "8.8.8.8"
     wired_device.ipv6 = "fe80::1"
-    wired_device.mac = "AB:CD:EF:12:34:56"
+    wired_device.mac = "AB-CD-EF-12-34-56"
     # Build the corresponding modification
     Modification.add_and_commit(s, wired_device,
                                 Utilisateur.find_or_create(s, "test"))
@@ -297,8 +297,8 @@ def test_update_device_wired(api_client, wired_device, sample_member1,
         "- e91f:bd71:56d9:13f3:5499:25b:cc84:f7e4\n"
         "- fe80::1\n"
         "mac:\n"
-        "- 96:24:F6:D0:48:A7\n"
-        "- AB:CD:EF:12:34:56\n"
+        "- 96-24-F6-D0-48-A7\n"
+        "- AB-CD-EF-12-34-56\n"
     )
     assert m.adherent_id == sample_member2.id
     now = datetime.datetime.now()
@@ -317,7 +317,7 @@ def test_update_device_wireless(
 
     wireless_device.start_modif_tracking()
     wireless_device.adherent = sample_member1
-    wireless_device.mac = "12:34:56:78:9A:BD"
+    wireless_device.mac = "12-34-56-78-9A-BD"
     # Build the corresponding modification
     Modification.add_and_commit(s, wireless_device,
                                 Utilisateur.find_or_create(s, "test"))
@@ -329,8 +329,8 @@ def test_update_device_wireless(
         "- 2\n"
         "- 1\n"
         "mac:\n"
-        "- 80:65:F3:FC:44:A9\n"
-        "- 12:34:56:78:9A:BD\n"
+        "- 80-65-F3-FC-44-A9\n"
+        "- 12-34-56-78-9A-BD\n"
     )
     assert m.adherent_id == sample_member1.id
     now = datetime.datetime.now()

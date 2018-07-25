@@ -8,7 +8,7 @@ from adh.model.models import (
 @pytest.fixture
 def wired_device(sample_member1):
     yield Ordinateur(
-        mac='96:24:F6:D0:48:A7',
+        mac='96-24-F6-D0-48-A7',
         ip='157.159.42.42',
         dns='bonnet_n4651',
         adherent=sample_member1,
@@ -19,7 +19,7 @@ def wired_device(sample_member1):
 @pytest.fixture
 def wired_device2(sample_member3):
     yield Ordinateur(
-        mac='96:24:F6:D0:48:A8',
+        mac='96-24-F6-D0-48-A8',
         ip='157.159.43.43',
         dns='test',
         adherent=sample_member3,
@@ -30,7 +30,7 @@ def wired_device2(sample_member3):
 @pytest.fixture
 def wireless_device(sample_member2):
     yield Portable(
-        mac='80:65:F3:FC:44:A9',
+        mac='80-65-F3-FC-44-A9',
         adherent=sample_member2,
     )
 
@@ -42,7 +42,7 @@ def wireless_device_dict():
     It is not present in the api_client by default
     '''
     yield {
-      'mac': '01:23:45:67:89:AC',
+      'mac': '01-23-45-67-89-AC',
       'connectionType': 'wireless',
       'username': 'dubois_j'
     }
@@ -51,7 +51,7 @@ def wireless_device_dict():
 @pytest.fixture
 def wired_device_dict():
     yield {
-      'mac': '01:23:45:67:89:AD',
+      'mac': '01-23-45-67-89-AD',
       'ipAddress': '127.0.0.1',
       'ipv6Address': 'dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166',
       'connectionType': 'wired',

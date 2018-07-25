@@ -56,14 +56,14 @@ def test_get_expired_devices(api_client):
     s = db.get_db().get_session()
     expired = get_expired_devices(s)
     expired = list(map(lambda x: x.mac, expired))
-    assert expired == ['96:24:F6:D0:48:A7']
+    assert expired == ['96-24-F6-D0-48-A7']
 
 
 def test_free_expired_devices(api_client):
     s = db.get_db().get_session()
     free_expired_devices(s)
     q = s.query(Ordinateur)
-    q = q.filter(Ordinateur.mac == '96:24:F6:D0:48:A7')
+    q = q.filter(Ordinateur.mac == '96-24-F6-D0-48-A7')
     assert q.one().ip == "En Attente"
 
 

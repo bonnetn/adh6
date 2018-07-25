@@ -3,7 +3,7 @@ from adh.model.models import Modification
 
 base_url = "api"
 device_cazal = {
-    'mac': 'FF:FF:FF:FF:FF:FF',
+    'mac': 'FF-FF-FF-FF-FF-FF',
     'ipAddress': '127.0.0.1',
     'ipv6Address': 'fe80::0',
     'connectionType': 'wired',
@@ -11,7 +11,7 @@ device_cazal = {
 }
 
 device_bonnet = {
-    'mac': '00:00:00:00:00:00',
+    'mac': '00-00-00-00-00-00',
     'ipAddress': '127.0.0.2',
     'ipv6Address': 'fe80::1',
     'connectionType': 'wireless',
@@ -40,11 +40,11 @@ INVALID_IP = [
 
 INVALID_MAC = [
     "",                      # Empty string
-    "AA:AA:AA:",             # Unfinished MAC address
-    "AA:AA:AA:AA:AA:AA:BB",  # MAC address too long
+    "AA-AA-AA-",             # Unfinished MAC address
+    "AA-AA-AA-AA-AA-AA-BB",  # MAC address too long
     "randomString",          # Random data
-    ":::::",                 # Only delimiters
-    "12:34:56:78:9A:BG",     # Non hexa byte (BG)
+    "-----",                 # Only delimiters
+    "12-34-56-78-9A-BG",     # Non hexa byte (BG)
     42,                      # Wrong type
 ]
 

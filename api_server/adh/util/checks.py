@@ -3,7 +3,7 @@ from ipaddress import IPv4Address, IPv4Network
 from ipaddress import IPv6Address, IPv6Network, AddressValueError
 import re
 
-MAC_REGEX = re.compile('^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$')
+MAC_REGEX = re.compile('^([0-9A-Fa-f]{2}-){5}([0-9A-Fa-f]{2})$')
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 
 
@@ -12,7 +12,7 @@ def isEmail(mail):
 
 
 def isMac(macAddress):
-    """ Allowed MAC address format: DE:AD:BE:EF:01:23 """
+    """ Allowed MAC address format: DE-AD-BE-EF-01-23 """
     macAddress = str(macAddress).upper()
     return bool(MAC_REGEX.match(macAddress))
 
