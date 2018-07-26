@@ -90,7 +90,7 @@
                       }[MAB]"
                       >{{ MAB }}</button></td>
           <td><a [routerLink]="['/device/edit', device.mac]"><button>Éditer</button></a></td>
-          <td><a (click)="onDelete(device.mac)"><button class="button-danger">X</button></a></td>
+          <td><a (click)="onDelete(device.mac)"><button [disabled]="submitDisabled" class="button-danger">X</button></a></td>
         </tr>
       </table>
     </div>
@@ -127,7 +127,7 @@
   </div>
   <div class="three columns">
     <ul>
-      <li class=u-full-width [ngClass]="{'commentaire': member.comment!=null}">{{ member.comment }}</li>
+      <Li class=u-full-width [ngClass]="{'commentaire': member.comment!=null}">{{ member.comment }}</Li>
       <img src="https://trombi.imtbs-tsp.eu/photo.php?uid={{ member.username }}&h=320&w=240"/>
       <br />
       <li>

@@ -165,11 +165,18 @@ export class MemberViewComponent implements OnInit, OnDestroy {
   }
 
   onDelete(mac: string) {
+    this.submitDisabled = true;
     this.deviceService.deleteDevice(mac)
       .pipe(
-        first()
+        first(),
+        flatMap(() => {
+          this.refreshInfo();
+          return this.all_devices$;
+        }),
+        first(),
+        finalize(() => this.submitDisabled = false)
       )
-      .subscribe(() => this.refreshInfo());
+      .subscribe(() => {});
   }
 
   ngOnInit() {
