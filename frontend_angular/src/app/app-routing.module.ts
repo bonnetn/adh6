@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { MemberSearchComponent } from './member-search/member-search.component';
+import { MemberListComponent } from './member-list/member-list.component';
 import { MemberCreateOrEditComponent } from './member-create-or-edit/member-create-or-edit.component';
 import { MemberViewComponent } from './member-view/member-view.component';
 import { RoomListComponent } from './room-list/room-list.component';
@@ -28,7 +28,7 @@ const routes: Routes = [
   {
     path: 'member',
     children: [
-      { path: 'search', component: MemberSearchComponent },
+      { path: 'search', component: MemberListComponent },
       { path: 'add', component: MemberCreateOrEditComponent },
       { path: 'view/:username', component: MemberViewComponent },
       { path: 'edit/:username', component: MemberCreateOrEditComponent },

@@ -19,10 +19,10 @@ class MemberListResponse {
 
 @Component({
   selector: 'app-members',
-  templateUrl: './member-search.component.html',
-  styleUrls: ['./member-search.component.css']
+  templateUrl: './member-list.component.html',
+  styleUrls: ['./member-list.component.css']
 })
-export class MemberSearchComponent implements OnInit {
+export class MemberListComponent implements OnInit {
 
   result$: Observable<MemberListResponse>;
 

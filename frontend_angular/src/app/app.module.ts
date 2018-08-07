@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SwitchLocalComponent } from './switch-local/switch-local.component';
-import { MemberSearchComponent } from './member-search/member-search.component';
+import { MemberListComponent } from './member-list/member-list.component';
 import { MemberViewComponent } from './member-view/member-view.component';
 import { ApiModule } from './api/api.module';
 import { RoomListComponent } from './room-list/room-list.component';
@@ -42,7 +42,7 @@ import { NotifInterceptor } from './http-interceptor/notif-interceptor';
     AppComponent,
     DashboardComponent,
     SwitchLocalComponent,
-    MemberSearchComponent,
+    MemberListComponent,
     MemberViewComponent,
     RoomListComponent,
     RoomDetailsComponent,
