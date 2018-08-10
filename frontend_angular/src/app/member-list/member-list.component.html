@@ -17,18 +17,14 @@
       <th></th>
       <th></th>
     </tr>
-    <tr *ngFor="let member of result.members | paginate: { itemsPerPage:
-      ITEMS_PER_PAGE, currentPage: page_number, totalItems: item_count}">
-      <td>{{member.firstName}}</td>
-      <td>{{member.lastName}}</td>
-      <td>{{member.username}}</td>
-      <td class="center"><a [routerLink]="['/room/view', member.roomNumber]">{{member.roomNumber}}</a></td>
+    <tr *ngFor="let member of result.members | paginate: { itemsPerPage: result.item_per_page, currentPage: result.page_number, totalItems: result.item_count}">
+      <td>{{ member.firstName }}</td>
+      <td>{{ member.lastName }}</td>
+      <td>{{ member.username }}</td>
+      <td class="center"><a [routerLink]="['/room/view', member.roomNumber]">{{ member.roomNumber }}</a></td>
       <td><a [routerLink]="['../view', member.username]"><button>Consulter</button></a></td>
     </tr><br />
   </table>
-  <pagination-controls
-    class="pagination"
-    (pageChange)="refreshMembers($event)"
-    previousLabel="" nextLabel=""
-    ></pagination-controls>
+  <pagination-controls class="pagination" (pageChange)="changePage($event)" previousLabel="" nextLabel="" >
+  </pagination-controls>
 </div>

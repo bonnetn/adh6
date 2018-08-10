@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 
 import {Observable} from 'rxjs/Observable';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 
 import {MemberService} from '../api/api/member.service';
@@ -9,12 +8,13 @@ import {Member} from '../api/model/member';
 import {PagingConf} from '../paging.config';
 
 import {map, tap} from 'rxjs/operators';
-import {PagingUtils} from '../paging-utils';
+import {SearchPage} from '../search-page';
 
 class MemberListResponse {
   members?: Array<Member>;
   page_number?: number;
   item_count?: number;
+  item_per_page?: number;
 }
 
 @Component({
@@ -22,40 +22,29 @@ class MemberListResponse {
   templateUrl: './member-list.component.html',
   styleUrls: ['./member-list.component.css']
 })
-export class MemberListComponent implements OnInit {
-
+export class MemberListComponent extends SearchPage implements OnInit {
   result$: Observable<MemberListResponse>;
 
-  ITEMS_PER_PAGE: number = +PagingConf.item_count;
-  private searchTerm$ = new BehaviorSubject<string>('');
-  private pageNumber$ = new BehaviorSubject<number>(1);
-
   constructor(public memberService: MemberService) {
-  }
-
-  search(term: string): void {
-    this.searchTerm$.next(term);
-  }
-
-  refreshMembers(page: number): void {
-    this.pageNumber$.next(page);
+    super();
   }
 
   ngOnInit() {
-    this.refreshMembers(1);
-    this.result$ = PagingUtils.getSearchResult(this.searchTerm$, this.pageNumber$, (terms, page) => this.buildRequest(terms, page));
+    super.ngOnInit();
+    this.result$ = this.getSearchResult((terms, page) => this.fetchMembers(terms, page));
   }
 
-  private buildRequest(terms: string, page: number) {
-    return this.memberService.filterMember(this.ITEMS_PER_PAGE, (page - 1) * this.ITEMS_PER_PAGE, terms, undefined, 'response')
+  private fetchMembers(terms: string, page: number) {
+    const n = +PagingConf.item_count;
+    return this.memberService.filterMember(n, (page - 1) * n, terms, undefined, 'response')
       .pipe(
         // switch to new search observable each time the term changes
         map((response) => <MemberListResponse>{
           members: response.body,
           item_count: +response.headers.get('x-total-count'),
           page_number: page,
+          item_per_page: n,
         }),
-        tap( (response) => console.log(response)),
       );
   }
 
