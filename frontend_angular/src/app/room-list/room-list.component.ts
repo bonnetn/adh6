@@ -5,11 +5,17 @@ import 'rxjs/add/operator/takeWhile';
 
 import {RoomService} from '../api/api/room.service';
 import {Room} from '../api/model/room';
-
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {PagingConf} from '../paging.config';
 
-import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
+import {SearchPage} from '../search-page';
+
+export interface RoomListResult {
+  room?: Array<Room>;
+  item_count?: number;
+  current_page?: number;
+  items_per_page?: number;
+}
 
 @Component({
   selector: 'app-rooms',
@@ -17,42 +23,30 @@ import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
   styleUrls: ['./room-list.component.css']
 })
 
-export class RoomListComponent implements OnInit {
+export class RoomListComponent extends SearchPage implements OnInit {
 
-  rooms$: Observable<Array<Room>>;
-
-  page_number = 1;
-  item_count = 1;
-  items_per_page: number = +PagingConf.item_count;
-  private searchTerms = new BehaviorSubject<string>('');
+  result$: Observable<RoomListResult>;
 
   constructor(public roomService: RoomService) {
-  }
-
-  search(term: string): void {
-    this.searchTerms.next(term);
-  }
-
-  refreshRooms(page: number): void {
-    this.rooms$ = this.searchTerms.pipe(
-      // wait 300ms after each keystroke before considering the term
-      debounceTime(300),
-
-      // ignore new term if same as previous term
-      distinctUntilChanged(),
-
-      // switch to new search observable each time the term changes
-      switchMap((term: string) => this.roomService.filterRoom(this.items_per_page, (page - 1) * this.items_per_page, term, 'response')),
-      switchMap((response) => {
-        this.item_count = +response.headers.get('x-total-count');
-        this.page_number = page;
-        return Observable.of(response.body);
-      }),
-    );
+    super();
   }
 
   ngOnInit() {
-    this.refreshRooms(1);
+    super.ngOnInit();
+    this.result$ = this.getSearchResult((terms, page) => this.fetchRoom(terms, page));
+  }
+
+  private fetchRoom(terms: string, page: number) {
+    const n = +PagingConf.item_count;
+    return this.roomService.filterRoom(n, (page - 1) * n, terms, 'response')
+      .pipe(
+        map((response) => <RoomListResult>{
+          room: response.body,
+          item_count: +response.headers.get('x-total-count'),
+          current_page: page,
+          items_per_page: n,
+        }
+      );
   }
 
 }

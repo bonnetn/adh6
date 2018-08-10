@@ -17,7 +17,7 @@
       <th></th>
       <th></th>
     </tr>
-    <tr *ngFor="let member of result.members | paginate: { itemsPerPage: result.item_per_page, currentPage: result.page_number, totalItems: result.item_count}">
+    <tr *ngFor="let member of result.members | paginate: { itemsPerPage: result.item_per_page, currentPage: result.current_page, totalItems: result.item_count}">
       <td>{{ member.firstName }}</td>
       <td>{{ member.lastName }}</td>
       <td>{{ member.username }}</td>

@@ -1,59 +1,54 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
+import {Observable} from 'rxjs/Observable';
 
-import { PortService } from '../api/api/port.service';
-import { Port } from '../api/model/port';
+import {PortService} from '../api/api/port.service';
+import {Port} from '../api/model/port';
+import {PagingConf} from '../paging.config';
 
-import { BehaviorSubject }    from 'rxjs/BehaviorSubject';
-import { PagingConf } from '../paging.config';
+import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
+import {SearchPage} from '../search-page';
 
-import {
-   debounceTime, distinctUntilChanged, switchMap
- } from 'rxjs/operators';
-
+export interface PortListResult {
+  ports?: Array<Port>;
+  item_count?: number;
+  current_page?: number;
+  items_per_page?: number;
+}
 
 @Component({
   selector: 'app-port-list',
   templateUrl: './port-list.component.html',
   styleUrls: ['./port-list.component.css']
 })
-export class PortListComponent implements OnInit {
+export class PortListComponent extends SearchPage implements OnInit {
 
-  ports$: Observable<Array<Port>>;
+  result$: Observable<PortListResult>;
 
-  page_number = 1;
-  item_count = 1;
-  items_per_page: number = +PagingConf.item_count;
-  private searchTerms = new BehaviorSubject<string>('');
-
-  constructor(public portService: PortService) { }
-
-  search(term: string): void {
-    this.searchTerms.next(term);
-  }
-
-  refreshPorts(page: number): void {
-    this.ports$ = this.searchTerms.pipe(
-      // wait 300ms after each keystroke before considering the term
-      debounceTime(300),
-
-      // ignore new term if same as previous term
-      distinctUntilChanged(),
-
-      // switch to new search observable each time the term changes
-      switchMap((term: string) => this.portService.filterPort(this.items_per_page, (page - 1) * this.items_per_page,
-                                                              undefined, undefined, term, 'response')),
-      switchMap((response) => {
-        this.item_count = +response.headers.get('x-total-count');
-        this.page_number = page;
-        return Observable.of(response.body);
-      }),
-    );
+  constructor(public portService: PortService) {
+    super();
   }
 
   ngOnInit() {
-    this.refreshPorts(1);
+    super.ngOnInit();
+    this.result$ = this.getSearchResult((terms, page) => this.fetchPort(terms, page));
+  }
+
+  private fetchPort(terms: string, page: number): Observable<PortListResult> {
+    const n = +PagingConf.item_count;
+    console.log(terms)
+    return this.portService.filterPort(n, (page - 1) * n, undefined, undefined, terms, 'response')
+      .pipe(
+        map((response) => {
+          return <PortListResult>{
+            ports: response.body,
+            item_count: +response.headers.get('x-total-count'),
+            current_page: page,
+            items_per_page: n,
+          };
+        }),
+      );
+
   }
 
 }

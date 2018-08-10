@@ -9,15 +9,14 @@
   </div>
 </div>
 <div style="overflow-x:auto;" class="u-max-full-width">
-  <table class="u-full-width">
+  <table class="u-full-width" *ngIf="result$ | async as result">
     <tr>
       <th class="center">Switch</th>
       <th class="center">Numéro de port</th>
       <th class="center">Chambre</th>
       <th></th>
     </tr>
-    <tr *ngFor="let portResult of ports$ | async | paginate: { itemsPerPage:
-      items_per_page, currentPage: page_number, totalItems: item_count}">
+    <tr *ngFor="let portResult of result.ports | paginate: { itemsPerPage: result.items_per_page, currentPage: result.current_page, totalItems: result.item_count}">
       <td class="center">{{ portResult.switchID }}</td>
       <td class="center">{{ portResult.portNumber }}</td>
       <td class="center">
@@ -29,9 +28,6 @@
       </td>
     </tr>
   </table>
-  <pagination-controls 
-    class="pagination" 
-    (pageChange)="refreshPorts($event)"
-    previousLabel="" nextLabel=""
-    ></pagination-controls>
+  <pagination-controls class="pagination" (pageChange)="changePage($event)" previousLabel="" nextLabel="" >
+  </pagination-controls>
 </div>

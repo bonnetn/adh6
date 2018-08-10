@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {map} from 'rxjs/operators';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 import 'rxjs/add/operator/takeWhile';
 
@@ -9,13 +8,14 @@ import {Device} from '../api/model/device';
 
 import {PagingConf} from '../paging.config';
 import {Observable} from 'rxjs';
-import {PagingUtils} from '../paging-utils';
+import {SearchPage} from '../search-page';
 
 
 export interface DeviceListResult {
   devices?: Array<Device>;
   item_count?: number;
   current_page?: number;
+  items_per_page?: number;
 }
 
 @Component({
@@ -23,40 +23,28 @@ export interface DeviceListResult {
   templateUrl: './device-list.component.html',
   styleUrls: ['./device-list.component.css']
 })
-export class DeviceListComponent implements OnInit {
+export class DeviceListComponent extends SearchPage implements OnInit {
 
   result$: Observable<DeviceListResult>;
 
-  readonly ITEMS_PER_PAGE: number = +PagingConf.item_count;
-
-  private searchTerm$ = new BehaviorSubject<string>('');
-  private pageNumber$ = new BehaviorSubject<number>(1);
-
   constructor(public deviceService: DeviceService) {
-  }
-
-  search(term: string): void {
-    this.searchTerm$.next(term);
-  }
-
-  refreshDevices(page: number): void {
-    this.pageNumber$.next(page);
+    super();
   }
 
   ngOnInit() {
-    this.result$ = PagingUtils.getSearchResult(this.searchTerm$, this.pageNumber$, (t, p) => this.getDevices(t, p));
+    super.ngOnInit();
+    this.result$ = this.getSearchResult((terms, page) => this.fetchDevices(terms, page));
   }
 
-  private getDevices(term: string, page: number) {
-
-    return this.deviceService.filterDevice(this.ITEMS_PER_PAGE, (page - 1) * this.ITEMS_PER_PAGE, undefined, term, 'response')
+  private fetchDevices(term: string, page: number) {
+    const n: number = +PagingConf.item_count;
+    return this.deviceService.filterDevice(n, (page - 1) * n, undefined, term, 'response')
       .pipe(
-        map(response => {
-          return <DeviceListResult>{
-            devices: response.body,
-            item_count: +response.headers.get('x-total-count'),
-            current_page: page,
-          };
+        map(response => <DeviceListResult>{
+          devices: response.body,
+          item_count: +response.headers.get('x-total-count'),
+          current_page: page,
+          items_per_page: n,
         }),
       );
   }
