@@ -1,15 +1,17 @@
-import logging
+import datetime
 import json
+import logging
+
 import pytest
-from adh.model.database import Database as db
+from dateutil import parser
+
 from CONFIGURATION import TEST_DATABASE as db_settings
+from adh.controller.member import ntlm_hash
+from adh.model.database import Database as db
+from adh.model.models import Adherent
 from test.resource import (
     base_url, TEST_HEADERS, assert_modification_was_created
 )
-from adh.model.models import Adherent
-from dateutil import parser
-from adh.controller.member import ntlm_hash
-import datetime
 
 
 @pytest.fixture
@@ -40,15 +42,18 @@ def sample_member13(sample_room2):
 
 def prep_db(session,
             sample_member1, sample_member2, sample_member13,
+            wired_device, wireless_device,
             sample_room1, sample_room2, sample_vlan):
     session.add_all([
         sample_room1, sample_room2,
+        wired_device, wireless_device,
         sample_member1, sample_member2, sample_member13])
     session.commit()
 
 
 @pytest.fixture
 def api_client(sample_member1, sample_member2, sample_member13,
+               wired_device, wireless_device,
                sample_room1, sample_room2, sample_vlan):
     from .context import app
     with app.app.test_client() as c:
@@ -57,6 +62,8 @@ def api_client(sample_member1, sample_member2, sample_member13,
                 sample_member1,
                 sample_member2,
                 sample_member13,
+                wired_device,
+                wireless_device,
                 sample_room1,
                 sample_room2,
                 sample_vlan)
@@ -72,7 +79,6 @@ def assert_member_in_db(body):
     assert r.nom == body["lastName"]
     assert r.prenom == body["firstName"]
     assert r.mail == body["email"]
-    print(r.date_de_depart)
     assert r.date_de_depart == parser.parse(body["departureDate"]).date()
     asso_time = parser.parse(body["associationMode"]).replace(tzinfo=None)
     assert r.mode_association == asso_time
@@ -639,6 +645,17 @@ def test_member_change_password_member_not_exist(api_client):
     assert result.status_code == 404
 
 
+def test_member_get_logs(api_client):
+    USERNAME = "dubois_j"
+    result = api_client.get(
+        '{}/member/{}/logs/'.format(base_url, USERNAME),
+        content_type='application/json',
+        headers=TEST_HEADERS,
+    )
+    assert result.status_code == 200
+    assert json.loads(result.data.decode('utf-8')) == ["test_log"]
+
+
 def test_member_log_create(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_member_put_member_create(api_client)
@@ -695,4 +712,14 @@ def test_member_log_update_password(api_client, caplog):
     assert caplog.record_tuples[1] == (
         'root', 20,
         'TestingClient updated the password of dubois_j'
+    )
+
+
+def test_member_log_get_logs(api_client, caplog):
+    with caplog.at_level(logging.INFO):
+        test_member_get_logs(api_client)
+
+    assert caplog.record_tuples[1] == (
+        'root', 20,
+        'TestingClient fetched the logs of dubois_j'
     )

@@ -49,7 +49,7 @@ def test_assigment_ip(network, taken, expected):
 ])
 def test_assigment_ip_no_more_left(network, taken):
     with pytest.raises(NoMoreIPAvailable):
-        print(get_available_ip(network, taken))
+        get_available_ip(network, taken)
 
 
 def test_get_expired_devices(api_client):

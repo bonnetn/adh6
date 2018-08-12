@@ -1,15 +1,22 @@
+import datetime
+import hashlib
 import json
 import logging
+import string
+
+import sqlalchemy
 from connexion import NoContent
+from elasticsearch5 import Elasticsearch
+from flask import current_app
+
+from CONFIGURATION import ELK_HOSTS
+from CONFIGURATION import PRICES
+from adh.auth import auth_regular_admin
+from adh.controller.device_utils import get_all_devices
+from adh.exceptions import InvalidEmail, RoomNotFound, MemberNotFound
 from adh.model.database import Database as Db
 from adh.model.models import Adherent, Chambre, Adhesion, Modification
 from adh.util.date import string_to_date
-from adh.exceptions import InvalidEmail, RoomNotFound, MemberNotFound
-import datetime
-import sqlalchemy
-from adh.auth import auth_regular_admin
-import hashlib
-from CONFIGURATION import PRICES
 
 
 def adherent_exists(session, username):
@@ -261,3 +268,75 @@ def update_password(admin, username, body):
     logging.info("%s updated the password of %s",
                  admin.login, username)
     return NoContent, 204
+
+
+def _get_mac_variations(addr):
+    addr = filter(lambda x: x in string.hexdigits, addr)
+    addr = "".join(addr)
+    addr = addr.lower()
+
+    variations = []
+    variations += ["{}:{}:{}:{}:{}:{}".format(*(addr[i * 2:i * 2 + 2] for i in range(6)))]
+    variations += ["{}-{}-{}-{}-{}-{}".format(*(addr[i:i + 2] for i in range(6)))]
+    variations += ["{}.{}.{}".format(*(addr[i:i + 4] for i in range(3)))]
+
+    variations += list(map(lambda x: x.upper(), variations))
+
+    return variations
+
+
+@auth_regular_admin
+def get_logs(admin, username):
+    s = Db.get_db().get_session()
+
+    # If the member does not exist, return 404
+    try:
+        Adherent.find(s, username)
+    except MemberNotFound:
+        return NoContent, 404
+
+    # Prepare the elasticsearch query...
+    query = {
+        "sort": [
+            '@timestamp',  # Sort by time
+        ],
+        "query": {
+            "bool": {
+                "should": [  # "should" in a "bool" query basically act as a "OR"
+                    {"match": {"message": username}},  # Match every log mentioning this member
+                    # rules to match MACs addresses are added in the next chunk of code
+                ],
+                "minimum_should_match": 1,
+            },
+        },
+        "_source": ["@timestamp", "message"],  # discard any other field than timestamp & message
+        "size": 100,  # TODO(insolentbacon): make a parameter in the request to change this value
+    }
+
+    # Fetch all the devices of the member to put them in the request
+    all_devices = get_all_devices(s)
+    q = s.query(all_devices, Adherent.login.label("login"))
+    q = q.join(Adherent, Adherent.id == all_devices.columns.adherent_id)
+    q = q.filter(Adherent.login == username)
+    mac_tbl = list(map(lambda x: x.mac, q.all()))
+
+    # Add the macs to the "should"
+    for addr in mac_tbl:
+        variations = map(
+            lambda x: {"match_phrase": {"message": x}},
+            _get_mac_variations(addr)
+        )
+        query["query"]["bool"]["should"] += list(variations)
+
+    logging.info("%s fetched the logs of %s", admin.login, username)
+    if current_app.config["TESTING"]:  # Do not actually query elasticsearch if testing...
+        return ["test_log"]
+
+    # TODO(insolentbacon): instantiate only once the Elasticsearch client
+    es = Elasticsearch(ELK_HOSTS)
+    res = es.search(index="", body=query)['hits']['hits']
+
+    return list(map(
+        lambda x: "{} {}".format(x["@timestamp"], x["message"]),
+        res
+    )), 200

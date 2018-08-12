@@ -454,7 +454,6 @@ def test_device_log_update_wired(api_client, caplog, wired_device,
         test_device_put_update_wired(api_client, wired_device,
                                      wired_device_dict)
 
-    print(caplog.record_tuples)
     assert caplog.record_tuples[1] == (
         'root', 20,
         'TestingClient updated the device 96-24-F6-D0-48-A7\n{"connectionType"'

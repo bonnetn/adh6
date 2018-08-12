@@ -355,7 +355,6 @@ def test_delete_device_wired(api_client, wired_device, sample_member1,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
-    print(m.action)
     assert m.action == (
         "---\n"
         "ordinateur: Suppression de l'ordinateur 96-24-F6-D0-48-A7\n"
@@ -384,7 +383,6 @@ def test_delete_device_wireless(
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
-    print(m.action)
     assert m.action == (
         "---\n"
         "portable: Suppression du portable 80-65-F3-FC-44-A9\n"
