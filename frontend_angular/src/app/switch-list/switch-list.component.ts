@@ -6,9 +6,10 @@ import {SwitchService} from '../api/api/switch.service';
 import {PagingConf} from '../paging.config';
 import {SearchPage} from '../search-page';
 import {map} from 'rxjs/operators';
+import {ModelSwitch} from '../api';
 
 export interface SwitchListResult {
-  switches: Array<Switch>;
+  switches: Array<ModelSwitch>;
   item_count?: number;
   current_page?: number;
   items_per_page?: number;
@@ -45,7 +46,5 @@ export class SwitchListComponent extends SearchPage implements OnInit {
           };
         }),
       );
-
   }
-
 }

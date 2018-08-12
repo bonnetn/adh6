@@ -45,7 +45,7 @@ export class RoomListComponent extends SearchPage implements OnInit {
           item_count: +response.headers.get('x-total-count'),
           current_page: page,
           items_per_page: n,
-        }
+        })
       );
   }
 

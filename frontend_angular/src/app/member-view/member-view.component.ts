@@ -22,6 +22,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
   member$: Observable<Member>;
   all_devices$: Observable<Device[]>;
+  log$: Observable<Array<string>>;
   public MAB: string;
   public MABdisabled: boolean;
   public cotisation = false;
@@ -176,11 +177,13 @@ export class MemberViewComponent implements OnInit, OnDestroy {
         first(),
         finalize(() => this.submitDisabled = false)
       )
-      .subscribe(() => {});
+      .subscribe(() => {
+      });
   }
 
   ngOnInit() {
     this.onMAB();
+
 
     // username of the owner of the profile
     this.username$ = this.route.params.pipe(
@@ -195,7 +198,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
     this.member$ = refresh$.pipe(
       switchMap(username => this.memberService.getMember(username)),
-      tap((user) => this.commentForm.setValue({comment: (user.comment === undefined) ? '' : user.comment,})),
+      tap((user) => this.commentForm.setValue({comment: (user.comment === undefined) ? '' : user.comment, })),
       share(),
     );
 
@@ -204,9 +207,20 @@ export class MemberViewComponent implements OnInit, OnDestroy {
       share(),
     );
 
+    this.log$ = this.username$.pipe(
+      flatMap((str) => this.memberService.getLogs(str))
+    );
   }
 
   ngOnDestroy() {
+  }
+
+  extractDateFromLog(log: string): Date {
+    return new Date(log.split(' ')[0]);
+  }
+
+  extractMsgFromLog(log: string): string {
+    return log.substr(log.indexOf(" ") + 1);
   }
 
 }

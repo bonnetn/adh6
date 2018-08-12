@@ -4,15 +4,16 @@
     <ul>
       <div class="row">
         <div class="four columns">
-          <li><strong>Identifiant DISI:</strong><br /> {{ member.username }}</li>
-          <li><strong>Envoyer un mail:</strong><br /> <a href="mailto:{{ member.email }}">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <font size="5">&#9993;</font></a></li>
-          <li><strong>Date de départ:</strong><br /> {{ member.departureDate }}</li>
+          <li><strong>Identifiant DISI:</strong><br/> {{ member.username }}</li>
+          <li><strong>Envoyer un mail:</strong><br/> <a href="mailto:{{ member.email }}">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <font size="5">&#9993;</font></a></li>
+          <li><strong>Date de départ:</strong><br/> {{ member.departureDate }}</li>
         </div>
         <div class="eight columns">
           <button class="u-full-width" [disabled]="member.roomNumber == null"
-            (click)="IfRoomExists(member.roomNumber)">Chambre {{ member.roomNumber }}</button>
+                  (click)="IfRoomExists(member.roomNumber)">Chambre {{ member.roomNumber }}
+          </button>
         </div>
         <div class="four columns">
           <a [routerLink]="['']">
@@ -30,11 +31,11 @@
       </div>
     </ul>
     <div *ngIf="cotisation">
-    <h3>Cotisation</h3>
+      <h3>Cotisation</h3>
       <div class="row">
         <div class="six columns">
           <select class="u-full-width" type="text" formControlName=""
-            placeholder="Renouvellement">
+                  placeholder="Renouvellement">
             <option value="">Renouvellement</option>
             <option value="1">1 mois (9€) - date</option>
             <option value="2">2 mois (18€) - date</option>
@@ -44,7 +45,7 @@
             <option value="6">1 an (50€) - date</option>
           </select>
           <select class="u-full-width" type="text" formControlName=""
-            placeholder="Matériel">
+                  placeholder="Matériel">
             <option value="">Matériel</option>
             <option value="3m">Câble 3m</option>
             <option value="5m">Câble 5m</option>
@@ -52,7 +53,7 @@
         </div>
         <div class="six columns">
           <select class="u-full-width" type="text" formControlName=""
-            placeholder="Payé par">
+                  placeholder="Payé par">
             <option value="">Payé par</option>
             <option value="liq">Liquide</option>
             <option value="cb">Carte Bancaire</option>
@@ -76,21 +77,30 @@
         </tr>
         <tr *ngFor="let device of all_devices$ | async">
           <td><a [routerLink]="['/device/view', device.mac ]">{{ device.mac }}</a></td>
-          <td><app-mac-vendor mac="{{device.mac}}"></app-mac-vendor></td>
+          <td>
+            <app-mac-vendor mac="{{device.mac}}"></app-mac-vendor>
+          </td>
           <td>{{ device.ipAddress }}</td>
-          <td><button
-                      style="width: 90px; height: 38px;"
-                      (click)="onMAB()"
-                      class="u-max-full-width"
-                      [disabled]='MABdisabled'
-                      [ngClass]="{
+          <td>
+            <button
+              style="width: 90px; height: 38px;"
+              (click)="onMAB()"
+              class="u-max-full-width"
+              [disabled]='MABdisabled'
+              [ngClass]="{
                       'off':'button-warning',
                       'on':'button-success',
                       'wifi':'button-primary'
                       }[MAB]"
-                      >{{ MAB }}</button></td>
-          <td><a [routerLink]="['/device/edit', device.mac]"><button>Éditer</button></a></td>
-          <td><a (click)="onDelete(device.mac)"><button [disabled]="submitDisabled" class="button-danger">X</button></a></td>
+            >{{ MAB }}
+            </button>
+          </td>
+          <td><a [routerLink]="['/device/edit', device.mac]">
+            <button>Éditer</button>
+          </a></td>
+          <td><a (click)="onDelete(device.mac)">
+            <button [disabled]="submitDisabled" class="button-danger">X</button>
+          </a></td>
         </tr>
       </table>
     </div>
@@ -101,7 +111,7 @@
         </div>
         <div class="three columns">
           <select class="u-full-width" type="text"
-            formControlName="connectionType">
+                  formControlName="connectionType">
             <option value="wired">Filaire</option>
             <option value="wireless">Wi-Fi</option>
           </select>
@@ -109,30 +119,39 @@
         <div class="five columns">
           <button type="submit"
                   [disabled]="submitDisabled || deviceForm.status == 'INVALID'"
-                  class="u-full-width button-primary">Ajouter l'appareil</button>
+                  class="u-full-width button-primary">Ajouter l'appareil
+          </button>
         </div>
       </form>
     </div>
-    <h3>Journal</h3>
-    <p>Afficher les logs DHCP</p>
-
     <h3>Commentaire</h3>
     <form [formGroup]="commentForm" (ngSubmit)="onSubmitComment()" novalidate>
       <textarea class="u-full-width" formControlName="comment"></textarea>
       <div class="row">
         <button type="submit" class="u-full-width button-primary"
-                              [disabled]="submitDisabled">Envoyer</button>
+                [disabled]="submitDisabled">Envoyer
+        </button>
       </div>
     </form>
+    <h3>Journal</h3>
+    <div style="overflow:auto; max-height: 30em; font-family: 'Lucida Console', Monaco, monospace; font-size: small;">
+      <ul class="u-max-full-width">
+        <li *ngFor="let log of log$ | async">
+          <span style="color:blue">{{ extractDateFromLog(log) | date:"dd/MM/yyy HH:mm:ss" }}</span> {{ extractMsgFromLog(log) }}
+        </li>
+      </ul>
+    </div>
+
   </div>
   <div class="three columns">
     <ul>
       <Li class=u-full-width [ngClass]="{'commentaire': member.comment!=null}">{{ member.comment }}</Li>
       <img src="https://trombi.imtbs-tsp.eu/photo.php?uid={{ member.username }}&h=320&w=240"/>
-      <br />
+      <br/>
       <li>
         <button class="u-full-width button-primary bigbutton">
-          Association des <br/>périphériques</button>
+          Association des <br/>périphériques
+        </button>
       </li>
       <li>Dernières modifications:</li>
     </ul>
