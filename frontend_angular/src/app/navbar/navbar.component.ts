@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AppComponent } from '../app.component';
-import { OAuthService } from 'angular-oauth2-oidc';
-import { authConfig } from '../auth.config';
+import {Component, OnInit} from '@angular/core';
+import {AppComponent} from '../app.component';
+import {OAuthService} from 'angular-oauth2-oidc';
+import {authConfig} from '../auth.config';
 
 
 @Component({
@@ -13,16 +12,16 @@ import { authConfig } from '../auth.config';
 export class NavbarComponent implements OnInit {
 
   public titre: string = this.appcomponent.titre;
+  navBarStatus = false;
 
   constructor(private oauthService: OAuthService,
-    private appcomponent: AppComponent) { }
+              private appcomponent: AppComponent) {
+  }
 
-  logout(){
+  logout() {
     this.oauthService.logOut();
     window.location.href = authConfig.logoutUrl;
   }
-
-  navBarStatus = false;
 
   ngOnInit() {
   }

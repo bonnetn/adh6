@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { PortService } from '../api/api/port.service';
-import { Port } from '../api/model/port';
-import { Router, ActivatedRoute } from '@angular/router';
-import { NotificationsService } from 'angular2-notifications';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {PortService} from '../api/api/port.service';
+import {Port} from '../api/model/port';
+import {ActivatedRoute, Router} from '@angular/router';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'app-port-details',
@@ -15,40 +15,41 @@ export class PortDetailsComponent implements OnInit, OnDestroy {
   port$: Observable<Port>;
   portID: number;
   switchID: number;
-  private sub: any;
-  port_ouverture: string = "ouvert";
+  port_ouverture: string = 'ouvert';
   portouvert: boolean = true;
-  port_authenth: string = "authentifié";
+  port_authenth: string = 'authentifié';
   isportauthenth: boolean = false;
+  private sub: any;
 
   constructor(
     public portService: PortService,
     private route: ActivatedRoute,
     private router: Router,
     private notif: NotificationsService,
-  ) { }
+  ) {
+  }
 
   ouverture() {
-    this.portouvert = !this.portouvert
+    this.portouvert = !this.portouvert;
   }
 
   authenth() {
-    this.isportauthenth = ! this.isportauthenth
+    this.isportauthenth = !this.isportauthenth;
   }
 
   IfRoomExists(roomNumber) {
     if (roomNumber == null) {
-      this.notif.error("This port is not assigned to a room");
+      this.notif.error('This port is not assigned to a room');
     }
     else {
-      this.router.navigate(["/room/view", roomNumber])
+      this.router.navigate(['/room/view', roomNumber]);
     }
   }
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe( params => {
-      this.switchID = +params["switchID"];
-      this.portID = +params["portID"];
+    this.sub = this.route.params.subscribe(params => {
+      this.switchID = +params['switchID'];
+      this.portID = +params['portID'];
       this.port$ = this.portService.getPort(this.portID);
     });
   }

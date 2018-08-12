@@ -1,4 +1,4 @@
-import { AuthConfig } from 'angular-oauth2-oidc';
+import {AuthConfig} from 'angular-oauth2-oidc';
 
 export const authConfig: AuthConfig = {
   loginUrl: 'https://adh6.minet.net/oauth/authorize',
@@ -7,4 +7,4 @@ export const authConfig: AuthConfig = {
   clientId: 'H4XcptJlYAWAqyxTJxybMXfi',
   scope: 'profile',
   oidc: false,
-}
+};

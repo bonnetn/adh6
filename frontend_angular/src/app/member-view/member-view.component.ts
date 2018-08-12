@@ -198,7 +198,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
     this.member$ = refresh$.pipe(
       switchMap(username => this.memberService.getMember(username)),
-      tap((user) => this.commentForm.setValue({comment: (user.comment === undefined) ? '' : user.comment, })),
+      tap((user) => this.commentForm.setValue({comment: (user.comment === undefined) ? '' : user.comment,})),
       share(),
     );
 
@@ -220,7 +220,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
   }
 
   extractMsgFromLog(log: string): string {
-    return log.substr(log.indexOf(" ") + 1);
+    return log.substr(log.indexOf(' ') + 1);
   }
 
 }

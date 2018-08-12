@@ -1,13 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute} from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import 'rxjs/add/operator/takeWhile';
 import 'rxjs/add/operator/switchMap';
 
-import { RoomService } from '../api/api/room.service';
-import { Room } from '../api/model/room';
-import { NotificationsService } from 'angular2-notifications';
+import {RoomService} from '../api/api/room.service';
+import {Room} from '../api/model/room';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'app-room-new',
@@ -18,9 +18,8 @@ import { NotificationsService } from 'angular2-notifications';
 export class RoomNewComponent implements OnInit, OnDestroy {
 
   disabled = false;
-  private alive = true;
-
   roomForm: FormGroup;
+  private alive = true;
 
   constructor(
     public roomService: RoomService,
@@ -29,14 +28,14 @@ export class RoomNewComponent implements OnInit, OnDestroy {
     private router: Router,
     private notif: NotificationsService,
   ) {
-  this.createForm();
+    this.createForm();
   }
 
   createForm() {
     this.roomForm = this.fb.group({
-      roomNumber: ['', [Validators.min(1000), Validators.max(9999), Validators.required ]],
-      vlan: ['', [Validators.min(0), Validators.max(100), Validators.required ]],
-      description: ['', Validators.required ],
+      roomNumber: ['', [Validators.min(1000), Validators.max(9999), Validators.required]],
+      vlan: ['', [Validators.min(0), Validators.max(100), Validators.required]],
+      description: ['', Validators.required],
     });
   }
 
@@ -50,14 +49,14 @@ export class RoomNewComponent implements OnInit, OnDestroy {
     };
 
     this.roomService.getRoom(v.roomNumber, 'response')
-      .takeWhile( () => this.alive )
-      .subscribe( (response) => {
+      .takeWhile(() => this.alive)
+      .subscribe((response) => {
         this.notif.error('Room already exists');
       }, (response) => {
         this.roomService.putRoom(v.roomNumber, room)
-          .takeWhile( () => this.alive )
-          .subscribe( (response) => {
-            this.router.navigate(['/room/view', v.roomNumber ]);
+          .takeWhile(() => this.alive)
+          .subscribe((response) => {
+            this.router.navigate(['/room/view', v.roomNumber]);
             this.notif.success(response.status + ': Success');
           });
       });

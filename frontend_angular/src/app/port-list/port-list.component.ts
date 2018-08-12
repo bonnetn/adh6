@@ -6,7 +6,7 @@ import {PortService} from '../api/api/port.service';
 import {Port} from '../api/model/port';
 import {PagingConf} from '../paging.config';
 
-import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {SearchPage} from '../search-page';
 
 export interface PortListResult {
@@ -36,7 +36,7 @@ export class PortListComponent extends SearchPage implements OnInit {
 
   private fetchPort(terms: string, page: number): Observable<PortListResult> {
     const n = +PagingConf.item_count;
-    console.log(terms)
+    console.log(terms);
     return this.portService.filterPort(n, (page - 1) * n, undefined, undefined, terms, 'response')
       .pipe(
         map((response) => {

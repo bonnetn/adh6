@@ -2,12 +2,14 @@
 <form [formGroup]="roomEdit" (ngSubmit)="onSubmit()" novalidate>
   <label>Adresse IP</label>
   <input class="u-full-width" formControlName="roomNumber" disabled type="number">
-  <br /><br />
+  <br/><br/>
   <button type="submit"
           [disabled]="disabled || roomEdit.status == 'INVALID'"
-          class="u-full-width button-primary">Modifier</button>
+          class="u-full-width button-primary">Modifier
+  </button>
 </form>
 <button type="submit"
         [disabled]="disabled || roomEdit.status == 'INVALID'"
-        class="u-full-width button-danger">Supprimer</button>
+        class="u-full-width button-danger">Supprimer
+</button>
 

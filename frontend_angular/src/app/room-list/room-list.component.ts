@@ -7,7 +7,7 @@ import {RoomService} from '../api/api/room.service';
 import {Room} from '../api/model/room';
 import {PagingConf} from '../paging.config';
 
-import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {SearchPage} from '../search-page';
 
 export interface RoomListResult {

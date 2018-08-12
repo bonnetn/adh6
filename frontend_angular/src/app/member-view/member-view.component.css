@@ -1,12 +1,12 @@
 img {
-    width: 95%;
-    height: 95%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto 
+  width: 95%;
+  height: 95%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto
 }
 
-.bigbutton{
-    height: 76px;
-    line-height: 30px;
+.bigbutton {
+  height: 76px;
+  line-height: 30px;
 }

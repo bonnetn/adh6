@@ -2,10 +2,10 @@
 <form [formGroup]="deviceForm" (ngSubmit)="onSubmit()" novalidate>
   <label>Propriétaire</label>
   <input class="u-full-width" formControlName="username" type="text">
-  <br /><br />
+  <br/><br/>
   <label>Adresse MAC</label>
   <input class="u-full-width" formControlName="mac" type="text">
-  <br /><br />
+  <br/><br/>
   <div class="form-group">
     <label>Type d'appareil</label>
     <div class="row">
@@ -23,8 +23,9 @@
       </div>
     </div>
   </div>
-  <br />
+  <br/>
   <button type="submit"
           [disabled]="disabled || deviceForm.status == 'INVALID'"
-          class="u-full-width button-primary">Modifier</button>
+          class="u-full-width button-primary">Modifier
+  </button>
 </form>

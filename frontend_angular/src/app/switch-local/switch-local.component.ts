@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { SwitchService } from '../api/api/switch.service';
-import { ModelSwitch } from '../api/model/modelSwitch';
-import { Port } from '../api/model/port';
-import { PortService } from '../api/api/port.service';
-import { ActivatedRoute } from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {SwitchService} from '../api/api/switch.service';
+import {ModelSwitch} from '../api/model/modelSwitch';
+import {Port} from '../api/model/port';
+import {PortService} from '../api/api/port.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-switch-local',
@@ -17,7 +17,8 @@ export class SwitchLocalComponent implements OnInit, OnDestroy {
   ports$: Observable<Array<Port>>;
   switchID = 8;
 
-  constructor(public switchService: SwitchService, private route: ActivatedRoute, public portService: PortService) { }
+  constructor(public switchService: SwitchService, private route: ActivatedRoute, public portService: PortService) {
+  }
 
   ngOnInit() {
     this.switchID = 8;

@@ -7,7 +7,7 @@ import {MemberService} from '../api/api/member.service';
 import {Member} from '../api/model/member';
 import {PagingConf} from '../paging.config';
 
-import {map, tap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {SearchPage} from '../search-page';
 
 class MemberListResponse {

@@ -5,6 +5,10 @@ export class SearchPage {
   private searchTerm$ = new BehaviorSubject<string>('');
   private pageNumber$ = new BehaviorSubject<number>(1);
 
+  ngOnInit() {
+    this.changePage(1);
+  }
+
   protected getSearchResult(f: (term: string, page: number) => Observable<any>): Observable<any> {
 
     // Stream of terms debounced
@@ -36,10 +40,6 @@ export class SearchPage {
 
   protected changePage(page: number): void {
     this.pageNumber$.next(page);
-  }
-
-  ngOnInit() {
-    this.changePage(1);
   }
 
 

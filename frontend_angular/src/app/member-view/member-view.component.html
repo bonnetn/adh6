@@ -137,7 +137,8 @@
     <div style="overflow:auto; max-height: 30em; font-family: 'Lucida Console', Monaco, monospace; font-size: small;">
       <ul class="u-max-full-width">
         <li *ngFor="let log of log$ | async">
-          <span style="color:blue">{{ extractDateFromLog(log) | date:"dd/MM/yyy HH:mm:ss" }}</span> {{ extractMsgFromLog(log) }}
+          <span style="color:blue">{{ extractDateFromLog(log) | date:"dd/MM/yyy HH:mm:ss" }}</span> {{
+          extractMsgFromLog(log) }}
         </li>
       </ul>
     </div>

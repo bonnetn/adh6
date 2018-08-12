@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 
-import { HttpClient} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-mac-vendor',
@@ -16,7 +16,8 @@ export class MacVendorComponent implements OnInit, OnDestroy {
 
   constructor(
     private http: HttpClient,
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     /*this.http.get( "https://api.macvendors.com/" + this.mac, {

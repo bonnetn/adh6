@@ -12,17 +12,17 @@ nav ul li {
 }
 
 nav ul li {
-	display: inline;
+  display: inline;
 }
 
 nav a {
   display: inline-block;
   color: white;
   padding: 1rem;
-	text-decoration: none;
+  text-decoration: none;
   text-transform: uppercase;
 }
- 
+
 nav a:hover {
   background-color: #2196F3;
 }
@@ -37,7 +37,10 @@ nav div ul .icon {
 
 /* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the topnav (.icon) */
 @media screen and (max-width: 600px) {
-  nav div ul li:not(:first-child) {display: none;}
+  nav div ul li:not(:first-child) {
+    display: none;
+  }
+
   nav div ul li.icon {
     float: right;
     display: block;
@@ -46,12 +49,16 @@ nav div ul .icon {
 
 /* The "responsive" class is added to the topnav with JavaScript when the user clicks on the icon. This class makes the topnav look good on small screens (display the links vertically instead of horizontally) */
 @media screen and (max-width: 600px) {
-  nav.responsive {position: relative;}
+  nav.responsive {
+    position: relative;
+  }
+
   nav.responsive div ul li.icon {
     position: absolute;
     right: 0;
     top: 0;
   }
+
   nav.responsive div ul li {
     float: none;
     display: block;
@@ -64,11 +71,11 @@ a {
 }
 
 h1 {
- color: #ffffff;
- margin: 0;
- background-color: #65B5EA;
- padding-top: 0.3em;
- padding-bottom: 0.3em;
+  color: #ffffff;
+  margin: 0;
+  background-color: #65B5EA;
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
 }
 
 h1:hover {

@@ -1,44 +1,47 @@
 <div *ngIf="(port$ | async) as port">
-<h2>Port {{ port.portNumber }}</h2>
-<h3>Informations</h3>
-<div class="row">
-  <div class="six columns">
-    <button class="u-full-width" [disabled]="port.roomNumber == null"
-      (click)="IfRoomExists(port.roomNumber)">Chambre {{ port.roomNumber }}</button>
+  <h2>Port {{ port.portNumber }}</h2>
+  <h3>Informations</h3>
+  <div class="row">
+    <div class="six columns">
+      <button class="u-full-width" [disabled]="port.roomNumber == null"
+              (click)="IfRoomExists(port.roomNumber)">Chambre {{ port.roomNumber }}
+      </button>
+    </div>
+    <div class="six columns">
+      <a [routerLink]="['/switch/view', port.switchID]">
+        <button class="u-full-width">Switch {{ port.switchID }}</button>
+      </a>
+    </div>
   </div>
-  <div class="six columns">
-    <a [routerLink]="['/switch/view', port.switchID]"><button class="u-full-width">Switch {{ port.switchID }}</button></a>
-  </div>
-</div>
-<p></p>
-<h3>Configuration</h3>
-<br />
-<div class=row>
-  <div class="six columns">
-  <button class="u-full-width"
-    [ngClass]="{true:'button-success',
+  <p></p>
+  <h3>Configuration</h3>
+  <br/>
+  <div class=row>
+    <div class="six columns">
+      <button class="u-full-width"
+              [ngClass]="{true:'button-success',
     false:'button-danger'}[portouvert]"
-    (click)="ouverture()"
-          >Port {{ port_ouverture }}
-  </button>
-  </div>
-  <div class="six columns">
-    <button class="u-full-width"
-      [ngClass]="{true:'button-success',
+              (click)="ouverture()"
+      >Port {{ port_ouverture }}
+      </button>
+    </div>
+    <div class="six columns">
+      <button class="u-full-width"
+              [ngClass]="{true:'button-success',
       false:'button-danger'}[isportauthenth]"
-      (click)="authenth()"
-            >{{ port_authenth  }}
-    </button>
+              (click)="authenth()"
+      >{{ port_authenth }}
+      </button>
+    </div>
   </div>
-</div>
-<div class=row>
-  <div class="six columns">
-    <strong>VLAN 41</strong><br />
-    <button class="u-full-width">Changer de VLAN</button>
+  <div class=row>
+    <div class="six columns">
+      <strong>VLAN 41</strong><br/>
+      <button class="u-full-width">Changer de VLAN</button>
+    </div>
+    <div class="six columns">
+      <strong>Vitesse 10Mb/s</strong><br/>
+      <button class="u-full-width">Changer le débit</button>
+    </div>
   </div>
-  <div class="six columns">
-    <strong>Vitesse 10Mb/s</strong><br />
-    <button class="u-full-width">Changer le débit</button>
-  </div>
-</div>
 </div>
