@@ -297,9 +297,9 @@ def get_logs(admin, username):
 
     # Prepare the elasticsearch query...
     query = {
-        "sort": [
-            '@timestamp',  # Sort by time
-        ],
+        "sort": {
+            '@timestamp': 'desc',  # Sort by time
+        },
         "query": {
             "bool": {
                 "should": [  # "should" in a "bool" query basically act as a "OR"
