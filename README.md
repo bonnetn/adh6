@@ -44,7 +44,7 @@ Ca semble donc aussi être un assez bon choix pour produire un code stable.
 En résumé, on a pris le parti prix d'ajouter deux dépendances au projet, mais on a gagné en flexibilité et en maintenabilité.
 
 
-## Backend
+## Dossier: api_server - le backend
 
 ### Le choix des technos
 
@@ -118,7 +118,7 @@ J'ai défini quelques fonctions utiles dans les modèles des objets de la BDD.
 - Obj.from_dict(dict) permet de retourner un obj en utilisant un dict de l'API
 - Obj.find(session, value) permet de retourner l'objet qui est associé par l'API
 
-## Frontend - Angular
+## Dossier frontend_angular: le frontend
 
 ### Pour installer:
 - Installez NodeJS ([voir le site](https://nodejs.org/en/download/)). (pas la version 10, celle LTS en dessous)
