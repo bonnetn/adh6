@@ -1,7 +1,8 @@
 import {BehaviorSubject, combineLatest, merge, Observable} from 'rxjs';
 import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
+import {OnInit} from '@angular/core';
 
-export class SearchPage {
+export class SearchPage implements OnInit {
   private searchTerm$ = new BehaviorSubject<string>('');
   private pageNumber$ = new BehaviorSubject<number>(1);
 

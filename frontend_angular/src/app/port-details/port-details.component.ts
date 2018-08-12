@@ -15,10 +15,10 @@ export class PortDetailsComponent implements OnInit, OnDestroy {
   port$: Observable<Port>;
   portID: number;
   switchID: number;
-  port_ouverture: string = 'ouvert';
-  portouvert: boolean = true;
-  port_authenth: string = 'authentifié';
-  isportauthenth: boolean = false;
+  port_ouverture = 'ouvert';
+  portouvert = true;
+  port_authenth = 'authentifié';
+  isportauthenth = false;
   private sub: any;
 
   constructor(
@@ -40,8 +40,7 @@ export class PortDetailsComponent implements OnInit, OnDestroy {
   IfRoomExists(roomNumber) {
     if (roomNumber == null) {
       this.notif.error('This port is not assigned to a room');
-    }
-    else {
+    } else {
       this.router.navigate(['/room/view', roomNumber]);
     }
   }

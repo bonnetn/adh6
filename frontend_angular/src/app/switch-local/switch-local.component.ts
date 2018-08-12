@@ -17,7 +17,7 @@ export class SwitchLocalComponent implements OnInit, OnDestroy {
   ports$: Observable<Array<Port>>;
   switchID = 8;
 
-  constructor(public switchService: SwitchService, private route: ActivatedRoute, public portService: PortService) {
+  constructor(public switchService: SwitchService, public portService: PortService) {
   }
 
   ngOnInit() {

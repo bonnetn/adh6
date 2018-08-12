@@ -14,7 +14,7 @@ export class AuthInterceptor implements HttpInterceptor {
     Observable<HttpEvent<any>> {
     const api_url = 'https://adh6.minet.net/api';
     // Check that the request is for the API server
-    if (req.url.substr(0, api_url.length) == api_url) {
+    if (req.url.substr(0, api_url.length) === api_url) {
       // if so, add the authentication header
       req = req.clone({
         setHeaders: {

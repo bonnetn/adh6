@@ -8,7 +8,7 @@ import {authConfig} from './auth.config';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  titre: string = 'ADH6';
+  titre = 'ADH6';
 
   constructor(private oauthService: OAuthService) {
     this.configureWithNewConfigApi();

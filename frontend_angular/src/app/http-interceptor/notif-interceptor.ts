@@ -15,7 +15,7 @@ export class NotifInterceptor implements HttpInterceptor {
     Observable<HttpEvent<any>> {
     const api_url = 'https://adh6.minet.net/api';
     // Check that the request is for the API server
-    if (req.method != 'GET' && req.url.substr(0, api_url.length) == api_url) {
+    if (req.method !== 'GET' && req.url.substr(0, api_url.length) === api_url) {
       // if there is an error, notify
       return next.handle(req).pipe(
         catchError(response => {

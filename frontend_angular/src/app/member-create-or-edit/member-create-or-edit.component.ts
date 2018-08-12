@@ -66,7 +66,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
     this.disabled = true;
     const v = this.memberEdit.value;
 
-    let req: MemberPatchRequest = {
+    const req: MemberPatchRequest = {
       email: v.email,
       firstName: v.firstName,
       lastName: v.lastName,

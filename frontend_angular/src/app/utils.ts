@@ -9,7 +9,7 @@ export class Utils {
       .pipe(
         first(),
         catchError((err: HttpErrorResponse) => {
-          if (err.status == 404) {
+          if (err.status === 404) {
             return EMPTY;
           }
           return Observable.of(false);

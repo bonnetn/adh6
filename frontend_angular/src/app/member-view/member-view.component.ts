@@ -126,10 +126,10 @@ export class MemberViewComponent implements OnInit, OnDestroy {
   updateDevice(username: string, alreadyExists: boolean);
   updateDevice(username?: string, alreadyExists?: boolean) {
 
-    if (username == undefined) {
+    if (username === undefined) {
       return this.username$
         .pipe(
-          flatMap((username) => this.updateDevice(username))
+          flatMap((usr) => this.updateDevice(usr))
         );
     }
 
@@ -198,12 +198,12 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
     this.member$ = refresh$.pipe(
       switchMap(username => this.memberService.getMember(username)),
-      tap((user) => this.commentForm.setValue({comment: (user.comment === undefined) ? '' : user.comment,})),
+      tap((user) => this.commentForm.setValue({comment: (user.comment === undefined) ? '' : user.comment})),
       share(),
     );
 
     this.all_devices$ = refresh$.pipe(
-      switchMap(username => this.deviceService.filterDevice(undefined, undefined, username)),
+      switchMap(username => this.deviceService.filterDevice(undefined, undefined,username)),
       share(),
     );
 
