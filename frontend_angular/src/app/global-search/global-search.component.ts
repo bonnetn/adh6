@@ -25,8 +25,9 @@ export class SearchResult {
   objType: string;
   name: string;
   color = 'grey';
+  link: Array<string>;
 
-  constructor(t: string, n: string) {
+  constructor(t: string, n: string, link: Array<string>) {
     this.objType = t;
     this.name = n;
     if (t === 'user') {
@@ -40,6 +41,7 @@ export class SearchResult {
     } else if (t === 'port') {
       this.color = 'purple';
     }
+    this.link = link;
   }
 }
 
@@ -87,26 +89,26 @@ export class GlobalSearchComponent implements OnInit {
 
         const user$ = this.memberService.filterMember(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
-          map((obj) => new SearchResult('user', obj.firstName + ' ' + obj.lastName)),
+          map((obj) => new SearchResult('user', obj.firstName + ' ' + obj.lastName, ['/member/view', obj.username])),
         );
 
         const device$ = this.deviceService.filterDevice(LIMIT, undefined, undefined, terms).pipe(
           mergeMap((array) => from(array)),
-          map((obj) => new SearchResult('device', obj.mac)),
+          map((obj) => new SearchResult('device', obj.mac, ['/device/view/', obj.mac])),
         );
 
         const room$ = this.roomService.filterRoom(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
-          map((obj) => new SearchResult('room', obj.description)),
+          map((obj) => new SearchResult('room', obj.description, ['/room/view', obj.roomNumber.toString()])),
         );
         const switch$ = this.switchService.filterSwitch(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
-          map((obj) => new SearchResult('switch', obj.description)),
+          map((obj) => new SearchResult('switch', obj.switch.description, ['/switch/view', obj.switch.id.toString()])),
         );
 
         const port$ = this.portService.filterPort(LIMIT, undefined, undefined, undefined, terms).pipe(
           mergeMap((array: Array<Port>) => from(array)),
-          map((obj: Port) => new SearchResult('port', 'Switch ' + obj.switchID + ' ' + obj.portNumber)),
+          map((obj: Port) => new SearchResult('port', 'Switch ' + obj.switchID + ' ' + obj.portNumber, ['/switch/view', obj.switchID.toString(), 'port', obj.id.toString()])),
         );
 
         return user$
