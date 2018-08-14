@@ -337,6 +337,6 @@ def get_logs(admin, username):
     res = es.search(index="", body=query)['hits']['hits']
 
     return list(map(
-        lambda x: "{} {}".format(x["@timestamp"], x["message"]),
+        lambda x: "{} {}".format(x["_source"]["@timestamp"], x["_source"]["message"]),
         res
     )), 200
