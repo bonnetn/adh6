@@ -70,8 +70,8 @@ def update_wired_device(admin, mac_address, body, s):
 
     dev.start_modif_tracking()
     dev.mac = body['mac']
-    dev.ip = body['ipAddress']
-    dev.ipv6 = body['ipv6Address']
+    dev.ip = body.get('ipAddress', 'En Attente')
+    dev.ipv6 = body.get('ipv6Address', 'En Attente')
     dev.adherent = Adherent.find(s, body['username'])
     s.flush()
 
