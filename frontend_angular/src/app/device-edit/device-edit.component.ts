@@ -32,7 +32,7 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
   createForm() {
     this.deviceForm = this.fb.group({
       username: ['', [Validators.required]],
-      mac: ['AA:AA:AA:AA:AA:AA', [Validators.required, Validators.minLength(17), Validators.maxLength(17)]],
+      mac: ['AA-AA-AA-AA-AA-AA', [Validators.required, Validators.minLength(17), Validators.maxLength(17)]],
       connectionType: ['', Validators.required],
     });
   }
