@@ -5,7 +5,7 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {DeviceService} from '../api/api/device.service';
 import {Device} from '../api/model/device';
 import {NotificationsService} from 'angular2-notifications';
-import {first, switchMap} from 'rxjs/operators';
+import {finalize, first, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-device-edit',
@@ -48,7 +48,10 @@ export class DeviceEditComponent implements OnInit, OnDestroy {
     };
 
     this.deviceService.putDevice(mac, device, 'response')
-      .pipe(first())
+      .pipe(
+        first(),
+        finalize(() => this.disabled = false),
+      )
       .subscribe((response: HttpResponse<void>) => {
         this.notificationService.success(response.status + ': Success');
         this.router.navigate(['member/view', v.username]);
