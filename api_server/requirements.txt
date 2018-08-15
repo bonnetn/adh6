@@ -1,7 +1,6 @@
 pytest
 flask
 connexion
-gevent
 SQLAlchemy
 mysqlclient
 pip
