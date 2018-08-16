@@ -15,14 +15,14 @@ RUN apt update \
 	libssl-dev \
     && useradd uwsgi
 
+RUN apt-get install -y libsasl2-dev libldap2-dev
+
 WORKDIR /adh6/
 
-RUN apt install -y libmariadbclient-dev
-
 # Install python requirements
-COPY api_server/requirements.txt /tmp/
+COPY authentication_server/requirements.txt /tmp/
 RUN pip3 install -r /tmp/requirements.txt && rm /tmp/requirements.txt
 
 EXPOSE 443
 
-CMD ["uwsgi", "--ini", "api_server/adh6-api.ini"]
+CMD ["uwsgi", "--ini", "authentication_server/adh6-authent.ini"]

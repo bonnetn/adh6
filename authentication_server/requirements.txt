@@ -1,3 +1,4 @@
+uwsgi
 Flask
 Flask-SQLAlchemy
 Authlib==0.6
