@@ -3,7 +3,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 cd $DIR
 
 # Build the docker image
-docker build -f "./Dockerfile" -t adh6_api . && \
+docker build -f "api_server/Dockerfile" -t adh6_api . && \
 
 # Run it
 docker run \

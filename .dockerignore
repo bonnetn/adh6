@@ -1,0 +1,59 @@
+# API SERVER
+**/__pycache__
+**.pyc
+**.idea
+api_server/.cache/
+api_server/.coverage
+api_server/.pytest_cache/
+api_server/.swagger-codegen/
+api_server/bin/
+api_server/include/
+api_server/lib/
+api_server/htmlcov/*
+api_server/pip-selfcheck.json
+api_server/certs/
+api_server/venv
+**/.pytest_cache
+
+# compiled output
+frontend_angular/dist
+frontend_angular/tmp
+frontend_angular/out-tsc
+
+# dependencies
+frontend_angular/node_modules
+
+# IDEs and editors
+frontend_angular/.project
+frontend_angular/.classpath
+frontend_angular/.c9/
+frontend_angular/*.launch
+frontend_angular/.settings/
+frontend_angular/*.sublime-workspace
+
+# IDE - VSCode
+frontend_angular/.vscode/*
+frontend_angular/!.vscode/settings.json
+frontend_angular/!.vscode/tasks.json
+frontend_angular/!.vscode/launch.json
+frontend_angular/!.vscode/extensions.json
+
+# misc
+frontend_angular//.sass-cache
+frontend_angular//connect.lock
+frontend_angular//coverage
+frontend_angular//libpeerconnection.log
+frontend_angular/npm-debug.log
+frontend_angular/testem.log
+frontend_angular//typings
+
+# e2e
+frontend_angular//e2e/*.js
+frontend_angular//e2e/*.map
+
+# System Files
+frontend_angular/.DS_Store
+frontend_angular/Thumbs.db
+
+#api
+frontend_angular/src/app/api/*

@@ -16,11 +16,11 @@ RUN apt update \
 	libssl-dev \
     && useradd uwsgi
 
-WORKDIR /adh6
+WORKDIR /adh6/
 
 # Install python requirements
-COPY requirements.txt ./
-RUN pip3 install -r requirements.txt 
+COPY api_server/requirements.txt /tmp/
+RUN pip3 install -r /tmp/requirements.txt && rm /tmp/requirements.txt
 
-CMD ["uwsgi", "--ini", "adh6-api.ini"]
 
+CMD ["uwsgi", "--ini", "api_server/adh6-api.ini"]
