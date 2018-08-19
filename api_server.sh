@@ -10,5 +10,4 @@ docker run \
 	-it \
 	--rm \
 	--name api_server \
-	--mount type=bind,source=$(pwd),target=/adh6,readonly \
 	adh6_api
