@@ -1,3 +1,6 @@
+# git
+.git/
+
 # API SERVER
 **/__pycache__
 **.pyc
