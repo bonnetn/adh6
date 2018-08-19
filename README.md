@@ -45,7 +45,7 @@ instructions pour installer docker?! Bon OK:
 2. Lancez l'application (le premier démarrage va prendre du temps, docker va
 construire toutes les images, installer plein de dépendances dans les
 environnements virtuels)
-> docker-compose up
+> docker-compose up --build
 
 
 ## Choix des technos
