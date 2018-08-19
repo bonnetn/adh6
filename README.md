@@ -68,8 +68,6 @@ En résumé, on a pris le parti prix d'ajouter deux dépendances au projet, mais
 
 ## Dossier: api_server - le backend
 
-### Le choix des technos
-
 ###  Je suis perdu, qu'est-ce que c'est que tous ces dossiers ?
 Ce projet consiste juste en l'implémentation des différents méthodes définies dans la spécification de l'API. 
 
@@ -129,7 +127,6 @@ J'ai défini quelques fonctions utiles dans les modèles des objets de la BDD.
 ## Dossier frontend_angular: le frontend
 
 *NOTE: nous utilisons la version 6 d'Angular*
-*NOTE2: Si vous trouver que c'est trop compliqué de configurer tout l'environnement de test, demandez à un des developpeurs un accès sur les machines virtuelles de test! Tout est déjà préparé dessus.*
 
 ## Authentication server
 ### Introduction
