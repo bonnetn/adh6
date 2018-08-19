@@ -26,6 +26,28 @@ La **fiabilité** de notre outil est aussi un concept important à nos yeux. C'e
 
 Allez sur gitlab.minet.net sur [la page du projet](https://gitlab.minet.net/adh6/core/). Si vous n'avez pas les accès, n'hésitez pas à les demander à zTeeed ou InsolentBacon (vous pouvez les contacter tous les deux dans la vraie vie ou sur mattermost/IRC). Une fois que vous y êtes, allez voir dans les issues, trouvez une qui vous plaît et assignez la vous! N'hésitez pas à demander des précisions sur les issues (aux deux mêmes zigotos), nous nous ferons un plaisir de tout vous expliquer!
 
+## OK, maintenant comment je lance en local?
+
+1. Installez *docker* et *docker-compose*. C'est le système qui va permettre de
+créer des environnements de dev' sur votre machine en local.
+
+Pour **Ubuntu/Debian**:
+> apt install docker docker-compose
+
+Pour **Arch Linux**:
+> pacman -S docker docker-compose
+
+Pour **Gentoo**:
+Les gars, vous avez installé gentoo, vous avez vraiment besoin des
+instructions pour installer docker?! Bon OK:
+> emerge --ask --verbose app-emulation/docker app-emulation/docker-compose
+
+2. Lancez l'application (le premier démarrage va prendre du temps, docker va
+construire toutes les images, installer plein de dépendances dans les
+environnements virtuels)
+> docker-compose up
+
+
 ## Choix des technos
 ### Communication client/serveur
 
@@ -47,20 +69,6 @@ En résumé, on a pris le parti prix d'ajouter deux dépendances au projet, mais
 ## Dossier: api_server - le backend
 
 ### Le choix des technos
-
-### How to setup the project
-- Create a virtualenv ```virtualenv ./```
-- Enter the virtualenv ```source bin/activate```
-- Install the requirements ```pip3 install -r requirements.txt```
-- Fill the setting file ``` cp CONFIGURATION.py{.example,} && vim CONFIGURATION.py ``` 
-- Install the UWSGI server ``` apt install uwsgi uwsgi-plugin-python3 ```
-- You can use the example configuration file provided for the UWSGI configuration ``` cp adh6-api.ini /etc/uwsgi/sites-available ```
-- Activate the site``` ln -s /etc/uwsgi/sites-available /etc/uwsgi/sites-enabled ```
-- Restart UWSGI ``` systemctl restart uwsgi ```
-
-A UWSGI server is now running on your machine. To access the API, install a webserver (such as NGINX) and configure it to use the UWSGI server.
-
-Note: this is not the easiest way to develop. Do not hesitate to ask an access of the test VMs. The whole environment is already setup.
 
 ###  Je suis perdu, qu'est-ce que c'est que tous ces dossiers ?
 Ce projet consiste juste en l'implémentation des différents méthodes définies dans la spécification de l'API. 
@@ -120,13 +128,6 @@ J'ai défini quelques fonctions utiles dans les modèles des objets de la BDD.
 
 ## Dossier frontend_angular: le frontend
 
-### Pour installer:
-- Installez NodeJS ([voir le site](https://nodejs.org/en/download/)). (pas la version 10, celle LTS en dessous)
-- ```sudo npm install --unsafe-perms -g @angular/cli@^6.0.0```
-- ```npm install```
-- Éditez éventuellement ```src/app/auth.config.ts``` si vous voulez changer le serveur d'authentification.
-- ``` npm start ```
-
 *NOTE: nous utilisons la version 6 d'Angular*
 *NOTE2: Si vous trouver que c'est trop compliqué de configurer tout l'environnement de test, demandez à un des developpeurs un accès sur les machines virtuelles de test! Tout est déjà préparé dessus.*
 
@@ -135,16 +136,3 @@ J'ai défini quelques fonctions utiles dans les modèles des objets de la BDD.
 Ce serveur un est un serveur OAuth2 qui a été implémenté en python grâce à la bibliothèque Authlib. Il est voué à être remplacé par une solution de [SSO](https://en.wikipedia.org/wiki/Single_sign-on) qui serait plus adaptée (On pourrait utiliser OpenID Connect).
 
 On utilise le flow *Implicit grant* d'OAuth2.
-
-
-### Comment lancer ?
-- Install required packages ```sudo apt install libpcre3 libpcre3-dev uwsgi uwsgi-plugin-python3```
-- Create a virtualenv ```virtualenv ./```
-- Enter the virtualenv ```source bin/activate```
-- Install the requirements ```pip3 install -r requirements.txt```
-- Fill the setting file ``` cp CONFIGURATION.py{.example,} && vim CONFIGURATION.py ``` 
-- You can use the example configuration file provided for the UWSGI configuration ``` cp adh6-api.ini /etc/uwsgi/sites-available ```
-- Activate the site``` ln -s /etc/uwsgi/sites-available /etc/uwsgi/sites-enabled ```
-- Restart UWSGI ``` systemctl restart uwsgi ```
-
-
