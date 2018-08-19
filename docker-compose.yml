@@ -1,0 +1,45 @@
+version: '3'
+services:
+  authentication_server:
+    build:
+      context: ./
+      dockerfile: ./authentication_server/Dockerfile
+    expose:
+      - "443"
+
+  frontend_angular:
+    build:
+      context: ./
+      dockerfile: ./frontend_angular/Dockerfile
+    expose:
+      - "8443" # app does not start as root here
+
+  api_server:
+    build:
+      context: ./
+      dockerfile: ./api_server/Dockerfile
+    links:
+      - database
+    expose:
+      - "443"
+
+  web_server:
+    image: "nginx"
+    links:
+      - frontend_angular
+      - api_server
+      - authentication_server
+    ports:
+      - "8443:443"
+      - "8080:80"
+
+  database:
+    image: "mariadb"
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: "adh6"
+      MYSQL_USER: "adh6"
+      MYSQL_PASSWORD: "this_is_a_dev_password_please_change_it_on_prod!"
+    expose:
+      - "3306"
+

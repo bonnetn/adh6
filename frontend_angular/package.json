@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "sh generate_api_services.sh && ng serve --public-host adh6.minet.net",
+    "start": "ng serve --public-host adh6.minet.net",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
