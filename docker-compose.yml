@@ -11,6 +11,8 @@ services:
     build:
       context: ./
       dockerfile: ./frontend_angular/Dockerfile
+      args:
+        PUBLIC_HOSTNAME: localhost
     expose:
       - "8443" # app does not start as root here
 
@@ -24,14 +26,15 @@ services:
       - "443"
 
   web_server:
-    image: "nginx"
+    build: "./reverse_proxy/"
     links:
-      - frontend_angular
-      - api_server
+      #- frontend_angular
+      #- api_server
       - authentication_server
     ports:
-      - "8443:443"
-      - "8080:80"
+      - "443:443"
+      - "80:80"
+    command: [nginx-debug, '-g', 'daemon off;']
 
   database:
     image: "mariadb"
