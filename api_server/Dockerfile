@@ -29,4 +29,4 @@ RUN pip3 install -r ./requirements.txt
 COPY ./openapi/spec.yaml ../openapi/
 COPY ./api_server ./
 
-CMD ["uwsgi", "--ini", "adh6-api.ini"]
+CMD ["uwsgi", "--ini", "uwsgi.ini"]
