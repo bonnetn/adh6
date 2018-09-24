@@ -1,18 +1,25 @@
+import os
+
 import requests
 import requests.exceptions
-from flask import current_app
-from connexion import NoContent
 from adh.model.database import Database as db
 from adh.model.models import Utilisateur
+from connexion import NoContent
+from flask import current_app
 
 
 def get_groups(token):
     try:
+        verify_cert = True
+        if os.environ["ENVIRONMENT"] == "testing":
+            verify_cert = False
+
         headers = {"Authorization": "Bearer " + token}
         r = requests.get(
             current_app.config["AUTH_SERVER_ADDRESS"] + "/api/me",
             headers=headers,
-            timeout=1
+            timeout=1,
+            verify=verify_cert
         )
     except requests.exceptions.ReadTimeout:
         return None
@@ -24,7 +31,6 @@ def get_groups(token):
 
 
 def token_info(access_token) -> dict:
-
     if current_app.config["TESTING"]:
         return {
             "uid": "TestingClient",

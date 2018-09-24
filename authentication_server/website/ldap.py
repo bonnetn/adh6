@@ -1,5 +1,6 @@
 import ldap
 import logging
+import os
 import ldap.filter
 from CONFIGURATION import LDAP_CONF
 
@@ -13,7 +14,10 @@ class LdapServ():
     @staticmethod
     def __init_ldap_con():
             # Force nice LDAP over TLS with CA
-            ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_HARD)
+            if os.Environ["ENVIRONMENT"] == "testing":
+                ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
+            else:
+                ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_HARD)
             ldap.set_option(ldap.OPT_PROTOCOL_VERSION, 3)
             ldap.set_option(ldap.OPT_X_TLS_CACERTFILE, LDAP_CONF["ca_file"])
             ldap.set_option(ldap.OPT_X_TLS_DEMAND, True)

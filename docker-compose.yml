@@ -7,6 +7,11 @@ services:
     expose:
       - "443"
 
+  cas:
+    build: "./cas"
+    expose:
+      - "8443:8443"
+
   frontend_angular:
     build:
       context: ./
@@ -22,6 +27,7 @@ services:
       dockerfile: ./api_server/Dockerfile
     links:
       - database
+      - authentication_server
     expose:
       - "443"
 
