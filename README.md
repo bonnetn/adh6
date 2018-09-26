@@ -47,6 +47,9 @@ construire toutes les images, installer plein de dépendances dans les
 environnements virtuels)
 > docker-compose up --build
 
+Le premier lancement peut prendre beaucoup de temps. Il va installer et set-up tous les environnements dockers, et rebuild CAS.  
+Ne vous inquiétez pas, lancer les dockers sera bien plus rapide les prochaines fois que vous re-lancerez.
+
 
 ## Choix des technos
 ### Communication client/serveur
