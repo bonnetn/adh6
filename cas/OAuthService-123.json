@@ -1,0 +1,11 @@
+{
+  "@class" : "org.apereo.cas.support.oauth.services.OAuthRegisteredService",
+  "clientId": "adh6",
+  "clientSecret": "minet",
+  "serviceId" : "^(https|imaps)://localhost.*",
+  "name" : "OAuthService",
+  "id" : 123,
+  "supportedGrantTypes": [ "java.util.HashSet", [ "token" ] ],
+  "supportedResponseTypes": [ "java.util.HashSet", [ "token" ] ],
+  "bypassApprovalPrompt": true
+}
