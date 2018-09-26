@@ -1,12 +1,5 @@
 version: '3'
 services:
-  authentication_server:
-    build:
-      context: ./
-      dockerfile: ./authentication_server/Dockerfile
-    expose:
-      - "443"
-
   cas:
     build: "./cas"
     ports:
@@ -27,16 +20,16 @@ services:
       dockerfile: ./api_server/Dockerfile
     links:
       - database
-      - authentication_server
+      - cas
     expose:
       - "443"
 
   web_server:
     build: "./reverse_proxy/"
     links:
-      #- frontend_angular
-      #- api_server
-      - authentication_server
+      - frontend_angular
+      - api_server
+      - cas
     ports:
       - "443:443"
       - "80:80"
