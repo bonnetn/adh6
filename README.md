@@ -133,3 +133,10 @@ J'ai défini quelques fonctions utiles dans les modèles des objets de la BDD.
 Ce serveur un est un serveur OAuth2 qui a été implémenté en python grâce à la bibliothèque Authlib. Il est voué à être remplacé par une solution de [SSO](https://en.wikipedia.org/wiki/Single_sign-on) qui serait plus adaptée (On pourrait utiliser OpenID Connect).
 
 On utilise le flow *Implicit grant* d'OAuth2.
+
+## CAS
+### Description
+Au lieu de réimplémenter une solution de Single sign-on, j'ai ajouté une image docker CAS au projet. 
+Il est configuré pour accepter un utilisateur avec comme identifiant minet et comme mot de passe minet.
+Cela peut sembler évident mais NE PAS UTILISER CETTE IMAGE EN PRODUCTION.
+Il faudra configurer CAS pour utiliser le serveur LDAP et éventuellement configurer les autres options de sécurité.
