@@ -9,7 +9,7 @@ services:
 
   cas:
     build: "./cas"
-    expose:
+    ports:
       - "8443:8443"
 
   frontend_angular:
