@@ -65,7 +65,3 @@ frontend_angular/src/app/api/*
 # certificats
 frontend_angular/certs/
 
-# AUTHENTICATION SERVER
-authentication_server/*.sqlite
-authentication_server/certs_local/
-authentication_server/CONFIGURATION.py
