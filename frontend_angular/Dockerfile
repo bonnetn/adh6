@@ -56,6 +56,9 @@ COPY frontend_angular/ ./
 USER root
 RUN sed -i 's/adh6.minet.net/localhost/g' src/app/http-interceptor/notif-interceptor.ts
 RUN sed -i 's/adh6.minet.net/localhost/g' src/app/http-interceptor/auth-interceptor.ts
+RUN sed -i 's/PUT_YOUR_SSO_URL_HERE/localhost:8443\/cas/g' src/app/auth.config.ts
+RUN sed -i 's/PUT_ADH6_URL_HERE/localhost/g' src/app/auth.config.ts
+
 USER angular
 
 CMD ["npm", "start"]

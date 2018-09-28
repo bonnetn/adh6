@@ -4,6 +4,7 @@ import {OAuthService} from 'angular-oauth2-oidc';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 
 import {Observable} from 'rxjs/Observable';
+import {authConfig} from '../auth.config';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -12,7 +13,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler):
     Observable<HttpEvent<any>> {
-    const api_url = 'https://adh6.minet.net/api';
+    const api_url = authConfig.redirectUri
     // Check that the request is for the API server
     if (req.url.substr(0, api_url.length) === api_url) {
       // if so, add the authentication header
