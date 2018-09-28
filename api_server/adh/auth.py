@@ -2,10 +2,11 @@ import os
 
 import requests
 import requests.exceptions
-from adh.model.database import Database as db
-from adh.model.models import Utilisateur
 from connexion import NoContent
 from flask import current_app
+
+from adh.model.database import Database as db
+from adh.model.models import Utilisateur
 
 
 def get_groups(token):
@@ -15,8 +16,9 @@ def get_groups(token):
             verify_cert = False
 
         headers = {"Authorization": "Bearer " + token}
+        print(headers)
         r = requests.get(
-            current_app.config["AUTH_SERVER_ADDRESS"] + "/api/me",
+            current_app.config["AUTH_SERVER_ADDRESS"],
             headers=headers,
             timeout=1,
             verify=verify_cert
@@ -24,10 +26,13 @@ def get_groups(token):
     except requests.exceptions.ReadTimeout:
         return None
 
-    if r.status_code != 200 or "uid" not in r.json():
+    if r.status_code != 200 or "id" not in r.json():
         return None
 
-    return r.json()
+    result = r.json()
+    if os.environ["ENVIRONMENT"] == "testing":
+        result["groups"] = ["adh6_user", "adh6_admin"]  # If we are testing, consider the user as admin
+    return result
 
 
 def token_info(access_token) -> dict:
@@ -42,7 +47,7 @@ def token_info(access_token) -> dict:
     if not infos:
         return None
     return {
-        "uid": infos["uid"],
+        "uid": infos["id"],
         "scope": ["profile"],
         "groups": infos["groups"]
     }
@@ -51,20 +56,22 @@ def token_info(access_token) -> dict:
 def auth_regular_admin(f):
     def wrapper(*args, user, token_info, **kwargs):
         if current_app.config["TESTING"] \
-           or "adh6_user" in token_info["groups"]:
+                or "adh6_user" in token_info["groups"]:
             s = db.get_db().get_session()
             admin = Utilisateur.find_or_create(s, user)
             return f(admin, *args, **kwargs)
         return NoContent, 401
+
     return wrapper
 
 
 def auth_super_admin(f):
     def wrapper(*args, user, token_info, **kwargs):
         if current_app.config["TESTING"] \
-           or "adh6_admin" in token_info["groups"]:
+                or "adh6_admin" in token_info["groups"]:
             s = db.get_db().get_session()
             admin = Utilisateur.find_or_create(s, user)
             return f(admin, *args, **kwargs)
         return NoContent, 401
+
     return wrapper
