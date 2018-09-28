@@ -23,6 +23,10 @@ services:
       - cas
     expose:
       - "443"
+    environment:
+      APPLICATION_ROOT: "/api"
+      CAS_PROFILE_URL: "https://localhost:8443/cas/oauth2.0/profile"
+      ENVIRONMENT: "testing"
 
   web_server:
     build: "./reverse_proxy/"

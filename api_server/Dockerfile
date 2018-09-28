@@ -30,5 +30,9 @@ COPY ./openapi/spec.yaml ../openapi/
 COPY ./api_server ./
 
 ENV ENVIRONMENT=testing
+ENV APPLICATION_ROOT=/api
+ENV CAS_PROFILE_URL=https://cas.minet.net/
+
+RUN /bin/bash ./gen_config/generate_config.sh
 
 CMD ["uwsgi", "--ini", "uwsgi.ini"]

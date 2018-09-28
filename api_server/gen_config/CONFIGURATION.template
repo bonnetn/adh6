@@ -1,0 +1,26 @@
+API_CONF = {
+    'AUTH_SERVER_ADDRESS': '{{ CAS_PROFILE_URL }}',
+    'APPLICATION_ROOT': '{{ APPLICATION_ROOT }}',
+}
+
+PROD_DATABASE = {
+    'drivername': 'sqlite',
+    'database': ':memory:',
+}
+
+TEST_DATABASE = {
+    'drivername': 'sqlite',
+    'database': ':memory:',
+}
+
+PRICES = {
+    31: 9,
+    2 * 31: 18,
+    3 * 31: 27,
+    4 * 31: 36,
+    5 * 31: 45,
+    360: 50,
+}
+
+ELK_HOSTS = [
+]
