@@ -66,42 +66,53 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
     this.disabled = true;
     const v = this.memberEdit.value;
 
-    const req: MemberPatchRequest = {
-      email: v.email,
-      firstName: v.firstName,
-      lastName: v.lastName,
-      username: v.username,
-    };
-    if (v.roomNumber) {
-      req.roomNumber = v.roomNumber;
-    }
     // If you create a user, then use the username from the form.
     // If you update a user, since the admin might have modified their username, you better use the original one (the one loaded at
     // initialization of the page).
-    let username = v.username;
+    let requestUsername = v.username;
     if (!this.create) {
-      username = this.originalUsername;
+      requestUsername = this.originalUsername;
     }
 
     Observable.of(this.create)
       .pipe(
         flatMap((create) => {
-          const has404 = Utils.hasReturned404(this.memberService.getMember(v.username));
-          if (!create && this.originalUsername === v.username) {
-            // Update and no change of the username, then OK
-            return Observable.of(true);
+          if (create) {
+            // We don't want to override with PUT so we check if the member exist.
+            return Utils.hasReturned404(this.memberService.getMember(v.username));
           }
-          // (Update and try to modify the username) OR (Create new user)
-          // If there is already a user with that username, do not allow.
-          return has404;
+          // If we try to modify, OK.
+          return Observable.of(true);
         }),
-        flatMap((allowed) => {
-          if (!allowed) {
+        flatMap((canCreate) => {
+          if (!canCreate) {
             return EMPTY;
           }
           return Observable.of(null);
         }),
-        flatMap(() => this.memberService.patchMember(username, req, 'response')),
+        flatMap(() => {
+          if (!this.create) {
+            const req: MemberPatchRequest = {
+              email: v.email,
+              firstName: v.firstName,
+              lastName: v.lastName,
+              username: v.username,
+            };
+            if (v.roomNumber) {
+              req.roomNumber = v.roomNumber;
+            }
+            return this.memberService.patchMember(requestUsername, req, 'response');
+          } else {
+            const req: Member = {
+              email: v.email,
+              firstName: v.firstName,
+              lastName: v.lastName,
+              username: v.username,
+              roomNumber: (v.roomNumber == null ? 0 : v.roomNumber),
+            };
+            return this.memberService.putMember(requestUsername, req, 'response');
+          }
+        }),
         first(),
         finalize(() => this.disabled = false),
       )
