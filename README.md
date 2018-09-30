@@ -47,8 +47,11 @@ construire toutes les images, installer plein de dépendances dans les
 environnements virtuels)
 > docker-compose up --build
 
-Le premier lancement peut prendre beaucoup de temps. Il va installer et set-up tous les environnements dockers, et rebuild CAS (ça prend beaucoup de temps et télécharge ~700MB, c'est pas de la faute d'ADH...).  
+Le premier lancement peut prendre beaucoup de temps (genre au moins 15 mins). Il va installer et set-up tous les environnements dockers, et rebuild CAS (ça prend beaucoup de temps et télécharge ~700MB, c'est pas de la faute d'ADH...).  
 Ne vous inquiétez pas, lancer les dockers sera bien plus rapide les prochaines fois que vous re-lancerez.
+
+
+Normalement, une fois que le projet est lancé, vous aurez les logs de tous les dockers dans la console. Si vous éditez le code du Frontend (angular) dans votre dossier, les modifications seront automatiquement réfléchies (vous allez voir des logs comme quoi il recompile automatiquement).
 
 
 ## Choix des technos
