@@ -1,5 +1,9 @@
 FROM apereo/cas:v5.3.2
 
+ARG ADH6_BASE_URL="adh6.minet.net/"
+
+EXPOSE 8443
+
 # Add OAuth2 dep & rebuild
 COPY ./pom.xml /cas-overlay/pom.xml
 RUN ./mvnw clean package -T 10 -Dcas.version=5.3.2
@@ -14,8 +18,14 @@ RUN keytool -import -keystore $JAVA_HOME/lib/security/cacerts -file /tmp/cas.crt
 RUN mkdir /etc/cas/config
 COPY ./cas.properties /etc/cas/config/
 
-# Add a service
-RUN mkdir -p /etc/cas/services
-COPY ./OAuthService-123.json /etc/cas/services/
+# Generate necessary config file
+ENV ADH6_BASE_URL=$ADH6_BASE_URL
 
+COPY ./gen_config ./gen_config
+RUN /bin/bash ./gen_config/generate_config.sh && \
+    mkdir -p /etc/cas/services && \
+    mv ./OAuthService-123.json /etc/cas/services && \
+    rm -rf ./gen_config/
+
+# Launch the app
 CMD ["/cas-overlay/bin/run-cas.sh"]

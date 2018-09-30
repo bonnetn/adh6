@@ -5,6 +5,7 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import {Observable} from 'rxjs/Observable';
 import {catchError} from 'rxjs/operators';
 import {_throw} from 'rxjs-compat/observable/throw';
+import {authConfig} from '../auth.config';
 
 @Injectable()
 export class NotifInterceptor implements HttpInterceptor {
@@ -13,7 +14,7 @@ export class NotifInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler):
     Observable<HttpEvent<any>> {
-    const api_url = 'https://adh6.minet.net/api';
+    const api_url = authConfig.redirectUri;
     // Check that the request is for the API server
     if (req.method !== 'GET' && req.url.substr(0, api_url.length) === api_url) {
       // if there is an error, notify

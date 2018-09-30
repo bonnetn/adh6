@@ -1,6 +1,8 @@
+###############################################################################
 # First stage: generate API files...
+###############################################################################
 FROM openjdk:8-jre-alpine
-ARG PUBLIC_HOSTNAME="adh6.minet.net"
+ARG BASE_ADH6_URL="adh6.minet.net"
 
 WORKDIR /tmp
 
@@ -9,12 +11,18 @@ RUN wget http://central.maven.org/maven2/io/swagger/swagger-codegen-cli/2.3.1/sw
 
 
 COPY openapi/spec.yaml ./swagger.yaml
-RUN sed -i "s/adh6.minet.net/$PUBLIC_HOSTNAME/g" swagger.yaml
+RUN sed -i "s#adh6.minet.net#$BASE_ADH6_URL#g" swagger.yaml
 RUN java -jar swagger-codegen-cli.jar generate -i "./swagger.yaml" -l typescript-angular -o "./api" --additional-properties ngVersion=6
 
+
+###############################################################################
 # 2nd stage, launch the app
+###############################################################################
 FROM node:carbon-slim
-ARG PUBLIC_HOSTNAME="adh6.minet.net"
+
+ARG BASE_ADH6_URL="adh6.minet.net"
+ARG SSO_LOGOUT="cas.minet.net/logout"
+ARG SSO_AUTHORIZE="cas.minet.net/oauth2.0/authorize"
 
 EXPOSE 8443
 
@@ -35,30 +43,30 @@ RUN groupadd -r angular && useradd --no-log-init -r -m -g angular angular && \
     mkdir -p /adh6/frontend_angular &&\
     chown angular:angular /adh6/frontend_angular
 
-
-USER angular
-
 WORKDIR /adh6/frontend_angular
 
 # Install packages
 COPY frontend_angular/package*.json ./
-RUN sed -i 's/adh6.minet.net/localhost/g' package.json
+
+# Need angular user to install package
+USER angular
 RUN npm install
+USER root
+
+# Copy source code
+COPY frontend_angular/src ./src
+COPY frontend_angular/*.json ./
 
 # Copy automatically generated files from previous stage
 COPY --from=0 /tmp/api src/app/api
 
-
-# Copy source code
-COPY frontend_angular/ ./
-
-# TODO: Remove that!
-USER root
-RUN sed -i 's/adh6.minet.net/localhost/g' src/app/http-interceptor/notif-interceptor.ts
-RUN sed -i 's/adh6.minet.net/localhost/g' src/app/http-interceptor/auth-interceptor.ts
-RUN sed -i 's/PUT_YOUR_SSO_URL_HERE/localhost:8443\/cas/g' src/app/auth.config.ts
-RUN sed -i 's/PUT_ADH6_URL_HERE/localhost/g' src/app/auth.config.ts
+# Generate necessary config file
+ENV SSO_LOGOUT=$SSO_LOGOUT
+ENV SSO_AUTHORIZE=$SSO_AUTHORIZE
+ENV BASE_ADH6_URL=${BASE_ADH6_URL}
+COPY frontend_angular/gen_config ./gen_config
+RUN /bin/bash ./gen_config/generate_config.sh && rm -rf ./gen_config
 
 USER angular
-
-CMD ["npm", "start"]
+# We use /bin/sh to be able to use ENV vars...
+CMD ["/bin/sh", "-c", "ng serve --public-host ${BASE_ADH6_URL}"]

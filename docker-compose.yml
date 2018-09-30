@@ -1,44 +1,55 @@
 version: '3'
 services:
+  # CAS is used as a OAuth2 server to authenticate the admins.
   cas:
-    build: "./cas"
+    build: 
+      context: "./cas"
+      args:
+        ADH6_BASE_URL: "localhost/" # Do not forget the trailing slash!
     ports:
       - "8443:8443"
 
+  # frontend_angular is a web server that provides the JS to the clients.
   frontend_angular:
     build:
       context: ./
       dockerfile: ./frontend_angular/Dockerfile
       args:
-        PUBLIC_HOSTNAME: localhost
+        BASE_ADH6_URL: "localhost/" # Do not forget the trailing slash!
+        SSO_LOGOUT: "localhost:8443/cas/logout"
+        SSO_AUTHORIZE: "localhost:8443/cas/oauth2.0/authorize"
     expose:
       - "8443" # app does not start as root here
 
+  # api_server is the API that actually does action on the database.
   api_server:
     build:
       context: ./
       dockerfile: ./api_server/Dockerfile
+      args:
+        APPLICATION_ROOT: "/api"
+        CAS_PROFILE_URL: "https://localhost:8443/cas/oauth2.0/profile"
     links:
       - database
       - cas
     expose:
       - "443"
     environment:
-      APPLICATION_ROOT: "/api"
-      CAS_PROFILE_URL: "https://localhost:8443/cas/oauth2.0/profile"
       ENVIRONMENT: "testing"
-
-  web_server:
+      
+  # The reverse proxy is used to gather the api and the frontend behind the same
+  # host. We can also use it to cache requests.
+  reverse_proxy:
     build: "./reverse_proxy/"
     links:
       - frontend_angular
       - api_server
-      - cas
     ports:
       - "443:443"
-      - "80:80"
-    command: [nginx-debug, '-g', 'daemon off;']
+      - "80:80" # Redirect to 443.
+    command: ['nginx-debug', '-g', 'daemon off;'] # More logging!
 
+  # The RDBMS of the project.
   database:
     image: "mariadb"
     environment:
