@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 services:
   # CAS is used as a OAuth2 server to authenticate the admins.
   cas:
@@ -20,6 +20,16 @@ services:
         SSO_AUTHORIZE: "localhost:8443/cas/oauth2.0/authorize"
     expose:
       - "8443" # app does not start as root here
+    volumes:
+      # Make a bind mount so you can modify files in the container
+      - type: bind
+        source: "./frontend_angular/src"
+        target: "/adh6/frontend_angular/src/"
+        read_only: "true"
+      # These are files that are generated in the dockerfile that should not be
+      # read from the host disk.
+      - "/adh6/frontend_angular/src/app/api"
+      - "/adh6/frontend_angular/src/app/config"
 
   # api_server is the API that actually does action on the database.
   api_server:

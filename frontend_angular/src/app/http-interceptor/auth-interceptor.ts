@@ -4,7 +4,7 @@ import {OAuthService} from 'angular-oauth2-oidc';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 
 import {Observable} from 'rxjs/Observable';
-import {authConfig} from '../auth.config';
+import {authConfig} from '../config/auth.config';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

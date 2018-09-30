@@ -5,7 +5,7 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import {Observable} from 'rxjs/Observable';
 import {catchError} from 'rxjs/operators';
 import {_throw} from 'rxjs-compat/observable/throw';
-import {authConfig} from '../auth.config';
+import {authConfig} from '../config/auth.config';
 
 @Injectable()
 export class NotifInterceptor implements HttpInterceptor {

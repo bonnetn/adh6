@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {JwksValidationHandler, OAuthService} from 'angular-oauth2-oidc';
-import {authConfig} from './auth.config';
+import {authConfig} from './config/auth.config';
 
 @Component({
   selector: 'app-root',

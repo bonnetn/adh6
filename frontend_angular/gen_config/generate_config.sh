@@ -1,7 +1,7 @@
 #!/bin/sh
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-CONFIG_FILE="$DIR/../src/app/auth.config.ts"
+CONFIG_FILE="$DIR/../src/app/config/auth.config.ts"
 
 cp "$DIR/auth.config.ts.template" "$CONFIG_FILE"
 sed -i "s#{{ SSO_LOGOUT }}#${SSO_LOGOUT}#g" $CONFIG_FILE

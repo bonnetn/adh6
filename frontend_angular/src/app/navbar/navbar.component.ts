@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AppComponent} from '../app.component';
 import {OAuthService} from 'angular-oauth2-oidc';
-import {authConfig} from '../auth.config';
+import {authConfig} from '../config/auth.config';
 
 
 @Component({
