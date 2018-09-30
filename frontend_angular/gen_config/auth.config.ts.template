@@ -1,0 +1,10 @@
+import {AuthConfig} from 'angular-oauth2-oidc';
+
+export const authConfig: AuthConfig = {
+  loginUrl: 'https://{{ SSO_AUTHORIZE }}',
+  logoutUrl: 'https://{{ SSO_LOGOUT }}',
+  redirectUri: 'https://{{ BASE_ADH6_URL }}',
+  clientId: 'adh6',
+  scope: 'profile',
+  oidc: false,
+};
