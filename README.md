@@ -50,6 +50,10 @@ environnements virtuels)
 Le premier lancement peut prendre beaucoup de temps (genre au moins 15 mins). Il va installer et set-up tous les environnements dockers, et rebuild CAS (ça prend beaucoup de temps et télécharge ~700MB, c'est pas de la faute d'ADH...).  
 Ne vous inquiétez pas, lancer les dockers sera bien plus rapide les prochaines fois que vous re-lancerez.
 
+Vous pouvez tester l'application dans votre navigateur à l'adresse https://localhost
+Vous pouvez vous identifier avec comme username *minet* et comme mot de passe *minet*.
+
+
 
 Normalement, une fois que le projet est lancé, vous aurez les logs de tous les dockers dans la console. Si vous éditez le code du Frontend (angular) dans votre dossier, les modifications seront automatiquement réfléchies (vous allez voir des logs comme quoi il recompile automatiquement).
 
