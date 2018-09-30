@@ -9,7 +9,7 @@ import {Device} from '../api/model/device';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {catchError, finalize, first, flatMap, map, share, switchMap, tap} from 'rxjs/operators';
-import {combineLatest} from 'rxjs';
+import {combineLatest, interval} from 'rxjs';
 
 @Component({
   selector: 'app-member-details',
@@ -203,13 +203,18 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     );
 
     this.all_devices$ = refresh$.pipe(
-      switchMap(username => this.deviceService.filterDevice(undefined, undefined,username)),
+      switchMap(username => this.deviceService.filterDevice(undefined, undefined, username)),
       share(),
     );
 
     this.log$ = this.username$.pipe(
-      flatMap((str) => this.memberService.getLogs(str))
-    );
+      switchMap((str) => {
+        return interval(10 * 1000).pipe(
+          switchMap(() => this.memberService.getLogs(str))
+        );
+      }) // refresh every 10 secs
+    )
+    ;
   }
 
   ngOnDestroy() {
