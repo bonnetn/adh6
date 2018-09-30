@@ -51,12 +51,11 @@ services:
 
   # The RDBMS of the project.
   database:
-    image: "mariadb"
+    build: "database"
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
       MYSQL_DATABASE: "adh6"
       MYSQL_USER: "adh6"
-      MYSQL_PASSWORD: "this_is_a_dev_password_please_change_it_on_prod!"
+      MYSQL_PASSWORD: "adh6_pass" # Please change this password on prod'.
     expose:
       - "3306"
-
