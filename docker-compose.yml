@@ -28,7 +28,7 @@ services:
       dockerfile: ./api_server/Dockerfile
       args:
         APPLICATION_ROOT: "/api"
-        CAS_PROFILE_URL: "https://localhost:8443/cas/oauth2.0/profile"
+        CAS_PROFILE_URL: "https://cas:8443/cas/oauth2.0/profile"
     links:
       - database
       - cas
