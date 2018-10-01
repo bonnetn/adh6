@@ -55,7 +55,10 @@ Vous pouvez vous identifier avec comme username *minet* et comme mot de passe *m
 
 
 
-Normalement, une fois que le projet est lancé, vous aurez les logs de tous les dockers dans la console. Si vous éditez le code du Frontend (angular) dans votre dossier, les modifications seront automatiquement réfléchies (vous allez voir des logs comme quoi il recompile automatiquement).
+Normalement, une fois que le projet est lancé, vous aurez les logs de tous les dockers dans la console. 
+Si vous éditez le code du Frontend (angular) dans votre dossier, les modifications seront automatiquement réfléchies (vous allez voir des logs comme quoi il recompile automatiquement). Pour le code de l'API, modifiez votre code et faites *docker-compose restart api_server*.
+Si vous modifiez autre chose, vous pouvez aussi tout relancer (mais ça prend du temps à cause de CAS).
+
 
 
 ## Choix des technos
