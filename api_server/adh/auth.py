@@ -11,7 +11,7 @@ from adh.model.models import Utilisateur
 def get_groups(token):
     try:
         verify_cert = True
-        if os.environ["ENVIRONMENT"] == "testing":
+        if os.environ["ENVIRONMENT"] == "dev":
             verify_cert = False
 
         headers = {"Authorization": "Bearer " + token}
@@ -28,7 +28,7 @@ def get_groups(token):
         return None
 
     result = r.json()
-    if os.environ["ENVIRONMENT"] == "testing":
+    if os.environ["ENVIRONMENT"] == "dev":
         result["groups"] = ["adh6_user", "adh6_admin"]  # If we are testing, consider the user asg.admin
     return result
 

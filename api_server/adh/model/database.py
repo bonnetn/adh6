@@ -1,3 +1,4 @@
+from flask import current_app
 from sqlalchemy import create_engine, event
 from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.declarative import declarative_base
@@ -21,8 +22,9 @@ class Database():
             # emit our own BEGIN
             conn.execute("BEGIN")
 
-        self.session_maker = scoped_session(sessionmaker(bind=self.engine))
+        self.session_maker = sessionmaker(bind=self.engine)
         if testing:
+            self.session_maker = scoped_session(self.session_maker)
             Base.metadata.drop_all(self.engine)
         Base.metadata.create_all(self.engine)
         self.testing = testing

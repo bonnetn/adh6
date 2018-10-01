@@ -45,7 +45,7 @@ services:
     expose:
       - "443"
     environment:
-      ENVIRONMENT: "testing"
+      ENVIRONMENT: "dev"
     volumes:
       # Make a bind mount so you can modify files in the container
       - type: bind

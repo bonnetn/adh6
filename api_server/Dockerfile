@@ -39,5 +39,5 @@ ENV CAS_PROFILE_URL=$CAS_PROFILE_URL
 RUN /bin/bash ./gen_config/generate_config.sh && rm -rf ./gen_config
 
 # Launch the app 
-ENV ENVIRONMENT=testing
+ENV ENVIRONMENT=dev
 CMD ["uwsgi", "--ini", "uwsgi.ini"]
