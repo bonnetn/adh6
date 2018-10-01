@@ -2,6 +2,7 @@ import datetime
 import json
 import logging
 
+import dateutil
 from connexion import NoContent
 from flask import g
 from sqlalchemy.orm.exc import MultipleResultsFound
@@ -199,7 +200,13 @@ def delete_device(mac_address):
 
 
 def allocate_ip_for_device(s, dev, admin):
-    if not dev.adherent.date_de_depart or dev.adherent.date_de_depart < datetime.datetime.now().date():
+    date_de_depart = dev.adherent.date_de_depart
+    if not date_de_depart:
+        return
+
+    # Force convertion in date (it can be a datetime or a date)
+    date_de_depart = dateutil.parser.parse(str(date_de_depart)).date()
+    if not date_de_depart or date_de_depart < datetime.datetime.now().date():
         return  # No need to allocate ip for someone who is not a member
 
     dev.start_modif_tracking()
