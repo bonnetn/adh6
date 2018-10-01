@@ -1,4 +1,4 @@
-from flask import g
+from flask import g, current_app
 
 from adh.model.database import Database as Db
 
@@ -17,7 +17,10 @@ def require_sql(f):
             s.rollback()
             raise
         finally:
-            s.close()
-            g.session = None
+            # When running unit tests, we don't close the session so tests can actually perform some work on that
+            # session.
+            if not current_app.config["TESTING"]:
+                s.close()
+                g.session = None
 
     return wrapper
