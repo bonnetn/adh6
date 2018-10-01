@@ -320,7 +320,7 @@ class Modification(Base):
     utilisateur_id = Column(Integer, index=True)
 
     @staticmethod
-    def add_and_commit(session, object_updated, admin):
+    def add(session, object_updated, admin):
         now = datetime.datetime.now()
         action, adherent = object_updated.get_ruby_modif()
         m = Modification(

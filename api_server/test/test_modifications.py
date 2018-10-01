@@ -36,7 +36,7 @@ def test_modification_pass_updated(api_client, sample_member1):
     s.flush()
 
     # Build the corresponding modification
-    Modification.add_and_commit(s, a,
+    Modification.add(s, a,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
@@ -66,7 +66,7 @@ def test_modification_multiple_changes_updated(api_client, sample_member1):
     s.flush()
 
     # Build the corresponding modification
-    Modification.add_and_commit(s, a,
+    Modification.add(s, a,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
@@ -101,7 +101,7 @@ def test_modification_add_new_user(api_client, sample_member2):
     s.flush()
 
     # Build the corresponding modification
-    Modification.add_and_commit(s, a,
+    Modification.add(s, a,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
@@ -152,7 +152,7 @@ def test_modification_delete_member(api_client, sample_member1):
     s.flush()
 
     # Build the corresponding modification
-    Modification.add_and_commit(s, a,
+    Modification.add(s, a,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
@@ -200,7 +200,7 @@ def test_add_device_wired(api_client, wired_device, sample_member1):
     s.flush()
 
     # Build the corresponding modification
-    Modification.add_and_commit(s, wired_device,
+    Modification.add(s, wired_device,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
@@ -240,7 +240,7 @@ def test_add_device_wireless(
     s.flush()
 
     # Build the corresponding modification
-    Modification.add_and_commit(s, wireless_device,
+    Modification.add(s, wireless_device,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
@@ -277,7 +277,7 @@ def test_update_device_wired(api_client, wired_device, sample_member1,
     wired_device.ipv6 = "fe80::1"
     wired_device.mac = "AB-CD-EF-12-34-56"
     # Build the corresponding modification
-    Modification.add_and_commit(s, wired_device,
+    Modification.add(s, wired_device,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
@@ -317,7 +317,7 @@ def test_update_device_wireless(
     wireless_device.adherent = sample_member1
     wireless_device.mac = "12-34-56-78-9A-BD"
     # Build the corresponding modification
-    Modification.add_and_commit(s, wireless_device,
+    Modification.add(s, wireless_device,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
@@ -348,7 +348,7 @@ def test_delete_device_wired(api_client, wired_device, sample_member1,
     s.delete(wired_device)
     s.flush()
     # Build the corresponding modification
-    Modification.add_and_commit(s, wired_device,
+    Modification.add(s, wired_device,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()
@@ -375,7 +375,7 @@ def test_delete_device_wireless(
     s.flush()
 
     # Build the corresponding modification
-    Modification.add_and_commit(s, wireless_device,
+    Modification.add(s, wireless_device,
                                 Utilisateur.find_or_create(s, "test"))
     q = s.query(Modification)
     m = q.first()

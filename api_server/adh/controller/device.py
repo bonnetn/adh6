@@ -135,7 +135,6 @@ def put_device(mac_address, body):
         return NoContent, return_code
 
     except ip_controller.NoMoreIPAvailable:
-        s.rollback()
         return 'No more ip available', 400
 
     except MemberNotFound:
@@ -232,4 +231,4 @@ def allocate_ip_for_device(s, dev, admin):
 
         dev.ip = next_ip
 
-    Modification.add_and_commit(s, dev, admin)
+    Modification.add(s, dev, admin)

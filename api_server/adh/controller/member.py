@@ -99,9 +99,8 @@ def delete_member(username):
         s.delete(a)
 
         # Write it in the modification table
-        Modification.add_and_commit(s, a, g.admin)
+        Modification.add(s, a, g.admin)
     except Exception:
-        s.rollback()
         raise
     logging.info("%s deleted the member %s", g.admin.login, username)
     return NoContent, 204
@@ -114,39 +113,36 @@ def patch_member(username, body):
     s = g.session
 
     # Create a valid object
+
+    # Check if it already exists
+    update = adherent_exists(s, username)
+
+    if not update:
+        return NoContent, 404
+
+    member = Adherent.find(s, username)
+    member.start_modif_tracking()
     try:
-        # Check if it already exists
-        update = adherent_exists(s, username)
+        member.nom = body.get("lastName", member.nom)
+        member.prenom = body.get("firstName", member.prenom)
+        member.mail = body.get("email", member.mail)
+        member.commentaires = body.get("comment", member.commentaires)
+        member.login = body.get("username", member.login)
+        if "departureDate" in body:
+            member.date_de_depart = string_to_date(body["departureDate"])
+        if "associationMode" in body:
+            member.mode_association = string_to_date(body["associationMode"])
+        if "roomNumber" in body:
+            member.chambre = Chambre.find(s, body["roomNumber"])
+    except InvalidEmail:
+        return "Invalid email", 400
+    except RoomNotFound:
+        return "No room found", 400
+    except ValueError:
+        return "String must not be empty", 400
 
-        if not update:
-            return NoContent, 404
-
-        member = Adherent.find(s, username)
-        member.start_modif_tracking()
-        try:
-            member.nom = body.get("lastName", member.nom)
-            member.prenom = body.get("firstName", member.prenom)
-            member.mail = body.get("email", member.mail)
-            member.commentaires = body.get("comment", member.commentaires)
-            member.login = body.get("username", member.login)
-            if "departureDate" in body:
-                member.date_de_depart = string_to_date(body["departureDate"])
-            if "associationMode" in body:
-                member.mode_association = string_to_date(body["associationMode"])
-            if "roomNumber" in body:
-                member.chambre = Chambre.find(s, body["roomNumber"])
-        except InvalidEmail:
-            return "Invalid email", 400
-        except RoomNotFound:
-            return "No room found", 400
-        except ValueError:
-            return "String must not be empty", 400
-
-        # Create the corresponding modification
-        Modification.add_and_commit(s, member, g.admin)
-    except Exception:
-        s.rollback()
-        raise
+    # Create the corresponding modification
+    Modification.add(s, member, g.admin)
 
     logging.info("%s updated the member %s\n%s",
                  g.admin.login, username, json.dumps(body, sort_keys=True))
@@ -169,23 +165,19 @@ def put_member(username, body):
     except ValueError:
         return "String must not be empty", 400
 
-    try:
-        # Check if it already exists
-        update = adherent_exists(s, username)
+    # Check if it already exists
+    update = adherent_exists(s, username)
 
-        if update:
-            current_adh = Adherent.find(s, username)
-            new_member.id = current_adh.id
-            current_adh.start_modif_tracking()
+    if update:
+        current_adh = Adherent.find(s, username)
+        new_member.id = current_adh.id
+        current_adh.start_modif_tracking()
 
-        # Merge the object (will create a new if it doesn't exist)
-        new_member = s.merge(new_member)
+    # Merge the object (will create a new if it doesn't exist)
+    new_member = s.merge(new_member)
 
-        # Create the corresponding modification
-        Modification.add_and_commit(s, new_member, g.admin)
-    except Exception:
-        s.rollback()
-        raise
+    # Create the corresponding modification
+    Modification.add(s, new_member, g.admin)
 
     if update:
         logging.info("%s updated the member %s\n%s",
@@ -224,10 +216,9 @@ def add_membership(username, body):
         adh.date_de_depart = end
 
     except MemberNotFound:
-        s.rollback()
         return NoContent, 404
 
-    Modification.add_and_commit(s, adh, g.admin)
+    Modification.add(s, adh, g.admin)
     logging.info("%s created the membership record %s\n%s",
                  g.admin.login, username, json.dumps(body, sort_keys=True))
     return NoContent, 200, {'Location': 'test'}  # TODO: finish that!
@@ -254,16 +245,12 @@ def update_password(username, body):
     except MemberNotFound:
         return NoContent, 404
 
-    try:
-        a.start_modif_tracking()
-        a.password = ntlm_hash(password)
+    a.start_modif_tracking()
+    a.password = ntlm_hash(password)
 
-        # Build the corresponding modification
-        Modification.add_and_commit(s, a, g.admin)
+    # Build the corresponding modification
+    Modification.add(s, a, g.admin)
 
-    except Exception:
-        s.rollback()
-        raise
 
     logging.info("%s updated the password of %s",
                  g.admin.login, username)
