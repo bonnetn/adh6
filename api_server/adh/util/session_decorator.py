@@ -1,3 +1,5 @@
+import logging
+
 from flask import g, current_app
 
 from adh.model.database import Database as Db
@@ -11,9 +13,20 @@ def require_sql(f):
         g.session = s = Db.get_db().get_session()
         try:
             result = f(*args, **kwargs)
-            s.commit()
+
+            # It makes things clearer and less error-prone.
+            assert isinstance(result, tuple), "Please always pass the result AND the HTTP code."
+            assert len(result) > 1, "Please always pass the result AND the HTTP code."
+
+            status_code = result[1]
+            if status_code and 200 <= status_code <= 299:
+                s.commit()
+            else:
+                logging.info("Status code %d not 2XX, rollbacking.", status_code)
+                s.rollback()
             return result
         except Exception:
+            logging.warn("Exception caught, rollbacking.")
             s.rollback()
             raise
         finally:

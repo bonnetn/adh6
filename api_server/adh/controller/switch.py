@@ -78,7 +78,7 @@ def get_switch(switchID):
     s = g.session
     try:
         logging.info("%s fetched the switch %d", g.admin.login, switchID)
-        return dict(Switch.find(s, switchID))
+        return dict(Switch.find(s, switchID)), 200
     except SwitchNotFound:
         return NoContent, 404
 

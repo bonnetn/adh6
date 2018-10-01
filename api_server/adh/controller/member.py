@@ -74,7 +74,7 @@ def get_member(username):
     s = g.session
     try:
         logging.info("%s fetched the member %s", g.admin.login, username)
-        return dict(Adherent.find(s, username))
+        return dict(Adherent.find(s, username)), 200
     except MemberNotFound:
         return NoContent, 404
 
@@ -335,7 +335,7 @@ def get_logs(username):
 
     logging.info("%s fetched the logs of %s", g.admin.login, username)
     if current_app.config["TESTING"]:  # Do not actually query elasticsearch if testing...
-        return ["test_log"]
+        return ["test_log"], 200
 
     # TODO(insolentbacon): instantiate only once the Elasticsearch client
     es = Elasticsearch(ELK_HOSTS)
