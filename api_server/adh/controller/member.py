@@ -287,6 +287,10 @@ def _get_mac_variations(addr):
 
 @auth_regular_admin
 def get_logs(admin, username):
+    if not ELK_HOSTS:
+        logging.warn("No elasticsearch node configured. Returning empty response.")
+        return NoContent, 200
+
     s = Db.get_db().get_session()
 
     # If the member does not exist, return 404
