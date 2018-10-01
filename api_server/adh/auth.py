@@ -16,7 +16,6 @@ def get_groups(token):
             verify_cert = False
 
         headers = {"Authorization": "Bearer " + token}
-        print(headers)
         r = requests.get(
             current_app.config["AUTH_SERVER_ADDRESS"],
             headers=headers,
