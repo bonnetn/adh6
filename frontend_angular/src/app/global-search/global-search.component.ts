@@ -103,7 +103,7 @@ export class GlobalSearchComponent implements OnInit {
         );
         const switch$ = this.switchService.filterSwitch(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
-          map((obj) => new SearchResult('switch', obj.switch.description, ['/switch/view', obj.switch.id.toString()])),
+          map((obj) => new SearchResult('switch', obj.description, ['/switch/view', obj.id.toString()])),
         );
 
         const port$ = this.portService.filterPort(LIMIT, undefined, undefined, undefined, terms).pipe(
