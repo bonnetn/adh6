@@ -46,6 +46,12 @@ services:
       - "443"
     environment:
       ENVIRONMENT: "testing"
+    volumes:
+      # Make a bind mount so you can modify files in the container
+      - type: bind
+        source: "./api_server/adh"
+        target: "/adh6/api_server/adh/"
+        read_only: "true"
       
   # The reverse proxy is used to gather the api and the frontend behind the same
   # host. We can also use it to cache requests.
