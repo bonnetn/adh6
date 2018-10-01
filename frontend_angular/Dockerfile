@@ -53,10 +53,6 @@ USER angular
 RUN npm install
 USER root
 
-# Copy source code
-COPY frontend_angular/src ./src
-COPY frontend_angular/*.json ./
-
 # Copy automatically generated files from previous stage
 COPY --from=0 /tmp/api src/app/api
 
@@ -65,7 +61,11 @@ ENV SSO_LOGOUT=$SSO_LOGOUT
 ENV SSO_AUTHORIZE=$SSO_AUTHORIZE
 ENV BASE_ADH6_URL=${BASE_ADH6_URL}
 COPY frontend_angular/gen_config ./gen_config
-RUN /bin/bash ./gen_config/generate_config.sh && rm -rf ./gen_config
+RUN mkdir -p ./src/app/config && /bin/bash ./gen_config/generate_config.sh && rm -rf ./gen_config
+
+# Copy source code
+COPY frontend_angular/*.json ./
+COPY frontend_angular/src ./src
 
 USER angular
 # We use /bin/sh to be able to use ENV vars...
