@@ -63,9 +63,8 @@ def create_port(body):
         return "Room not found", 400
 
     s.add(port)
-    headers = {
-        'Location': '/port/{}'.format(port.id)
-    }
+    s.flush()  # Needed to fetch the port.id
+    headers = {'Location': '/port/{}'.format(port.id)}
     logging.info("%s created the port\n%s",
                  g.admin.login, json.dumps(body, sort_keys=True))
     return NoContent, 200, headers

@@ -67,6 +67,7 @@ def create_switch(body):
 
     logging.info("%s created a switch\n%s", g.admin.login, json.dumps(body,
                                                                       sort_keys=True))
+    s.flush()  # Needed to set the switch.id
     return NoContent, 201, {'Location': '/switch/{}'.format(switch.id)}
 
 
