@@ -28,7 +28,6 @@ def create_wireless_device(admin, body, s):
     )
 
     s.add(dev)
-    s.flush()
 
     Modification.add_and_commit(s, dev, admin)
     return dev
@@ -44,7 +43,6 @@ def create_wired_device(admin, body, s):
     )
 
     s.add(dev)
-    s.flush()
 
     Modification.add_and_commit(s, dev, admin)
     return dev
@@ -58,7 +56,6 @@ def update_wireless_device(admin, mac_address, body, s):
     dev.start_modif_tracking()
     dev.mac = body['mac']
     dev.adherent = Adherent.find(s, body['username'])
-    s.flush()
 
     Modification.add_and_commit(s, dev, admin)
     return dev
@@ -74,7 +71,6 @@ def update_wired_device(admin, mac_address, body, s):
     dev.ip = body.get('ipAddress', 'En Attente')
     dev.ipv6 = body.get('ipv6Address', 'En Attente')
     dev.adherent = Adherent.find(s, body['username'])
-    s.flush()
 
     Modification.add_and_commit(s, dev, admin)
     return dev
@@ -87,7 +83,6 @@ def delete_wired_device(admin, mac_address, s):
 
     dev.start_modif_tracking()
     s.delete(dev)
-    s.flush()
 
     Modification.add_and_commit(s, dev, admin)
 
@@ -99,7 +94,6 @@ def delete_wireless_device(admin, mac_address, s):
 
     dev.start_modif_tracking()
     s.delete(dev)
-    s.flush()
 
     Modification.add_and_commit(s, dev, admin)
 

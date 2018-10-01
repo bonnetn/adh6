@@ -65,7 +65,6 @@ def put_room(roomNumber, body):
         new_room.id = Chambre.find(s, roomNumber).id
 
     s.merge(new_room)
-    s.commit()
 
     if exists:
         logging.info("%s updated the room %d\n%s",
@@ -99,6 +98,5 @@ def delete_room(roomNumber):
     except RoomNotFound:
         return NoContent, 404
 
-    s.commit()
     logging.info("%s deleted the room %d", g.admin.login, roomNumber)
     return NoContent, 204

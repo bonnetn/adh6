@@ -331,7 +331,6 @@ class Modification(Base):
             utilisateur_id=admin.id
         )
         session.add(m)
-        session.commit()
 
 
 class Ordinateur(Base, RubyHashModificationTracker):
@@ -558,7 +557,6 @@ class Utilisateur(Base):
                 access_token="-"
             )
             session.add(new_admin)
-            session.flush()
             return new_admin
 
 

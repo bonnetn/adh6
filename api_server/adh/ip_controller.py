@@ -47,4 +47,3 @@ def free_expired_devices(session):
     for dev in get_expired_devices(session):
         dev.ip = "En Attente"
         dev.ipv6 = "En Attente"
-    session.flush()

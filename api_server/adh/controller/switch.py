@@ -64,7 +64,6 @@ def create_switch(body):
     except InvalidIPv4:
         return "Invalid IPv4", 400
     s.add(switch)
-    s.commit()
 
     logging.info("%s created a switch\n%s", g.admin.login, json.dumps(body,
                                                                       sort_keys=True))
@@ -101,7 +100,6 @@ def update_switch(switchID, body):
         return "Invalid IPv4", 400
 
     s.merge(switch)
-    s.commit()
 
     logging.info("%s updated the switch %d\n%s",
                  g.admin.login, switchID, json.dumps(body, sort_keys=True))
@@ -120,7 +118,6 @@ def delete_switch(switchID):
         return NoContent, 404
 
     s.delete(switch)
-    s.commit()
 
     logging.info("%s deleted the switch %d", g.admin.login, switchID)
     return NoContent, 204

@@ -97,7 +97,6 @@ def delete_member(username):
 
         # Actually delete it
         s.delete(a)
-        s.flush()
 
         # Write it in the modification table
         Modification.add_and_commit(s, a, g.admin)
@@ -143,8 +142,6 @@ def patch_member(username, body):
         except ValueError:
             return "String must not be empty", 400
 
-        s.flush()
-
         # Create the corresponding modification
         Modification.add_and_commit(s, member, g.admin)
     except Exception:
@@ -183,7 +180,6 @@ def put_member(username, body):
 
         # Merge the object (will create a new if it doesn't exist)
         new_member = s.merge(new_member)
-        s.flush()
 
         # Create the corresponding modification
         Modification.add_and_commit(s, new_member, g.admin)
@@ -261,7 +257,6 @@ def update_password(username, body):
     try:
         a.start_modif_tracking()
         a.password = ntlm_hash(password)
-        s.flush()
 
         # Build the corresponding modification
         Modification.add_and_commit(s, a, g.admin)

@@ -128,7 +128,7 @@ def test_device_filter_hit_limit(api_client, sample_member1):
 
 
 def test_device_put_create_wireless(api_client, wireless_device_dict):
-    ''' Can create a valid wireless device ? '''
+    """ Can create a valid wireless device ? """
     addr = '{}/device/{}'.format(base_url, wireless_device_dict['mac'])
     r = api_client.put(addr,
                        data=json.dumps(wireless_device_dict),
@@ -139,9 +139,9 @@ def test_device_put_create_wireless(api_client, wireless_device_dict):
 
 
 def test_device_put_create_wired_without_ip(api_client, wired_device_dict):
-    '''
+    """
     Can create a valid wired device? Create two devices and check the IP
-    '''
+    """
 
     del wired_device_dict['ipAddress']
     del wired_device_dict['ipv6Address']

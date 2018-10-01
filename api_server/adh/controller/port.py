@@ -63,7 +63,6 @@ def create_port(body):
         return "Room not found", 400
 
     s.add(port)
-    s.commit()
     headers = {
         'Location': '/port/{}'.format(port.id)
     }
@@ -106,7 +105,6 @@ def update_port(port_id, body):
         return "Port not found", 404
 
     s.merge(new_port)
-    s.commit()
 
     logging.info("%s updated the port /port/%d\n%s",
                  g.admin.login, port_id, json.dumps(body, sort_keys=True))
@@ -122,7 +120,6 @@ def delete_port(port_id):
         s.delete(Port.find(s, port_id))
     except PortNotFound:
         return NoContent, 404
-    s.commit()
     logging.info("%s deleted the port /port/%d",
                  g.admin.login, port_id)
     return NoContent, 204
