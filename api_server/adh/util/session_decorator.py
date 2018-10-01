@@ -6,6 +6,12 @@ from adh.model.database import Database as Db
 
 
 def require_sql(f):
+    """
+    Populate the g.session with a SQLAlchemy session. The wrapper will also take care of the lifecycle of the session.
+    If the function wrapped return something that is not a 2XX error code, the session will be automatically rollbacked.
+    Otherwise it will commit.
+    """
+
     def wrapper(*args, **kwargs):
         if "session" in g:
             return f(*args, **kwargs)

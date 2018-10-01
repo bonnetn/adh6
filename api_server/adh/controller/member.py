@@ -251,7 +251,6 @@ def update_password(username, body):
     # Build the corresponding modification
     Modification.add(s, a, g.admin)
 
-
     logging.info("%s updated the password of %s",
                  g.admin.login, username)
     return NoContent, 204
