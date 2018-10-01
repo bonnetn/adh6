@@ -3,9 +3,8 @@ import os
 import requests
 import requests.exceptions
 from connexion import NoContent
-from flask import current_app
+from flask import current_app, g
 
-from adh.model.database import Database as db
 from adh.model.models import Utilisateur
 
 
@@ -30,7 +29,7 @@ def get_groups(token):
 
     result = r.json()
     if os.environ["ENVIRONMENT"] == "testing":
-        result["groups"] = ["adh6_user", "adh6_admin"]  # If we are testing, consider the user as admin
+        result["groups"] = ["adh6_user", "adh6_admin"]  # If we are testing, consider the user asg.admin
     return result
 
 
@@ -56,9 +55,8 @@ def auth_regular_admin(f):
     def wrapper(*args, user, token_info, **kwargs):
         if current_app.config["TESTING"] \
                 or "adh6_user" in token_info["groups"]:
-            s = db.get_db().get_session()
-            admin = Utilisateur.find_or_create(s, user)
-            return f(admin, *args, **kwargs)
+            g.admin = Utilisateur.find_or_create(g.session, user)
+            return f(*args, **kwargs)
         return NoContent, 401
 
     return wrapper
@@ -68,9 +66,8 @@ def auth_super_admin(f):
     def wrapper(*args, user, token_info, **kwargs):
         if current_app.config["TESTING"] \
                 or "adh6_admin" in token_info["groups"]:
-            s = db.get_db().get_session()
-            admin = Utilisateur.find_or_create(s, user)
-            return f(admin, *args, **kwargs)
+            g.admin = Utilisateur.find_or_create(g.session, user)
+            return f(*args, **kwargs)
         return NoContent, 401
 
     return wrapper

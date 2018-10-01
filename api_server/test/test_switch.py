@@ -1,11 +1,13 @@
-import logging
-import pytest
 import json
-from .resource import base_url
+import logging
+
+import pytest
+
 from CONFIGURATION import TEST_DATABASE as db_settings
-from adh.model.models import Switch
 from adh.model.database import Database as db
+from adh.model.models import Switch
 from .resource import INVALID_IP, TEST_HEADERS
+from .resource import base_url
 
 
 @pytest.fixture
@@ -57,9 +59,9 @@ def test_switch_to_dict(api_client, sample_switch1):
 @pytest.mark.parametrize("test_ip", INVALID_IP)
 def test_switch_post_invalid_ip(api_client, test_ip):
     sample_switch1 = {
-      "description": "Test Switch",
-      "ip": test_ip,
-      "community": "myGreatCommunity"
+        "description": "Test Switch",
+        "ip": test_ip,
+        "community": "myGreatCommunity"
     }
     r = api_client.post(
         "{}/switch/".format(base_url),
@@ -71,11 +73,10 @@ def test_switch_post_invalid_ip(api_client, test_ip):
 
 
 def test_switch_post_valid(api_client):
-
     sample_switch1 = {
-      "description": "Test Switch",
-      "ip": "192.168.103.128",
-      "community": "myGreatCommunity"
+        "description": "Test Switch",
+        "ip": "192.168.103.128",
+        "community": "myGreatCommunity"
     }
 
     # Insert data to the database
@@ -175,9 +176,9 @@ def test_switch_filter_by_term_nonexistant(api_client):
 @pytest.mark.parametrize("test_ip", INVALID_IP)
 def test_switch_update_switch_invalid_ip(api_client, test_ip):
     sample_switch1 = {
-      "description": "Modified switch",
-      "ip": test_ip,
-      "community": "communityModified"
+        "description": "Modified switch",
+        "ip": test_ip,
+        "community": "communityModified"
     }
 
     r = api_client.put(
@@ -191,9 +192,9 @@ def test_switch_update_switch_invalid_ip(api_client, test_ip):
 
 def test_switch_update_existant_switch(api_client):
     sample_switch1 = {
-      "description": "Modified switch",
-      "ip": "192.168.103.132",
-      "community": "communityModified"
+        "description": "Modified switch",
+        "ip": "192.168.103.132",
+        "community": "communityModified"
     }
 
     r = api_client.put(
@@ -208,9 +209,9 @@ def test_switch_update_existant_switch(api_client):
 
 def test_switch_update_non_existant_switch(api_client):
     sample_switch1 = {
-      "description": "Modified switch",
-      "ip": "192.168.103.132",
-      "community": "communityModified"
+        "description": "Modified switch",
+        "ip": "192.168.103.132",
+        "community": "communityModified"
     }
 
     r = api_client.put(

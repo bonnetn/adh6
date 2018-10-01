@@ -1,9 +1,11 @@
-import logging
 import json
+import logging
+
 import pytest
+
+from CONFIGURATION import TEST_DATABASE as db_settings
 from adh.model.database import Database as db
 from adh.model.models import Chambre
-from CONFIGURATION import TEST_DATABASE as db_settings
 from .resource import base_url, TEST_HEADERS
 
 
@@ -115,10 +117,10 @@ def test_room_put_new_room_invalid_vlan(api_client):
 
 def test_room_put_new_room(api_client):
     room = {
-      "roomNumber": 5111,
-      "vlan": 42,
-      "phone": 6842,
-      "description": "Chambre 5111"
+        "roomNumber": 5111,
+        "vlan": 42,
+        "phone": 6842,
+        "description": "Chambre 5111"
     }
     r = api_client.put(
         "{}/room/{}".format(base_url, 5111),
@@ -132,10 +134,10 @@ def test_room_put_new_room(api_client):
 
 def test_room_put_update_room(api_client):
     room = {
-      "roomNumber": 5111,
-      "vlan": 42,
-      "phone": 6842,
-      "description": "Chambre 5111"
+        "roomNumber": 5111,
+        "vlan": 42,
+        "phone": 6842,
+        "description": "Chambre 5111"
     }
     r = api_client.put(
         "{}/room/{}".format(base_url, 5110),
@@ -169,7 +171,6 @@ def test_room_delete_non_existant_room(api_client):
 
 
 def test_room_log_create_room(api_client, caplog):
-
     with caplog.at_level(logging.INFO):
         test_room_put_new_room(api_client)
 
@@ -181,7 +182,6 @@ def test_room_log_create_room(api_client, caplog):
 
 
 def test_room_log_update_room(api_client, caplog):
-
     with caplog.at_level(logging.INFO):
         test_room_put_update_room(api_client)
 
@@ -193,7 +193,6 @@ def test_room_log_update_room(api_client, caplog):
 
 
 def test_room_log_delete_room(api_client, caplog):
-
     with caplog.at_level(logging.INFO):
         test_room_delete_existant_room(api_client)
 

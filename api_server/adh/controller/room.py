@@ -1,11 +1,14 @@
-import logging
 import json
+import logging
+
 from connexion import NoContent
+from flask import g
 from sqlalchemy import or_
-from adh.exceptions import RoomNotFound, VlanNotFound
-from adh.model.database import Database as Db
-from adh.model.models import Chambre
+
 from adh.auth import auth_regular_admin, auth_super_admin
+from adh.exceptions import RoomNotFound, VlanNotFound
+from adh.model.models import Chambre
+from adh.util.session_decorator import require_sql
 
 
 def room_exists(session, roomNumber):
@@ -17,12 +20,13 @@ def room_exists(session, roomNumber):
     return True
 
 
+@require_sql
 @auth_regular_admin
-def filter_room(admin, limit=100, offset=0, terms=None):
+def filter_room(limit=100, offset=0, terms=None):
     """ [API] Filter the list of the rooms """
     if limit < 0:
         return "Limit must be a positive integer", 400
-    s = Db.get_db().get_session()
+    s = g.session
     q = s.query(Chambre)
     if terms:
         q = q.filter(or_(
@@ -41,14 +45,15 @@ def filter_room(admin, limit=100, offset=0, terms=None):
         'X-Total-Count': str(count)
     }
 
-    logging.info("%s fetched the room list", admin.login)
+    logging.info("%s fetched the room list", g.admin.login)
     return result, 200, headers
 
 
+@require_sql
 @auth_super_admin
-def put_room(admin, roomNumber, body):
+def put_room(roomNumber, body):
     """ [API] Update/create a room in the database """
-    s = Db.get_db().get_session()
+    s = g.session
 
     try:
         new_room = Chambre.from_dict(s, body)
@@ -64,34 +69,36 @@ def put_room(admin, roomNumber, body):
 
     if exists:
         logging.info("%s updated the room %d\n%s",
-                     admin.login, roomNumber, json.dumps(body, sort_keys=True))
+                     g.admin.login, roomNumber, json.dumps(body, sort_keys=True))
         return NoContent, 204
     else:
         logging.info("%s created the room %d\n%s",
-                     admin.login, roomNumber, json.dumps(body, sort_keys=True))
+                     g.admin.login, roomNumber, json.dumps(body, sort_keys=True))
         return NoContent, 201
 
 
+@require_sql
 @auth_regular_admin
-def get_room(admin, roomNumber):
+def get_room(roomNumber):
     """ [API] Get the room specified """
-    s = Db.get_db().get_session()
+    s = g.session
     try:
-        logging.info("%s fetched the room %d", admin.login, roomNumber)
+        logging.info("%s fetched the room %d", g.admin.login, roomNumber)
         return dict(Chambre.find(s, roomNumber)), 200
     except RoomNotFound:
         return NoContent, 404
 
 
+@require_sql
 @auth_super_admin
-def delete_room(admin, roomNumber):
+def delete_room(roomNumber):
     """ [API] Delete room from the database """
-    s = Db.get_db().get_session()
+    s = g.session
     try:
         s.delete(Chambre.find(s, roomNumber))
     except RoomNotFound:
         return NoContent, 404
 
     s.commit()
-    logging.info("%s deleted the room %d", admin.login, roomNumber)
+    logging.info("%s deleted the room %d", g.admin.login, roomNumber)
     return NoContent, 204

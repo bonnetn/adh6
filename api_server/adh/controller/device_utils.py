@@ -1,6 +1,7 @@
-from adh.model.models import Adherent, Portable, Ordinateur, Modification
 from sqlalchemy.sql.expression import literal
 from sqlalchemy.types import String
+
+from adh.model.models import Adherent, Portable, Ordinateur, Modification
 
 
 def is_wired(mac_address, s):
@@ -104,7 +105,6 @@ def delete_wireless_device(admin, mac_address, s):
 
 
 def get_all_devices(s):
-
     q_wired = s.query(
         Ordinateur.mac.label("mac"),
         Ordinateur.ip.label("ip"),

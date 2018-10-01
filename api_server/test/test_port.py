@@ -1,10 +1,11 @@
 import json
-import pytest
 import logging
-from adh.model.database import Database as db
-from CONFIGURATION import TEST_DATABASE as db_settings
-from adh.model.models import Port
 
+import pytest
+
+from CONFIGURATION import TEST_DATABASE as db_settings
+from adh.model.database import Database as db
+from adh.model.models import Port
 from .resource import base_url, TEST_HEADERS
 
 
@@ -134,9 +135,9 @@ def test_port_get_filter_by_term_numero(api_client):
 
 def test_port_post_create_port_invalid_switchID(api_client, sample_switch1):
     body = {
-      "roomNumber": 5110,
-      "switchID": 999,
-      "portNumber": "1/0/4"
+        "roomNumber": 5110,
+        "switchID": 999,
+        "portNumber": "1/0/4"
     }
 
     r = api_client.post(
@@ -150,9 +151,9 @@ def test_port_post_create_port_invalid_switchID(api_client, sample_switch1):
 
 def test_port_post_create_port(api_client, sample_switch1):
     body = {
-      "roomNumber": 5110,
-      "switchID": sample_switch1.id,
-      "portNumber": "1/0/4"
+        "roomNumber": 5110,
+        "switchID": sample_switch1.id,
+        "portNumber": "1/0/4"
     }
 
     r = api_client.post(
@@ -186,12 +187,11 @@ def test_port_get_non_existant_port(api_client, sample_switch1, sample_port1):
 def test_port_put_update_port_invalid_switch(api_client,
                                              sample_switch1,
                                              sample_port1):
-
     portNumber = "1/2/3"
     body = {
-      "roomNumber": 5110,
-      "switchID": 999,
-      "portNumber": portNumber
+        "roomNumber": 5110,
+        "switchID": 999,
+        "portNumber": portNumber
     }
 
     r = api_client.put(
@@ -204,12 +204,11 @@ def test_port_put_update_port_invalid_switch(api_client,
 
 
 def test_port_put_update_port(api_client, sample_switch1, sample_port1):
-
     portNumber = "1/2/3"
     body = {
-      "roomNumber": 5110,
-      "switchID": sample_switch1.id,
-      "portNumber": portNumber
+        "roomNumber": 5110,
+        "switchID": sample_switch1.id,
+        "portNumber": portNumber
     }
 
     assert sample_port1.numero != portNumber
@@ -226,12 +225,11 @@ def test_port_put_update_port(api_client, sample_switch1, sample_port1):
 
 def test_port_put_update_non_existant_port(api_client,
                                            sample_switch1):
-
     portNumber = "1/2/3"
     body = {
-      "roomNumber": 5110,
-      "switchID": sample_switch1.id,
-      "portNumber": portNumber
+        "roomNumber": 5110,
+        "switchID": sample_switch1.id,
+        "portNumber": portNumber
     }
 
     r = api_client.put(
@@ -244,7 +242,6 @@ def test_port_put_update_non_existant_port(api_client,
 
 
 def test_port_put_delete_port(api_client, sample_switch1, sample_port1):
-
     r = api_client.delete(
         "{}/port/{}".format(base_url, sample_port1.id),
         headers=TEST_HEADERS,
@@ -259,7 +256,6 @@ def test_port_put_delete_port(api_client, sample_switch1, sample_port1):
 
 def test_port_put_delete_non_existant_port(api_client,
                                            sample_switch1):
-
     r = api_client.delete(
         "{}/port/{}".format(base_url, 4242),
         headers=TEST_HEADERS,

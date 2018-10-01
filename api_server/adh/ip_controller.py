@@ -1,5 +1,6 @@
-import ipaddress
 import datetime
+import ipaddress
+
 from adh.model.models import Ordinateur, Adherent
 
 

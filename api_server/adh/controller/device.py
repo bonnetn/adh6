@@ -1,31 +1,34 @@
-from connexion import NoContent
 import datetime
 import json
-from adh.exceptions import MemberNotFound
-from adh.model.database import Database as Db
-from adh.model import models
-from adh.model.models import Adherent, Modification
-from sqlalchemy.orm.exc import MultipleResultsFound
-from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidMac
-from adh import ip_controller
-from adh.controller.device_utils import is_wired, is_wireless, \
-        delete_wireless_device, \
-        delete_wired_device, \
-        update_wireless_device, \
-        update_wired_device, \
-        create_wireless_device, \
-        create_wired_device, \
-        get_all_devices, \
-        dev_to_dict
-from adh.auth import auth_regular_admin
 import logging
 
+from connexion import NoContent
+from flask import g
+from sqlalchemy.orm.exc import MultipleResultsFound
 
+from adh import ip_controller
+from adh.auth import auth_regular_admin
+from adh.controller.device_utils import is_wired, is_wireless, \
+    delete_wireless_device, \
+    delete_wired_device, \
+    update_wireless_device, \
+    update_wired_device, \
+    create_wireless_device, \
+    create_wired_device, \
+    get_all_devices, \
+    dev_to_dict
+from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidMac
+from adh.exceptions import MemberNotFound
+from adh.model import models
+from adh.model.models import Adherent, Modification
+from adh.util.session_decorator import require_sql
+
+
+@require_sql
 @auth_regular_admin
-def filter_device(admin, limit=100, offset=0, username=None, terms=None):
+def filter_device(limit=100, offset=0, username=None, terms=None):
     """ [API] Filter the list of the devices according to some criterias """
-    s = Db.get_db().get_session()
-
+    s = g.session
     if limit < 0:
         return 'Limit must be a positive number', 400
 
@@ -59,79 +62,51 @@ def filter_device(admin, limit=100, offset=0, username=None, terms=None):
         "X-Total-Count": count,
         "access-control-expose-headers": "X-Total-Count"
     }
-    logging.info("%s fetched the device list", admin.login)
+    logging.info("%s fetched the device list", g.admin.login)
     return results, 200, headers
 
 
-def allocate_ip_for_device(s, dev, admin):
-    if dev.adherent.date_de_depart < datetime.datetime.now().date():
-        return  # No need to allocate ip for someone who is not a member
-
-    dev.start_modif_tracking()
-    if dev.ipv6 == "En Attente":
-        network = dev.adherent.chambre.vlan.adressesv6
-
-        ip_controller.free_expired_devices(s)
-        next_ip = ip_controller.get_available_ip(
-                    network,
-                    ip_controller.get_all_used_ipv6(s)
-        )
-
-        dev.ipv6 = next_ip
-
-    if dev.ip == "En Attente":
-        network = dev.adherent.chambre.vlan.adresses
-
-        ip_controller.free_expired_devices(s)
-        next_ip = ip_controller.get_available_ip(
-                    network,
-                    ip_controller.get_all_used_ipv4(s)
-        )
-
-        dev.ip = next_ip
-
-    Modification.add_and_commit(s, dev, admin)
-
-
+@require_sql
 @auth_regular_admin
-def put_device(admin, mac_address, body):
+def put_device(mac_address, body):
     """ [API] Put (update or create) a new device in the database """
-    s = Db.get_db().get_session()
+    s = g.session
+
     try:
         wired = is_wired(mac_address, s)
         wireless = is_wireless(mac_address, s)
         wanted_type = body["connectionType"]
 
         if body["connectionType"] == "wireless" \
-           and ('ipAddress' in body or 'ipv6Address' in body):
+                and ('ipAddress' in body or 'ipv6Address' in body):
             return "You cannot assign an IP address to a wireless device", 400
 
         if wired and wireless:
             if wanted_type == "wired":
-                delete_wireless_device(admin, mac_address, s)
-                device = update_wired_device(admin, mac_address, body, s)
-                allocate_ip_for_device(s, device, admin)
+                delete_wireless_device(g.admin, mac_address, s)
+                device = update_wired_device(g.admin, mac_address, body, s)
+                allocate_ip_for_device(s, device, g.admin)
             else:
-                delete_wired_device(admin, mac_address, s)
-                update_wireless_device(admin, mac_address, body, s)
+                delete_wired_device(g.admin, mac_address, s)
+                update_wireless_device(g.admin, mac_address, body, s)
             return_code = 204
 
         elif wired:
             if wanted_type == "wireless":
-                delete_wired_device(admin, mac_address, s)
-                create_wireless_device(admin, body, s)
+                delete_wired_device(g.admin, mac_address, s)
+                create_wireless_device(g.admin, body, s)
             else:
-                device = update_wired_device(admin, mac_address, body, s)
-                allocate_ip_for_device(s, device, admin)
+                device = update_wired_device(g.admin, mac_address, body, s)
+                allocate_ip_for_device(s, device, g.admin)
             return_code = 204
 
         elif wireless:
             if wanted_type == "wired":
-                delete_wireless_device(admin, mac_address, s)
-                device = create_wired_device(admin, body, s)
-                allocate_ip_for_device(s, device, admin)
+                delete_wireless_device(g.admin, mac_address, s)
+                device = create_wired_device(g.admin, body, s)
+                allocate_ip_for_device(s, device, g.admin)
             else:
-                update_wireless_device(admin, mac_address, body, s)
+                update_wireless_device(g.admin, mac_address, body, s)
             return_code = 204
 
         else:  # Create device
@@ -140,21 +115,21 @@ def put_device(admin, mac_address, body):
                        'and in the body don\'t match', 400
 
             if wanted_type == "wired":
-                device = create_wired_device(admin, body, s)
-                allocate_ip_for_device(s, device, admin)
+                device = create_wired_device(g.admin, body, s)
+                allocate_ip_for_device(s, device, g.admin)
             else:
-                create_wireless_device(admin, body, s)
+                create_wireless_device(g.admin, body, s)
             return_code = 201
 
         if return_code == 204:
             logging.info("%s updated the device %s\n%s",
-                         admin.login, mac_address, json.dumps(body,
-                                                              sort_keys=True))
+                         g.admin.login, mac_address, json.dumps(body,
+                                                                sort_keys=True))
 
         elif return_code == 201:
             logging.info("%s created the device %s\n%s",
-                         admin.login, mac_address, json.dumps(body,
-                                                              sort_keys=True))
+                         g.admin.login, mac_address, json.dumps(body,
+                                                                sort_keys=True))
 
         return NoContent, return_code
 
@@ -179,41 +154,75 @@ def put_device(admin, mac_address, body):
                'A MAC address should be unique. Fix your database.', 500
 
 
+@require_sql
 @auth_regular_admin
-def get_device(admin, mac_address):
+def get_device(mac_address):
     """ [API] Return the device specified by the macAddress """
-    s = Db.get_db().get_session()
+    s = g.session
+
     if is_wireless(mac_address, s):
         q = s.query(models.Portable)
         q = q.filter(models.Portable.mac == mac_address)
         r = q.one()
-        logging.info("%s fetched the device %s", admin.login, mac_address)
+        logging.info("%s fetched the device %s", g.admin.login, mac_address)
         return dict(r), 200
 
     elif is_wired(mac_address, s):
         q = s.query(models.Ordinateur)
         q = q.filter(models.Ordinateur.mac == mac_address)
         r = q.one()
-        logging.info("%s fetched the device %s", admin.login, mac_address)
+        logging.info("%s fetched the device %s", g.admin.login, mac_address)
         return dict(r), 200
 
     else:
         return NoContent, 404
 
 
+@require_sql
 @auth_regular_admin
-def delete_device(admin, mac_address):
+def delete_device(mac_address):
     """ [API] Delete the specified device from the database """
-    s = Db.get_db().get_session()
+    s = g.session
+
     if is_wireless(mac_address, s):
-        delete_wireless_device(admin, mac_address, s)
-        logging.info("%s deleted the device %s", admin.login, mac_address)
+        delete_wireless_device(g.admin, mac_address, s)
+        logging.info("%s deleted the device %s", g.admin.login, mac_address)
         return NoContent, 204
 
     elif is_wired(mac_address, s):
-        delete_wired_device(admin, mac_address, s)
-        logging.info("%s deleted the device %s", admin.login, mac_address)
+        delete_wired_device(g.admin, mac_address, s)
+        logging.info("%s deleted the device %s", g.admin.login, mac_address)
         return NoContent, 204
 
     else:
         return NoContent, 404
+
+
+def allocate_ip_for_device(s, dev, admin):
+    if not dev.adherent.date_de_depart or dev.adherent.date_de_depart < datetime.datetime.now().date():
+        return  # No need to allocate ip for someone who is not a member
+
+    dev.start_modif_tracking()
+    if dev.ipv6 == "En Attente":
+        network = dev.adherent.chambre.vlan.adressesv6
+
+        ip_controller.free_expired_devices(s)
+        next_ip = ip_controller.get_available_ip(
+            network,
+            ip_controller.get_all_used_ipv6(s)
+        )
+
+        dev.ipv6 = next_ip
+
+    if dev.ip == "En Attente":
+        network = dev.adherent.chambre.vlan.adresses
+
+        ip_controller.free_expired_devices(s)
+        next_ip = ip_controller.get_available_ip(
+            network,
+            ip_controller.get_all_used_ipv4(s)
+        )
+
+        dev.ip = next_ip
+
+    Modification.add_and_commit(s, dev, admin)

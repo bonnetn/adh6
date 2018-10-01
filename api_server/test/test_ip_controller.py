@@ -1,11 +1,12 @@
-from adh.model.models import Ordinateur
+import pytest
+
+from CONFIGURATION import TEST_DATABASE as db_settings
 from adh.ip_controller import (
     get_available_ip, NoMoreIPAvailable, get_all_used_ipv4, get_all_used_ipv6,
     get_expired_devices, free_expired_devices
 )
 from adh.model.database import Database as db
-from CONFIGURATION import TEST_DATABASE as db_settings
-import pytest
+from adh.model.models import Ordinateur
 
 
 def prep_db(session,
@@ -33,9 +34,9 @@ def api_client(wired_device, wired_device2):
     ('192.168.102.0/24', ["192.168.102.2", "192.168.102.4"], "192.168.102.3"),
     ('192.168.102.0/23', ["192.168.102.2", "192.168.102.4"], "192.168.102.3"),
     (
-        '192.168.102.0/23',
-        ("192.168.102.{}".format(i) for i in range(2, 256)),
-        "192.168.103.0"
+            '192.168.102.0/23',
+            ("192.168.102.{}".format(i) for i in range(2, 256)),
+            "192.168.103.0"
     ),
 ])
 def test_assigment_ip(network, taken, expected):

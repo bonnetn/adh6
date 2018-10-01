@@ -1,5 +1,7 @@
-import pytest
 import datetime
+
+import pytest
+
 from adh.model.models import (
     Adherent, Chambre, Vlan, Ordinateur, Portable, Switch, Port
 )
@@ -42,20 +44,20 @@ def wireless_device_dict():
     It is not present in the api_client by default
     '''
     yield {
-      'mac': '01-23-45-67-89-AC',
-      'connectionType': 'wireless',
-      'username': 'dubois_j'
+        'mac': '01-23-45-67-89-AC',
+        'connectionType': 'wireless',
+        'username': 'dubois_j'
     }
 
 
 @pytest.fixture
 def wired_device_dict():
     yield {
-      'mac': '01-23-45-67-89-AD',
-      'ipAddress': '127.0.0.1',
-      'ipv6Address': 'dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166',
-      'connectionType': 'wired',
-      'username': 'dupontje'
+        'mac': '01-23-45-67-89-AD',
+        'ipAddress': '127.0.0.1',
+        'ipv6Address': 'dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166',
+        'connectionType': 'wired',
+        'username': 'dupontje'
     }
 
 

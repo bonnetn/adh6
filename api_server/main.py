@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-import connexion
 import logging
-from adh.model.database import Database
-from CONFIGURATION import PROD_DATABASE as DATABASE
+
+import connexion
 from connexion.resolver import RestyResolver
+
 from CONFIGURATION import API_CONF
+from CONFIGURATION import PROD_DATABASE as DATABASE
+from adh.model.database import Database
 
 Database.init_db(DATABASE)
 
@@ -17,9 +19,3 @@ app.add_api('swagger.yaml',
 # set the WSGI application callable to allow using uWSGI:
 # uwsgi --http :8080 -w app
 application = app.app
-
-
-@application.teardown_appcontext
-def shutdown_session(exception=None):
-    if Database.get_db():
-        Database.get_db().remove_session()

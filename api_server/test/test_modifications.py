@@ -1,10 +1,12 @@
+import datetime
+
 import pytest
-from adh.model.database import Database as db
+
 from CONFIGURATION import TEST_DATABASE as db_settings
+from adh.model.database import Database as db
 from adh.model.models import (
     Adherent, Modification, Utilisateur
 )
-import datetime
 
 
 def prep_db(session, sample_member1, wired_device):
@@ -193,7 +195,6 @@ def test_modification_delete_member(api_client, sample_member1):
 
 
 def test_add_device_wired(api_client, wired_device, sample_member1):
-
     s = db.get_db().get_session()
     s.add(wired_device)
     s.flush()
@@ -233,8 +234,7 @@ def test_add_device_wired(api_client, wired_device, sample_member1):
 
 
 def test_add_device_wireless(
-                api_client, wireless_device, sample_member1, sample_member2):
-
+        api_client, wireless_device, sample_member1, sample_member2):
     s = db.get_db().get_session()
     s.add(wireless_device)
     s.flush()
@@ -266,7 +266,6 @@ def test_add_device_wireless(
 
 def test_update_device_wired(api_client, wired_device, sample_member1,
                              sample_member2):
-
     s = db.get_db().get_session()
     s.add(wired_device)
     s.flush()
@@ -309,8 +308,7 @@ def test_update_device_wired(api_client, wired_device, sample_member1,
 
 
 def test_update_device_wireless(
-                api_client, wireless_device, sample_member1, sample_member2):
-
+        api_client, wireless_device, sample_member1, sample_member2):
     s = db.get_db().get_session()
     s.add(wireless_device)
     s.flush()
@@ -342,7 +340,6 @@ def test_update_device_wireless(
 
 def test_delete_device_wired(api_client, wired_device, sample_member1,
                              sample_member2):
-
     s = db.get_db().get_session()
     s.add(wired_device)
     s.flush()
@@ -368,8 +365,7 @@ def test_delete_device_wired(api_client, wired_device, sample_member1,
 
 
 def test_delete_device_wireless(
-                api_client, wireless_device, sample_member1, sample_member2):
-
+        api_client, wireless_device, sample_member1, sample_member2):
     s = db.get_db().get_session()
     s.add(wireless_device)
     s.flush()

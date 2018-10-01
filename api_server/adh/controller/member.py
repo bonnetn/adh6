@@ -7,34 +7,34 @@ import string
 import sqlalchemy
 from connexion import NoContent
 from elasticsearch5 import Elasticsearch
-from flask import current_app
+from flask import current_app, g
 
 from CONFIGURATION import ELK_HOSTS
 from CONFIGURATION import PRICES
 from adh.auth import auth_regular_admin
 from adh.controller.device_utils import get_all_devices
 from adh.exceptions import InvalidEmail, RoomNotFound, MemberNotFound
-from adh.model.database import Database as Db
 from adh.model.models import Adherent, Chambre, Adhesion, Modification
 from adh.util.date import string_to_date
+from adh.util.session_decorator import require_sql
 
 
-def adherent_exists(session, username):
+def adherent_exists(s, username):
     """ Returns true if the member exists """
     try:
-        Adherent.find(session, username)
+        Adherent.find(s, username)
     except MemberNotFound:
         return False
     return True
 
 
+@require_sql
 @auth_regular_admin
-def filter_member(admin, limit=100, offset=0, terms=None, roomNumber=None):
+def filter_member(limit=100, offset=0, terms=None, roomNumber=None):
     """ [API] Filter the list of members from the the database """
+    s = g.session
     if limit < 0:
         return "Limit must be positive", 400
-
-    s = Db.get_db().get_session()
 
     q = s.query(Adherent)
     if roomNumber:
@@ -63,25 +63,27 @@ def filter_member(admin, limit=100, offset=0, terms=None, roomNumber=None):
         "X-Total-Count": str(count),
         'access-control-expose-headers': 'X-Total-Count'
     }
-    logging.info("%s fetched the member list", admin.login)
+    logging.info("%s fetched the member list", g.admin.login)
     return list(map(dict, r)), 200, headers
 
 
+@require_sql
 @auth_regular_admin
-def get_member(admin, username):
+def get_member(username):
     """ [API] Get the specified member from the database """
-    s = Db.get_db().get_session()
+    s = g.session
     try:
-        logging.info("%s fetched the member %s", admin.login, username)
+        logging.info("%s fetched the member %s", g.admin.login, username)
         return dict(Adherent.find(s, username))
     except MemberNotFound:
         return NoContent, 404
 
 
+@require_sql
 @auth_regular_admin
-def delete_member(admin, username):
+def delete_member(username):
     """ [API] Delete the specified User from the database """
-    s = Db.get_db().get_session()
+    s = g.session
 
     # Find the soon-to-be deleted user
     try:
@@ -98,18 +100,19 @@ def delete_member(admin, username):
         s.flush()
 
         # Write it in the modification table
-        Modification.add_and_commit(s, a, admin)
+        Modification.add_and_commit(s, a, g.admin)
     except Exception:
         s.rollback()
         raise
-    logging.info("%s deleted the member %s", admin.login, username)
+    logging.info("%s deleted the member %s", g.admin.login, username)
     return NoContent, 204
 
 
+@require_sql
 @auth_regular_admin
-def patch_member(admin, username, body):
+def patch_member(username, body):
     """ [API] Partially update a member from the database """
-    s = Db.get_db().get_session()
+    s = g.session
 
     # Create a valid object
     try:
@@ -143,20 +146,21 @@ def patch_member(admin, username, body):
         s.flush()
 
         # Create the corresponding modification
-        Modification.add_and_commit(s, member, admin)
+        Modification.add_and_commit(s, member, g.admin)
     except Exception:
         s.rollback()
         raise
 
     logging.info("%s updated the member %s\n%s",
-                 admin.login, username, json.dumps(body, sort_keys=True))
+                 g.admin.login, username, json.dumps(body, sort_keys=True))
     return NoContent, 204
 
 
+@require_sql
 @auth_regular_admin
-def put_member(admin, username, body):
+def put_member(username, body):
     """ [API] Create/Update member from the database """
-    s = Db.get_db().get_session()
+    s = g.session
 
     # Create a valid object
     try:
@@ -182,26 +186,26 @@ def put_member(admin, username, body):
         s.flush()
 
         # Create the corresponding modification
-        Modification.add_and_commit(s, new_member, admin)
+        Modification.add_and_commit(s, new_member, g.admin)
     except Exception:
         s.rollback()
         raise
 
     if update:
         logging.info("%s updated the member %s\n%s",
-                     admin.login, username, json.dumps(body, sort_keys=True))
+                     g.admin.login, username, json.dumps(body, sort_keys=True))
         return NoContent, 204
     else:
         logging.info("%s created the member %s\n%s",
-                     admin.login, username, json.dumps(body, sort_keys=True))
+                     g.admin.login, username, json.dumps(body, sort_keys=True))
         return NoContent, 201
 
 
+@require_sql
 @auth_regular_admin
-def add_membership(admin, username, body):
+def add_membership(username, body):
     """ [API] Add a membership record in the database """
-
-    s = Db.get_db().get_session()
+    s = g.session
 
     start = datetime.datetime.now().date()
     if "start" in body:
@@ -227,9 +231,9 @@ def add_membership(admin, username, body):
         s.rollback()
         return NoContent, 404
 
-    Modification.add_and_commit(s, adh, admin)
+    Modification.add_and_commit(s, adh, g.admin)
     logging.info("%s created the membership record %s\n%s",
-                 admin.login, username, json.dumps(body, sort_keys=True))
+                 g.admin.login, username, json.dumps(body, sort_keys=True))
     return NoContent, 200, {'Location': 'test'}  # TODO: finish that!
 
 
@@ -243,10 +247,11 @@ def ntlm_hash(txt):
     return hashlib.new('md4', txt.encode('utf-16le')).hexdigest()
 
 
+@require_sql
 @auth_regular_admin
-def update_password(admin, username, body):
+def update_password(username, body):
     password = body["password"]
-    s = Db.get_db().get_session()
+    s = g.session
 
     try:
         a = Adherent.find(s, username)
@@ -259,14 +264,14 @@ def update_password(admin, username, body):
         s.flush()
 
         # Build the corresponding modification
-        Modification.add_and_commit(s, a, admin)
+        Modification.add_and_commit(s, a, g.admin)
 
     except Exception:
         s.rollback()
         raise
 
     logging.info("%s updated the password of %s",
-                 admin.login, username)
+                 g.admin.login, username)
     return NoContent, 204
 
 
@@ -285,13 +290,14 @@ def _get_mac_variations(addr):
     return variations
 
 
+@require_sql
 @auth_regular_admin
-def get_logs(admin, username):
+def get_logs(username):
+    s = g.session
+
     if not ELK_HOSTS:
         logging.warn("No elasticsearch node configured. Returning empty response.")
         return NoContent, 200
-
-    s = Db.get_db().get_session()
 
     # If the member does not exist, return 404
     try:
@@ -332,7 +338,7 @@ def get_logs(admin, username):
         )
         query["query"]["bool"]["should"] += list(variations)
 
-    logging.info("%s fetched the logs of %s", admin.login, username)
+    logging.info("%s fetched the logs of %s", g.admin.login, username)
     if current_app.config["TESTING"]:  # Do not actually query elasticsearch if testing...
         return ["test_log"]
 

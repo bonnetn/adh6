@@ -72,7 +72,7 @@ paths:
           description: "Invalid input"
       x-swagger-router-controller: "adh.controller.member"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
   /member/{username}:
     get:
       tags:
@@ -96,7 +96,7 @@ paths:
           description: "Not found"
       x-swagger-router-controller: "adh.controller.member"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
     put:
       tags:
       - "member"
@@ -116,7 +116,7 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/Member"
-          
+
       responses:
         204:
           description: "Updated"
@@ -124,7 +124,7 @@ paths:
           description: "Invalid input"
       x-swagger-router-controller: "adh.controller.member"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
     patch:
       tags:
       - "member"
@@ -153,7 +153,7 @@ paths:
           description: "Invalid input"
       x-swagger-router-controller: "adh.controller.member"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
     delete:
       tags:
       - "member"
@@ -174,7 +174,7 @@ paths:
           description: "Not found"
       x-swagger-router-controller: "adh.controller.member"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
   /member/{username}/password/:
     put:
       tags:
@@ -202,13 +202,13 @@ paths:
               type: "string"
               example: "&<Hs8XK/H+dT{7d7:=bxN~9;EqhwtW-;"
       responses:
-          204:
-            description: "Modified"
-          404:
-            description: "Not found"
+        204:
+          description: "Modified"
+        404:
+          description: "Not found"
       x-swagger-router-controller: "adh.controller.member"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
   /member/{username}/logs/:
     get:
       tags:
@@ -224,18 +224,18 @@ paths:
         required: true
         type: "string"
       responses:
-          200:
-            description: "Success"
-            schema:
-              type: "array"
-              items:
-                type: string
-                example: "2018-07-14T04:44:51.537Z Password OK"
-          404:
-            description: "Not found"
+        200:
+          description: "Success"
+          schema:
+            type: "array"
+            items:
+              type: string
+              example: "2018-07-14T04:44:51.537Z Password OK"
+        404:
+          description: "Not found"
       x-swagger-router-controller: "adh.controller.member"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
   /member/{username}/membership:
     post:
       tags:
@@ -269,7 +269,7 @@ paths:
           description: "Invalid input"
       x-swagger-router-controller: "adh.controller.member"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
   /device/:
     get:
       tags:
@@ -315,11 +315,11 @@ paths:
               $ref: "#/definitions/Device"
         400:
           description: "Invalid input"
-        
-        
+
+
       x-swagger-router-controller: "adh.controller.device"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
   /device/{mac_address}:
     get:
       tags:
@@ -343,7 +343,7 @@ paths:
           description: "Not found"
       x-swagger-router-controller: "adh.controller.device"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
     put:
       tags:
       - "device"
@@ -373,7 +373,7 @@ paths:
 
       x-swagger-router-controller: "adh.controller.device"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
     delete:
       tags:
       - "device"
@@ -394,7 +394,7 @@ paths:
           description: "Not found"
       x-swagger-router-controller: "adh.controller.device"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
   /room/:
     get:
       tags:
@@ -437,7 +437,7 @@ paths:
           description: "Invalid input"
       x-swagger-router-controller: "adh.controller.room"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
   /room/{roomNumber}:
     get:
       tags:
@@ -460,7 +460,7 @@ paths:
           description: "Not found"
       x-swagger-router-controller: "adh.controller.room"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
     put:
       tags:
       - "room"
@@ -488,7 +488,7 @@ paths:
           description: "Invalid input / no more IP"
       x-swagger-router-controller: "adh.controller.room"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
     delete:
       tags:
       - "room"
@@ -508,7 +508,7 @@ paths:
           description: "Not found"
       x-swagger-router-controller: "adh.controller.room"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
   /switch/:
     get:
       tags:
@@ -551,7 +551,7 @@ paths:
           description: "Invalid input"
       x-swagger-router-controller: "adh.controller.switch"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
     post:
       tags:
       - "switch"
@@ -577,7 +577,7 @@ paths:
           description: "Invalid input"
       x-swagger-router-controller: "adh.controller.switch"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
   /switch/{switchID}:
     get:
       tags:
@@ -600,7 +600,7 @@ paths:
           description: "Not found"
       x-swagger-router-controller: "adh.controller.switch"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
     put:
       tags:
       - "switch"
@@ -628,7 +628,7 @@ paths:
           description: "Invalid input"
       x-swagger-router-controller: "adh.controller.switch"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
     delete:
       tags:
       - "switch"
@@ -648,7 +648,7 @@ paths:
           description: "Not found"
       x-swagger-router-controller: "adh.controller.switch"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
   /ports/:
     get:
       tags:
@@ -701,7 +701,7 @@ paths:
           description: "Invalid input"
       x-swagger-router-controller: "adh.controller.port"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
   /port/:
     post:
       tags:
@@ -728,7 +728,7 @@ paths:
           description: "Invalid input"
       x-swagger-router-controller: "adh.controller.port"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
   /port/{port_id}:
     get:
       tags:
@@ -751,7 +751,7 @@ paths:
           description: "Not found"
       x-swagger-router-controller: "adh.controller.port"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
     put:
       tags:
       - "port"
@@ -779,7 +779,7 @@ paths:
           description: "Invalid input"
       x-swagger-router-controller: "adh.controller.port"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
     delete:
       tags:
       - "port"
@@ -799,7 +799,7 @@ paths:
           description: "Not found"
       x-swagger-router-controller: "adh.controller.port"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
   /port/{port_id}/state/:
     get:
       tags:
@@ -822,7 +822,7 @@ paths:
           description: "Not found"
       x-swagger-router-controller: "adh.controller.snmp_port"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
     put:
       tags:
       - "port"
@@ -841,7 +841,7 @@ paths:
         description: "True to open, False to shutdown"
         schema:
           type: boolean
-        
+
       responses:
         204:
           description: "Updated"
@@ -850,8 +850,8 @@ paths:
 
       x-swagger-router-controller: "adh.controller.snmp_port"
       security:
-        - oauth2: ["profile"]
-        
+      - oauth2: ["profile"]
+
   /port/{port_id}/vlan/:
     get:
       tags:
@@ -875,7 +875,7 @@ paths:
           description: "Not found"
       x-swagger-router-controller: "adh.controller.snmp_port"
       security:
-        - oauth2: ["profile"]
+      - oauth2: ["profile"]
     put:
       tags:
       - "port"
@@ -895,7 +895,7 @@ paths:
         schema:
           type: integer
           example: 48
-        
+
       responses:
         204:
           description: "Updated"
@@ -904,8 +904,8 @@ paths:
 
       x-swagger-router-controller: "adh.controller.snmp_port"
       security:
-        - oauth2: ["profile"]
-    
+      - oauth2: ["profile"]
+
 securityDefinitions:
   oauth2:
     type: "oauth2"

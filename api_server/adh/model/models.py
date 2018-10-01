@@ -1,16 +1,18 @@
 # coding: utf-8
+import datetime
+
 from sqlalchemy import Column, Date, DateTime, Integer, \
-        Numeric, String, Text, text, ForeignKey
+    Numeric, String, Text, text, ForeignKey
+from sqlalchemy import inspect
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy.orm.exc import NoResultFound
-from adh.util import checks
-from adh.model.database import Base
+
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
 from adh.exceptions import MemberNotFound, RoomNotFound, SwitchNotFound
 from adh.exceptions import VlanNotFound, PortNotFound
+from adh.model.database import Base
+from adh.util import checks
 from adh.util.date import string_to_date
-import datetime
-from sqlalchemy import inspect
 
 
 def _get_model_dict(model):
@@ -63,8 +65,8 @@ class RubyHashModificationTracker(ModificationTracker):
 
         txt = []
         for key in sorted(set().union(
-            self._new_data.keys(),
-            self._old_data.keys()
+                self._new_data.keys(),
+                self._old_data.keys()
         )):
             old = self._old_data.get(key)
             new = self._new_data.get(key)
@@ -182,7 +184,6 @@ class Adherent(Base, RubyHashModificationTracker):
     )
     access_token = Column(String(255))
 
-
     def get_ruby_modif(self):
         """
         Override this method to add the prefix and to return the Adherent as
@@ -192,7 +193,6 @@ class Adherent(Base, RubyHashModificationTracker):
         modif = '--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
                 modif
         return modif, self
- 
 
     @staticmethod
     def find(session, username):
@@ -324,12 +324,12 @@ class Modification(Base):
         now = datetime.datetime.now()
         action, adherent = object_updated.get_ruby_modif()
         m = Modification(
-                adherent_id=adherent.id,
-                action=action,
-                created_at=now,
-                updated_at=now,
-                utilisateur_id=admin.id
-                )
+            adherent_id=adherent.id,
+            action=action,
+            created_at=now,
+            updated_at=now,
+            utilisateur_id=admin.id
+        )
         session.add(m)
         session.commit()
 
@@ -348,7 +348,6 @@ class Ordinateur(Base, RubyHashModificationTracker):
     last_seen = Column(DateTime)
     ipv6 = Column(String(255))
 
-
     def get_ruby_modif(self):
         """
         Override this method to add the prefix and to return the Adherent as
@@ -358,14 +357,13 @@ class Ordinateur(Base, RubyHashModificationTracker):
         if not self._new_data:
             proper_mac = self.mac.upper().replace(":", "-")
             return (
-                "---\n"
-                "ordinateur: Suppression de l'ordinateur {}\n".format(proper_mac)
-            ), self.adherent
+                       "---\n"
+                       "ordinateur: Suppression de l'ordinateur {}\n".format(proper_mac)
+                   ), self.adherent
 
         modif = 'ordinateur: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
                 modif
         return modif, self.adherent
- 
 
     @validates('mac')
     def mac_valid(self, key, mac):
@@ -407,7 +405,6 @@ class Portable(Base, RubyHashModificationTracker):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
 
-
     def get_ruby_modif(self):
         """
         Override this method to add the prefix and to return the Adherent as
@@ -417,9 +414,9 @@ class Portable(Base, RubyHashModificationTracker):
         if not self._new_data:
             proper_mac = self.mac.upper().replace(":", "-")
             return (
-                "---\n"
-                "portable: Suppression du portable {}\n".format(proper_mac)
-            ), self.adherent
+                       "---\n"
+                       "portable: Suppression du portable {}\n".format(proper_mac)
+                   ), self.adherent
         modif = 'portable: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
                 modif
         return modif, self.adherent

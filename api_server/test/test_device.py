@@ -1,10 +1,11 @@
 import json
 import logging
-import pytest
-from adh.model.database import Database as db
-from CONFIGURATION import TEST_DATABASE as db_settings
-from adh.model.models import Ordinateur, Portable
 
+import pytest
+
+from CONFIGURATION import TEST_DATABASE as db_settings
+from adh.model.database import Database as db
+from adh.model.models import Ordinateur, Portable
 from .resource import (
     base_url, INVALID_MAC, INVALID_IP, INVALID_IPv6, TEST_HEADERS,
     assert_modification_was_created
@@ -314,9 +315,9 @@ def test_device_put_update_wired_and_wireless_to_wireless(
         mac=wired_device.mac,
         adherent_id=1,
     )
-    session = db.get_db().get_session()
-    session.add(dev_with_same_mac)
-    session.commit()
+    s = db.get_db().get_session()
+    s.add(dev_with_same_mac)
+    s.commit()
 
     # Then try to update it...
     r = api_client.put(
@@ -341,9 +342,9 @@ def test_device_put_update_wired_and_wireless_to_wired(api_client,
         mac=wireless_device.mac,
         adherent_id=1,
     )
-    session = db.get_db().get_session()
-    session.add(dev_with_same_mac)
-    session.commit()
+    s = db.get_db().get_session()
+    s.add(dev_with_same_mac)
+    s.commit()
 
     # Then try to update it...
     r = api_client.put(
