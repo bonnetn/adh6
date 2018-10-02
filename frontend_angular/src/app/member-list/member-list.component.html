@@ -16,7 +16,6 @@
       <th>Prénom</th>
       <th>Login</th>
       <th class="center">Chambre</th>
-      <th></th>
     </tr>
     <tr
       *ngFor="let member of result.members | paginate: { itemsPerPage: result.item_per_page, currentPage: result.current_page, totalItems: result.item_count}"

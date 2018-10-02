@@ -127,3 +127,7 @@ td.center {
 .clickable-table tr td {
   cursor: pointer;
 }
+.clickable-table tr td, .clickable-table tr th {
+  padding-left: 1em;
+  padding-right: 1em;
+}
