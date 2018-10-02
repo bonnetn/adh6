@@ -141,6 +141,11 @@ J'ai défini quelques fonctions utiles dans les modèles des objets de la BDD.
 
 *NOTE: nous utilisons la version 6 d'Angular*
 
+![diagramme des vues](flux_adh6.png)
+
+Voici le diagramme de toutes les vues d'ADH6 pour son cas d'utilisation
+principal (c'est à dire, gérer les profils d'adhérents).
+
 ## CAS
 ### Description
 CAS est le service qui gère l'authentification des actions des utilisateurs.
