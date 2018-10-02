@@ -69,7 +69,7 @@ services:
   database:
     build: "database"
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: "root"
       MYSQL_DATABASE: "adh6"
       MYSQL_USER: "adh6"
       MYSQL_PASSWORD: "adh6_pass" # Please change this password on prod'.
