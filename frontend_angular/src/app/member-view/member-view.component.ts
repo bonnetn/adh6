@@ -30,6 +30,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
   private username$: Observable<string>;
   private commentForm: FormGroup;
   private deviceForm: FormGroup;
+  private selectedDevice: string;
 
   constructor(
     public memberService: MemberService,
@@ -51,9 +52,9 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     const v = this.deviceForm.value;
     if (v.connectionType === 'wired') {
       if (this.MAB === 'on') {
-        this.MAB = 'off';
+        this.MAB = 'MAB off';
       } else {
-        this.MAB = 'on';
+        this.MAB = 'MAB on';
       }
     } else {
       this.MAB = 'wifi';
@@ -184,7 +185,6 @@ export class MemberViewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.onMAB();
 
-
     // username of the owner of the profile
     this.username$ = this.route.params.pipe(
       map(params => params['username'])
@@ -226,6 +226,18 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
   extractMsgFromLog(log: string): string {
     return log.substr(log.indexOf(' ') + 1);
+  }
+
+  toggleSelectionDevice(device: Device): void {
+    if (this.isSelectedDevice(device)) {
+      this.selectedDevice = null;
+    } else {
+      this.selectedDevice = device.mac;
+    }
+  }
+
+  isSelectedDevice(device: Device): boolean {
+    return this.selectedDevice === device.mac;
   }
 
 }

@@ -10,3 +10,33 @@ img {
   height: 76px;
   line-height: 30px;
 }
+
+/* Remove the border between the mac and the details */
+.device_row td {
+  cursor: pointer;
+  padding-left: 1em;
+}
+
+.device_details_area {
+  background-color: azure;
+}
+
+.device_details_area td {
+  padding-left: 2em;
+}
+
+.device_details {
+  margin-up: 0;
+  margin-bottom: 1em;
+}
+
+.device_details tr td {
+  padding: 0 1em 0 0;
+  border-bottom: 0;
+}
+
+.device_property {
+  padding-right: 1em;
+  font-weight: bold;
+}
+

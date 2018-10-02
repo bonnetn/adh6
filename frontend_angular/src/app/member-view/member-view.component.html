@@ -1,7 +1,8 @@
 <div *ngIf="(member$ | async) as member" class="row">
+  <!-- Left column -->
   <div class="nine columns">
     <h2>{{ member.firstName }} {{ member.lastName }}</h2>
-    <ul>
+    <ul class="nobullet">
       <div class="row">
         <div class="four columns">
           <li><strong>Identifiant DISI:</strong><br/> {{ member.username }}</li>
@@ -65,25 +66,45 @@
       </div>
     </div>
     <h3>Appareils</h3>
-    <div style="overflow-x:auto;" class="u-max-full-width">
-      <table class="u-max-full-width">
-        <tr>
-          <th class="center">Adresse MAC</th>
-          <th>Fabricant</th>
-          <th class="center">Adresse IPv4</th>
-          <th class="center">MAB</th>
-          <th></th>
-          <th></th>
+    <!-- Device list -->
+    <table class="u-full-width">
+      <thead>
+      <tr>
+        <th>MAC</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <ng-container *ngFor="let device of all_devices$ | async">
+        <tr class="device_row" (click)="toggleSelectionDevice(device)">
+          <td>{{ device.mac }}</td>
+          <td><a>Détails</a></td>
         </tr>
-        <tr *ngFor="let device of all_devices$ | async">
-          <td><a [routerLink]="['/device/view', device.mac ]">{{ device.mac }}</a></td>
-          <td>
-            <app-mac-vendor mac="{{device.mac}}"></app-mac-vendor>
-          </td>
-          <td>{{ device.ipAddress }}</td>
-          <td>
+        <tr *ngIf="isSelectedDevice(device)" class="device_details_area">
+          <td colspan="2">
+            <table class="device_details">
+              <tr>
+                <td class="device_property">Type:</td>
+                <td style="font-style: italic">{{ device.connectionType }}</td>
+              </tr>
+              <tr>
+                <td class="device_property">IPv4:</td>
+                <td>{{ device.ipAddress }}</td>
+              </tr>
+              <tr>
+                <td class="device_property">IPv6:</td>
+                <td>{{ device.ipv6Address }}</td>
+              </tr>
+              <tr>
+                <td class="device_property">Fabriquant:</td>
+                <td>Unknown</td>
+              </tr>
+            </table>
+            <a (click)="onDelete(device.mac)">
+              <button [disabled]="submitDisabled" class="button-danger">Supprimer</button>
+              |
+            </a>
             <button
-              style="width: 90px; height: 38px;"
               (click)="onMAB()"
               class="u-max-full-width"
               [disabled]='MABdisabled'
@@ -95,15 +116,10 @@
             >{{ MAB }}
             </button>
           </td>
-          <td><a [routerLink]="['/device/edit', device.mac]">
-            <button>Éditer</button>
-          </a></td>
-          <td><a (click)="onDelete(device.mac)">
-            <button [disabled]="submitDisabled" class="button-danger">X</button>
-          </a></td>
         </tr>
-      </table>
-    </div>
+      </ng-container>
+      </tbody>
+    </table>
     <div class="row">
       <form [formGroup]="deviceForm" (ngSubmit)="onSubmitDevice()" novalidate>
         <div class="four columns">
@@ -135,25 +151,30 @@
     </form>
     <h3>Journal</h3>
     <div style="overflow:auto; max-height: 30em; font-family: 'Lucida Console', Monaco, monospace; font-size: small;">
-      <ul class="u-max-full-width">
+      <ul class="nobullet u-max-full-width">
         <li *ngFor="let log of log$ | async">
           <span style="color:blue">{{ extractDateFromLog(log) | date:"dd/MM/yyy HH:mm:ss" }}</span> {{
           extractMsgFromLog(log) }}
         </li>
       </ul>
     </div>
-
   </div>
+
+  <!-- Right column -->
   <div class="three columns">
-    <ul>
-      <Li class=u-full-width [ngClass]="{'commentaire': member.comment!=null}">{{ member.comment }}</Li>
+    <ul class="nobullet">
+      <!-- Comment -->
+      <li class=u-full-width [ngClass]="{'commentaire': member.comment!=null}">{{ member.comment }}</li>
+      <!-- DISI picture -->
       <img src="https://trombi.imtbs-tsp.eu/photo.php?uid={{ member.username }}&h=320&w=240"/>
       <br/>
+      <!-- Association button -->
       <li>
         <button class="u-full-width button-primary bigbutton">
           Association des <br/>périphériques
         </button>
       </li>
+      <!-- History -->
       <li>Dernières modifications:</li>
     </ul>
   </div>

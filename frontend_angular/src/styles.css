@@ -98,15 +98,14 @@ textarea {
   resize: none;
 }
 
-ul, li {
+.nobullet {
   list-style-type: none;
 }
 
 .commentaire {
   width: 7.7em;
   margin: 1em auto;
-  padding: 10px;
-  border: 4px solid #65B5EA;
+  border: 0.2em solid #65B5EA;
   font-size: 1.4em;
   text-align: center;
   font-weight: bold;
