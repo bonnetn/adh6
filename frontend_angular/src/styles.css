@@ -119,3 +119,11 @@ td.center {
 .pagination {
   text-align: center;
 }
+
+.clickable-table tr:hover td {
+  background-color: azure;
+}
+
+.clickable-table tr td {
+  cursor: pointer;
+}

@@ -10,24 +10,21 @@
   </div>
 </div>
 <div style="overflow-x:auto;" class="u-max-full-width">
-  <table class="u-full-width" *ngIf="result$ | async as result">
+  <table class="u-full-width clickable-table" *ngIf="result$ | async as result">
     <tr>
       <th>Nom</th>
       <th>Prénom</th>
       <th>Login</th>
       <th class="center">Chambre</th>
       <th></th>
-      <th></th>
     </tr>
     <tr
-      *ngFor="let member of result.members | paginate: { itemsPerPage: result.item_per_page, currentPage: result.current_page, totalItems: result.item_count}">
+      *ngFor="let member of result.members | paginate: { itemsPerPage: result.item_per_page, currentPage: result.current_page, totalItems: result.item_count}"
+      [routerLink]="['../view', member.username]">
       <td>{{ member.firstName }}</td>
       <td>{{ member.lastName }}</td>
       <td>{{ member.username }}</td>
       <td class="center"><a [routerLink]="['/room/view', member.roomNumber]">{{ member.roomNumber }}</a></td>
-      <td><a [routerLink]="['../view', member.username]">
-        <button>Consulter</button>
-      </a></td>
     </tr>
     <br/>
   </table>
