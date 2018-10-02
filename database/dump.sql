@@ -38,8 +38,18 @@ CREATE TABLE `adherents` (
   `access_token` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_adherents_on_chambre_id` (`chambre_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=55121 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=55124 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `adherents`
+--
+
+LOCK TABLES `adherents` WRITE;
+/*!40000 ALTER TABLE `adherents` DISABLE KEYS */;
+INSERT INTO `adherents` VALUES (55121,'Test','Numero1','a@a.fr','testtest',NULL,2853,NULL,NULL,NULL,NULL,'2011-04-30 17:50:17',NULL),(55122,'Test','Numero2','b@b.fr','tasttast',NULL,2854,NULL,NULL,NULL,NULL,'2011-04-30 17:50:17',NULL),(55123,'Test','Numero3','c@c.fr','tusttust',NULL,NULL,NULL,NULL,NULL,NULL,'2011-04-30 17:50:17',NULL);
+/*!40000 ALTER TABLE `adherents` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `articles`
@@ -61,6 +71,15 @@ CREATE TABLE `articles` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `articles`
+--
+
+LOCK TABLES `articles` WRITE;
+/*!40000 ALTER TABLE `articles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `articles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `caisse`
 --
 
@@ -77,6 +96,15 @@ CREATE TABLE `caisse` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `caisse`
+--
+
+LOCK TABLES `caisse` WRITE;
+/*!40000 ALTER TABLE `caisse` DISABLE KEYS */;
+/*!40000 ALTER TABLE `caisse` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `chambres`
@@ -97,8 +125,18 @@ CREATE TABLE `chambres` (
   `vlan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_chambres_on_vlan_id` (`vlan_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2853 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2855 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `chambres`
+--
+
+LOCK TABLES `chambres` WRITE;
+/*!40000 ALTER TABLE `chambres` DISABLE KEYS */;
+INSERT INTO `chambres` VALUES (2853,1234,'Chambre de test 1',NULL,NULL,NULL,NULL,NULL,15),(2854,6666,'Chambre de test 2',NULL,NULL,NULL,NULL,NULL,16);
+/*!40000 ALTER TABLE `chambres` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `comptes`
@@ -116,6 +154,15 @@ CREATE TABLE `comptes` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `comptes`
+--
+
+LOCK TABLES `comptes` WRITE;
+/*!40000 ALTER TABLE `comptes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `comptes` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `ecritures`
@@ -143,6 +190,15 @@ CREATE TABLE `ecritures` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `ecritures`
+--
+
+LOCK TABLES `ecritures` WRITE;
+/*!40000 ALTER TABLE `ecritures` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ecritures` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `illustrations`
 --
 
@@ -157,6 +213,15 @@ CREATE TABLE `illustrations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=233 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `illustrations`
+--
+
+LOCK TABLES `illustrations` WRITE;
+/*!40000 ALTER TABLE `illustrations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `illustrations` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `inscriptions`
@@ -180,6 +245,15 @@ CREATE TABLE `inscriptions` (
   KEY `index_inscriptions_on_chambre_id` (`chambre_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `inscriptions`
+--
+
+LOCK TABLES `inscriptions` WRITE;
+/*!40000 ALTER TABLE `inscriptions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `inscriptions` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Temporary table structure for view `last_use_mac_U6`
@@ -259,6 +333,15 @@ CREATE TABLE `mac_vendors` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `mac_vendors`
+--
+
+LOCK TABLES `mac_vendors` WRITE;
+/*!40000 ALTER TABLE `mac_vendors` DISABLE KEYS */;
+/*!40000 ALTER TABLE `mac_vendors` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `mail_templates`
 --
 
@@ -275,6 +358,15 @@ CREATE TABLE `mail_templates` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `mail_templates`
+--
+
+LOCK TABLES `mail_templates` WRITE;
+/*!40000 ALTER TABLE `mail_templates` DISABLE KEYS */;
+/*!40000 ALTER TABLE `mail_templates` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `messages`
@@ -300,6 +392,15 @@ CREATE TABLE `messages` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `messages`
+--
+
+LOCK TABLES `messages` WRITE;
+/*!40000 ALTER TABLE `messages` DISABLE KEYS */;
+/*!40000 ALTER TABLE `messages` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `modifications`
 --
 
@@ -316,8 +417,18 @@ CREATE TABLE `modifications` (
   PRIMARY KEY (`id`),
   KEY `index_modifications_on_adherent_id` (`adherent_id`),
   KEY `index_modifications_on_utilisateur_id` (`utilisateur_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=781133 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=781140 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `modifications`
+--
+
+LOCK TABLES `modifications` WRITE;
+/*!40000 ALTER TABLE `modifications` DISABLE KEYS */;
+INSERT INTO `modifications` VALUES (781133,NULL,'--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\nlogin:\n- \n- testtest\nmail:\n- \n- a@a.fr\nnom:\n- \n- Nom\nprenom:\n- \n- Prénom\n','2018-10-02 20:57:57','2018-10-02 20:57:57',1223),(781134,55121,'--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\nnom:\n- Nom\n- Test\nprenom:\n- Prénom\n- Numero1\n','2018-10-02 20:58:08','2018-10-02 20:58:08',1223),(781135,NULL,'--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\nlogin:\n- \n- tasttast\nmail:\n- \n- b@b.fr\nnom:\n- \n- Test\nprenom:\n- \n- Numero2\n','2018-10-02 20:58:31','2018-10-02 20:58:31',1223),(781136,NULL,'--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\nlogin:\n- \n- tusttust\nmail:\n- \n- c@c.fr\nnom:\n- \n- Test\nprenom:\n- \n- Numero3\n','2018-10-02 20:58:53','2018-10-02 20:58:53',1223),(781137,55122,'ordinateur: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\nip:\n- \n- En Attente\nipv6:\n- \n- En Attente\nmac:\n- \n- 01-23-45-76-89-AB\n','2018-10-02 20:59:02','2018-10-02 20:59:02',1223),(781138,55121,'ordinateur: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\nip:\n- \n- En Attente\nipv6:\n- \n- En Attente\nmac:\n- \n- CC-CC-CC-CC-CC-CC\n','2018-10-02 20:59:17','2018-10-02 20:59:17',1223),(781139,55123,'portable: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\nmac:\n- \n- 01-23-45-76-89-AC\n','2018-10-02 20:59:31','2018-10-02 20:59:31',1223);
+/*!40000 ALTER TABLE `modifications` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Temporary table structure for view `nb_ordinateurs_actifs`
@@ -374,8 +485,18 @@ CREATE TABLE `ordinateurs` (
   `ipv6` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_ordinateurs_on_adherent_id` (`adherent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=118063 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=118065 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ordinateurs`
+--
+
+LOCK TABLES `ordinateurs` WRITE;
+/*!40000 ALTER TABLE `ordinateurs` DISABLE KEYS */;
+INSERT INTO `ordinateurs` VALUES (118063,'01-23-45-76-89-AB','En Attente',NULL,55122,NULL,NULL,NULL,'En Attente'),(118064,'CC-CC-CC-CC-CC-CC','En Attente',NULL,55121,NULL,NULL,NULL,'En Attente');
+/*!40000 ALTER TABLE `ordinateurs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `portables`
@@ -393,8 +514,18 @@ CREATE TABLE `portables` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_portables_on_adherent_id` (`adherent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=157683 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=157684 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `portables`
+--
+
+LOCK TABLES `portables` WRITE;
+/*!40000 ALTER TABLE `portables` DISABLE KEYS */;
+INSERT INTO `portables` VALUES (157683,'01-23-45-76-89-AC',55123,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `portables` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `ports`
@@ -415,8 +546,18 @@ CREATE TABLE `ports` (
   PRIMARY KEY (`id`),
   KEY `index_ports_on_switch_id` (`switch_id`),
   KEY `index_ports_on_chambre_id` (`chambre_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3093 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3095 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ports`
+--
+
+LOCK TABLES `ports` WRITE;
+/*!40000 ALTER TABLE `ports` DISABLE KEYS */;
+INSERT INTO `ports` VALUES (3093,1,'1/1/1','1.2.3.4',10,15,'2018-01-01 00:00:00','2018-01-01 00:00:00'),(3094,1,'1/1/2','1.2.3.4',10,16,'2018-01-01 00:00:00','2018-01-01 00:00:00');
+/*!40000 ALTER TABLE `ports` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `radacct`
@@ -465,6 +606,15 @@ CREATE TABLE `radacct` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `radacct`
+--
+
+LOCK TABLES `radacct` WRITE;
+/*!40000 ALTER TABLE `radacct` DISABLE KEYS */;
+/*!40000 ALTER TABLE `radacct` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Temporary table structure for view `radcheck`
 --
 
@@ -500,6 +650,15 @@ CREATE TABLE `radgroupreply` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `radgroupreply`
+--
+
+LOCK TABLES `radgroupreply` WRITE;
+/*!40000 ALTER TABLE `radgroupreply` DISABLE KEYS */;
+/*!40000 ALTER TABLE `radgroupreply` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `radpostauth`
 --
 
@@ -515,6 +674,15 @@ CREATE TABLE `radpostauth` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=45309533 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `radpostauth`
+--
+
+LOCK TABLES `radpostauth` WRITE;
+/*!40000 ALTER TABLE `radpostauth` DISABLE KEYS */;
+/*!40000 ALTER TABLE `radpostauth` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `radreply`
@@ -535,6 +703,15 @@ CREATE TABLE `radreply` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `radreply`
+--
+
+LOCK TABLES `radreply` WRITE;
+/*!40000 ALTER TABLE `radreply` DISABLE KEYS */;
+/*!40000 ALTER TABLE `radreply` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `radusergroup`
 --
 
@@ -550,6 +727,15 @@ CREATE TABLE `radusergroup` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `radusergroup`
+--
+
+LOCK TABLES `radusergroup` WRITE;
+/*!40000 ALTER TABLE `radusergroup` DISABLE KEYS */;
+/*!40000 ALTER TABLE `radusergroup` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `schema_migrations`
 --
 
@@ -561,6 +747,15 @@ CREATE TABLE `schema_migrations` (
   UNIQUE KEY `unique_schema_migrations` (`version`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `schema_migrations`
+--
+
+LOCK TABLES `schema_migrations` WRITE;
+/*!40000 ALTER TABLE `schema_migrations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `switches`
@@ -577,8 +772,18 @@ CREATE TABLE `switches` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `switches`
+--
+
+LOCK TABLES `switches` WRITE;
+/*!40000 ALTER TABLE `switches` DISABLE KEYS */;
+INSERT INTO `switches` VALUES (10,'Switch de test','192.168.10.99','myCommunity','2018-01-01 00:00:00','2018-01-01 00:00:00');
+/*!40000 ALTER TABLE `switches` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tickets`
@@ -601,6 +806,15 @@ CREATE TABLE `tickets` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `tickets`
+--
+
+LOCK TABLES `tickets` WRITE;
+/*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tutorials`
 --
 
@@ -620,6 +834,15 @@ CREATE TABLE `tutorials` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `tutorials`
+--
+
+LOCK TABLES `tutorials` WRITE;
+/*!40000 ALTER TABLE `tutorials` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tutorials` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `utilisateurs`
 --
 
@@ -637,8 +860,18 @@ CREATE TABLE `utilisateurs` (
   `updated_at` datetime DEFAULT NULL,
   `access_token` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1223 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1224 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `utilisateurs`
+--
+
+LOCK TABLES `utilisateurs` WRITE;
+/*!40000 ALTER TABLE `utilisateurs` DISABLE KEYS */;
+INSERT INTO `utilisateurs` VALUES (1223,'-',42,'-','minet','-','2018-10-02 20:53:11','2018-10-02 20:53:11','-');
+/*!40000 ALTER TABLE `utilisateurs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `vlans`
@@ -655,8 +888,18 @@ CREATE TABLE `vlans` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vlans`
+--
+
+LOCK TABLES `vlans` WRITE;
+/*!40000 ALTER TABLE `vlans` DISABLE KEYS */;
+INSERT INTO `vlans` VALUES (15,10,'192.168.10.0/24','fe80::/10','2018-01-01 00:00:00','2018-01-01 00:00:00'),(16,11,'192.168.11.0/24','fe80::/10','2018-01-01 00:00:00','2018-01-01 00:00:00');
+/*!40000 ALTER TABLE `vlans` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `webs`
@@ -674,6 +917,15 @@ CREATE TABLE `webs` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `webs`
+--
+
+LOCK TABLES `webs` WRITE;
+/*!40000 ALTER TABLE `webs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `webs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Final view structure for view `last_use_mac_U6`
@@ -817,4 +1069,4 @@ CREATE TABLE `webs` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-30 18:38:29
+-- Dump completed on 2018-10-02 21:00:25
