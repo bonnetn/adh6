@@ -2,35 +2,48 @@
   <!-- Left column -->
   <div class="nine columns">
     <h2>{{ member.firstName }} {{ member.lastName }}</h2>
-    <ul class="nobullet">
-      <div class="row">
-        <div class="four columns">
-          <li><strong>Identifiant DISI:</strong><br/> {{ member.username }}</li>
-          <li><strong>Envoyer un mail:</strong><br/> <a href="mailto:{{ member.email }}">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <font size="5">&#9993;</font></a></li>
-          <li><strong>Date de départ:</strong><br/> {{ member.departureDate }}</li>
-        </div>
-        <div class="eight columns">
-          <button class="u-full-width" [disabled]="member.roomNumber == null"
-                  (click)="IfRoomExists(member.roomNumber)">Chambre {{ member.roomNumber }}
-          </button>
-        </div>
-        <div class="four columns">
-          <a [routerLink]="['']">
-            <button class="u-full-width">Historique</button>
-          </a>
-        </div>
+    <!--
         <div class="four columns">
           <button class="u-full-width" (click)="onCotisation()">Cotiser</button>
         </div>
-        <div class="eight columns">
-          <a [routerLink]="['/member/edit/', member.username ]">
-            <button class="u-full-width">Éditer le profile</button>
-          </a>
-        </div>
-      </div>
-    </ul>
+    -->
+
+    <div class="row">
+      <table class="u-full-width shift-content-right">
+        <thead>
+        <tr>
+          <th colspan="2"><h3 class="table-title">Profil</h3></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td class="profile-field">Identifiant DISI</td>
+          <td>{{member.username}}</td>
+        </tr>
+        <tr>
+          <td class="profile-field">Mail</td>
+          <td><a href="mailto:{{member.email}}">{{member.email}}</a></td>
+        </tr>
+        <tr>
+          <td class="profile-field">Date de départ</td>
+          <td>{{member.departureDate}}</td>
+        </tr>
+        <tr>
+          <td class="profile-field">Chambre</td>
+          <td>
+            <button class="button" [disabled]="member.roomNumber == null"
+                    (click)="IfRoomExists(member.roomNumber)">{{ member.roomNumber || "Aucune" }}
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <a [routerLink]="['/member/edit/', member.username ]">
+        <button class="u-full-width">Éditer le profile</button>
+      </a>
+    </div>
+
     <div *ngIf="cotisation">
       <h3>Cotisation</h3>
       <div class="row">
@@ -65,12 +78,11 @@
         </div>
       </div>
     </div>
-    <h3>Appareils</h3>
     <!-- Device list -->
-    <table class="u-full-width">
+    <table class="u-full-width shift-content-right">
       <thead>
       <tr>
-        <th>MAC</th>
+        <th><h3 class="table-title">Appareils</h3></th>
         <th></th>
       </tr>
       </thead>
@@ -162,20 +174,13 @@
 
   <!-- Right column -->
   <div class="three columns">
-    <ul class="nobullet">
-      <!-- Comment -->
-      <li class=u-full-width [ngClass]="{'commentaire': member.comment!=null}">{{ member.comment }}</li>
-      <!-- DISI picture -->
-      <img src="https://trombi.imtbs-tsp.eu/photo.php?uid={{ member.username }}&h=320&w=240"/>
-      <br/>
-      <!-- Association button -->
-      <li>
-        <button class="u-full-width button-primary bigbutton">
-          Association des <br/>périphériques
-        </button>
-      </li>
-      <!-- History -->
-      <li>Dernières modifications:</li>
-    </ul>
+    <!-- Comment -->
+    <div class="u-full-width" [ngClass]="{'commentaire': member.comment!=null}">{{ member.comment }}</div>
+    <!-- DISI picture -->
+    <img class="u-full-width image-disi"
+         src="https://trombi.imtbs-tsp.eu/photo.php?uid={{ member.username }}&h=320&w=240"/>
+    <!-- Association button -->
+    <button class="button-primary u-full-width association-button">Association des périphériques</button>
+    <!-- History -->
   </div>
 </div>
