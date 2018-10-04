@@ -43,6 +43,44 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     this.createForm();
   }
 
+  ngOnInit() {
+    this.onMAB();
+
+    // username of the owner of the profile
+    this.username$ = this.route.params.pipe(
+      map(params => params['username'])
+    );
+
+    // stream, which will emit the username every time the profile needs to be refreshed
+    const refresh$ = combineLatest(this.username$, this.refreshInfo$)
+      .pipe(
+        map(([x]) => x)
+      );
+
+    this.member$ = refresh$.pipe(
+      switchMap(username => this.memberService.getMember(username)),
+      tap((user) => this.commentForm.setValue({comment: (user.comment === undefined) ? '' : user.comment})),
+      share(),
+    );
+
+    this.all_devices$ = refresh$.pipe(
+      switchMap(username => this.deviceService.filterDevice(undefined, undefined, username)),
+      share(),
+    );
+
+    this.log$ = this.username$.pipe(
+      switchMap((str) => {
+        return interval(10 * 1000).pipe(
+          switchMap(() => this.memberService.getLogs(str))
+        );
+      }) // refresh every 10 secs
+    )
+    ;
+  }
+
+  ngOnDestroy() {
+  }
+
   refreshInfo() {
     this.refreshInfo$.next(null);
   }
@@ -66,7 +104,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     this.cotisation = !this.cotisation;
   }
 
-  IfRoomExists(roomNumber) {
+  redirectToRoom(roomNumber) {
     if (roomNumber == null) {
       this.notif.error('This user is not assigned to a room');
     } else {
@@ -84,7 +122,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSubmitComment() {
+  submitComment() {
     this.submitDisabled = true;
     const newComment = this.commentForm.value.comment;
 
@@ -108,7 +146,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
   }
 
-  onSubmitDevice() {
+  submitDevice() {
     // First we fetch the username of the current user...
     this.submitDisabled = true;
     this.updateDevice()
@@ -166,7 +204,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDelete(mac: string) {
+  deleteDevice(mac: string) {
     this.submitDisabled = true;
     this.deviceService.deleteDevice(mac)
       .pipe(
@@ -181,45 +219,6 @@ export class MemberViewComponent implements OnInit, OnDestroy {
       .subscribe(() => {
       });
   }
-
-  ngOnInit() {
-    this.onMAB();
-
-    // username of the owner of the profile
-    this.username$ = this.route.params.pipe(
-      map(params => params['username'])
-    );
-
-    // stream, which will emit the username every time the profile needs to be refreshed
-    const refresh$ = combineLatest(this.username$, this.refreshInfo$)
-      .pipe(
-        map(([x]) => x)
-      );
-
-    this.member$ = refresh$.pipe(
-      switchMap(username => this.memberService.getMember(username)),
-      tap((user) => this.commentForm.setValue({comment: (user.comment === undefined) ? '' : user.comment})),
-      share(),
-    );
-
-    this.all_devices$ = refresh$.pipe(
-      switchMap(username => this.deviceService.filterDevice(undefined, undefined, username)),
-      share(),
-    );
-
-    this.log$ = this.username$.pipe(
-      switchMap((str) => {
-        return interval(10 * 1000).pipe(
-          switchMap(() => this.memberService.getLogs(str))
-        );
-      }) // refresh every 10 secs
-    )
-    ;
-  }
-
-  ngOnDestroy() {
-  }
-
   extractDateFromLog(log: string): Date {
     return new Date(log.split(' ')[0]);
   }
@@ -228,15 +227,15 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     return log.substr(log.indexOf(' ') + 1);
   }
 
-  toggleSelectionDevice(device: Device): void {
-    if (this.isSelectedDevice(device)) {
+  toggleDeviceDetails(device: Device): void {
+    if (this.isDeviceOpened(device)) {
       this.selectedDevice = null;
     } else {
       this.selectedDevice = device.mac;
     }
   }
 
-  isSelectedDevice(device: Device): boolean {
+  isDeviceOpened(device: Device): boolean {
     return this.selectedDevice === device.mac;
   }
 

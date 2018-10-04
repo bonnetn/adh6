@@ -32,7 +32,7 @@
           <td class="profile-field">Chambre</td>
           <td>
             <button class="button" [disabled]="member.roomNumber == null"
-                    (click)="IfRoomExists(member.roomNumber)">{{ member.roomNumber || "Aucune" }}
+                    (click)="redirectToRoom(member.roomNumber)">{{ member.roomNumber || "Aucune" }}
             </button>
           </td>
         </tr>
@@ -88,11 +88,11 @@
       </thead>
       <tbody>
       <ng-container *ngFor="let device of all_devices$ | async">
-        <tr class="device_row" (click)="toggleSelectionDevice(device)">
+        <tr class="device_row" (click)="toggleDeviceDetails(device)">
           <td>{{ device.mac }}</td>
           <td><a>Détails</a></td>
         </tr>
-        <tr *ngIf="isSelectedDevice(device)" class="device_details_area">
+        <tr *ngIf="isDeviceOpened(device)" class="device_details_area">
           <td colspan="2">
             <table class="device_details">
               <tr>
@@ -112,7 +112,7 @@
                 <td>Unknown</td>
               </tr>
             </table>
-            <a (click)="onDelete(device.mac)">
+            <a (click)="deleteDevice(device.mac)">
               <button [disabled]="submitDisabled" class="button-danger">Supprimer</button>
               |
             </a>
@@ -133,7 +133,7 @@
       </tbody>
     </table>
     <div class="row">
-      <form [formGroup]="deviceForm" (ngSubmit)="onSubmitDevice()" novalidate>
+      <form [formGroup]="deviceForm" (ngSubmit)="submitDevice()" novalidate>
         <div class="four columns">
           <input class="u-full-width" type="text" formControlName="mac">
         </div>
@@ -153,7 +153,7 @@
       </form>
     </div>
     <h3>Commentaire</h3>
-    <form [formGroup]="commentForm" (ngSubmit)="onSubmitComment()" novalidate>
+    <form [formGroup]="commentForm" (ngSubmit)="submitComment()" novalidate>
       <textarea class="u-full-width" formControlName="comment"></textarea>
       <div class="row">
         <button type="submit" class="u-full-width button-primary"
