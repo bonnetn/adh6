@@ -19,8 +19,6 @@ import {SwitchDetailsComponent} from './switch-details/switch-details.component'
 import {SwitchEditComponent} from './switch-edit/switch-edit.component';
 import {SwitchNewComponent} from './switch-new/switch-new.component';
 import {DeviceListComponent} from './device-list/device-list.component';
-import {DeviceDetailsComponent} from './device-details/device-details.component';
-import {DeviceEditComponent} from './device-edit/device-edit.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
@@ -49,8 +47,6 @@ const routes: Routes = [
     children: [
       {path: '', redirectTo: 'search', pathMatch: 'full'},
       {path: 'search', component: DeviceListComponent},
-      {path: 'view/:mac', component: DeviceDetailsComponent},
-      {path: 'edit/:mac', component: DeviceEditComponent},
     ],
   },
   {path: 'switch_local', component: SwitchLocalComponent},
