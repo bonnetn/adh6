@@ -42,17 +42,16 @@ export class MemberViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.onMAB();
-
     // username of the owner of the profile
     this.username$ = this.route.params.pipe(
       map(params => params['username'])
     );
 
     // stream, which will emit the username every time the profile needs to be refreshed
-    const refresh$ = combineLatest(this.username$, this.refreshInfo$)
+    const refresh$ = combineLatest(this.username$, this.refreshInfoOrder$)
       .pipe(
-        map(([x]) => x)
+        map(([x]) => x),
+        share()
       );
 
     this.member$ = refresh$.pipe(
@@ -79,38 +78,15 @@ export class MemberViewComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  refreshInfo() {
-    this.refreshInfo$.next(null);
+  refreshInfo(): void {
+    this.refreshInfoOrder$.next(null);
   }
 
-  onMAB() {
-    this.MABdisabled = false;
-    const v = this.deviceForm.value;
-    if (v.connectionType === 'wired') {
-      if (this.MAB === 'on') {
-        this.MAB = 'MAB off';
-      } else {
-        this.MAB = 'MAB on';
-      }
-    } else {
-      this.MAB = 'wifi';
-      this.MABdisabled = true;
-    }
-  }
-
-  onCotisation() {
+  toggleCotisationMenu(): void {
     this.cotisation = !this.cotisation;
   }
 
-  redirectToRoom(roomNumber) {
-    if (roomNumber == null) {
-      this.notif.error('This user is not assigned to a room');
-    } else {
-      this.router.navigate(['/room/view', roomNumber]);
-    }
-  }
-
-  createForm() {
+  createForm(): void {
     this.commentForm = this.fb.group({
       comment: [''],
     });
@@ -120,7 +96,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     });
   }
 
-  submitComment() {
+  submitComment(): void {
     this.submitDisabled = true;
     const newComment = this.commentForm.value.comment;
 
@@ -130,9 +106,9 @@ export class MemberViewComponent implements OnInit, OnDestroy {
         return user;
       }),
       flatMap(user => this.memberService.putMember(user.username, user)),
-      flatMap(() => {
+      map(() => {
         this.refreshInfo();
-        return this.member$;
+        return null;
       }),
       finalize(() => this.submitDisabled = false),
       first(),
@@ -144,10 +120,10 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
   }
 
-  submitDevice() {
+  submitDevice(): void {
     // First we fetch the username of the current user...
     this.submitDisabled = true;
-    this.updateDevice()
+    this.addDevice()
       .pipe(
         first(),
         // No matter what, submit will be re-enable (even if there is an error)
@@ -158,15 +134,15 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
   }
 
-  updateDevice();
-  updateDevice(username: string);
-  updateDevice(username: string, alreadyExists: boolean);
-  updateDevice(username?: string, alreadyExists?: boolean) {
+  addDevice();
+  addDevice(username: string);
+  addDevice(username: string, alreadyExists: boolean);
+  addDevice(username?: string, alreadyExists?: boolean) {
 
     if (username === undefined) {
       return this.username$
         .pipe(
-          flatMap((usr) => this.updateDevice(usr))
+          flatMap((usr) => this.addDevice(usr))
         );
     }
 
@@ -175,7 +151,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
       return this.deviceService.getDevice(v.mac).pipe(
         map(() => true),
         catchError(() => Observable.of(false)),
-        flatMap((exists) => this.updateDevice(username, exists)),
+        flatMap((exists) => this.addDevice(username, exists)),
       );
     }
 
@@ -202,7 +178,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  deleteDevice(mac: string) {
+  deleteDevice(mac: string): void {
     this.submitDisabled = true;
     this.deviceService.deleteDevice(mac)
       .pipe(
@@ -217,6 +193,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
       .subscribe(() => {
       });
   }
+
   extractDateFromLog(log: string): Date {
     return new Date(log.split(' ')[0]);
   }
