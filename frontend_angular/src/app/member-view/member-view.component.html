@@ -31,9 +31,11 @@
         <tr>
           <td class="profile-field">Chambre</td>
           <td>
-            <button class="button" [disabled]="member.roomNumber == null"
-                    (click)="redirectToRoom(member.roomNumber)">{{ member.roomNumber || "Aucune" }}
-            </button>
+            <a [routerLink]='["/room/view/", member.roomNumber]'>
+              <button class="button" [disabled]="member.roomNumber == null">
+                {{ member.roomNumber || "Aucune" }}
+              </button>
+            </a>
           </td>
         </tr>
         </tbody>
