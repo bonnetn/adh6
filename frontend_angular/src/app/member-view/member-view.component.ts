@@ -17,16 +17,14 @@ import {combineLatest, interval} from 'rxjs';
   styleUrls: ['./member-view.component.css']
 })
 export class MemberViewComponent implements OnInit, OnDestroy {
-
   submitDisabled = false;
 
   member$: Observable<Member>;
   all_devices$: Observable<Device[]>;
   log$: Observable<Array<string>>;
-  public MAB: string;
-  public MABdisabled: boolean;
-  public cotisation = false;
-  private refreshInfo$ = new BehaviorSubject<null>(null);
+
+  cotisation = false;
+  private refreshInfoOrder$ = new BehaviorSubject<null>(null);
   private username$: Observable<string>;
   private commentForm: FormGroup;
   private deviceForm: FormGroup;

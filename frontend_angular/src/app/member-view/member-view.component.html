@@ -2,11 +2,6 @@
   <!-- Left column -->
   <div class="nine columns">
     <h2>{{ member.firstName }} {{ member.lastName }}</h2>
-    <!--
-        <div class="four columns">
-          <button class="u-full-width" (click)="onCotisation()">Cotiser</button>
-        </div>
-    -->
 
     <div class="row">
       <table class="u-full-width shift-content-right">
@@ -46,13 +41,15 @@
       </a>
     </div>
 
+    <div class="four columns">
+      <button class="u-full-width" (click)="toggleCotisationMenu()">Cotiser</button>
+    </div>
     <div *ngIf="cotisation">
       <h3>Cotisation</h3>
       <div class="row">
         <div class="six columns">
           <select class="u-full-width" type="text" formControlName=""
                   placeholder="Renouvellement">
-            <option value="">Renouvellement</option>
             <option value="1">1 mois (9€) - date</option>
             <option value="2">2 mois (18€) - date</option>
             <option value="3">3 mois (27€) - date</option>
@@ -62,7 +59,6 @@
           </select>
           <select class="u-full-width" type="text" formControlName=""
                   placeholder="Matériel">
-            <option value="">Matériel</option>
             <option value="3m">Câble 3m</option>
             <option value="5m">Câble 5m</option>
           </select>
@@ -70,7 +66,6 @@
         <div class="six columns">
           <select class="u-full-width" type="text" formControlName=""
                   placeholder="Payé par">
-            <option value="">Payé par</option>
             <option value="liq">Liquide</option>
             <option value="cb">Carte Bancaire</option>
             <option value="chq">Chèque</option>
