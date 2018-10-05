@@ -19,6 +19,7 @@ import {SwitchService} from '../api/api/switch.service';
 
 import {PortService} from '../api/api/port.service';
 import {Port} from '../api';
+import {EMPTY} from 'rxjs';
 
 
 export class SearchResult {
@@ -82,8 +83,9 @@ export class GlobalSearchComponent implements OnInit {
       switchMap((terms: string) => {
 
         if (terms.length < 2) {
-          return Observable.of([]);
+          return EMPTY;
         }
+
 
         const LIMIT = 20;
 

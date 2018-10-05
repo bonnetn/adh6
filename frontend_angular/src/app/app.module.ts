@@ -25,7 +25,7 @@ import {MemberCreateOrEditComponent} from './member-create-or-edit/member-create
 import {MacVendorComponent} from './mac-vendor/mac-vendor.component';
 import {GlobalSearchComponent} from './global-search/global-search.component';
 import {NavbarComponent} from './navbar/navbar.component';
-import {SimpleNotificationsModule} from 'angular2-notifications';
+import {NotificationAnimationType, SimpleNotificationsModule} from 'angular2-notifications';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {OAuthModule} from 'angular-oauth2-oidc';
 import {LoginComponent} from './login/login.component';
@@ -71,7 +71,7 @@ import {NotifInterceptor} from './http-interceptor/notif-interceptor';
       timeOut: 3000,
       clickToClose: false,
       clickIconToClose: true,
-      animate: 'fade',
+      animate: NotificationAnimationType.Fade,
       showProgressBar: false,
     }),
     BrowserAnimationsModule,
