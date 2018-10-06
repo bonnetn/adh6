@@ -41,7 +41,7 @@ def filter_switch(limit=100, offset=0, terms=None):
     q = q.all()
 
     # Convert the qs into data suited for the API
-    q = map(lambda x: {'switchID': x.id, 'switch': dict(x)}, q)
+    q = map(lambda x: dict(x), q)
     result = list(q)  # Cast generator as list
 
     headers = {

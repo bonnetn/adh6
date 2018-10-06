@@ -96,7 +96,7 @@ export class GlobalSearchComponent implements OnInit {
 
         const device$ = this.deviceService.filterDevice(LIMIT, undefined, undefined, terms).pipe(
           mergeMap((array) => from(array)),
-          map((obj) => new SearchResult('device', obj.mac, ['/device/view/', obj.mac])),
+          map((obj) => new SearchResult('device', obj.mac, ['/member/view/', obj.username])),
         );
 
         const room$ = this.roomService.filterRoom(LIMIT, undefined, terms).pipe(
@@ -110,7 +110,12 @@ export class GlobalSearchComponent implements OnInit {
 
         const port$ = this.portService.filterPort(LIMIT, undefined, undefined, undefined, terms).pipe(
           mergeMap((array: Array<Port>) => from(array)),
-          map((obj: Port) => new SearchResult('port', 'Switch ' + obj.switchID + ' ' + obj.portNumber, ['/switch/view', obj.switchID.toString(), 'port', obj.id.toString()])),
+          map((obj: Port) =>
+            new SearchResult(
+              'port',
+              `Switch ${obj.switchID} ${obj.portNumber}`,
+              ['/switch/view', obj.switchID.toString(), 'port', obj.id.toString()]
+            )),
         );
 
         return user$
