@@ -13,15 +13,13 @@
   <table class="u-full-width clickable-table" *ngIf="result$ | async as result">
     <tr>
       <th>Nom</th>
-      <th>Prénom</th>
       <th>Login</th>
       <th class="center">Chambre</th>
     </tr>
     <tr
       *ngFor="let member of result.members | paginate: { itemsPerPage: result.item_per_page, currentPage: result.current_page, totalItems: result.item_count}"
       [routerLink]="['../view', member.username]">
-      <td>{{ member.firstName }}</td>
-      <td>{{ member.lastName }}</td>
+      <td>{{ member.lastName | uppercase }} <span class="firstname">{{ member.firstName | lowercase }}</span></td>
       <td>{{ member.username }}</td>
       <td class="center"><a [routerLink]="['/room/view', member.roomNumber]">{{ member.roomNumber }}</a></td>
     </tr>
