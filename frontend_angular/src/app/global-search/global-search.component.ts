@@ -69,7 +69,6 @@ export class GlobalSearchComponent implements OnInit {
     this.searchTerm$.next(terms);
   }
 
-
   ngOnInit() {
 
     // This is a stream of what the user types debounced
@@ -91,7 +90,7 @@ export class GlobalSearchComponent implements OnInit {
 
         const user$ = this.memberService.filterMember(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
-          map((obj) => new SearchResult('user', obj.firstName + ' ' + obj.lastName, ['/member/view', obj.username])),
+          map((obj) => new SearchResult('user', this.capitalizeFirstLetter(obj.firstName) + ' ' + obj.lastName.toUpperCase(), ['/member/view', obj.username])),
         );
 
         const device$ = this.deviceService.filterDevice(LIMIT, undefined, undefined, terms).pipe(
@@ -141,6 +140,10 @@ export class GlobalSearchComponent implements OnInit {
       }, [])
     );
 
+  }
+
+  private capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
 
 }

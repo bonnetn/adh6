@@ -14,14 +14,14 @@
     <tr>
       <th>Nom</th>
       <th>Login</th>
-      <th class="center">Chambre</th>
+      <th class="roomNumberRow">Chambre</th>
     </tr>
     <tr
       *ngFor="let member of result.members | paginate: { itemsPerPage: result.item_per_page, currentPage: result.current_page, totalItems: result.item_count}"
       [routerLink]="['../view', member.username]">
-      <td>{{ member.lastName | uppercase }} <span class="firstname">{{ member.firstName | lowercase }}</span></td>
+      <td>{{ member.lastName | uppercase }} <span class="capitalize">{{ member.firstName | lowercase }}</span></td>
       <td>{{ member.username }}</td>
-      <td class="center"><a [routerLink]="['/room/view', member.roomNumber]">{{ member.roomNumber }}</a></td>
+      <td class="roomNumberRow"><a [routerLink]="['/room/view', member.roomNumber]">{{ member.roomNumber }}</a></td>
     </tr>
     <br/>
   </table>

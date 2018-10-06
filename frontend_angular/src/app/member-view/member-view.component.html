@@ -1,7 +1,7 @@
 <div *ngIf="(member$ | async) as member" class="row">
   <!-- Left column -->
   <div class="nine columns">
-    <h2>{{ member.firstName }} {{ member.lastName }}</h2>
+    <h2><span class="capitalize">{{ member.firstName | lowercase }}</span> {{ member.lastName | uppercase }}</h2>
 
     <div class="row">
       <table class="u-full-width shift-content-right">
