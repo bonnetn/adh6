@@ -85,7 +85,9 @@
       </thead>
       <tbody>
       <ng-container *ngFor="let device of all_devices$ | async">
-        <tr class="device_row" (click)="toggleDeviceDetails(device)">
+        <tr class="device_row"
+            [ngClass]="{'mac_highlighted': device.mac == (macHighlighted$ | async)}"
+            (click)="toggleDeviceDetails(device)">
           <td>{{ device.mac }}</td>
           <td><a>Détails</a></td>
         </tr>

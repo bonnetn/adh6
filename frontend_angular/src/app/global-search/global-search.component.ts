@@ -21,14 +21,18 @@ import {PortService} from '../api/api/port.service';
 import {Port} from '../api';
 import {EMPTY} from 'rxjs';
 
+class QueryParams {
+  highlight: string;
+}
 
 export class SearchResult {
   objType: string;
   name: string;
   color = 'grey';
   link: Array<string>;
+  queryParams: QueryParams;
 
-  constructor(t: string, n: string, link: Array<string>) {
+  constructor(t: string, n: string, link: Array<string>, params?: QueryParams) {
     this.objType = t;
     this.name = n;
     if (t === 'user') {
@@ -43,6 +47,7 @@ export class SearchResult {
       this.color = 'purple';
     }
     this.link = link;
+    this.queryParams = params;
   }
 }
 
@@ -90,12 +95,21 @@ export class GlobalSearchComponent implements OnInit {
 
         const user$ = this.memberService.filterMember(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
-          map((obj) => new SearchResult('user', this.capitalizeFirstLetter(obj.firstName) + ' ' + obj.lastName.toUpperCase(), ['/member/view', obj.username])),
+          map((obj) => new SearchResult(
+            'user',
+            `${this.capitalizeFirstLetter(obj.firstName)} ${obj.lastName.toUpperCase()}`,
+            ['/member/view', obj.username]
+          )),
         );
 
         const device$ = this.deviceService.filterDevice(LIMIT, undefined, undefined, terms).pipe(
           mergeMap((array) => from(array)),
-          map((obj) => new SearchResult('device', obj.mac, ['/member/view/', obj.username])),
+          map((obj) => new SearchResult(
+            'device',
+            obj.mac,
+            ['/member/view/', obj.username],
+            {'highlight': obj.mac}
+          )),
         );
 
         const room$ = this.roomService.filterRoom(LIMIT, undefined, terms).pipe(

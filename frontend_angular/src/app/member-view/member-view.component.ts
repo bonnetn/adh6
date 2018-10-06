@@ -21,6 +21,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
   member$: Observable<Member>;
   all_devices$: Observable<Device[]>;
   log$: Observable<Array<string>>;
+  macHighlighted$: Observable<string>;
 
   cotisation = false;
   private refreshInfoOrder$ = new BehaviorSubject<null>(null);
@@ -44,6 +45,10 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     // username of the owner of the profile
     this.username$ = this.route.params.pipe(
       map(params => params['username'])
+    );
+
+    this.macHighlighted$ = this.route.queryParams.pipe(
+      map(params => params['highlight'])
     );
 
     // stream, which will emit the username every time the profile needs to be refreshed
