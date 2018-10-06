@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {MemberService} from '../api/api/member.service';
 import {DeviceService} from '../api/api/device.service';
@@ -9,7 +8,7 @@ import {Device} from '../api/model/device';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {catchError, finalize, first, flatMap, map, share, switchMap, tap} from 'rxjs/operators';
-import {combineLatest, interval} from 'rxjs';
+import {combineLatest, interval, Observable} from 'rxjs';
 
 @Component({
   selector: 'app-member-details',
@@ -51,7 +50,6 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     const refresh$ = combineLatest(this.username$, this.refreshInfoOrder$)
       .pipe(
         map(([x]) => x),
-        share()
       );
 
     this.member$ = refresh$.pipe(
@@ -135,8 +133,11 @@ export class MemberViewComponent implements OnInit, OnDestroy {
   }
 
   addDevice();
+
   addDevice(username: string);
+
   addDevice(username: string, alreadyExists: boolean);
+
   addDevice(username?: string, alreadyExists?: boolean) {
 
     if (username === undefined) {
@@ -147,8 +148,9 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     }
 
     const v = this.deviceForm.value;
+    const mac = this.sanitizeMac(v.mac);
     if (alreadyExists === undefined) {
-      return this.deviceService.getDevice(v.mac).pipe(
+      return this.deviceService.getDevice(mac).pipe(
         map(() => true),
         catchError(() => Observable.of(false)),
         flatMap((exists) => this.addDevice(username, exists)),
@@ -156,7 +158,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     }
 
     const device: Device = {
-      mac: v.mac,
+      mac: mac,
       connectionType: v.connectionType,
       username: username
     };
@@ -164,7 +166,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     // Make an observable that will return True if the device already exists
     if (!alreadyExists) {
       // If the device does not then create it, and refresh the info
-      return this.deviceService.putDevice(v.mac, device)
+      return this.deviceService.putDevice(mac, device)
         .pipe(
           flatMap(() => {
             this.refreshInfo();
@@ -212,6 +214,10 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
   isDeviceOpened(device: Device): boolean {
     return this.selectedDevice === device.mac;
+  }
+
+  private sanitizeMac(mac: string) {
+    return mac.toLowerCase().replace(/[^a-f0-9]+/g, '-');
   }
 
 }
