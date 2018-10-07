@@ -33,6 +33,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {AuthInterceptor} from './http-interceptor/auth-interceptor';
 import {NotifInterceptor} from './http-interceptor/notif-interceptor';
+import { MemberPasswordEditComponent } from './member-password-edit/member-password-edit.component';
 
 
 @NgModule({
@@ -61,6 +62,7 @@ import {NotifInterceptor} from './http-interceptor/notif-interceptor';
     GlobalSearchComponent,
     NavbarComponent,
     LoginComponent,
+    MemberPasswordEditComponent,
   ],
   imports: [
     BrowserModule,

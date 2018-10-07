@@ -41,7 +41,6 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
       email: ['', [Validators.required, Validators.email]],
       roomNumber: [null, [Validators.min(1000), Validators.max(9999)]],
     });
-
   }
 
   editMember() {

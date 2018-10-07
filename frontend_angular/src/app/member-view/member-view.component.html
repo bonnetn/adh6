@@ -36,9 +36,18 @@
         </tbody>
       </table>
 
-      <a [routerLink]="['/member/edit/', member.username ]">
-        <button class="u-full-width">Éditer le profile</button>
-      </a>
+      <div class="row">
+        <div class="six columns">
+          <a [routerLink]="['/member/edit/', member.username ]">
+            <button class="u-full-width">Éditer le profile</button>
+          </a>
+        </div>
+        <div class="six columns">
+          <a [routerLink]="['/member/password/', member.username ]">
+            <button class="u-full-width">Changer mot de passe</button>
+          </a>
+        </div>
+      </div>
     </div>
 
     <div class="four columns">

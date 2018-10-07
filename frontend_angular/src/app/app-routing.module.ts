@@ -19,6 +19,7 @@ import {SwitchDetailsComponent} from './switch-details/switch-details.component'
 import {SwitchEditComponent} from './switch-edit/switch-edit.component';
 import {SwitchNewComponent} from './switch-new/switch-new.component';
 import {DeviceListComponent} from './device-list/device-list.component';
+import {MemberPasswordEditComponent} from './member-password-edit/member-password-edit.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
@@ -30,6 +31,7 @@ const routes: Routes = [
       {path: 'add', component: MemberCreateOrEditComponent},
       {path: 'view/:username', component: MemberViewComponent},
       {path: 'edit/:username', component: MemberCreateOrEditComponent},
+      {path: 'password/:username', component: MemberPasswordEditComponent},
     ],
   },
   {
