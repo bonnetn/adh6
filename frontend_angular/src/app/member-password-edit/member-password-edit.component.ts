@@ -1,5 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {NotificationsService} from 'angular2-notifications';
+import {finalize, first, map, switchMap, tap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {MemberService} from '../api';
 
 function passwordConfirming(c: AbstractControl): any {
   if (!c || !c.value) return;
@@ -24,6 +29,10 @@ export class MemberPasswordEditComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private router: Router,
+    private notif: NotificationsService,
+    private route: ActivatedRoute,
+    private memberService: MemberService,
   ) {
   }
 
@@ -40,7 +49,36 @@ export class MemberPasswordEditComponent implements OnInit {
     });
   }
 
+
   changePassword(): void {
-    alert('!');
+    this.getUsername()
+      .pipe(
+        first(),
+        switchMap(username => this.updatePasswordOfUser(username)),
+        finalize(() => this.disabled = false)
+      )
+      .subscribe((_) => {});
+  }
+
+  private updatePasswordOfUser(username: string) {
+    return this.memberService.updatePassword(
+      username,
+      {password: this.memberPassword.value.password},
+      'response')
+      .pipe(
+        first(),
+        tap((response) => {
+          this.router.navigate(['member/view', username]);
+          this.notif.success(response.status + ': Success');
+        }),
+      );
+
+  }
+
+  private getUsername(): Observable<string> {
+    return this.route.paramMap.pipe(
+      map(params => params.get('username')),
+      first(),
+    );
   }
 }
