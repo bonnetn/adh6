@@ -97,7 +97,7 @@
         <tr class="device_row"
             [ngClass]="{'mac_highlighted': device.mac == (macHighlighted$ | async)}"
             (click)="toggleDeviceDetails(device)">
-          <td>{{ device.mac }}</td>
+          <td>{{ device.mac | uppercase }}</td>
           <td><a>Détails</a></td>
         </tr>
         <tr *ngIf="isDeviceOpened(device)" class="device_details_area">
