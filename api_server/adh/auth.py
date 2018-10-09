@@ -8,6 +8,9 @@ from flask import current_app, g
 from adh.model.models import Utilisateur
 from adh.util.env import isDevelopmentEnvironment
 
+ADH6_USER = "adh6_user"
+ADH6_ADMIN = "adh6_admin"
+
 
 def get_groups(token):
     try:
@@ -55,7 +58,7 @@ def token_info(access_token) -> dict:
 def auth_regular_admin(f):
     def wrapper(*args, user, token_info, **kwargs):
         if current_app.config["TESTING"] \
-                or "adh6_user" in token_info["groups"]:
+                or ADH6_USER in token_info["groups"]:
             g.admin = Utilisateur.find_or_create(g.session, user)
             return f(*args, **kwargs)
         return NoContent, 401
@@ -66,7 +69,7 @@ def auth_regular_admin(f):
 def auth_super_admin(f):
     def wrapper(*args, user, token_info, **kwargs):
         if current_app.config["TESTING"] \
-                or "adh6_admin" in token_info["groups"]:
+                or ADH6_ADMIN in token_info["groups"]:
             g.admin = Utilisateur.find_or_create(g.session, user)
             return f(*args, **kwargs)
         return NoContent, 401
