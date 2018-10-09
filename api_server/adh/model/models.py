@@ -568,3 +568,14 @@ class Adhesion(Base):
     adherent = relationship(Adherent)
     depart = Column(DateTime, nullable=False)
     fin = Column(DateTime, nullable=False)
+
+
+class NainA(Base):
+    __tablename__ = 'temporary_account'
+
+    id = Column(Integer, primary_key=True)
+    first_name = Column(Text, nullable=False)
+    last_name = Column(Text, nullable=False)
+    access_token = Column(Text, nullable=False)
+    start_time = Column(DateTime, nullable=False)
+    expiration_time = Column(DateTime, nullable=False)
