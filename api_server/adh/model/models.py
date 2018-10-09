@@ -4,15 +4,17 @@ import datetime
 from sqlalchemy import Column, Date, DateTime, Integer, \
     Numeric, String, Text, text, ForeignKey
 from sqlalchemy import inspect
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy.orm.exc import NoResultFound
 
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
 from adh.exceptions import MemberNotFound, RoomNotFound, SwitchNotFound
 from adh.exceptions import VlanNotFound, PortNotFound
-from adh.model.database import Base
 from adh.util import checks
 from adh.util.date import string_to_date
+
+Base = declarative_base()
 
 
 def _get_model_dict(model):

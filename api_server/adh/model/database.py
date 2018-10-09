@@ -1,43 +1,54 @@
-from flask import current_app
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 
-Base = declarative_base()
+from adh.model.models import Base, NainA
+from adh.util.env import isDevelopmentEnvironment
 
 
 class Database():
-
     def __init__(self, db_settings, testing=False):
-        self.engine = create_engine(URL(**db_settings), pool_recycle=3600)
-
-        @event.listens_for(self.engine, "connect")
-        def do_connect(dbapi_connection, connection_record):
-            dbapi_connection.isolation_level = None
-
-        @event.listens_for(self.engine, "begin")
-        def do_begin(conn):
-            # emit our own BEGIN
-            conn.execute("BEGIN")
-
-        self.session_maker = sessionmaker(bind=self.engine)
-        if testing:
-            self.session_maker = scoped_session(self.session_maker)
-            Base.metadata.drop_all(self.engine)
-        Base.metadata.create_all(self.engine)
         self.testing = testing
 
-        self.session_maker().begin_nested()
+        self.engine = create_engine(
+            URL(**db_settings),
+            isolation_level="SERIALIZABLE",  # As we don't have a lot of IO, we can afford the highest isolation.
+            echo=testing or isDevelopmentEnvironment(),  # Echo the SQL queries if testing.
+            pool_pre_ping=True, # Make sure the connection is OK before using it.
+        )
+
+        self.session_maker = sessionmaker(
+            bind=self.engine,
+            autoflush=True,  # Flush at each query so that we can see our changes in the current session.
+            autocommit=False,  # Never auto-commit, we want proper transactions!
+        )
+
+        if testing:
+            self.session_maker = scoped_session(self.session_maker)
+
+            # If testing, drop all tables & recreate them
+            Base.metadata.drop_all(self.engine)
+            Base.metadata.create_all(self.engine)
+
+        else:
+            # Create NainA table if not exists. (The other tables should already exist.)
+            Base.metadata.create_all(
+                self.engine,
+                tables=[NainA.__table__]
+            )
 
     def get_session(self):
         return self.session_maker()
 
     db = None
 
+    @staticmethod
     def init_db(settings, testing=False):
         Database.db = Database(settings, testing=testing)
 
+    @staticmethod
     def get_db():
+        if Database.db is None:
+            raise AttributeError("database is none")
         return Database.db
