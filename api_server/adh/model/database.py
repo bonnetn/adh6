@@ -14,7 +14,7 @@ class Database():
         self.engine = create_engine(
             URL(**db_settings),
             isolation_level="SERIALIZABLE",  # As we don't have a lot of IO, we can afford the highest isolation.
-            echo=testing or isDevelopmentEnvironment(),  # Echo the SQL queries if testing.
+            echo=testing,  # Echo the SQL queries if testing.
             pool_pre_ping=True, # Make sure the connection is OK before using it.
         )
 
