@@ -6,12 +6,13 @@ from connexion import NoContent
 from flask import current_app, g
 
 from adh.model.models import Utilisateur
+from adh.util.env import isDevelopmentEnvironment
 
 
 def get_groups(token):
     try:
         verify_cert = True
-        if os.environ["ENVIRONMENT"] == "dev":
+        if isDevelopmentEnvironment():
             verify_cert = False
 
         headers = {"Authorization": "Bearer " + token}
@@ -28,8 +29,8 @@ def get_groups(token):
         return None
 
     result = r.json()
-    if os.environ["ENVIRONMENT"] == "dev":
-        result["groups"] = ["adh6_user", "adh6_admin"]  # If we are testing, consider the user asg.admin
+    if isDevelopmentEnvironment():
+        result["groups"] = [ADH6_USER, ADH6_ADMIN]  # If we are testing, consider the user asg.admin
     return result
 
 
