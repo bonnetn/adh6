@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TemporaryAccountService} from '../api';
-import {finalize, first, map, tap} from 'rxjs/operators';
+import {filter, finalize, first, map} from 'rxjs/operators';
 import {authConfig} from '../config/auth.config';
 import {NotificationsService} from 'angular2-notifications';
 
@@ -13,7 +13,7 @@ import {NotificationsService} from 'angular2-notifications';
 export class CreateTemporaryAccountComponent implements OnInit {
 
   formGroup: FormGroup;
-  disabled: boolean = false;
+  disabled = false;
   access_token: string;
   url: string;
 
@@ -47,7 +47,6 @@ export class CreateTemporaryAccountComponent implements OnInit {
       })
       .pipe(
         finalize(() => this.disabled = false),
-        tap((data) => {console.log(data)})
         map((data) => data.accessToken),
         first(),
       )
@@ -56,10 +55,27 @@ export class CreateTemporaryAccountComponent implements OnInit {
       });
   }
 
-  copyLink(inputElement){
+  copyLink(inputElement) {
     inputElement.select();
     document.execCommand('copy');
     inputElement.setSelectionRange(0, 0);
-    this.notif.success("Copied to clipboard!")
+    this.notif.success('Copied to clipboard!');
+  }
+
+  revokeTokens() {
+    if (!window.confirm('Voulez-vous vraiment révoquer tous les comptes NainA actifs ?')) {
+      return;
+    }
+    this.disabled = true;
+    this.tempAccService.revokeTempAccount('response')
+      .pipe(
+        finalize(() => this.disabled = false)
+        first(),
+        map((response) => response.status),
+        filter((status) => status === 204)
+      )
+      .subscribe((status) => {
+        this.notif.success('Revoked all tokens!');
+      });
   }
 }

@@ -2,6 +2,7 @@ import datetime
 import logging
 import secrets
 
+from connexion import NoContent
 from flask import g
 
 from adh.auth import auth_super_admin
@@ -36,3 +37,17 @@ def create_temp_account(body):
     logging.info("%s created a temporary account for '%s %s'", g.admin.login, firstname, lastname)
 
     return {"accessToken": "NAINA_{}".format(token)}, 200
+
+
+@require_sql
+@auth_super_admin
+def revoke_temp_account():
+    s = g.session
+
+    now = datetime.datetime.now()
+    q = s.query(NainA)
+    q = q.filter(NainA.expiration_time > now)
+    q.update({"expiration_time": now})
+    s.commit()
+    logging.info("%s revoked all temporary accounts.", g.admin.login)
+    return NoContent, 204

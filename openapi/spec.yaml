@@ -940,6 +940,19 @@ paths:
       x-swagger-router-controller: "adh.controller.temporary_account"
       security:
       - oauth2: ["profile"]
+    delete:
+      tags:
+      - "temporary_account"
+      summary: "Revoke all active temporary accounts."
+      operationId: "revoke_temp_account"
+      produces:
+      - "application/json"
+      responses:
+        204:
+          description: "Success"
+      x-swagger-router-controller: "adh.controller.temporary_account"
+      security:
+      - oauth2: ["profile"]
 securityDefinitions:
   oauth2:
     type: "oauth2"

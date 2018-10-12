@@ -16,6 +16,11 @@
       Créer
     </button>
   </form>
+  <a (click)="revokeTokens()">
+    <button type="submit" class="u-full-width button-danger" [disabled]="disabled">
+      Révoquer tous les comptes NainA
+    </button>
+  </a>
 </ng-container>
 <ng-container *ngIf="access_token != ''">
   <h2>Lien d'accès</h2>
@@ -23,7 +28,8 @@
     Envoyez ce lien au 1A:
   </label>
   <div class="row">
-    <input type="text" id="textbox_link" value="{{ url }}dashboard#naina_token={{ access_token }}" readonly #userinput class="u-full-width">
+    <input type="text" id="textbox_link" value="{{ url }}dashboard#naina_token={{ access_token }}" readonly #userinput
+           class="u-full-width">
   </div>
   <div class="row">
     <button (click)="copyLink(userinput)" value="click to copy" class="u-full-width">Copier</button>

@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {JwksValidationHandler, OAuthService} from 'angular-oauth2-oidc';
 import {authConfig} from './config/auth.config';
-import {NAINA_FIELD, NAINA_PREFIX} from './config/naina.config.ts';
+import {NAINA_FIELD, NAINA_PREFIX} from './config/naina.config';
 import {ActivatedRoute} from '@angular/router';
 import {filter, first, map} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
@@ -42,8 +42,8 @@ export class AppComponent implements OnInit, OnDestroy {
         sessionStorage.setItem('granted_scopes', '["profile"]');
         sessionStorage.setItem('access_token_stored_at', '' + Date.now());
 
-        const pathWithoutHash = this.location.path(false);
-        this.location.replaceState(pathWithoutHash);
+        // const pathWithoutHash = this.location.path(false);
+        // this.location.replaceState(pathWithoutHash);
       });
   }
 
