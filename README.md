@@ -59,6 +59,8 @@ Normalement, une fois que le projet est lancé, vous aurez les logs de tous les 
 Si vous éditez le code du Frontend (angular) dans votre dossier, les modifications seront automatiquement réfléchies (vous allez voir des logs comme quoi il recompile automatiquement). Pour le code de l'API, modifiez votre code et faites *docker-compose restart api_server*.
 Si vous modifiez autre chose, vous pouvez aussi tout relancer (mais ça prend du temps à cause de CAS).
 
+PS: Parfois, lorsque que vous ajoutez un fichier, il faudra éteindre adh6, faire *docker-compose rm -v* puis relancer.
+
 
 
 ## Choix des technos
