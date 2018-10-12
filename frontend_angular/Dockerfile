@@ -62,6 +62,7 @@ ENV SSO_AUTHORIZE=$SSO_AUTHORIZE
 ENV BASE_ADH6_URL=${BASE_ADH6_URL}
 COPY frontend_angular/gen_config ./gen_config
 RUN mkdir -p ./src/app/config && /bin/bash ./gen_config/generate_config.sh && rm -rf ./gen_config
+COPY frontend_angular/src/app/config/naina.config.ts ./src/app/config/naina.config.ts
 
 # Copy source code
 COPY frontend_angular/*.json ./

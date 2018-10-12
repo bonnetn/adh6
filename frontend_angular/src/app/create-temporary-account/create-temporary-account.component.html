@@ -1,0 +1,24 @@
+<ng-container *ngIf="access_token == ''">
+  <form [formGroup]="formGroup" (ngSubmit)="createNainA()" novalidate>
+    <label>Prénom</label>
+    <input class="u-full-width" type="text" formControlName="first_name"/>
+
+    <label>Nom de famille</label>
+    <input class="u-full-width" type="text" formControlName="last_name">
+
+    <p style="font-weight: bold">
+      En créant ce compte temporaire j'assume la responsabilité de la bonne utilisation des droits fournis à la personne
+      désignée.
+      Je certifie également que le prénom et nom fournis sont corrects.
+    </p>
+    <button type="submit" class="u-full-width button-primary"
+            [disabled]="disabled || formGroup.status == 'INVALID'">
+      Créer
+    </button>
+  </form>
+</ng-container>
+<ng-container *ngIf="access_token != ''">
+  <a href="{{ url }}dashboard#naina_token={{ access_token }}">
+    {{ url }}dashboard#naina_token={{ access_token }}
+  </a>
+</ng-container>

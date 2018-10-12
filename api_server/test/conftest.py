@@ -3,8 +3,8 @@ import datetime
 import pytest
 
 from adh.model.models import (
-    Adherent, Chambre, Vlan, Ordinateur, Portable, Switch, Port
-)
+    Adherent, Chambre, Vlan, Ordinateur, Portable, Switch, Port,
+    NainA)
 
 
 @pytest.fixture
@@ -169,4 +169,28 @@ def sample_port2(sample_switch2):
         switch=sample_switch2,
         chambre_id=0,
 
+    )
+
+
+@pytest.fixture
+def sample_naina():
+    yield NainA(
+        first_name="Nain",
+        last_name="Ha",
+        access_token="WEAK_TOKEN",
+        start_time=datetime.datetime.now(),
+        expiration_time=datetime.datetime.now() + datetime.timedelta(hours=2),
+        admin="admin_who_created_naina",
+    )
+
+
+@pytest.fixture
+def sample_naina_expired():
+    yield NainA(
+        first_name="NainExpired",
+        last_name="HaExpired",
+        access_token="EXPIRED_TOKEN",
+        start_time=datetime.datetime.now() - datetime.timedelta(hours=2),
+        expiration_time=datetime.datetime.now() - datetime.timedelta(hours=1),
+        admin="admin_who_created_naina",
     )

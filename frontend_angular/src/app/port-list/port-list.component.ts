@@ -36,7 +36,6 @@ export class PortListComponent extends SearchPage implements OnInit {
 
   private fetchPort(terms: string, page: number): Observable<PortListResult> {
     const n = +PagingConf.item_count;
-    console.log(terms);
     return this.portService.filterPort(n, (page - 1) * n, undefined, undefined, terms, 'response')
       .pipe(
         map((response) => {

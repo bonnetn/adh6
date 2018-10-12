@@ -5,19 +5,19 @@ from adh.auth import auth_regular_admin
 
 @auth_regular_admin
 def get_port_status(switchID, port_id):
-    return 204, NoContent, True
+    return NoContent, 200, True
 
 
 @auth_regular_admin
 def set_port_status(switchID, port_id, state):
-    return 200, NoContent
+    return NoContent, 200
 
 
 @auth_regular_admin
 def get_port_vlan(switchID, port_id):
-    return 200, NoContent, 42
+    return NoContent, 200, 42
 
 
 @auth_regular_admin
 def set_port_vlan(switchID, port_id, vlan):
-    return 204, NoContent
+    return NoContent, 204

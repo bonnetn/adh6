@@ -1,3 +1,6 @@
+import logging
+from _mysql_exceptions import OperationalError
+
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import scoped_session
@@ -33,10 +36,13 @@ class Database():
 
         else:
             # Create NainA table if not exists. (The other tables should already exist.)
-            Base.metadata.create_all(
-                self.engine,
-                tables=[NainA.__table__]
-            )
+            try:
+                Base.metadata.create_all(
+                    self.engine,
+                    tables=[NainA.__table__]
+                )
+            except OperationalError as e:
+                logging.warn("Error when creating the table.", e)
 
     def get_session(self):
         return self.session_maker()

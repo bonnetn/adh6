@@ -56,7 +56,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
                           regular update (does not update username)
 
      A) create value is transformed into an observable
-        create = True means the form is for creation of a member
+        create = True means the formGroup is for creation of a member
         create = False is to update a member
      B) has404 checks that a member with that username does not exist already.
      */
@@ -65,7 +65,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
     this.disabled = true;
     const v = this.memberEdit.value;
 
-    // If you create a user, then use the username from the form.
+    // If you create a user, then use the username from the formGroup.
     // If you update a user, since the admin might have modified their username, you better use the original one (the one loaded at
     // initialization of the page).
     let requestUsername = v.username;

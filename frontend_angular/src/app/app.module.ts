@@ -34,6 +34,7 @@ import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {AuthInterceptor} from './http-interceptor/auth-interceptor';
 import {NotifInterceptor} from './http-interceptor/notif-interceptor';
 import { MemberPasswordEditComponent } from './member-password-edit/member-password-edit.component';
+import { CreateTemporaryAccountComponent } from './create-temporary-account/create-temporary-account.component';
 
 
 @NgModule({
@@ -63,6 +64,7 @@ import { MemberPasswordEditComponent } from './member-password-edit/member-passw
     NavbarComponent,
     LoginComponent,
     MemberPasswordEditComponent,
+    CreateTemporaryAccountComponent,
   ],
   imports: [
     BrowserModule,

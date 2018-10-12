@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "Adherent api\n"
-  version: "1.0.10"
+  version: "1.0.11"
   title: "Adherent"
   license:
     name: "Apache 2.0"
@@ -22,6 +22,8 @@ tags:
   description: "Operations on switches"
 - name: "port"
   description: "Operations on ports"
+- name: "temporary_account"
+  description: "Temporary accounts"
 schemes:
 - "https"
 paths:
@@ -905,7 +907,39 @@ paths:
       x-swagger-router-controller: "adh.controller.snmp_port"
       security:
       - oauth2: ["profile"]
-
+  /temp_acc/:
+    post:
+      tags:
+      - "temporary_account"
+      summary: "Create new temporary account for this day. Only super admins can do that."
+      operationId: "create_temp_account"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        required: true
+        schema:
+          type: object
+          properties:
+            firstname:
+              type: string
+              example: Jean
+            lastname:
+              type: string
+              example: Dupont
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              access_token:
+                type: string
+                example: "NAINA_AMLKSJQLMHFQ"
+      x-swagger-router-controller: "adh.controller.temporary_account"
+      security:
+      - oauth2: ["profile"]
 securityDefinitions:
   oauth2:
     type: "oauth2"

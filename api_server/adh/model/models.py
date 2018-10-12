@@ -576,8 +576,14 @@ class NainA(Base):
     __tablename__ = 'temporary_account'
 
     id = Column(Integer, primary_key=True)
+
+    # Name of the 1A.
     first_name = Column(Text, nullable=False)
     last_name = Column(Text, nullable=False)
+    # Access token that she/he will use.
     access_token = Column(Text, nullable=False)
+    # Time window when she/he will have access to ADH database.
     start_time = Column(DateTime, nullable=False)
     expiration_time = Column(DateTime, nullable=False)
+    # Administrator who created that temporary account.
+    admin = Column(Text, nullable=False)

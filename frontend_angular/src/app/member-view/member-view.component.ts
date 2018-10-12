@@ -9,6 +9,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {catchError, finalize, first, flatMap, map, share, switchMap, tap} from 'rxjs/operators';
 import {combineLatest, interval, Observable} from 'rxjs';
+import {TemporaryAccountService} from '../api/api/temporaryAccount.service';
 
 @Component({
   selector: 'app-member-details',
@@ -37,6 +38,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     private router: Router,
     private fb: FormBuilder,
     private notif: NotificationsService,
+    public tempAccService: TemporaryAccountService,
   ) {
     this.createForm();
   }

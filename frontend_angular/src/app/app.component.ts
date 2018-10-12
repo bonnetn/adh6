@@ -1,6 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {JwksValidationHandler, OAuthService} from 'angular-oauth2-oidc';
 import {authConfig} from './config/auth.config';
+import {NAINA_FIELD, NAINA_PREFIX} from './config/naina.config.ts';
+import {ActivatedRoute} from '@angular/router';
+import {filter, first, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +13,10 @@ import {authConfig} from './config/auth.config';
 export class AppComponent implements OnInit, OnDestroy {
   titre = 'ADH6';
 
-  constructor(private oauthService: OAuthService) {
+  constructor(
+    private oauthService: OAuthService,
+    private route: ActivatedRoute,
+  ) {
     this.configureWithNewConfigApi();
   }
 
@@ -20,6 +26,20 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isAuthenticated();
+    this.route.fragment
+      .pipe(
+        filter((fragment) => fragment != null && fragment.startsWith(NAINA_FIELD + NAINA_PREFIX)),
+        map((fragment) => fragment.substring(NAINA_FIELD.length)),
+        first(),
+      )
+      .subscribe((token) => {
+        sessionStorage.setItem('access_token', token);
+        sessionStorage.setItem('granted_scopes', '["profile"]');
+        sessionStorage.setItem('access_token_stored_at', '' + Date.now());
+
+        const pathWithoutHash = this.location.path(false);
+        this.location.replaceState(pathWithoutHash);
+      });
   }
 
   ngOnDestroy() {
