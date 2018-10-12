@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TemporaryAccountService} from '../api';
 import {finalize, first, map, tap} from 'rxjs/operators';
 import {authConfig} from '../config/auth.config';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'app-create-temporary-account',
@@ -19,6 +20,7 @@ export class CreateTemporaryAccountComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public tempAccService: TemporaryAccountService,
+    private notif: NotificationsService,
   ) {
   }
 
@@ -52,5 +54,12 @@ export class CreateTemporaryAccountComponent implements OnInit {
       .subscribe((token) => {
         this.access_token = token;
       });
+  }
+
+  copyLink(inputElement){
+    inputElement.select();
+    document.execCommand('copy');
+    inputElement.setSelectionRange(0, 0);
+    this.notif.success("Copied to clipboard!")
   }
 }

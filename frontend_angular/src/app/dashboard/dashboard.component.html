@@ -1,8 +1,17 @@
 <div class="dashboard">
   <img class="u-full-width" src="../assets/logoMiNET.png">
   <br/>
-  <a [routerLink]="['/member/add']">
-    <button class="button-primary u-full-width">Nouvelle inscription</button>
-  </a>
+  <div class="row">
+    <div class="six columns">
+      <a [routerLink]="['/member/add']">
+        <button class="button-primary u-full-width">Nouvelle inscription</button>
+      </a>
+    </div>
+    <div class="six columns">
+      <a [routerLink]="['/naina']">
+        <button class="button-primary u-full-width">Créer un compte NainA</button>
+      </a>
+    </div>
+  </div>
   <app-global-search></app-global-search>
 </div>

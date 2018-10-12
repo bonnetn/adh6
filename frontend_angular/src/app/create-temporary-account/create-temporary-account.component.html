@@ -18,7 +18,14 @@
   </form>
 </ng-container>
 <ng-container *ngIf="access_token != ''">
-  <a href="{{ url }}dashboard#naina_token={{ access_token }}">
-    {{ url }}dashboard#naina_token={{ access_token }}
-  </a>
+  <h2>Lien d'accès</h2>
+  <label for="textbox_link" class="row">
+    Envoyez ce lien au 1A:
+  </label>
+  <div class="row">
+    <input type="text" id="textbox_link" value="{{ url }}dashboard#naina_token={{ access_token }}" readonly #userinput class="u-full-width">
+  </div>
+  <div class="row">
+    <button (click)="copyLink(userinput)" value="click to copy" class="u-full-width">Copier</button>
+  </div>
 </ng-container>

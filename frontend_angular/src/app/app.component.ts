@@ -4,6 +4,7 @@ import {authConfig} from './config/auth.config';
 import {NAINA_FIELD, NAINA_PREFIX} from './config/naina.config.ts';
 import {ActivatedRoute} from '@angular/router';
 import {filter, first, map} from 'rxjs/operators';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'app-root',
@@ -33,6 +34,10 @@ export class AppComponent implements OnInit, OnDestroy {
         first(),
       )
       .subscribe((token) => {
+        if (this.isAuthenticated()) {
+          alert('Vous êtes déjà authentifié.');
+          return;
+        }
         sessionStorage.setItem('access_token', token);
         sessionStorage.setItem('granted_scopes', '["profile"]');
         sessionStorage.setItem('access_token_stored_at', '' + Date.now());
