@@ -1,5 +1,4 @@
 
-
 # ADH6
 Auteur original: *Nicolas Bonnet*
 
@@ -45,12 +44,14 @@ instructions pour installer docker?! Bon OK:
 2. Lancez l'application (le premier démarrage va prendre du temps, docker va
 construire toutes les images, installer plein de dépendances dans les
 environnements virtuels).
+
 > docker-compose up --build
 
-/!\ Vous aurez sûrement besoin de lancer le service docker. Avec systemd:
+* Vous aurez sûrement besoin de lancer le service docker. Avec systemd:*
+
 > systemctl start docker
 
-Vous aurez sûrement à vous ajouter au groupe *docker* pour éviter de lancer docker-compose en root.
+Vous aurez sûrement à vous ajouter au groupe *docker* pour éviter de lancer docker-compose en root. (Vous aurez sûrement à vous re-logger après)
 > usermod -aG docker votre_nom_d'utilisateur
 
 Le premier lancement peut prendre beaucoup de temps (genre au moins 15 mins). Il va installer et set-up tous les environnements dockers, et rebuild CAS (ça prend beaucoup de temps et télécharge ~700MB, c'est pas de la faute d'ADH...).  
