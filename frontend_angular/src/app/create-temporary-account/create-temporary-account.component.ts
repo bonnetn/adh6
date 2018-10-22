@@ -69,7 +69,7 @@ export class CreateTemporaryAccountComponent implements OnInit {
     this.disabled = true;
     this.tempAccService.revokeTempAccount('response')
       .pipe(
-        finalize(() => this.disabled = false)
+        finalize(() => this.disabled = false),
         first(),
         map((response) => response.status),
         filter((status) => status === 204)
