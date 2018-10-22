@@ -61,6 +61,9 @@ Vous pouvez tester l'application dans votre navigateur à l'adresse https://loca
 Vous pouvez vous identifier avec comme username *minet* et comme mot de passe *minet*.
 
 
+**NOTE**: Le certificat est auto-signé. Les navigateurs web récents permettent d'activer une option pour toujours faire confiance aux certificats pour localhost.
+
+
 
 Normalement, une fois que le projet est lancé, vous aurez les logs de tous les dockers dans la console. 
 Si vous éditez le code du Frontend (angular) dans votre dossier, les modifications seront automatiquement réfléchies (vous allez voir des logs comme quoi il recompile automatiquement). Pour le code de l'API, modifiez votre code et faites *docker-compose restart api_server*.
