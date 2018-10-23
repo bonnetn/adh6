@@ -47,7 +47,7 @@ environnements virtuels).
 
 > docker-compose up --build
 
-* Vous aurez sûrement besoin de lancer le service docker. Avec systemd:*
+*Vous aurez sûrement besoin de lancer le service docker. Avec systemd:*
 
 > systemctl start docker
 
