@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "Adherent api\n"
-  version: "1.0.11"
+  version: "1.0.12"
   title: "Adherent"
   license:
     name: "Apache 2.0"
@@ -844,6 +844,55 @@ paths:
         schema:
           type: boolean
 
+      responses:
+        204:
+          description: "Updated"
+        404:
+          description: "Not found"
+
+      x-swagger-router-controller: "adh.controller.snmp_port"
+      security:
+      - oauth2: ["profile"]
+  /port/{port_id}/mab/:
+    get:
+      tags:
+      - "port"
+      summary: "Check whether MAB is enable on this port or not."
+      operationId: "get_port_mab"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "port_id"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "True if MAB is enabled"
+          schema:
+            type: boolean
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "adh.controller.snmp_port"
+      security:
+      - oauth2: ["profile"]
+    put:
+      tags:
+      - "port"
+      summary: "Enable/disable MAB on a port"
+      operationId: "set_port_mab"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "port_id"
+        in: "path"
+        required: true
+        type: "integer"
+      - name: "state"
+        in: "body"
+        required: true
+        schema:
+          type: boolean
       responses:
         204:
           description: "Updated"

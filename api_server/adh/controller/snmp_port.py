@@ -21,3 +21,11 @@ def get_port_vlan(switchID, port_id):
 @auth_regular_admin
 def set_port_vlan(switchID, port_id, vlan):
     return NoContent, 204
+
+@auth_regular_admin
+def get_port_mab(port_id):
+    return False, 200
+
+@auth_regular_admin
+def set_port_mab(port_id, mab):
+    return NoContent, 204
