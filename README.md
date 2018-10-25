@@ -54,7 +54,7 @@ environnements virtuels).
 Vous aurez sûrement à vous ajouter au groupe *docker* pour éviter de lancer docker-compose en root. (Vous aurez sûrement à vous re-logger après)
 > usermod -aG docker votre_nom_d'utilisateur
 
-Le premier lancement peut prendre beaucoup de temps (genre au moins 15 mins). Il va installer et set-up tous les environnements dockers, et rebuild CAS (ça prend beaucoup de temps et télécharge ~700MB, c'est pas de la faute d'ADH...).  
+Le premier lancement peut prendre beaucoup de temps (genre au moins 15 mins). Il va installer et set-up tous les environnements dockers, et rebuild CAS (ça prend beaucoup de temps et télécharge ~700MB *Selon InsolentBacon, voyez l'espace libre chuter tout le long... 4Gb...*, c'est pas de la faute d'ADH...).  
 Ne vous inquiétez pas, lancer les dockers sera bien plus rapide les prochaines fois que vous re-lancerez.
 
 Vous pouvez tester l'application dans votre navigateur à l'adresse https://localhost
@@ -65,7 +65,7 @@ Vous pouvez vous identifier avec comme username *minet* et comme mot de passe *m
 
 
 
-Normalement, une fois que le projet est lancé, vous aurez les logs de tous les dockers dans la console. 
+Normalement, une fois que le projet est lancé, vous aurez les logs de tous les dockers dans la console.
 Si vous éditez le code du Frontend (angular) dans votre dossier, les modifications seront automatiquement réfléchies (vous allez voir des logs comme quoi il recompile automatiquement). Pour le code de l'API, modifiez votre code et faites *docker-compose restart api_server*.
 Si vous modifiez autre chose, vous pouvez aussi tout relancer (mais ça prend du temps à cause de CAS).
 
@@ -94,7 +94,7 @@ En résumé, on a pris le parti prix d'ajouter deux dépendances au projet, mais
 ## Dossier: api_server - le backend
 
 ###  Je suis perdu, qu'est-ce que c'est que tous ces dossiers ?
-Ce projet consiste juste en l'implémentation des différents méthodes définies dans la spécification de l'API. 
+Ce projet consiste juste en l'implémentation des différents méthodes définies dans la spécification de l'API.
 
 Si vous êtes un PGM et que vous voulez juste lire le code, sachez juste que tout le code est dans le dossier *adh/*.
 
@@ -103,10 +103,10 @@ Pour que python se comporte en serveur Web on utilise *Flask*, et pour pas avoir
 La spécification de l'API est stockée dans swagger.yaml à la racine du projet,
 ce fichier est automatiquement exporté de swaggerhub.
 https://app.swaggerhub.com/apis/insolentbacon/adherents/
-** Si vous voulez modifier l'API, ne modifiez pas sur ce site (de toute façon vous n'aurez sûrement pas les droits), modifiez le fichier openapi/spec.yaml.** 
+** Si vous voulez modifier l'API, ne modifiez pas sur ce site (de toute façon vous n'aurez sûrement pas les droits), modifiez le fichier openapi/spec.yaml.**
 Le site permet just d'avoir une jolie représentation de l'API.
 
-*En gros*, les fonctions importantes sont juste celles dans *adh/controller/*, 
+*En gros*, les fonctions importantes sont juste celles dans *adh/controller/*,
 qui sont appelées quand on fait des requêtes vers le serveur web.
 
 Maintenant, parce qu'on veut pas faire de requêtes directement dans la BDD SQL (pour des raisons de sécurité et de flemme), on utilise *SQLAlchemy*. C'est en fait une bibliothèque qui permet de manipuler des objets dans la BDD comme des objets python (allez chercher ce qu'est un *ORM*).
@@ -127,7 +127,7 @@ lorsque on lance pytest.
 
 ### Notes au futurs devs:
 #### Comment lancer les tests ?
-Lancez ```pytest``` dans la console, ou utilisez votre IDE... 
+Lancez ```pytest``` dans la console, ou utilisez votre IDE...
 
 #### Comment obtenir une analyse du "code coverage" ?
 ```pytest --cov=adh --cov-report html``` dans la console.
@@ -136,9 +136,9 @@ Lancez ```pytest``` dans la console, ou utilisez votre IDE...
 Quand vous implémentez une fonction de l'API dans controller, ne faites qu'UNE session SQLAlchemy, créée DANS votre fonction de controller. Ca évite les nested transactions qui sont pas toujours supportées. (et c'est plus propre, moins error-prone)
 
 *Extrait de la doc d'SQLALchemy:*
-> As a general rule, keep the lifecycle of the session separate and external 
-> from functions and objects that access and/or manipulate database data. 
-> This will greatly help with achieving a predictable and consistent 
+> As a general rule, keep the lifecycle of the session separate and external
+> from functions and objects that access and/or manipulate database data.
+> This will greatly help with achieving a predictable and consistent
 > transactional scope.
 
 #### Petites fonctions utiles
@@ -161,10 +161,9 @@ principal (c'est à dire, gérer les profils d'adhérents).
 ## CAS
 ### Description
 CAS est le service qui gère l'authentification des actions des utilisateurs.
-Au lieu de réimplémenter une solution de Single sign-on, j'ai ajouté une image docker CAS au projet. 
+Au lieu de réimplémenter une solution de Single sign-on, j'ai ajouté une image docker CAS au projet.
 Il est configuré pour accepter un utilisateur avec comme identifiant minet et comme mot de passe minet.
 Cela peut sembler évident mais NE PAS UTILISER CETTE IMAGE EN PRODUCTION.
 Il faudra configurer CAS pour utiliser le serveur LDAP et éventuellement configurer les autres options de sécurité.
 
 Le protocole utilisé est OAuth2.
-
