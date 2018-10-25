@@ -25,7 +25,7 @@ services:
       - type: bind
         source: "./frontend_angular/src"
         target: "/adh6/frontend_angular/src/"
-        read_only: "true"
+        read_only: true
       # These are files that are generated in the dockerfile that should not be
       # read from the host disk.
       - "/adh6/frontend_angular/src/app/api"
@@ -51,7 +51,7 @@ services:
       - type: bind
         source: "./api_server/adh"
         target: "/adh6/api_server/adh/"
-        read_only: "true"
+        read_only: true
       
   # The reverse proxy is used to gather the api and the frontend behind the same
   # host. We can also use it to cache requests.
