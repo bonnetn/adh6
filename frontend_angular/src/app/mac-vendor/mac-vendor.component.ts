@@ -1,6 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-
-import {HttpClient} from '@angular/common/http';
+import {DeviceService} from '../api/api/device.service';
+import {filter, finalize, first, map} from 'rxjs/operators';
+import {Utils} from '../utils';
 
 @Component({
   selector: 'app-mac-vendor',
@@ -12,23 +13,22 @@ export class MacVendorComponent implements OnInit, OnDestroy {
   @Input() mac: string;
 
   private alive = true;
+  private vendor = "";
 
   constructor(
-    private http: HttpClient,
+    public deviceService: DeviceService
   ) {
   }
 
   ngOnInit() {
-    /*this.http.get( "https://api.macvendors.com/" + this.mac, {
-      responseType: "text"
-    })
-      .takeWhile( () => this.alive )
-      .subscribe(( data:string) => {
-        this.vendor = data;
-      },
-        ( err : HttpErrorResponse) => {
-          this.vendor = "Unknown";
-        });*/
+    this.deviceService.getDeviceVendor(Utils.sanitizeMac(this.mac).substr(0, 8))
+      .pipe(
+        map((data) => data.vendorname),
+        first(),
+      )
+      .subscribe((vendor) => {
+        this.vendor = vendor;
+      });
   }
 
   ngOnDestroy() {

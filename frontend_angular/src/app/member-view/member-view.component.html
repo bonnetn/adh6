@@ -117,7 +117,7 @@
               </tr>
               <tr>
                 <td class="device_property">Fabriquant:</td>
-                <td>Unknown</td>
+                <td><app-mac-vendor mac="{{ device.mac }}"></app-mac-vendor></td>
               </tr>
             </table>
             <a (click)="deleteDevice(device.mac)">
