@@ -10,6 +10,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {catchError, finalize, first, flatMap, map, share, switchMap, tap} from 'rxjs/operators';
 import {combineLatest, interval, Observable} from 'rxjs';
 import {TemporaryAccountService} from '../api/api/temporaryAccount.service';
+import {Utils} from '../utils';
 
 @Component({
   selector: 'app-member-details',
@@ -155,7 +156,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     }
 
     const v = this.deviceForm.value;
-    const mac = this.sanitizeMac(v.mac);
+    const mac = Utils.sanitizeMac(v.mac);
     if (alreadyExists === undefined) {
       return this.deviceService.getDevice(mac).pipe(
         map(() => true),
@@ -221,10 +222,6 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
   isDeviceOpened(device: Device): boolean {
     return this.selectedDevice === device.mac;
-  }
-
-  private sanitizeMac(mac: string) {
-    return mac.toLowerCase().replace(/[^a-f0-9]+/g, '-');
   }
 
 }

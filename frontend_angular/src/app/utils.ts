@@ -17,4 +17,9 @@ export class Utils {
         isEmpty(),
       );
   }
+
+  public static sanitizeMac(mac: string) {
+    return mac.toLowerCase().replace(/[^a-f0-9]+/g, '-');
+  }
+
 }
