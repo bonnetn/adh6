@@ -397,6 +397,34 @@ paths:
       x-swagger-router-controller: "adh.controller.device"
       security:
       - oauth2: ["profile"]
+  /device/{mac_address}/vendor:
+    get:
+      tags:
+      - "device"
+      summary: "Retrieve the vendor of a device based on its MAC"
+      operationId: "get_device_vendor"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "mac_address"
+        in: "path"
+        description: "The mac address of the device that will be looked up"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              vendorname:
+                type: string
+                example: "Cisco Systems, Inc"
+        404:
+          description: "No match"
+      x-swagger-router-controller: "adh.controller.device"
+      security:
+      - oauth2: ["profile"]
   /room/:
     get:
       tags:

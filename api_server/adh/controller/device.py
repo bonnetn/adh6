@@ -1,6 +1,7 @@
 import datetime
 import json
 import logging
+import requests
 
 import dateutil
 from connexion import NoContent
@@ -197,6 +198,19 @@ def delete_device(mac_address):
     else:
         return NoContent, 404
 
+@require_sql
+@auth_regular_admin
+def get_device_vendor(mac_address):
+    """ [API] Return the vendor associated with the macAddress """
+    s = g.session
+    r = requests.get('https://macvendors.co/api/vendorname/' + str(mac_address))
+
+    if r.status_code == 200:
+        logging.info("%s fetched the vendor for device %s", g.admin.login, mac_address)
+        return {"vendorname": r.text}, 200
+
+    else:
+        return NoContent, 404
 
 def allocate_ip_for_device(s, dev, admin):
     date_de_depart = dev.adherent.date_de_depart
