@@ -930,8 +930,8 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE `transaction` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`src` varchar(255) DEFAULT NULL,
-	`dst` varchar(255) DEFAULT NULL,
+	`src` int(11) DEFAULT NULL,
+	`dst` int(11) DEFAULT NULL,
 	`product` int(11) DEFAULT NULL,
 	`value` decimal(8,2) DEFAULT NULL,
 	`name` varchar(255) DEFAULT NULL,
