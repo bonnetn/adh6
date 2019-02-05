@@ -927,6 +927,51 @@ LOCK TABLES `webs` WRITE;
 /*!40000 ALTER TABLE `webs` ENABLE KEYS */;
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `transaction`;
+CREATE TABLE `transaction` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`src` varchar(255) DEFAULT NULL,
+	`dst` varchar(255) DEFAULT NULL,
+	`product` int(11) DEFAULT NULL,
+	`value` decimal(8,2) DEFAULT NULL,
+	`name` varchar(255) DEFAULT NULL,
+	`attachment` mediumtext DEFAULT NULL,
+	`type` varchar(255) DEFAULT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `payment_method`;
+CREATE TABLE `payment_method` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` varchar(255) DEFAULT NULL,
+	`account` int(11) DEFAULT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `product`;
+CREATE TABLE `product` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`buying_price` decimal(8,2) DEFAULT NULL,
+	`selling_price` decimal(8,2) DEFAULT NULL,
+	`name` varchar(255) DEFAULT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `account`;
+CREATE TABLE `account` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`type` int(11) DEFAULT NULL,
+	`balance` decimal(8,2) DEFAULT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `account_type`;
+CREATE TABLE `account_type` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` varchar(255) DEFAULT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 --
 -- Final view structure for view `last_use_mac_U6`
 --
