@@ -961,7 +961,6 @@ DROP TABLE IF EXISTS `account`;
 CREATE TABLE `account` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`type` int(11) DEFAULT NULL,
-	`balance` decimal(8,2) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
