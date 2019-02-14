@@ -347,7 +347,7 @@ def test_member_patch_username(api_client):
         "lastName": "Dubois",
         "roomNumber": 5110,
         "comment": None,
-        "departureDate": "2005-07-14",
+        "departureDate": str(datetime.datetime(2005, 7, 14, 12, 30)),
         "associationMode": "2011-04-30T17:50:17",
         "email": "j.dubois@free.fr",
         "username": "TEST"
@@ -371,7 +371,7 @@ def test_member_patch_email(api_client):
         "lastName": "Dubois",
         "roomNumber": 5110,
         "comment": None,
-        "departureDate": "2005-07-14",
+        "departureDate": str(datetime.datetime(2005, 7, 14, 12, 30)),
         "associationMode": "2011-04-30T17:50:17",
         "email": "TEST@TEST.FR",
         "username": "dubois_j"
@@ -395,7 +395,7 @@ def test_member_patch_associationmode(api_client):
         "lastName": "Dubois",
         "roomNumber": 5110,
         "comment": None,
-        "departureDate": "2005-07-14",
+        "departureDate": str(datetime.datetime(2005, 7, 14, 12, 30)),
         "associationMode": "1996-01-01T00:00:00",
         "email": "j.dubois@free.fr",
         "username": "dubois_j"
@@ -443,7 +443,7 @@ def test_member_patch_comment(api_client):
         "lastName": "Dubois",
         "roomNumber": 5110,
         "comment": "TEST",
-        "departureDate": "2005-07-14",
+        "departureDate": str(datetime.datetime(2005, 7, 14, 12, 30)),
         "associationMode": "2011-04-30T17:50:17",
         "email": "j.dubois@free.fr",
         "username": "dubois_j"
@@ -467,7 +467,7 @@ def test_member_patch_roomnumber(api_client):
         "lastName": "Dubois",
         "roomNumber": 4592,
         "comment": None,
-        "departureDate": "2005-07-14",
+        "departureDate": str(datetime.datetime(2005, 7, 14, 12, 30)),
         "associationMode": "2011-04-30T17:50:17",
         "email": "j.dubois@free.fr",
         "username": "dubois_j"
@@ -491,7 +491,7 @@ def test_member_patch_lastname(api_client):
         "lastName": "TEST",
         "roomNumber": 5110,
         "comment": None,
-        "departureDate": "2005-07-14",
+        "departureDate": str(datetime.datetime(2005, 7, 14, 12, 30)),
         "associationMode": "2011-04-30T17:50:17",
         "email": "j.dubois@free.fr",
         "username": "dubois_j"
@@ -515,7 +515,7 @@ def test_member_patch_firstname(api_client):
         "lastName": "Dubois",
         "roomNumber": 5110,
         "comment": None,
-        "departureDate": "2005-07-14",
+        "departureDate": str(datetime.datetime(2005, 7, 14, 12, 30)),
         "associationMode": "2011-04-30T17:50:17",
         "email": "j.dubois@free.fr",
         "username": "dubois_j"
@@ -660,7 +660,7 @@ def test_member_log_create(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_member_put_member_create(api_client)
 
-    assert caplog.record_tuples[1] == (
+    assert caplog.record_tuples[0] == (
         'root', 20,
         'TestingClient created the member doe_john\n{"associationMode": '
         '"2000-01-23T04:56:07.000+00:00", "comment": "comment", '
@@ -674,7 +674,7 @@ def test_member_log_update(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_member_put_member_update(api_client)
 
-    assert caplog.record_tuples[1] == (
+    assert caplog.record_tuples[0] == (
         'root', 20,
         'TestingClient updated the member dubois_j\n{"associationMode": '
         '"2000-01-23T04:56:07.000+00:00", "comment": "comment", '
@@ -688,7 +688,7 @@ def test_member_log_delete(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_member_delete_existant(api_client)
 
-    assert caplog.record_tuples[1] == (
+    assert caplog.record_tuples[0] == (
         'root', 20,
         'TestingClient deleted the member dubois_j'
     )
@@ -698,7 +698,7 @@ def test_member_log_add_membership(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_member_post_add_membership_ok(api_client)
 
-    assert caplog.record_tuples[1] == (
+    assert caplog.record_tuples[0] == (
         'root', 20,
         'TestingClient created the membership record dubois_j\n{"duration": '
         '360, "start": "2000-01-23T04:56:07.000+00:00"}'
@@ -709,7 +709,7 @@ def test_member_log_update_password(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_member_change_password_ok(api_client)
 
-    assert caplog.record_tuples[1] == (
+    assert caplog.record_tuples[0] == (
         'root', 20,
         'TestingClient updated the password of dubois_j'
     )
@@ -719,7 +719,7 @@ def test_member_log_get_logs(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_member_get_logs(api_client)
 
-    assert caplog.record_tuples[1] == (
+    assert caplog.record_tuples[0] == (
         'root', 20,
         'TestingClient fetched the logs of dubois_j'
     )

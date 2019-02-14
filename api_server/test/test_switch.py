@@ -248,7 +248,7 @@ def test_switch_log_create(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_switch_post_valid(api_client)
 
-    assert caplog.record_tuples[1] == (
+    assert caplog.record_tuples[0] == (
         'root', 20,
         'TestingClient created a switch\n{"community": "myGreatCommunity", '
         '"description": "Test Switch", "ip": "192.168.103.128"}'
@@ -259,7 +259,7 @@ def test_switch_log_update(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_switch_update_existant_switch(api_client)
 
-    assert caplog.record_tuples[1] == (
+    assert caplog.record_tuples[0] == (
         'root', 20,
         'TestingClient updated the switch 1\n{"community": '
         '"communityModified", "description": "Modified switch", "ip": '
@@ -271,7 +271,7 @@ def test_switch_log_delete(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_switch_delete_existant_switch(api_client)
 
-    assert caplog.record_tuples[1] == (
+    assert caplog.record_tuples[0] == (
         'root', 20,
         'TestingClient deleted the switch 1'
     )

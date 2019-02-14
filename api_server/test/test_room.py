@@ -174,7 +174,7 @@ def test_room_log_create_room(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_room_put_new_room(api_client)
 
-    assert caplog.record_tuples[1] == (
+    assert caplog.record_tuples[0] == (
         'root', 20,
         'TestingClient created the room 5111\n{"description": "Chambre 5111", '
         '"phone": 6842, "roomNumber": 5111, "vlan": 42}'
@@ -185,7 +185,7 @@ def test_room_log_update_room(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_room_put_update_room(api_client)
 
-    assert caplog.record_tuples[1] == (
+    assert caplog.record_tuples[0] == (
         'root', 20,
         'TestingClient updated the room 5110\n{"description": "Chambre 5111", '
         '"phone": 6842, "roomNumber": 5111, "vlan": 42}'
@@ -196,7 +196,7 @@ def test_room_log_delete_room(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_room_delete_existant_room(api_client)
 
-    assert caplog.record_tuples[1] == (
+    assert caplog.record_tuples[0] == (
         'root', 20,
         'TestingClient deleted the room 5110'
     )

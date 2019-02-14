@@ -162,7 +162,7 @@ def test_modification_delete_member(api_client, sample_member1):
         '- 1\n'
         '- \n'
         'date_de_depart:\n'
-        '- 2005-07-14 12:30:00\n'
+        '- 2005-07-14\n'
         '- \n'
         'id:\n'
         '- 1\n'
