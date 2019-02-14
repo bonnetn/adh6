@@ -1,8 +1,9 @@
 test:
+  image: python:3.7-stretch
   before_script:
   - cd api_server/
   - apt update -q
-  - apt install -qy sqlite3 python3 python3-pip libmariadbclient-dev
+  - apt install -qy sqlite3 python3.7 python3.7-pip libmariadbclient-dev
   - pip3 install -r requirements.txt
   - cp CONFIGURATION.py{.example,}
   script:
