@@ -9,3 +9,4 @@ python-dateutil
 pysnmp
 uwsgi
 elasticsearch>=5.0.0,<6.0.0
+python-secrets
