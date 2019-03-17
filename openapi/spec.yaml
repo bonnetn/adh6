@@ -1474,6 +1474,7 @@ definitions:
       id:
         type: "integer"
         example: 1
+        readOnly: true
       name:
         type: "string"
         example: "Adhérent"
@@ -1496,6 +1497,7 @@ definitions:
       id:
         type: "integer"
         example: 1
+        readOnly: true
       name:
         type: "string"
         example: "Carte bancaire"
