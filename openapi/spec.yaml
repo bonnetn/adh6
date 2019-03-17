@@ -1274,6 +1274,229 @@ paths:
       x-swagger-router-controller: "adh.controller.payment_method"
       security:
       - oauth2: ["profile"]
+  /account/:
+    post:
+      tags:
+      - "account"
+      summary: "Create account"
+      operationId: "create_account"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "New values of the account"
+        required: true
+        schema:
+          $ref: "#/definitions/Account"
+      responses:
+        200:
+          description: "Created"
+        400:
+          description: "Invalid input"
+      x-swagger-router-controller: "adh.controller.account"
+      security:
+      - oauth2: ["profile"]
+    get:
+      tags:
+      - "account"
+      summary: "Filter accounts"
+      operationId: "filter_account"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Limit the number of accounts returned in the result. Default is\
+          \ 100"
+        required: false
+        type: "integer"
+        default: 100
+      - name: "offset"
+        in: "query"
+        description: "Skip the first n results"
+        required: false
+        type: "integer"
+        default: 0
+      - name: "terms"
+        in: "query"
+        description: "The generic search terms (will search in any field)"
+        required: false
+        type: "string"
+      - name: "name"
+        in: "query"
+        description: "Filter by name"
+        required: false
+        type: "string"
+      - name: "type"
+        in: "query"
+        description: "Filter by type"
+        required: false
+        type: "integer"
+      responses:
+        200:
+          description: "Success"
+          headers:
+            X-Total-Count:
+              type: "integer"
+              description: "Total count of filtered entities"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Account"
+        400:
+          description: "Invalid input"
+      x-swagger-router-controller: "adh.controller.account"
+      security:
+      - oauth2: ["profile"]
+  /account/{id}:
+    get:
+      tags:
+      - "account"
+      summary: "Retrieve"
+      operationId: "get_account"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id of the account that needs to be fetched."
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Account"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "adh.controller.account"
+      security:
+      - oauth2: ["profile"]
+    patch:
+      tags:
+      - "account"
+      summary: "Partially update"
+      operationId: "patch_account"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id of the account will be updated"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        description: "New values of the account"
+        required: true
+        schema:
+          $ref: "#/definitions/AccountPatchRequest"
+      responses:
+        404:
+          description: "Not found"
+        204:
+          description: "Updated"
+        400:
+          description: "Invalid input"
+      x-swagger-router-controller: "adh.controller.account"
+      security:
+      - oauth2: ["profile"]
+  /product/:
+    post:
+      tags:
+      - "product"
+      summary: "Create product"
+      operationId: "create_product"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "New values of the product"
+        required: true
+        schema:
+          $ref: "#/definitions/Product"
+
+      responses:
+        204:
+          description: "Updated"
+        400:
+          description: "Invalid input"
+      x-swagger-router-controller: "adh.controller.product"
+      security:
+      - oauth2: ["profile"]
+    get:
+      tags:
+      - "product"
+      summary: "Filter products"
+      operationId: "filter_product"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Limit the number of accounts returned in the result. Default is\
+          \ 100"
+        required: false
+        type: "integer"
+        default: 100
+      - name: "offset"
+        in: "query"
+        description: "Skip the first n results"
+        required: false
+        type: "integer"
+        default: 0
+      - name: "terms"
+        in: "query"
+        description: "The generic search terms (will search in any field)"
+        required: false
+        type: "string"
+      - name: "name"
+        in: "query"
+        description: "Filter by name"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+          headers:
+            X-Total-Count:
+              type: "integer"
+              description: "Total count of filtered entities"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Product"
+        400:
+          description: "Invalid input"
+      x-swagger-router-controller: "adh.controller.product"
+      security:
+      - oauth2: ["profile"]
+  /product/{id}:
+    get:
+      tags:
+      - "product"
+      summary: "Retrieve"
+      operationId: "get_product"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id of the product that needs to be fetched."
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Product"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "adh.controller.product"
+      security:
+      - oauth2: ["profile"]
 securityDefinitions:
   oauth2:
     type: "oauth2"
@@ -1512,6 +1735,75 @@ definitions:
         example: "Carte bancaire"
     example:
       name: "Carte bancaire"
+  Account:
+    type: "object"
+    required:
+    - "type"
+    - "actif"
+    properties:
+      id:
+        type: "integer"
+        example: 1
+        description: "ID of the account"
+      name:
+        type: "string"
+        example: "MiNET"
+        description: "Name of the account"
+      type:
+        type: "integer"
+        example: 1
+        description: "ID of the type of account"
+      actif:
+        type: "boolean"
+        example: "true"
+        description: "Account state"
+    example:
+      type: 2
+      actif: "true"
+  Product:
+    type: "object"
+    required:
+      - "buying_price"
+      - "selling_price"
+      - "name"
+    properties:
+      id:
+        type: "integer"
+        example: 1
+        description: "ID of the product"
+      buying_price:
+        type: "number"
+        example: 0.99
+        description: "Buying price of the product"
+      selling_price:
+        type: "number"
+        example: 0.99
+        description: "Buying price of the product"
+      name:
+        type: "string"
+        example: "Câble 5m"
+        description: "Name of the product"
+    example:
+      id: 1
+      buying_price: 0.99
+      selling_price: 0.99
+      name: "Câble 5m"
+  AccountPatchRequest:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        example: "MiNET"
+      type:
+        type: "integer"
+        example: 2
+      actif:
+        type: "boolean"
+        example: "true"
+    example:
+      name: "MiNET"
+      type: 2
+      actif: "true"
 externalDocs:
   description: "Find out more about MiNET"
   url: "http://minet.net"
