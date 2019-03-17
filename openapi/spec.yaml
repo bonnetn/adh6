@@ -27,6 +27,99 @@ tags:
 schemes:
 - "https"
 paths:
+  /transactions/:
+    get:
+      tags:
+      - "transaction"
+      summary: "Filter transactions"
+      operationId: "filter_transaction"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Limit the number of transactions returned in the result. Default is\
+          \ 100"
+        required: false
+        type: "integer"
+        default: 100
+      - name: "offset"
+        in: "query"
+        description: "Skip the first n results"
+        required: false
+        type: "integer"
+        default: 0
+      - name: "terms"
+        in: "query"
+        description: "The generic search terms (will search in any field)"
+        required: false
+        type: "string"
+      - name: "account"
+        in: "query"
+        description: "Filter by account id (either as source or destination)"
+        required: false
+        type: "integer"
+      responses:
+        200:
+          description: "Success"
+          headers:
+            X-Total-Count:
+              type: "integer"
+              description: "Total count of filtered entities"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Transaction"
+        400:
+          description: "Invalid input"
+      x-swagger-router-controller: "adh.controller.transaction"
+      security:
+      - oauth2: ["profile"]
+  /transaction/{id}:
+    get:
+      tags:
+      - "transaction"
+      summary: "Retrieve"
+      operationId: "get_transaction"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The unique identifier of the transaction that needs to be fetched"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Transaction"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "adh.controller.transaction"
+      security:
+      - oauth2: ["profile"]
+    delete:
+      tags:
+      - "transaction"
+      summary: "Delete"
+      operationId: "delete_transaction"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The unique identifier of the transaction that will be deleted"
+        required: true
+        type: "integer"
+      responses:
+        204:
+          description: "Deleted"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "adh.controller.transaction"
+      security:
+      - oauth2: ["picsou"]
   /members/:
     get:
       tags:
@@ -1505,7 +1598,52 @@ securityDefinitions:
     x-tokenInfoFunc: adh.auth.token_info
     scopes:
       profile: "access username & adh groups of admins from LDAP"
+      picsou: "manage the flow of value between accounts"
 definitions:
+  Transaction:
+    type: "object"
+    required:
+    - value
+    - src
+    - dst
+    - name
+    - type
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+        example: 0
+        readOnly: true
+      product:
+        type: "integer"
+        format: "int32"
+        example: 0
+      value:
+        type: "number"
+        format: "double"
+        example: 42.0
+      timestamp:
+        type: "integer"
+        format: "int32"
+        example: 1552845236
+        readOnly: true
+      src:
+        type: "integer"
+        format: "int32"
+        example: 0
+      dst:
+        type: "integer"
+        format: "int32"
+        example: 0
+      name:
+        type: "string"
+        example: "Transaction test"
+      attachements:
+        type: "string"
+      type:
+        type: "integer"
+        format: "int32"
+        example: 0
   Member:
     type: "object"
     required:
