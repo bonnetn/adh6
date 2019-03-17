@@ -1030,6 +1030,250 @@ paths:
       x-swagger-router-controller: "adh.controller.temporary_account"
       security:
       - oauth2: ["profile"]
+  /account_types/:
+    get:
+      tags:
+      - "account_type"
+      summary: "Filter account types"
+      operationId: "filter_account_type"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Limit the number of account types returned in the result. Default is\
+          \ 100"
+        required: false
+        type: "integer"
+        default: 100
+      - name: "offset"
+        in: "query"
+        description: "Skip the first n results"
+        required: false
+        type: "integer"
+        default: 0
+      - name: "terms"
+        in: "query"
+        description: "Search terms"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+          headers:
+            X-Total-Count:
+              type: "integer"
+              description: "Total count of filtered entities"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/AccountType"
+        400:
+          description: "Invalid input"
+      x-swagger-router-controller: "adh.controller.account_type"
+      security:
+      - oauth2: ["profile"]
+  /account_type/:
+    post:
+      tags:
+      - "account_type"
+      summary: "Create an account type"
+      operationId: "create_account_type"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Account type to create"
+        required: true
+        schema:
+          $ref: "#/definitions/AccountType"
+      responses:
+        200:
+          description: "Created"
+          headers:
+            Location:
+              type: "string"
+              description: "URI to the newly created account type"
+        400:
+          description: "Invalid input"
+      x-swagger-router-controller: "adh.controller.account_type"
+      security:
+      - oauth2: ["profile"]
+  /account_type/{account_type_id}:
+    get:
+      tags:
+      - "account_type"
+      summary: "Retrieve an account type"
+      operationId: "get_account_type"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "account_type_id"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/AccountType"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "adh.controller.account_type"
+      security:
+      - oauth2: ["profile"]
+    patch:
+      tags:
+      - "account_type"
+      summary: "Partially update"
+      operationId: "patch_account_type"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "account_type_id"
+        in: "path"
+        description: "Name of the account type will be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "New values of the account type"
+        required: true
+        schema:
+          $ref: "#/definitions/AccountTypePatchRequest"
+      responses:
+        404:
+          description: "Not found"
+        204:
+          description: "Updated"
+        400:
+          description: "Invalid input"
+      x-swagger-router-controller: "adh.controller.account_type"
+      security:
+      - oauth2: ["profile"]
+  /payment_methods/:
+    get:
+      tags:
+      - "payment_method"
+      summary: "Filter payment methods"
+      operationId: "filter_payment_methods"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Limit the number of payment methods returned in the result. Default is\
+          \ 100"
+        required: false
+        type: "integer"
+        default: 100
+      - name: "offset"
+        in: "query"
+        description: "Skip the first n results"
+        required: false
+        type: "integer"
+        default: 0
+      - name: "terms"
+        in: "query"
+        description: "Search terms"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+          headers:
+            X-Total-Count:
+              type: "integer"
+              description: "Total count of filtered entities"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/PaymentMethod"
+        400:
+          description: "Invalid input"
+      x-swagger-router-controller: "adh.controller.payment_method"
+      security:
+      - oauth2: ["profile"]
+  /payment_method/:
+    post:
+      tags:
+      - "payment_method"
+      summary: "Create a payment method"
+      operationId: "create_payment_method"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Payment method to create"
+        required: true
+        schema:
+          $ref: "#/definitions/PaymentMethod"
+      responses:
+        200:
+          description: "Created"
+          headers:
+            Location:
+              type: "string"
+              description: "URI to the newly created payment method"
+        400:
+          description: "Invalid input"
+      x-swagger-router-controller: "adh.controller.payment_method"
+      security:
+      - oauth2: ["profile"]
+  /payment_method/{payment_method_id}:
+    get:
+      tags:
+      - "payment_method"
+      summary: "Retrieve a payment method"
+      operationId: "get_payment_method"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "payment_method_id"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/PaymentMethod"
+        404:
+          description: "Not found"
+      x-swagger-router-controller: "adh.controller.payment_method"
+      security:
+      - oauth2: ["profile"]
+    patch:
+      tags:
+      - "payment_method"
+      summary: "Partially update"
+      operationId: "patch_payment_method"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "payment_method_id"
+        in: "path"
+        description: "Name of the payment method will be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "New values of the payment method"
+        required: true
+        schema:
+          $ref: "#/definitions/PaymentMethodPatchRequest"
+      responses:
+        404:
+          description: "Not found"
+        204:
+          description: "Updated"
+        400:
+          description: "Invalid input"
+      x-swagger-router-controller: "adh.controller.payment_method"
+      security:
+      - oauth2: ["profile"]
 securityDefinitions:
   oauth2:
     type: "oauth2"
@@ -1222,6 +1466,50 @@ definitions:
     example:
       duration: 365
       start: "2000-01-23T04:56:07.000+00:00"
+  AccountType:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      id:
+        type: "integer"
+        example: 1
+      name:
+        type: "string"
+        example: "Adhérent"
+    example:
+      id: 1
+      name: "Adhérent"
+  AccountTypePatchRequest:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        example: "Adhérent"
+    example:
+      name: "Adhérent"
+  PaymentMethod:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      id:
+        type: "integer"
+        example: 1
+      name:
+        type: "string"
+        example: "Carte bancaire"
+    example:
+      id: 1
+      name: "Carte bancaire"
+  PaymentMethodPatchRequest:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        example: "Carte bancaire"
+    example:
+      name: "Carte bancaire"
 externalDocs:
   description: "Find out more about MiNET"
   url: "http://minet.net"
