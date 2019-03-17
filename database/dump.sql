@@ -930,46 +930,67 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE `transaction` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`src` int(11) DEFAULT NULL,
-	`dst` int(11) DEFAULT NULL,
-	`product` int(11) DEFAULT NULL,
-	`value` decimal(8,2) DEFAULT NULL,
-	`name` varchar(255) DEFAULT NULL,
-	`attachment` mediumtext DEFAULT NULL,
-	`type` varchar(255) DEFAULT NULL,
+	`product` int(11) NOT NULL,
+	`value` DECIMAL(8,2) NOT NULL,
+	`timestamp` TIMESTAMP NOT NULL,
+	`src` int(11) NOT NULL,
+	`dst` int(11) NOT NULL,
+	`name` varchar(255) NOT NULL,
+	`attachments` mediumtext NOT NULL,
+	`type` int(11) NOT NULL,
 	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
 
 DROP TABLE IF EXISTS `payment_method`;
 CREATE TABLE `payment_method` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) DEFAULT NULL,
-	`account` int(11) DEFAULT NULL,
+	`name` varchar(255) NOT NULL,
+	`account` int(11) NOT NULL,
 	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
+LOCK TABLES `payment_method` WRITE;
+INSERT INTO `payment_method` VALUES (0, "Liquide"), (1, "Carte bancaire");
+UNLOCK TABLES;
+
 
 DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`buying_price` decimal(8,2) DEFAULT NULL,
-	`selling_price` decimal(8,2) DEFAULT NULL,
-	`name` varchar(255) DEFAULT NULL,
+	`buying_price` DECIMAL(8,2) NOT NULL,
+	`selling_price` DECIMAL(8,2) NOT NULL,
+	`name` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
+LOCK TABLES `product`;
+INSERT INTO `product` VALUES (0, 0, 50, 'Abonnemnt 1an'), (1, 5, 5, 'Cable 5m');
+UNLCOCK TABLES;
+
 
 DROP TABLE IF EXISTS `account`;
 CREATE TABLE `account` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`type` int(11) DEFAULT NULL,
+        `creation_date` NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `actif` boolean() DEFAULT NULL
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `account_type`;
 CREATE TABLE `account_type` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) DEFAULT NULL,
+	`name` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
+LOCK TABLES `account_type`;
+INSERT INTO `account_type` VALUES (0, "adherents"), (1, "Club");
+UNLOCK TABLES;
+
+ALTER TABLE `account` ADD CONSTRAINT `account_fk0` FOREIGN KEY (`type`) REFERENCES `account_type`(`id`);
+ALTER TABLE `transaction` ADD CONSTRAINT `transaction_fk0` FOREIGN KEY (`product`) REFERENCES `product`(`id`);
+ALTER TABLE `transaction` ADD CONSTRAINT `transaction_fk1` FOREIGN KEY (`src`) REFERENCES `account`(`id`);
+ALTER TABLE `transaction` ADD CONSTRAINT `transaction_fk2` FOREIGN KEY (`dst`) REFERENCES `account`(`id`);
+ALTER TABLE `transaction` ADD CONSTRAINT `transaction_fk3` FOREIGN KEY (`type`) REFERENCES `payment_method`(`id`);
+ALTER TABLE `payment_method` ADD CONSTRAINT `payment_method_fk0` FOREIGN KEY (`account`) REFERENCES `account`(`id`);
 
 --
 -- Final view structure for view `last_use_mac_U6`
