@@ -3,6 +3,7 @@ import datetime
 
 from sqlalchemy import Column, Date, DateTime, Integer, \
     Numeric, String, Text, text, ForeignKey
+from sqlalchemy import Column, DECIMAL, ForeignKey, String, TIMESTAMP, TEXT
 from sqlalchemy import inspect
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, validates
@@ -587,3 +588,55 @@ class NainA(Base):
     expiration_time = Column(DateTime, nullable=False)
     # Administrator who created that temporary account.
     admin = Column(Text, nullable=False)
+
+class AccountType(Base):
+    __tablename__ = 'account_type'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False)
+
+
+class PaymentMethod(Base):
+    __tablename__ = 'payment_method'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False)
+
+
+class Product(Base):
+    __tablename__ = 'product'
+
+    id = Column(Integer, primary_key=True)
+    buying_price = Column(DECIMAL(8, 2), nullable=False)
+    selling_price = Column(DECIMAL(8, 2), nullable=False)
+    name = Column(String(255), nullable=False)
+
+
+class Account(Base):
+    __tablename__ = 'account'
+
+    id = Column(Integer, primary_key=True, unique=True)
+    type = Column(ForeignKey('account_type.id'), nullable=False, index=True)
+    creation_date = Column(TIMESTAMP, nullable=False, unique=True)
+    name = Column(String(255), nullable=False)
+
+    account_type = relationship('AccountType')
+
+
+class Transaction(Base):
+    __tablename__ = 'transaction'
+
+    id = Column(Integer, primary_key=True)
+    product = Column(ForeignKey('product.id'), nullable=False, index=True)
+    value = Column(DECIMAL(8, 2), nullable=False)
+    timestamp = Column(TIMESTAMP, nullable=False) 
+    src = Column(ForeignKey('account.id'), nullable=False, index=True)
+    dst = Column(ForeignKey('account.id'), nullable=False, index=True)
+    name = Column(String(255), nullable=False)
+    attachments = Column(TEXT(65535), nullable=False)
+    type = Column(ForeignKey('payment_method.id'), nullable=False, index=True)
+
+    account = relationship('Account', primaryjoin='Transaction.dst == Account.id')
+    product1 = relationship('Product')
+    account1 = relationship('Account', primaryjoin='Transaction.src == Account.id')
+    payment_method = relationship('PaymentMethod')
