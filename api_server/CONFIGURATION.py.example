@@ -30,6 +30,7 @@ TEST_DATABASE = {
 # meh... At least you have to take a look at how ADH works :D
 PRICES = {
     1: 1, # 1 day = 1 euros
+    31: 9,
     360: 100, # 360 days = 100 euros
 }
 
