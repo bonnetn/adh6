@@ -5,13 +5,13 @@ import logging
 import pytest
 from dateutil import parser
 
-from CONFIGURATION import TEST_DATABASE as db_settings
+from CONFIGURATION import TEST_DATABASE as db_settings, PRICES
 from adh.controller.member import ntlm_hash
 from adh.model.database import Database as db
 from adh.model.models import Adherent
 from test.resource import (
-    base_url, TEST_HEADERS, assert_modification_was_created
-)
+    base_url, TEST_HEADERS, assert_modification_was_created,
+    logs_contains)
 
 
 @pytest.fixture
@@ -561,7 +561,7 @@ def test_member_put_member_update(api_client):
 
 def test_member_post_add_membership_not_found(api_client):
     body = {
-        "duration": 31,
+        "duration": list(PRICES.keys())[0],
         "start": "2000-01-23T04:56:07.000+00:00"
     }
     result = api_client.post(
@@ -660,66 +660,45 @@ def test_member_log_create(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_member_put_member_create(api_client)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient created the member doe_john\n{"associationMode": '
-        '"2000-01-23T04:56:07.000+00:00", "comment": "comment", '
-        '"departureDate": "2000-01-23T04:56:07.000+00:00", "email": '
-        '"john.doe@gmail.com", "firstName": "John", "lastName": "Doe", '
-        '"roomNumber": 4592, "username": "doe_john"}'
-    )
+    log = 'TestingClient created the member doe_john'
+    assert logs_contains(caplog, log)
 
 
 def test_member_log_update(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_member_put_member_update(api_client)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient updated the member dubois_j\n{"associationMode": '
-        '"2000-01-23T04:56:07.000+00:00", "comment": "comment", '
-        '"departureDate": "2000-01-23T04:56:07.000+00:00", "email": '
-        '"john.doe@gmail.com", "firstName": "Jean-Louis", "lastName": '
-        '"Dubois", "roomNumber": 4592, "username": "dubois_j"}'
-    )
+    log = 'TestingClient updated the member dubois_j'
+    assert logs_contains(caplog, log)
 
 
 def test_member_log_delete(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_member_delete_existant(api_client)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient deleted the member dubois_j'
-    )
+    log = 'TestingClient deleted the member dubois_j'
+    assert logs_contains(caplog, log)
 
 
 def test_member_log_add_membership(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_member_post_add_membership_ok(api_client)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient created the membership record dubois_j\n{"duration": '
-        '360, "start": "2000-01-23T04:56:07.000+00:00"}'
-    )
+    log = 'TestingClient created the membership record dubois_j'
+    assert logs_contains(caplog, log)
 
 
 def test_member_log_update_password(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_member_change_password_ok(api_client)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient updated the password of dubois_j'
-    )
+    log = 'TestingClient updated the password of dubois_j'
+    assert logs_contains(caplog, log)
 
 
 def test_member_log_get_logs(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_member_get_logs(api_client)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient fetched the logs of dubois_j'
-    )
+    log = 'TestingClient fetched the logs of dubois_j'
+    assert logs_contains(caplog, log)

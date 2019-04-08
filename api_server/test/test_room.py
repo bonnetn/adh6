@@ -6,7 +6,7 @@ import pytest
 from CONFIGURATION import TEST_DATABASE as db_settings
 from adh.model.database import Database as db
 from adh.model.models import Chambre
-from .resource import base_url, TEST_HEADERS
+from .resource import base_url, TEST_HEADERS, logs_contains
 
 
 def assert_room_in_db(body):
@@ -174,29 +174,21 @@ def test_room_log_create_room(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_room_put_new_room(api_client)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient created the room 5111\n{"description": "Chambre 5111", '
-        '"phone": 6842, "roomNumber": 5111, "vlan": 42}'
-    )
+    log = 'TestingClient created the room 5111'
+    assert logs_contains(caplog, log)
 
 
 def test_room_log_update_room(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_room_put_update_room(api_client)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient updated the room 5110\n{"description": "Chambre 5111", '
-        '"phone": 6842, "roomNumber": 5111, "vlan": 42}'
-    )
+    log = 'TestingClient updated the room 5110'
+    assert logs_contains(caplog, log)
 
 
 def test_room_log_delete_room(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_room_delete_existant_room(api_client)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient deleted the room 5110'
-    )
+    log = 'TestingClient deleted the room 5110'
+    assert logs_contains(caplog, log)

@@ -6,7 +6,7 @@ import pytest
 from CONFIGURATION import TEST_DATABASE as db_settings
 from adh.model.database import Database as db
 from adh.model.models import Switch
-from .resource import INVALID_IP, TEST_HEADERS
+from .resource import INVALID_IP, TEST_HEADERS, logs_contains
 from .resource import base_url
 
 
@@ -248,30 +248,21 @@ def test_switch_log_create(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_switch_post_valid(api_client)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient created a switch\n{"community": "myGreatCommunity", '
-        '"description": "Test Switch", "ip": "192.168.103.128"}'
-    )
+    log = 'TestingClient created a switch'
+    assert logs_contains(caplog, log)
 
 
 def test_switch_log_update(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_switch_update_existant_switch(api_client)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient updated the switch 1\n{"community": '
-        '"communityModified", "description": "Modified switch", "ip": '
-        '"192.168.103.132"}'
-    )
+    log = 'TestingClient updated the switch 1'
+    assert logs_contains(caplog, log)
 
 
 def test_switch_log_delete(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_switch_delete_existant_switch(api_client)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient deleted the switch 1'
-    )
+    log = 'TestingClient deleted the switch 1'
+    assert logs_contains(caplog, log)

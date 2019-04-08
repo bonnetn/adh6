@@ -53,3 +53,7 @@ TEST_HEADERS = {"Authorization": "Bearer TEST_TOKEN"}
 def assert_modification_was_created(s):
     q = s.query(Modification)
     assert q.count() >= 1
+
+
+def logs_contains(caplog, log):
+    return any(log in msg for msg in caplog.messages) is True

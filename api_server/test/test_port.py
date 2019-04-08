@@ -6,7 +6,7 @@ import pytest
 from CONFIGURATION import TEST_DATABASE as db_settings
 from adh.model.database import Database as db
 from adh.model.models import Port
-from .resource import base_url, TEST_HEADERS
+from .resource import base_url, TEST_HEADERS, logs_contains
 
 
 def prep_db(session,
@@ -267,11 +267,8 @@ def test_port_log_create_port(api_client, sample_switch1, caplog):
     with caplog.at_level(logging.INFO):
         test_port_post_create_port(api_client, sample_switch1)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient created the port\n{"portNumber": "1/0/4", '
-        '"roomNumber": 5110, "switchID": 1}'
-    )
+    log = 'TestingClient created the port'
+    assert logs_contains(caplog, log)
 
 
 def test_port_log_update_port(api_client, sample_switch1,
@@ -279,11 +276,8 @@ def test_port_log_update_port(api_client, sample_switch1,
     with caplog.at_level(logging.INFO):
         test_port_put_update_port(api_client, sample_switch1, sample_port1)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient updated the port /port/1\n{"portNumber": '
-        '"1/2/3", "roomNumber": 5110, "switchID": 1}'
-    )
+    log = 'TestingClient updated the port /port/1'
+    assert logs_contains(caplog, log)
 
 
 def test_port_log_delete_port(api_client, sample_switch1,
@@ -291,7 +285,5 @@ def test_port_log_delete_port(api_client, sample_switch1,
     with caplog.at_level(logging.INFO):
         test_port_put_delete_port(api_client, sample_switch1, sample_port1)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient deleted the port /port/1'
-    )
+    log = 'TestingClient deleted the port /port/1'
+    assert logs_contains(caplog, log)

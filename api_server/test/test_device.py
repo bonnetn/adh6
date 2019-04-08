@@ -8,8 +8,8 @@ from adh.model.database import Database as db
 from adh.model.models import Ordinateur, Portable
 from .resource import (
     base_url, INVALID_MAC, INVALID_IP, INVALID_IPv6, TEST_HEADERS,
-    assert_modification_was_created
-)
+    assert_modification_was_created,
+    logs_contains)
 
 
 def prep_db(session,
@@ -428,25 +428,18 @@ def test_device_log_create_wired(api_client, caplog, wired_device_dict):
     with caplog.at_level(logging.INFO):
         test_device_put_create_wired(api_client, wired_device_dict)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient created the device 01-23-45-67-89-AD\n{"connectionType": '
-        '"wired", "ipAddress": "127.0.0.1", "ipv6Address": '
-        '"dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166", "mac": "01-23-45-67-89-AD", '
-        '"username": "dupontje"}'
-    )
+    log = 'TestingClient created the device 01-23-45-67-89-AD'
+    assert logs_contains(caplog, log)
+    assert logs_contains(caplog, 'wired')
 
 
 def test_device_log_create_wireless(api_client, caplog, wireless_device_dict):
     with caplog.at_level(logging.INFO):
         test_device_put_create_wireless(api_client, wireless_device_dict)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient created the device 01-23-45-67-89-AC\n{"'
-        'connectionType": "wireless", "mac": "01-23-45-67-89-AC", "'
-        'username": "dubois_j"}'
-    )
+    log = 'TestingClient created the device 01-23-45-67-89-AC'
+    assert logs_contains(caplog, log)
+    assert logs_contains(caplog, 'wireless')
 
 
 def test_device_log_update_wired(api_client, caplog, wired_device,
@@ -455,13 +448,9 @@ def test_device_log_update_wired(api_client, caplog, wired_device,
         test_device_put_update_wired(api_client, wired_device,
                                      wired_device_dict)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient updated the device 96-24-F6-D0-48-A7\n{"connectionType"'
-        ': "wired", "ipAddress": "127.0.0.1", "ipv6Address": '
-        '"dbb1:39b7:1e8f:1a2a:3737:9721:5d16:166", "mac": "01-23-45-67-89-AD",'
-        ' "username": "dupontje"}'
-    )
+    log = 'TestingClient updated the device 96-24-F6-D0-48-A7'
+    assert logs_contains(caplog, log)
+    assert logs_contains(caplog, 'wired')
 
 
 def test_device_log_update_wireless(api_client, caplog, wireless_device,
@@ -470,12 +459,9 @@ def test_device_log_update_wireless(api_client, caplog, wireless_device,
         test_device_put_update_wireless(api_client, wireless_device,
                                         wireless_device_dict)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient updated the device 80-65-F3-FC-44-A9\n{"'
-        'connectionType": "wireless", "mac": "01-23-45-67-89-AC", "'
-        'username": "dubois_j"}'
-    )
+    log = 'TestingClient updated the device 80-65-F3-FC-44-A9'
+    assert logs_contains(caplog, log)
+    assert logs_contains(caplog, 'wireless')
 
 
 def test_device_log_delete_wired(api_client, caplog, wired_device,
@@ -483,10 +469,8 @@ def test_device_log_delete_wired(api_client, caplog, wired_device,
     with caplog.at_level(logging.INFO):
         test_device_delete_wired(api_client, wired_device)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient deleted the device 96-24-F6-D0-48-A7'
-    )
+    log = 'TestingClient deleted the device 96-24-F6-D0-48-A7'
+    assert logs_contains(caplog, log)
 
 
 def test_device_log_delete_wireless(api_client, caplog, wireless_device,
@@ -494,7 +478,5 @@ def test_device_log_delete_wireless(api_client, caplog, wireless_device,
     with caplog.at_level(logging.INFO):
         test_device_delete_wireless(api_client, wireless_device)
 
-    assert caplog.record_tuples[0] == (
-        'root', 20,
-        'TestingClient deleted the device 80-65-F3-FC-44-A9'
-    )
+    log = 'TestingClient deleted the device 80-65-F3-FC-44-A9'
+    assert logs_contains(caplog, log)
