@@ -5,10 +5,10 @@ from connexion import NoContent
 from flask import g
 from sqlalchemy import or_
 
-from adh.auth import auth_regular_admin, auth_super_admin
+from adh.interface_adapter.endpoint.auth import auth_regular_admin, auth_super_admin
 from adh.exceptions import RoomNotFound, SwitchNotFound, PortNotFound
 from adh.interface_adapter.sql.model.models import Port, Chambre, Switch
-from adh.util.session_decorator import require_sql
+from adh.interface_adapter.endpoint.decorator.session_decorator import require_sql
 
 
 @require_sql

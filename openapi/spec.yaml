@@ -1498,7 +1498,7 @@ securityDefinitions:
     type: "oauth2"
     authorizationUrl: "http://localhost:5000/oauth/authorize"
     flow: "implicit"
-    x-tokenInfoFunc: adh.auth.token_info
+    x-tokenInfoFunc: adh.interface_adapter.endpoint.auth.token_info
     scopes:
       profile: "access username & adh groups of admins from LDAP"
       picsou: "manage the flow of value between accounts"

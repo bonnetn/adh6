@@ -1,7 +1,7 @@
 import pytest
 
 from CONFIGURATION import TEST_DATABASE as db_settings
-from adh.ip_controller import (
+from adh.interface_adapter.endpoint.util.ip_controller import (
     get_available_ip, NoMoreIPAvailable, get_all_used_ipv4, get_all_used_ipv6,
     get_expired_devices, free_expired_devices
 )

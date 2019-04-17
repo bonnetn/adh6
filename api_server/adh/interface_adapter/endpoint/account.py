@@ -1,5 +1,5 @@
-from adh.auth import auth_regular_admin
-from adh.util.session_decorator import require_sql
+from adh.interface_adapter.endpoint.auth import auth_regular_admin
+from adh.interface_adapter.endpoint.decorator.session_decorator import require_sql
 
 @require_sql
 @auth_regular_admin
