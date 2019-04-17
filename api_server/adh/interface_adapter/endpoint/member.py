@@ -17,6 +17,7 @@ from adh.interface_adapter.endpoint.auth import auth_regular_admin
 from adh.interface_adapter.endpoint.decorator.session_decorator import require_sql
 from adh.interface_adapter.endpoint.device_utils import get_all_devices
 from adh.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion, Modification
+from adh.util.context import build_context
 from adh.util.date import string_to_date
 from main import member_manager
 
@@ -33,10 +34,10 @@ def adherent_exists(s, username):
 @auth_regular_admin
 def search(limit=100, offset=0, terms=None, roomNumber=None):
     """ [API] Filter the list of members from the the database """
-    ctx = frozendict({
-        CTX_SQL_SESSION: g.session,
-        CTX_ADMIN: g.admin,
-    })
+    ctx = build_context(
+        session=g.session,
+        admin=g.admin,
+    )
     try:
         result, total_count = member_manager.search(ctx, limit, offset, roomNumber, terms)
         headers = {
