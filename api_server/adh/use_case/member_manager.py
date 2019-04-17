@@ -3,41 +3,31 @@ import logging
 import sqlalchemy
 
 from adh.constants import CTX_SQL_SESSION, CTX_ADMIN
+from adh.exceptions import MustBePositiveException
 from adh.interface_adapter.sql.model.models import Adherent, Chambre
+from adh.use_case.interface.member_repository import MemberRepository
+from adh.use_case.interface.room_repository import RoomRepository
 
 
 class MemberManager:
+    def __init__(self,
+                 member_storage: MemberRepository):
+        self.member_storage = member_storage
+
     def search(self, ctx, limit, offset=0, room_number=None, terms=None):
-        s = ctx.get(CTX_SQL_SESSION)
+
         if limit < 0:
-            raise ValueError("limit must be positive")
+            raise MustBePositiveException('limit')
 
-        q = s.query(Adherent)
-        if room_number:
-            try:
-                q2 = s.query(Chambre)
-                q2 = q2.filter(Chambre.numero == room_number)
-                result = q2.one()
-            except sqlalchemy.orm.exc.NoResultFound:
-                return [], 0
+        if offset < 0:
+            raise MustBePositiveException('offset')
 
-            q = q.filter(Adherent.chambre == result)
-        if terms:
-            q = q.filter(
-                (Adherent.nom.contains(terms)) |
-                (Adherent.prenom.contains(terms)) |
-                (Adherent.mail.contains(terms)) |
-                (Adherent.login.contains(terms)) |
-                (Adherent.commentaires.contains(terms))
-            )
-        count = q.count()
-        q = q.order_by(Adherent.login.asc())
-        q = q.offset(offset)
-        q = q.limit(limit)
-        r = q.all()
+        result, count = self.member_storage.search_member_by(ctx,
+                                                             limit=limit,
+                                                             offset=offset,
+                                                             room_number=room_number,
+                                                             terms=terms)
 
         logging.info("%s fetched the member list", ctx.get(CTX_ADMIN))
-        return list(map(dict, r)), count
+        return result, count
 
-    def add_new_member(self) -> None:
-        return

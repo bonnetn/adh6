@@ -32,3 +32,7 @@ class VlanNotFound(ValueError):
 
 class RoomNotFound(ValueError):
     pass
+
+
+def MustBePositiveException(name):
+    return ValueError(f'{name} must be positive')

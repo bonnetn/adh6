@@ -7,11 +7,13 @@ from connexion.resolver import RestyResolver
 from CONFIGURATION import API_CONF
 from CONFIGURATION import PROD_DATABASE as DATABASE
 from adh.interface_adapter.sql.model.database import Database
+from adh.interface_adapter.sql.sql_storage import SQLStorage
 from adh.use_case.member_manager import MemberManager
 
 Database.init_db(DATABASE)
 
-member_manager = MemberManager()
+sql_storage = SQLStorage()
+member_manager = MemberManager(sql_storage)
 
 logging.basicConfig(level=logging.INFO)
 app = connexion.FlaskApp(__name__)
