@@ -7,11 +7,9 @@ import string
 from connexion import NoContent
 from elasticsearch5 import Elasticsearch
 from flask import current_app, g
-from frozendict import frozendict
 
 from CONFIGURATION import ELK_HOSTS
 from CONFIGURATION import PRICES
-from adh.constants import CTX_SQL_SESSION, CTX_ADMIN
 from adh.exceptions import InvalidEmail, RoomNotFound, MemberNotFound
 from adh.interface_adapter.endpoint.auth import auth_regular_admin
 from adh.interface_adapter.endpoint.decorator.session_decorator import require_sql
@@ -20,6 +18,7 @@ from adh.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion, 
 from adh.util.context import build_context
 from adh.util.date import string_to_date
 from main import member_manager
+
 
 def adherent_exists(s, username):
     """ Returns true if the member exists """
@@ -53,10 +52,12 @@ def search(limit=100, offset=0, terms=None, roomNumber=None):
 @auth_regular_admin
 def get(username):
     """ [API] Get the specified member from the database """
-    s = g.session
+    ctx = build_context(
+        session=g.session,
+        admin=g.admin,
+    )
     try:
-        logging.info("%s fetched the member %s", g.admin.login, username)
-        return dict(Adherent.find(s, username)), 200
+        return member_manager.get_by_username(ctx, username), 200
     except MemberNotFound:
         return NoContent, 404
 

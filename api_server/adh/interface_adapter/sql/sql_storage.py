@@ -6,9 +6,14 @@ from adh.use_case.interface.member_repository import MemberRepository
 
 
 class SQLStorage(MemberRepository):
-    def search_member_by(self, ctx, limit=None, offset=None, room_number=None, terms=None) -> (list, int):
+    def search_member_by(self, ctx, limit=None, offset=None, room_number=None, terms=None, username=None) -> (
+    list, int):
         s = ctx.get(CTX_SQL_SESSION)
         q = s.query(Adherent)
+
+        if username:
+            q = q.filter(Adherent.login == username)
+
         if room_number:
             try:
                 q2 = s.query(Chambre)
@@ -18,6 +23,7 @@ class SQLStorage(MemberRepository):
                 return [], 0
 
             q = q.filter(Adherent.chambre == result)
+
         if terms:
             q = q.filter(
                 (Adherent.nom.contains(terms)) |
@@ -26,6 +32,7 @@ class SQLStorage(MemberRepository):
                 (Adherent.login.contains(terms)) |
                 (Adherent.commentaires.contains(terms))
             )
+
         count = q.count()
         q = q.order_by(Adherent.login.asc())
         q = q.offset(offset)

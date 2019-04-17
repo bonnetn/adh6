@@ -1,18 +1,25 @@
 import logging
 
-import sqlalchemy
-
-from adh.constants import CTX_SQL_SESSION, CTX_ADMIN
-from adh.exceptions import MustBePositiveException
-from adh.interface_adapter.sql.model.models import Adherent, Chambre
+from adh.constants import CTX_ADMIN
+from adh.exceptions import MustBePositiveException, MemberNotFound
 from adh.use_case.interface.member_repository import MemberRepository
-from adh.use_case.interface.room_repository import RoomRepository
 
 
 class MemberManager:
     def __init__(self,
                  member_storage: MemberRepository):
         self.member_storage = member_storage
+
+    def get_by_username(self, ctx, username):
+        if not username:
+            raise ValueError('username not provided')
+
+        result, _ = self.member_storage.search_member_by(ctx, username=username)
+        if not result:
+            raise MemberNotFound()
+
+        logging.info("%s fetched the member %s", ctx.get(CTX_ADMIN), username)
+        return result[0]
 
     def search(self, ctx, limit, offset=0, room_number=None, terms=None):
 
@@ -30,4 +37,3 @@ class MemberManager:
 
         logging.info("%s fetched the member list", ctx.get(CTX_ADMIN))
         return result, count
-
