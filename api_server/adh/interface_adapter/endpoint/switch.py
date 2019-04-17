@@ -22,7 +22,7 @@ def switch_exists(session, switchID):
 
 @require_sql
 @auth_regular_admin
-def filter_switch(limit=100, offset=0, terms=None):
+def search(limit=100, offset=0, terms=None):
     """ [API] Filter the switch list """
     if limit < 0:
         return "Limit must be positive", 400
@@ -54,7 +54,7 @@ def filter_switch(limit=100, offset=0, terms=None):
 
 @require_sql
 @auth_super_admin
-def create_switch(body):
+def post(body):
     """ [API] Create a switch in the database """
     if "id" in body:
         return "You cannot set the id", 400
@@ -73,7 +73,7 @@ def create_switch(body):
 
 @require_sql
 @auth_regular_admin
-def get_switch(switchID):
+def get(switchID):
     """ [API] Get the specified switch from the database """
     s = g.session
     try:
@@ -85,7 +85,7 @@ def get_switch(switchID):
 
 @require_sql
 @auth_super_admin
-def update_switch(switchID, body):
+def put(switchID, body):
     """ [API] Update the specified switch from the database """
     if "id" in body:
         return "You cannot update the id", 400
@@ -109,7 +109,7 @@ def update_switch(switchID, body):
 
 @require_sql
 @auth_super_admin
-def delete_switch(switchID):
+def delete(switchID):
     """ [API] Delete the specified switch from the database """
     s = g.session
 

@@ -13,7 +13,7 @@ from adh.util.session_decorator import require_sql
 
 @require_sql
 @auth_regular_admin
-def filter_port(limit=100, offset=0,
+def search(limit=100, offset=0,
                 switchID=None, roomNumber=None, terms=None):
     """ [API] Filter the port list according to some criteria """
     if limit < 0:
@@ -51,7 +51,7 @@ def filter_port(limit=100, offset=0,
 
 @require_sql
 @auth_super_admin
-def create_port(body):
+def post(body):
     """ [API] Create a port in the database """
 
     s = g.session
@@ -72,7 +72,7 @@ def create_port(body):
 
 @require_sql
 @auth_regular_admin
-def get_port(port_id):
+def get(port_id):
     """ [API] Get a port from the database """
     s = g.session
     try:
@@ -88,7 +88,7 @@ def get_port(port_id):
 
 @require_sql
 @auth_super_admin
-def update_port(port_id, body):
+def put(port_id, body):
     """ [API] Update a port in the database """
 
     s = g.session
@@ -112,7 +112,7 @@ def update_port(port_id, body):
 
 @require_sql
 @auth_super_admin
-def delete_port(port_id):
+def delete(port_id):
     """ [API] Delete a port from the database """
     s = g.session
     try:
@@ -121,4 +121,31 @@ def delete_port(port_id):
         return NoContent, 404
     logging.info("%s deleted the port /port/%d",
                  g.admin.login, port_id)
+    return NoContent, 204
+
+@auth_regular_admin
+def get_state(switchID, port_id):
+    return NoContent, 200, True
+
+
+@auth_regular_admin
+def put_state(switchID, port_id, state):
+    return NoContent, 200
+
+
+@auth_regular_admin
+def get_vlan(switchID, port_id):
+    return NoContent, 200, 42
+
+
+@auth_regular_admin
+def put_vlan(switchID, port_id, vlan):
+    return NoContent, 204
+
+@auth_regular_admin
+def get_mab(port_id):
+    return False, 200
+
+@auth_regular_admin
+def put_mab(port_id, mab):
     return NoContent, 204

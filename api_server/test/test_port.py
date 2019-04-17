@@ -49,7 +49,7 @@ def test_port_to_dict(sample_port1):
 
 def test_port_get_filter_all(api_client):
     r = api_client.get(
-        "{}/ports/".format(base_url),
+        "{}/port/".format(base_url),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -60,7 +60,7 @@ def test_port_get_filter_all(api_client):
 
 def test_port_get_filter_all_with_invalid_limit(api_client):
     r = api_client.get(
-        "{}/ports/?limit={}".format(base_url, -1),
+        "{}/port/?limit={}".format(base_url, -1),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 400
@@ -68,7 +68,7 @@ def test_port_get_filter_all_with_invalid_limit(api_client):
 
 def test_port_get_filter_all_with_limit(api_client):
     r = api_client.get(
-        "{}/ports/?limit={}".format(base_url, 1),
+        "{}/port/?limit={}".format(base_url, 1),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -79,7 +79,7 @@ def test_port_get_filter_all_with_limit(api_client):
 
 def test_port_get_filter_by_switchid(api_client, sample_switch2):
     r = api_client.get(
-        "{}/ports/?switchID={}".format(base_url, sample_switch2.id),
+        "{}/port/?switchID={}".format(base_url, sample_switch2.id),
         headers=TEST_HEADERS
     )
     assert r.status_code == 200
@@ -90,7 +90,7 @@ def test_port_get_filter_by_switchid(api_client, sample_switch2):
 
 def test_port_get_filter_by_roomnumber_with_results(api_client):
     r = api_client.get(
-        "{}/ports/?roomNumber={}".format(base_url, 0),
+        "{}/port/?roomNumber={}".format(base_url, 0),
         headers=TEST_HEADERS,
     )
 
@@ -102,7 +102,7 @@ def test_port_get_filter_by_roomnumber_with_results(api_client):
 
 def test_port_get_filter_by_roomnumber_without_result(api_client):
     r = api_client.get(
-        "{}/ports/?roomNumber={}".format(base_url, 42),
+        "{}/port/?roomNumber={}".format(base_url, 42),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -113,7 +113,7 @@ def test_port_get_filter_by_roomnumber_without_result(api_client):
 
 def test_port_get_filter_by_term_oid(api_client):
     r = api_client.get(
-        "{}/ports/?terms={}".format(base_url, "1.2"),
+        "{}/port/?terms={}".format(base_url, "1.2"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -124,7 +124,7 @@ def test_port_get_filter_by_term_oid(api_client):
 
 def test_port_get_filter_by_term_numero(api_client):
     r = api_client.get(
-        "{}/ports/?terms={}".format(base_url, "0/0/1"),
+        "{}/port/?terms={}".format(base_url, "0/0/1"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200

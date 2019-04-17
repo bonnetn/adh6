@@ -12,7 +12,7 @@ from flask import current_app, g
 from CONFIGURATION import ELK_HOSTS
 from CONFIGURATION import PRICES
 from adh.auth import auth_regular_admin
-from adh.controller.device_utils import get_all_devices
+from adh.interface_adapter.endpoint.device_utils import get_all_devices
 from adh.exceptions import InvalidEmail, RoomNotFound, MemberNotFound
 from adh.model.models import Adherent, Chambre, Adhesion, Modification
 from adh.util.date import string_to_date
@@ -30,7 +30,7 @@ def adherent_exists(s, username):
 
 @require_sql
 @auth_regular_admin
-def filter_member(limit=100, offset=0, terms=None, roomNumber=None):
+def search(limit=100, offset=0, terms=None, roomNumber=None):
     """ [API] Filter the list of members from the the database """
     s = g.session
     if limit < 0:
@@ -69,7 +69,7 @@ def filter_member(limit=100, offset=0, terms=None, roomNumber=None):
 
 @require_sql
 @auth_regular_admin
-def get_member(username):
+def get(username):
     """ [API] Get the specified member from the database """
     s = g.session
     try:
@@ -81,7 +81,7 @@ def get_member(username):
 
 @require_sql
 @auth_regular_admin
-def delete_member(username):
+def delete(username):
     """ [API] Delete the specified User from the database """
     s = g.session
 
@@ -108,7 +108,7 @@ def delete_member(username):
 
 @require_sql
 @auth_regular_admin
-def patch_member(username, body):
+def patch(username, body):
     """ [API] Partially update a member from the database """
     s = g.session
 
@@ -151,7 +151,7 @@ def patch_member(username, body):
 
 @require_sql
 @auth_regular_admin
-def put_member(username, body):
+def put(username, body):
     """ [API] Create/Update member from the database """
     s = g.session
 
@@ -191,7 +191,7 @@ def put_member(username, body):
 
 @require_sql
 @auth_regular_admin
-def add_membership(username, body):
+def post_membership(username, body):
     """ [API] Add a membership record in the database """
     s = g.session
 
@@ -236,7 +236,7 @@ def ntlm_hash(txt):
 
 @require_sql
 @auth_regular_admin
-def update_password(username, body):
+def put_password(username, body):
     password = body["password"]
     s = g.session
 

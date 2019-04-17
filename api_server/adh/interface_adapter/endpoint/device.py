@@ -10,7 +10,7 @@ from sqlalchemy.orm.exc import MultipleResultsFound
 
 from adh import ip_controller
 from adh.auth import auth_regular_admin
-from adh.controller.device_utils import is_wired, is_wireless, \
+from adh.interface_adapter.endpoint.device_utils import is_wired, is_wireless, \
     delete_wireless_device, \
     delete_wired_device, \
     update_wireless_device, \
@@ -28,7 +28,7 @@ from adh.util.session_decorator import require_sql
 
 @require_sql
 @auth_regular_admin
-def filter_device(limit=100, offset=0, username=None, terms=None):
+def search(limit=100, offset=0, username=None, terms=None):
     """ [API] Filter the list of the devices according to some criterias """
     s = g.session
     if limit < 0:
@@ -70,7 +70,7 @@ def filter_device(limit=100, offset=0, username=None, terms=None):
 
 @require_sql
 @auth_regular_admin
-def put_device(mac_address, body):
+def put(mac_address, body):
     """ [API] Put (update or create) a new device in the database """
     s = g.session
 
@@ -157,7 +157,7 @@ def put_device(mac_address, body):
 
 @require_sql
 @auth_regular_admin
-def get_device(mac_address):
+def get(mac_address):
     """ [API] Return the device specified by the macAddress """
     s = g.session
 
@@ -181,7 +181,7 @@ def get_device(mac_address):
 
 @require_sql
 @auth_regular_admin
-def delete_device(mac_address):
+def delete(mac_address):
     """ [API] Delete the specified device from the database """
     s = g.session
 
@@ -200,7 +200,7 @@ def delete_device(mac_address):
 
 @require_sql
 @auth_regular_admin
-def get_device_vendor(mac_address):
+def get_vendor(mac_address):
     """ [API] Return the vendor associated with the macAddress """
     s = g.session
     r = requests.get('https://macvendors.co/api/vendorname/' + str(mac_address))

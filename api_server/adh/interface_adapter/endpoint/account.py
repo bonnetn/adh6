@@ -14,21 +14,21 @@ from adh.util.session_decorator import require_sql
 
 @require_sql
 @auth_regular_admin
-def filter_product(limit=100, offset=0, terms=None):
+def search(limit=100, offset=0, terms=None):
     pass
 
 @require_sql
 @auth_regular_admin
-def create_product(body):
+def post(body):
     pass
 
 @require_sql
 @auth_regular_admin
-def get_product(product_id):
+def get(account_id):
     pass
 
 @require_sql
 @auth_regular_admin
-def patch_product(product_id, body):
+def patch(account_id, body):
     pass
 

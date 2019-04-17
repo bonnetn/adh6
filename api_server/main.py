@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 app = connexion.FlaskApp(__name__)
 app.app.config.update(API_CONF)
 app.add_api('swagger.yaml',
-            resolver=RestyResolver('adh.controller'),
+            resolver=RestyResolver('adh.interface_adapter.endpoint'),
             strict_validation=True)
 # set the WSGI application callable to allow using uWSGI:
 # uwsgi --http :8080 -w app

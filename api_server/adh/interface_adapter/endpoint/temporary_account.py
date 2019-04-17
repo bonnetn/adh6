@@ -14,7 +14,7 @@ TOKEN_SIZE = 32
 
 @require_sql
 @auth_super_admin
-def create_temp_account(body):
+def post(body):
     s = g.session
     firstname = body.get("firstname")
     lastname = body.get("lastname")
@@ -41,7 +41,7 @@ def create_temp_account(body):
 
 @require_sql
 @auth_super_admin
-def revoke_temp_account():
+def delete():
     s = g.session
 
     now = datetime.datetime.now()

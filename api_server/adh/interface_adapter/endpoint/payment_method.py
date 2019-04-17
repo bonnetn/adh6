@@ -14,21 +14,21 @@ from adh.util.session_decorator import require_sql
 
 @require_sql
 @auth_regular_admin
-def filter_account_type(limit=100, offset=0, terms=None):
+def search(limit=100, offset=0, terms=None):
     pass
 
 @require_sql
 @auth_regular_admin
-def create_account_type(body):
+def post(body):
     pass
 
 @require_sql
 @auth_regular_admin
-def get_account_type(account_type_id):
+def get(payment_method_id):
     pass
 
 @require_sql
 @auth_regular_admin
-def patch_account_type(account_type_id, body):
+def patch(payment_method_id, body):
     pass
 

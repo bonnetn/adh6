@@ -6,7 +6,7 @@ import pytest
 from dateutil import parser
 
 from CONFIGURATION import TEST_DATABASE as db_settings, PRICES
-from adh.controller.member import ntlm_hash
+from adh.interface_adapter.endpoint.member import ntlm_hash
 from adh.model.database import Database as db
 from adh.model.models import Adherent
 from test.resource import (
@@ -101,7 +101,7 @@ def test_member_to_dict(sample_member1):
 
 def test_member_filter_all(api_client):
     r = api_client.get(
-        '{}/members/'.format(base_url),
+        '{}/member/'.format(base_url),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -112,7 +112,7 @@ def test_member_filter_all(api_client):
 
 def test_member_filter_all_with_invalid_limit(api_client):
     r = api_client.get(
-        '{}/members/?limit={}'.format(base_url, -1),
+        '{}/member/?limit={}'.format(base_url, -1),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 400
@@ -120,7 +120,7 @@ def test_member_filter_all_with_invalid_limit(api_client):
 
 def test_member_filter_all_with_limit(api_client):
     r = api_client.get(
-        '{}/members/?limit={}'.format(base_url, 1),
+        '{}/member/?limit={}'.format(base_url, 1),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -131,7 +131,7 @@ def test_member_filter_all_with_limit(api_client):
 
 def test_member_filter_by_roomNumber(api_client):
     r = api_client.get(
-        '{}/members/?roomNumber={}'.format(base_url, 5110),
+        '{}/member/?roomNumber={}'.format(base_url, 5110),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -142,7 +142,7 @@ def test_member_filter_by_roomNumber(api_client):
 
 def test_member_filter_by_non_existant_roomNumber(api_client):
     r = api_client.get(
-        '{}/members/?roomNumber={}'.format(base_url, 6666),
+        '{}/member/?roomNumber={}'.format(base_url, 6666),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -153,7 +153,7 @@ def test_member_filter_by_non_existant_roomNumber(api_client):
 
 def test_member_filter_terms_first_name(api_client):
     r = api_client.get(
-        '{}/members/?terms={}'.format(base_url, "Jean"),
+        '{}/member/?terms={}'.format(base_url, "Jean"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -164,7 +164,7 @@ def test_member_filter_terms_first_name(api_client):
 
 def test_member_filter_terms_last_name(api_client):
     r = api_client.get(
-        '{}/members/?terms={}'.format(base_url, "ubois"),
+        '{}/member/?terms={}'.format(base_url, "ubois"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -175,7 +175,7 @@ def test_member_filter_terms_last_name(api_client):
 
 def test_member_filter_terms_email(api_client):
     r = api_client.get(
-        '{}/members/?terms={}'.format(base_url, "bgdu78"),
+        '{}/member/?terms={}'.format(base_url, "bgdu78"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -186,7 +186,7 @@ def test_member_filter_terms_email(api_client):
 
 def test_member_filter_terms_login(api_client):
     r = api_client.get(
-        '{}/members/?terms={}'.format(base_url, "dubois_j"),
+        '{}/member/?terms={}'.format(base_url, "dubois_j"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -197,7 +197,7 @@ def test_member_filter_terms_login(api_client):
 
 def test_member_filter_terms_comment(api_client):
     r = api_client.get(
-        '{}/members/?terms={}'.format(base_url, "routeur"),
+        '{}/member/?terms={}'.format(base_url, "routeur"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -208,7 +208,7 @@ def test_member_filter_terms_comment(api_client):
 
 def test_member_filter_terms_nonexistant(api_client):
     r = api_client.get(
-        '{}/members/?terms={}'.format(base_url, "azerty"),
+        '{}/member/?terms={}'.format(base_url, "azerty"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -219,7 +219,7 @@ def test_member_filter_terms_nonexistant(api_client):
 
 def test_member_filter_terms_test_upper_case(api_client):
     r = api_client.get(
-        '{}/members/?terms={}'.format(base_url, "DUBOIS_J"),
+        '{}/member/?terms={}'.format(base_url, "DUBOIS_J"),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 200
@@ -565,7 +565,7 @@ def test_member_post_add_membership_not_found(api_client):
         "start": "2000-01-23T04:56:07.000+00:00"
     }
     result = api_client.post(
-        '{}/member/{}/membership'.format(base_url, "charlie"),
+        '{}/member/{}/membership/'.format(base_url, "charlie"),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -583,7 +583,7 @@ def test_member_post_add_membership_undefined_price(api_client):
         "start": "2000-01-23T04:56:07.000+00:00"
     }
     result = api_client.post(
-        '{}/member/{}/membership'.format(base_url, "dubois_j"),
+        '{}/member/{}/membership/'.format(base_url, "dubois_j"),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS,
@@ -597,7 +597,7 @@ def test_member_post_add_membership_ok(api_client):
         "start": "2000-01-23T04:56:07.000+00:00"
     }
     result = api_client.post(
-        '{}/member/{}/membership'.format(base_url, "dubois_j"),
+        '{}/member/{}/membership/'.format(base_url, "dubois_j"),
         data=json.dumps(body),
         content_type='application/json',
         headers=TEST_HEADERS,

@@ -27,12 +27,11 @@ tags:
 schemes:
 - "https"
 paths:
-  /transactions/:
+  /transaction/:
     get:
       tags:
       - "transaction"
       summary: "Filter transactions"
-      operationId: "filter_transaction"
       produces:
       - "application/json"
       parameters:
@@ -72,7 +71,6 @@ paths:
               $ref: "#/definitions/Transaction"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.transaction"
       security:
       - oauth2: ["profile"]
   /transaction/{id}:
@@ -80,7 +78,6 @@ paths:
       tags:
       - "transaction"
       summary: "Retrieve"
-      operationId: "get_transaction"
       produces:
       - "application/json"
       parameters:
@@ -96,14 +93,12 @@ paths:
             $ref: "#/definitions/Transaction"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.transaction"
       security:
       - oauth2: ["profile"]
     delete:
       tags:
       - "transaction"
       summary: "Delete"
-      operationId: "delete_transaction"
       produces:
       - "application/json"
       parameters:
@@ -117,15 +112,13 @@ paths:
           description: "Deleted"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.transaction"
       security:
       - oauth2: ["picsou"]
-  /members/:
+  /member/:
     get:
       tags:
       - "member"
       summary: "Filter members"
-      operationId: "filter_member"
       produces:
       - "application/json"
       parameters:
@@ -165,7 +158,6 @@ paths:
               $ref: "#/definitions/Member"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.member"
       security:
       - oauth2: ["profile"]
   /member/{username}:
@@ -173,7 +165,6 @@ paths:
       tags:
       - "member"
       summary: "Retrieve"
-      operationId: "get_member"
       produces:
       - "application/json"
       parameters:
@@ -189,14 +180,12 @@ paths:
             $ref: "#/definitions/Member"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.member"
       security:
       - oauth2: ["profile"]
     put:
       tags:
       - "member"
       summary: "Update/create"
-      operationId: "put_member"
       produces:
       - "application/json"
       parameters:
@@ -217,14 +206,12 @@ paths:
           description: "Updated"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.member"
       security:
       - oauth2: ["profile"]
     patch:
       tags:
       - "member"
       summary: "Partially update"
-      operationId: "patch_member"
       produces:
       - "application/json"
       parameters:
@@ -246,14 +233,12 @@ paths:
           description: "Updated"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.member"
       security:
       - oauth2: ["profile"]
     delete:
       tags:
       - "member"
       summary: "Delete"
-      operationId: "delete_member"
       produces:
       - "application/json"
       parameters:
@@ -267,15 +252,14 @@ paths:
           description: "Deleted"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.member"
       security:
       - oauth2: ["profile"]
   /member/{username}/password/:
     put:
+      operationId: adh.interface_adapter.endpoint.member.put_password
       tags:
       - "member"
       summary: "Update password"
-      operationId: "update_password"
       produces:
       - "application/json"
       parameters:
@@ -301,15 +285,14 @@ paths:
           description: "Modified"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.member"
       security:
       - oauth2: ["profile"]
   /member/{username}/logs/:
     get:
+      operationId: adh.interface_adapter.endpoint.member.get_logs
       tags:
       - "member"
       summary: "Get the most recent logs"
-      operationId: "get_logs"
       produces:
       - "application/json"
       parameters:
@@ -328,15 +311,14 @@ paths:
               example: "2018-07-14T04:44:51.537Z Password OK"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.member"
       security:
       - oauth2: ["profile"]
-  /member/{username}/membership:
+  /member/{username}/membership/:
     post:
+      operationId: adh.interface_adapter.endpoint.member.post_membership
       tags:
       - "membership"
       summary: "Add a membership record for an member"
-      operationId: "add_membership"
       produces:
       - "application/json"
       parameters:
@@ -362,7 +344,6 @@ paths:
           description: "Success"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.member"
       security:
       - oauth2: ["profile"]
   /device/:
@@ -370,7 +351,6 @@ paths:
       tags:
       - "device"
       summary: "Filter devices"
-      operationId: "filter_device"
       produces:
       - "application/json"
       parameters:
@@ -412,7 +392,6 @@ paths:
           description: "Invalid input"
 
 
-      x-swagger-router-controller: "adh.controller.device"
       security:
       - oauth2: ["profile"]
   /device/{mac_address}:
@@ -420,7 +399,6 @@ paths:
       tags:
       - "device"
       summary: "Retrieve a device"
-      operationId: "get_device"
       produces:
       - "application/json"
       parameters:
@@ -436,14 +414,12 @@ paths:
             $ref: "#/definitions/Device"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.device"
       security:
       - oauth2: ["profile"]
     put:
       tags:
       - "device"
       summary: "Update/create a device"
-      operationId: "put_device"
       produces:
       - "application/json"
       parameters:
@@ -466,14 +442,12 @@ paths:
         400:
           description: "Invalid input"
 
-      x-swagger-router-controller: "adh.controller.device"
       security:
       - oauth2: ["profile"]
     delete:
       tags:
       - "device"
       summary: "Delete a device"
-      operationId: "delete_device"
       produces:
       - "application/json"
       parameters:
@@ -487,15 +461,14 @@ paths:
           description: "Deleted"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.device"
       security:
       - oauth2: ["profile"]
   /device/{mac_address}/vendor:
     get:
+      operationId: adh.interface_adapter.endpoint.device.get_vendor
       tags:
       - "device"
       summary: "Retrieve the vendor of a device based on its MAC"
-      operationId: "get_device_vendor"
       produces:
       - "application/json"
       parameters:
@@ -515,7 +488,6 @@ paths:
                 example: "Cisco Systems, Inc"
         404:
           description: "No match"
-      x-swagger-router-controller: "adh.controller.device"
       security:
       - oauth2: ["profile"]
   /room/:
@@ -523,7 +495,6 @@ paths:
       tags:
       - "room"
       summary: "Filter rooms"
-      operationId: "filter_room"
       produces:
       - "application/json"
       parameters:
@@ -558,7 +529,6 @@ paths:
               $ref: "#/definitions/Room"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.room"
       security:
       - oauth2: ["profile"]
   /room/{roomNumber}:
@@ -566,7 +536,6 @@ paths:
       tags:
       - "room"
       summary: "Retrieve a room"
-      operationId: "get_room"
       produces:
       - "application/json"
       parameters:
@@ -581,14 +550,12 @@ paths:
             $ref: "#/definitions/Room"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.room"
       security:
       - oauth2: ["profile"]
     put:
       tags:
       - "room"
       summary: "Update/create a room"
-      operationId: "put_room"
       produces:
       - "application/json"
       parameters:
@@ -609,14 +576,12 @@ paths:
           description: "Updated"
         400:
           description: "Invalid input / no more IP"
-      x-swagger-router-controller: "adh.controller.room"
       security:
       - oauth2: ["profile"]
     delete:
       tags:
       - "room"
       summary: "Delete a room"
-      operationId: "delete_room"
       produces:
       - "application/json"
       parameters:
@@ -629,7 +594,6 @@ paths:
           description: "Deleted"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.room"
       security:
       - oauth2: ["profile"]
   /switch/:
@@ -637,7 +601,6 @@ paths:
       tags:
       - "switch"
       summary: "Get all switches"
-      operationId: "filter_switch"
       produces:
       - "application/json"
       parameters:
@@ -672,14 +635,12 @@ paths:
               $ref: "#/definitions/Switch"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.switch"
       security:
       - oauth2: ["profile"]
     post:
       tags:
       - "switch"
       summary: "Create a switch"
-      operationId: "create_switch"
       produces:
       - "application/json"
       parameters:
@@ -698,7 +659,6 @@ paths:
               description: "URI to the newly created switch"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.switch"
       security:
       - oauth2: ["profile"]
   /switch/{switchID}:
@@ -706,7 +666,6 @@ paths:
       tags:
       - "switch"
       summary: "Retrieve a switch"
-      operationId: "get_switch"
       produces:
       - "application/json"
       parameters:
@@ -721,14 +680,12 @@ paths:
             $ref: "#/definitions/Switch"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.switch"
       security:
       - oauth2: ["profile"]
     put:
       tags:
       - "switch"
       summary: "Update a switch"
-      operationId: "update_switch"
       produces:
       - "application/json"
       parameters:
@@ -749,14 +706,12 @@ paths:
           description: "Not found"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.switch"
       security:
       - oauth2: ["profile"]
     delete:
       tags:
       - "switch"
       summary: "Delete a switch"
-      operationId: "delete_switch"
       produces:
       - "application/json"
       parameters:
@@ -769,15 +724,13 @@ paths:
           description: "Deleted"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.switch"
       security:
       - oauth2: ["profile"]
-  /ports/:
+  /port/:
     get:
       tags:
       - "port"
       summary: "Filter ports"
-      operationId: "filter_port"
       produces:
       - "application/json"
       parameters:
@@ -822,15 +775,12 @@ paths:
               $ref: "#/definitions/Port"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.port"
       security:
       - oauth2: ["profile"]
-  /port/:
     post:
       tags:
       - "port"
       summary: "Create a port"
-      operationId: "create_port"
       produces:
       - "application/json"
       parameters:
@@ -849,7 +799,6 @@ paths:
               description: "URI to the newly created port"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.port"
       security:
       - oauth2: ["profile"]
   /port/{port_id}:
@@ -857,7 +806,6 @@ paths:
       tags:
       - "port"
       summary: "Retrieve a port"
-      operationId: "get_port"
       produces:
       - "application/json"
       parameters:
@@ -872,14 +820,12 @@ paths:
             $ref: "#/definitions/Port"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.port"
       security:
       - oauth2: ["profile"]
     put:
       tags:
       - "port"
       summary: "Update a port"
-      operationId: "update_port"
       produces:
       - "application/json"
       parameters:
@@ -900,14 +846,12 @@ paths:
           description: "Not found"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.port"
       security:
       - oauth2: ["profile"]
     delete:
       tags:
       - "port"
       summary: "Delete a port"
-      operationId: "delete_port"
       produces:
       - "application/json"
       parameters:
@@ -920,15 +864,14 @@ paths:
           description: "Deleted"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.port"
       security:
       - oauth2: ["profile"]
   /port/{port_id}/state/:
     get:
+      operationId: adh.interface_adapter.endpoint.port.get_state
       tags:
       - "port"
       summary: "Retrieve the status of a port."
-      operationId: "get_port_status"
       produces:
       - "application/json"
       parameters:
@@ -943,14 +886,13 @@ paths:
             type: boolean
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.snmp_port"
       security:
       - oauth2: ["profile"]
     put:
+      operationId: adh.interface_adapter.endpoint.port.put_state
       tags:
       - "port"
       summary: "Shutdown/enable a port"
-      operationId: "set_port_status"
       produces:
       - "application/json"
       parameters:
@@ -971,15 +913,14 @@ paths:
         404:
           description: "Not found"
 
-      x-swagger-router-controller: "adh.controller.snmp_port"
       security:
       - oauth2: ["profile"]
   /port/{port_id}/mab/:
     get:
+      operationId: adh.interface_adapter.endpoint.port.get_mab
       tags:
       - "port"
       summary: "Check whether MAB is enable on this port or not."
-      operationId: "get_port_mab"
       produces:
       - "application/json"
       parameters:
@@ -994,14 +935,13 @@ paths:
             type: boolean
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.snmp_port"
       security:
       - oauth2: ["profile"]
     put:
+      operationId: adh.interface_adapter.endpoint.port.put_mab
       tags:
       - "port"
       summary: "Enable/disable MAB on a port"
-      operationId: "set_port_mab"
       produces:
       - "application/json"
       parameters:
@@ -1020,16 +960,15 @@ paths:
         404:
           description: "Not found"
 
-      x-swagger-router-controller: "adh.controller.snmp_port"
       security:
       - oauth2: ["profile"]
 
   /port/{port_id}/vlan/:
     get:
+      operationId: adh.interface_adapter.endpoint.port.get_vlan
       tags:
       - "port"
       summary: "Retrieve the VLAN assigned to the port."
-      operationId: "get_port_vlan"
       produces:
       - "application/json"
       parameters:
@@ -1045,14 +984,13 @@ paths:
             type: integer
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.snmp_port"
       security:
       - oauth2: ["profile"]
     put:
+      operationId: adh.interface_adapter.endpoint.port.put_vlan
       tags:
       - "port"
       summary: "Change the VLAN assigned a to port"
-      operationId: "set_port_vlan"
       produces:
       - "application/json"
       parameters:
@@ -1074,15 +1012,13 @@ paths:
         404:
           description: "Not found"
 
-      x-swagger-router-controller: "adh.controller.snmp_port"
       security:
       - oauth2: ["profile"]
-  /temp_acc/:
+  /temporary_account/:
     post:
       tags:
       - "temporary_account"
       summary: "Create new temporary account for this day. Only super admins can do that."
-      operationId: "create_temp_account"
       produces:
       - "application/json"
       parameters:
@@ -1107,28 +1043,24 @@ paths:
               access_token:
                 type: string
                 example: "NAINA_AMLKSJQLMHFQ"
-      x-swagger-router-controller: "adh.controller.temporary_account"
       security:
       - oauth2: ["profile"]
     delete:
       tags:
       - "temporary_account"
       summary: "Revoke all active temporary accounts."
-      operationId: "revoke_temp_account"
       produces:
       - "application/json"
       responses:
         204:
           description: "Success"
-      x-swagger-router-controller: "adh.controller.temporary_account"
       security:
       - oauth2: ["profile"]
-  /account_types/:
+  /account_type/:
     get:
       tags:
       - "account_type"
       summary: "Filter account types"
-      operationId: "filter_account_type"
       produces:
       - "application/json"
       parameters:
@@ -1163,7 +1095,6 @@ paths:
               $ref: "#/definitions/AccountType"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.account_type"
       security:
       - oauth2: ["profile"]
   /account_type/:
@@ -1171,7 +1102,6 @@ paths:
       tags:
       - "account_type"
       summary: "Create an account type"
-      operationId: "create_account_type"
       produces:
       - "application/json"
       parameters:
@@ -1190,7 +1120,6 @@ paths:
               description: "URI to the newly created account type"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.account_type"
       security:
       - oauth2: ["profile"]
   /account_type/{account_type_id}:
@@ -1198,7 +1127,6 @@ paths:
       tags:
       - "account_type"
       summary: "Retrieve an account type"
-      operationId: "get_account_type"
       produces:
       - "application/json"
       parameters:
@@ -1213,14 +1141,12 @@ paths:
             $ref: "#/definitions/AccountType"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.account_type"
       security:
       - oauth2: ["profile"]
     patch:
       tags:
       - "account_type"
       summary: "Partially update"
-      operationId: "patch_account_type"
       produces:
       - "application/json"
       parameters:
@@ -1242,15 +1168,13 @@ paths:
           description: "Updated"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.account_type"
       security:
       - oauth2: ["profile"]
-  /payment_methods/:
+  /payment_method/:
     get:
       tags:
       - "payment_method"
       summary: "Filter payment methods"
-      operationId: "filter_payment_methods"
       produces:
       - "application/json"
       parameters:
@@ -1285,7 +1209,6 @@ paths:
               $ref: "#/definitions/PaymentMethod"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.payment_method"
       security:
       - oauth2: ["profile"]
   /payment_method/:
@@ -1293,7 +1216,6 @@ paths:
       tags:
       - "payment_method"
       summary: "Create a payment method"
-      operationId: "create_payment_method"
       produces:
       - "application/json"
       parameters:
@@ -1312,7 +1234,6 @@ paths:
               description: "URI to the newly created payment method"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.payment_method"
       security:
       - oauth2: ["profile"]
   /payment_method/{payment_method_id}:
@@ -1320,7 +1241,6 @@ paths:
       tags:
       - "payment_method"
       summary: "Retrieve a payment method"
-      operationId: "get_payment_method"
       produces:
       - "application/json"
       parameters:
@@ -1335,14 +1255,12 @@ paths:
             $ref: "#/definitions/PaymentMethod"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.payment_method"
       security:
       - oauth2: ["profile"]
     patch:
       tags:
       - "payment_method"
       summary: "Partially update"
-      operationId: "patch_payment_method"
       produces:
       - "application/json"
       parameters:
@@ -1364,7 +1282,6 @@ paths:
           description: "Updated"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.payment_method"
       security:
       - oauth2: ["profile"]
   /account/:
@@ -1372,7 +1289,6 @@ paths:
       tags:
       - "account"
       summary: "Create account"
-      operationId: "create_account"
       produces:
       - "application/json"
       parameters:
@@ -1387,14 +1303,12 @@ paths:
           description: "Created"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.account"
       security:
       - oauth2: ["profile"]
     get:
       tags:
       - "account"
       summary: "Filter accounts"
-      operationId: "filter_account"
       produces:
       - "application/json"
       parameters:
@@ -1439,7 +1353,6 @@ paths:
               $ref: "#/definitions/Account"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.account"
       security:
       - oauth2: ["profile"]
   /account/{id}:
@@ -1447,7 +1360,6 @@ paths:
       tags:
       - "account"
       summary: "Retrieve"
-      operationId: "get_account"
       produces:
       - "application/json"
       parameters:
@@ -1463,14 +1375,12 @@ paths:
             $ref: "#/definitions/Account"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.account"
       security:
       - oauth2: ["profile"]
     patch:
       tags:
       - "account"
       summary: "Partially update"
-      operationId: "patch_account"
       produces:
       - "application/json"
       parameters:
@@ -1492,7 +1402,6 @@ paths:
           description: "Updated"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.account"
       security:
       - oauth2: ["profile"]
   /product/:
@@ -1500,7 +1409,6 @@ paths:
       tags:
       - "product"
       summary: "Create product"
-      operationId: "create_product"
       produces:
       - "application/json"
       parameters:
@@ -1516,14 +1424,12 @@ paths:
           description: "Updated"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.product"
       security:
       - oauth2: ["profile"]
     get:
       tags:
       - "product"
       summary: "Filter products"
-      operationId: "filter_product"
       produces:
       - "application/json"
       parameters:
@@ -1563,7 +1469,6 @@ paths:
               $ref: "#/definitions/Product"
         400:
           description: "Invalid input"
-      x-swagger-router-controller: "adh.controller.product"
       security:
       - oauth2: ["profile"]
   /product/{id}:
@@ -1571,7 +1476,6 @@ paths:
       tags:
       - "product"
       summary: "Retrieve"
-      operationId: "get_product"
       produces:
       - "application/json"
       parameters:
@@ -1587,7 +1491,6 @@ paths:
             $ref: "#/definitions/Product"
         404:
           description: "Not found"
-      x-swagger-router-controller: "adh.controller.product"
       security:
       - oauth2: ["profile"]
 securityDefinitions:

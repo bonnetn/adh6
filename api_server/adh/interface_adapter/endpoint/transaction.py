@@ -14,7 +14,7 @@ from adh.util.session_decorator import require_sql
 
 @require_sql
 @auth_regular_admin
-def filter_transaction(limit=100, offset=0, terms=None, account=None):
+def search(limit=100, offset=0, terms=None, account=None):
     pass
 
 @require_sql
@@ -24,10 +24,10 @@ def create_transaction(body):
 
 @require_sql
 @auth_regular_admin
-def get_transaction(body):
+def get(body):
     pass
 
 @require_sql
 @auth_regular_admin
-def delete_transaction(transaction_id):
+def delete(transaction_id):
     pass
