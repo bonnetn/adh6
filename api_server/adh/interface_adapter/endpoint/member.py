@@ -4,20 +4,21 @@ import json
 import logging
 import string
 
-import sqlalchemy
 from connexion import NoContent
 from elasticsearch5 import Elasticsearch
 from flask import current_app, g
+from frozendict import frozendict
 
 from CONFIGURATION import ELK_HOSTS
 from CONFIGURATION import PRICES
-from adh.interface_adapter.endpoint.auth import auth_regular_admin
-from adh.interface_adapter.endpoint.device_utils import get_all_devices
+from adh.constants import CTX_SQL_SESSION, CTX_ADMIN
 from adh.exceptions import InvalidEmail, RoomNotFound, MemberNotFound
+from adh.interface_adapter.endpoint.auth import auth_regular_admin
+from adh.interface_adapter.endpoint.decorator.session_decorator import require_sql
+from adh.interface_adapter.endpoint.device_utils import get_all_devices
 from adh.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion, Modification
 from adh.util.date import string_to_date
-from adh.interface_adapter.endpoint.decorator.session_decorator import require_sql
-
+from main import member_manager
 
 def adherent_exists(s, username):
     """ Returns true if the member exists """
@@ -32,39 +33,19 @@ def adherent_exists(s, username):
 @auth_regular_admin
 def search(limit=100, offset=0, terms=None, roomNumber=None):
     """ [API] Filter the list of members from the the database """
-    s = g.session
-    if limit < 0:
-        return "Limit must be positive", 400
-
-    q = s.query(Adherent)
-    if roomNumber:
-        try:
-            q2 = s.query(Chambre)
-            q2 = q2.filter(Chambre.numero == roomNumber)
-            result = q2.one()
-        except sqlalchemy.orm.exc.NoResultFound:
-            return [], 200, {"X-Total-Count": '0'}
-
-        q = q.filter(Adherent.chambre == result)
-    if terms:
-        q = q.filter(
-            (Adherent.nom.contains(terms)) |
-            (Adherent.prenom.contains(terms)) |
-            (Adherent.mail.contains(terms)) |
-            (Adherent.login.contains(terms)) |
-            (Adherent.commentaires.contains(terms))
-        )
-    count = q.count()
-    q = q.order_by(Adherent.login.asc())
-    q = q.offset(offset)
-    q = q.limit(limit)
-    r = q.all()
-    headers = {
-        "X-Total-Count": str(count),
-        'access-control-expose-headers': 'X-Total-Count'
-    }
-    logging.info("%s fetched the member list", g.admin.login)
-    return list(map(dict, r)), 200, headers
+    ctx = frozendict({
+        CTX_SQL_SESSION: g.session,
+        CTX_ADMIN: g.admin,
+    })
+    try:
+        result, total_count = member_manager.search(ctx, limit, offset, roomNumber, terms)
+        headers = {
+            "X-Total-Count": str(total_count),
+            'access-control-expose-headers': 'X-Total-Count'
+        }
+        return result, 200, headers
+    except ValueError as e:
+        return f'Wrong argument: {e}.', 400
 
 
 @require_sql
