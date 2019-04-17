@@ -14,7 +14,7 @@ from CONFIGURATION import PRICES
 from adh.auth import auth_regular_admin
 from adh.interface_adapter.endpoint.device_utils import get_all_devices
 from adh.exceptions import InvalidEmail, RoomNotFound, MemberNotFound
-from adh.model.models import Adherent, Chambre, Adhesion, Modification
+from adh.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion, Modification
 from adh.util.date import string_to_date
 from adh.util.session_decorator import require_sql
 

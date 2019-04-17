@@ -4,8 +4,8 @@ import logging
 import pytest
 
 from CONFIGURATION import TEST_DATABASE as db_settings
-from adh.model.database import Database as db
-from adh.model.models import Chambre
+from adh.interface_adapter.sql.model.database import Database as db
+from adh.interface_adapter.sql.model.models import Chambre
 from .resource import base_url, TEST_HEADERS, logs_contains
 
 

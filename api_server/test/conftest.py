@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from adh.model.models import (
+from adh.interface_adapter.sql.model.models import (
     Adherent, Chambre, Vlan, Ordinateur, Portable, Switch, Port,
     NainA)
 

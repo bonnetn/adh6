@@ -1,7 +1,7 @@
 from sqlalchemy.sql.expression import literal
 from sqlalchemy.types import String
 
-from adh.model.models import Adherent, Portable, Ordinateur, Modification
+from adh.interface_adapter.sql.model.models import Adherent, Portable, Ordinateur, Modification
 
 
 def is_wired(mac_address, s):

@@ -4,8 +4,8 @@ import logging
 import pytest
 
 from CONFIGURATION import TEST_DATABASE as db_settings
-from adh.model.database import Database as db
-from adh.model.models import Ordinateur, Portable
+from adh.interface_adapter.sql.model.database import Database as db
+from adh.interface_adapter.sql.model.models import Ordinateur, Portable
 from .resource import (
     base_url, INVALID_MAC, INVALID_IP, INVALID_IPv6, TEST_HEADERS,
     assert_modification_was_created,

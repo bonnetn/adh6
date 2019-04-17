@@ -6,8 +6,8 @@ from connexion import NoContent
 from flask import current_app, g
 from sqlalchemy.orm.exc import NoResultFound
 
-from adh.model.database import Database as Db
-from adh.model.models import Utilisateur, NainA
+from adh.interface_adapter.sql.model.database import Database as Db
+from adh.interface_adapter.sql.model.models import Utilisateur, NainA
 from adh.util.env import isDevelopmentEnvironment
 
 ADH6_USER = "adh6_user"

@@ -7,7 +7,7 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 
-from adh.model.models import Base, NainA
+from adh.interface_adapter.sql.model.models import Base, NainA
 
 
 class Database():

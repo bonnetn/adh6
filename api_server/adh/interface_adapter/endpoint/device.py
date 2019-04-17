@@ -21,8 +21,8 @@ from adh.interface_adapter.endpoint.device_utils import is_wired, is_wireless, \
     dev_to_dict
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidMac
 from adh.exceptions import MemberNotFound
-from adh.model import models
-from adh.model.models import Adherent, Modification
+from adh.interface_adapter.sql.model import models
+from adh.interface_adapter.sql.model.models import Adherent, Modification
 from adh.util.session_decorator import require_sql
 
 

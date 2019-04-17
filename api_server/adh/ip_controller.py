@@ -1,7 +1,7 @@
 import datetime
 import ipaddress
 
-from adh.model.models import Ordinateur, Adherent
+from adh.interface_adapter.sql.model.models import Ordinateur, Adherent
 
 
 class NoMoreIPAvailable(Exception):

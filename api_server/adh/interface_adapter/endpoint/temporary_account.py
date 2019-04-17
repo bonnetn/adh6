@@ -6,7 +6,7 @@ from connexion import NoContent
 from flask import g
 
 from adh.auth import auth_super_admin
-from adh.model.models import NainA
+from adh.interface_adapter.sql.model.models import NainA
 from adh.util.session_decorator import require_sql
 
 TOKEN_SIZE = 32

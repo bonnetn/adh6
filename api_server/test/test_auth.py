@@ -2,7 +2,7 @@ import pytest
 
 from CONFIGURATION import TEST_DATABASE as db_settings
 from adh.auth import authenticate_temp_account, token_info
-from adh.model.database import Database as db
+from adh.interface_adapter.sql.model.database import Database as db
 from .context import app
 
 

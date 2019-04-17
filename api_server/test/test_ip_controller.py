@@ -5,8 +5,8 @@ from adh.ip_controller import (
     get_available_ip, NoMoreIPAvailable, get_all_used_ipv4, get_all_used_ipv6,
     get_expired_devices, free_expired_devices
 )
-from adh.model.database import Database as db
-from adh.model.models import Ordinateur
+from adh.interface_adapter.sql.model.database import Database as db
+from adh.interface_adapter.sql.model.models import Ordinateur
 
 
 def prep_db(session,

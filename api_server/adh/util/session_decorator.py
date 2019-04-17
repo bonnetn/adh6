@@ -2,7 +2,7 @@ import logging
 
 from flask import g, current_app
 
-from adh.model.database import Database as Db
+from adh.interface_adapter.sql.model.database import Database as Db
 
 
 def require_sql(f):

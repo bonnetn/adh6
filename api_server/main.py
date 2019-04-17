@@ -6,7 +6,7 @@ from connexion.resolver import RestyResolver
 
 from CONFIGURATION import API_CONF
 from CONFIGURATION import PROD_DATABASE as DATABASE
-from adh.model.database import Database
+from adh.interface_adapter.sql.model.database import Database
 
 Database.init_db(DATABASE)
 

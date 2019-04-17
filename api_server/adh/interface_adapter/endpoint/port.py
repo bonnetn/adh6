@@ -7,7 +7,7 @@ from sqlalchemy import or_
 
 from adh.auth import auth_regular_admin, auth_super_admin
 from adh.exceptions import RoomNotFound, SwitchNotFound, PortNotFound
-from adh.model.models import Port, Chambre, Switch
+from adh.interface_adapter.sql.model.models import Port, Chambre, Switch
 from adh.util.session_decorator import require_sql
 
 
