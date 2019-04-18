@@ -17,14 +17,14 @@ def track_modifications(ctx, session, obj: RubyHashTrackable):
         if obj in session.new:
             diff = obj.serialize_snapshot_diff(None, obj.take_snapshot())
 
-        if obj in session.dirty:
-            diff = obj.serialize_snapshot_diff(snap_before, obj.take_snapshot())
-
-        if obj in session.deleted:
+        elif obj in session.deleted:
             diff = obj.serialize_snapshot_diff(snap_before, None)
 
+        elif snap_before != obj.take_snapshot():
+            diff = obj.serialize_snapshot_diff(snap_before, obj.take_snapshot())
+
         if diff is None:
-            raise RuntimeError('Object was not modified yet it was being tracked')
+            return  # No modification.
 
         now = datetime.now()
         admin = ctx.get(CTX_ADMIN)
@@ -38,4 +38,3 @@ def track_modifications(ctx, session, obj: RubyHashTrackable):
             utilisateur_id=admin.id
         )
         session.add(m)
-        print(diff)

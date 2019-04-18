@@ -7,5 +7,9 @@ class MemberRepository(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
+    def update_partially_member(self, ctx, member_to_update, **fields_to_update) -> None:
+        pass
+
+    @abc.abstractmethod
     def delete_member(self, ctx, username=None) -> None:
         pass

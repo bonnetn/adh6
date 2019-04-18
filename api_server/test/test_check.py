@@ -10,9 +10,9 @@ from test import resource
     "12-34-56-78-9a-bc",  # lowercased, OK
 ])
 def test_check_valid_mac(mac):
-    assert checks.isMac(mac) is True
+    assert checks.is_mac_address(mac) is True
 
 
 @pytest.mark.parametrize('mac', resource.INVALID_MAC)
 def test_check_invalid_mac(mac):
-    assert checks.isMac(mac) is False
+    assert checks.is_mac_address(mac) is False

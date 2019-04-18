@@ -14,7 +14,8 @@ from adh.exceptions import InvalidEmail, RoomNotFound, MemberNotFound
 from adh.interface_adapter.endpoint.auth import auth_regular_admin
 from adh.interface_adapter.endpoint.decorator.session_decorator import require_sql
 from adh.interface_adapter.endpoint.device_utils import get_all_devices
-from adh.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion, Modification
+from adh.interface_adapter.sql.model.models import Adherent, Adhesion, Modification
+from adh.use_case.member_manager import MutationRequest
 from adh.util.context import build_context
 from adh.util.date import string_to_date
 from main import member_manager
@@ -82,43 +83,27 @@ def delete(username):
 @auth_regular_admin
 def patch(username, body):
     """ [API] Partially update a member from the database """
-    s = g.session
-
-    # Create a valid object
-
-    # Check if it already exists
-    update = adherent_exists(s, username)
-
-    if not update:
-        return NoContent, 404
-
-    member = Adherent.find(s, username)
-    member.start_modif_tracking()
+    ctx = build_context(
+        session=g.session,
+        admin=g.admin,
+    )
     try:
-        member.nom = body.get("lastName", member.nom)
-        member.prenom = body.get("firstName", member.prenom)
-        member.mail = body.get("email", member.mail)
-        member.commentaires = body.get("comment", member.commentaires)
-        member.login = body.get("username", member.login)
-        if "departureDate" in body:
-            member.date_de_depart = string_to_date(body["departureDate"])
-        if "associationMode" in body:
-            member.mode_association = string_to_date(body["associationMode"])
-        if "roomNumber" in body:
-            member.chambre = Chambre.find(s, body["roomNumber"])
-    except InvalidEmail:
-        return "Invalid email", 400
-    except RoomNotFound:
-        return "No room found", 400
-    except ValueError:
-        return "String must not be empty", 400
 
-    # Create the corresponding modification
-    Modification.add(s, member, g.admin)
+        mutation_request = MutationRequest(
+            email=body.get('email'),
+            first_name=body.get('firstName'),
+            last_name=body.get('lastName'),
+            username=body.get('username'),
+            departure_date=body.get('departureDate'),
+            comment=body.get('comment'),
+            association_mode=body.get('associationMode'),
+            room_number=body.get('roomNumber'),
+        )
+        member_manager.update_partially(ctx, username, mutation_request)
+        return NoContent, 204
 
-    logging.info("%s updated the member %s\n%s",
-                 g.admin.login, username, json.dumps(body, sort_keys=True))
-    return NoContent, 204
+    except ValueError as e:
+        return f"Invalid parameter: {e}", 400
 
 
 @require_sql

@@ -167,7 +167,7 @@ class Adherent(Base, RubyHashTrackable):
 
     @validates('mail')
     def valid_email(self, key, mail):
-        if not mail or not checks.isEmail(mail):
+        if not mail or not checks.is_email(mail):
             raise InvalidEmail()
         return mail
 
@@ -305,7 +305,7 @@ class Ordinateur(Base, RubyHashTrackable):
 
     @validates('mac')
     def mac_valid(self, key, mac):
-        if not mac or not checks.isMac(mac):
+        if not mac or not checks.is_mac_address(mac):
             raise InvalidMac()
         return mac
 
@@ -359,7 +359,7 @@ class Portable(Base, RubyHashTrackable):
 
     @validates('mac')
     def mac_valid(self, key, mac):
-        if not mac or not checks.isMac(mac):
+        if not mac or not checks.is_mac_address(mac):
             raise InvalidMac()
         return mac
 
