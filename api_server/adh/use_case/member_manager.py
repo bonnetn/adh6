@@ -22,7 +22,6 @@ class MemberManager:
         return result[0]
 
     def search(self, ctx, limit, offset=0, room_number=None, terms=None):
-
         if limit < 0:
             raise MustBePositiveException('limit')
 
@@ -37,3 +36,13 @@ class MemberManager:
 
         logging.info("%s fetched the member list", ctx.get(CTX_ADMIN))
         return result, count
+
+    def delete(self, ctx, username):
+        if not username:
+            raise ValueError('username not provided')
+
+        try:
+            self.member_storage.delete_member(ctx, username)
+            logging.info("%s deleted the member %s", ctx.get(CTX_ADMIN), username)
+        except ValueError:
+            raise MemberNotFound()

@@ -1,10 +1,9 @@
 # coding: utf-8
 import datetime
 
-from sqlalchemy import Column, Date, DateTime, Integer, \
-    Numeric, String, Text, text, ForeignKey
 from sqlalchemy import Column, DECIMAL, ForeignKey, String, TIMESTAMP, TEXT
-from sqlalchemy import inspect
+from sqlalchemy import Date, DateTime, Integer, \
+    Numeric, Text, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy.orm.exc import NoResultFound
@@ -12,75 +11,12 @@ from sqlalchemy.orm.exc import NoResultFound
 from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
 from adh.exceptions import MemberNotFound, RoomNotFound, SwitchNotFound
 from adh.exceptions import VlanNotFound, PortNotFound
+from adh.interface_adapter.sql.model.trackable import RubyHashTrackable
+from adh.interface_adapter.sql.util.rubydiff import rubydiff
 from adh.util import checks
 from adh.util.date import string_to_date
 
 Base = declarative_base()
-
-
-def _get_model_dict(model):
-    """
-    Converts a SQLAlchemy row to a dictionnary of Column:Value
-    """
-    return dict((column.name, getattr(model, column.name))
-                for column in model.__table__.columns)
-
-
-class ModificationTracker():
-    """
-    Define a class on which you can record modification of this instance
-    """
-    __abstract__ = True
-
-    def _end_modif_tracking(self):
-        """
-        Call this function when you want to stop recording modifications
-        This should not be called by the user.
-
-        If start_modif was not called before, it will consider that the object
-        was created from scratch.
-        """
-        self._old_data = getattr(self, "_old_data", {})
-        self._new_data = _get_model_dict(self)
-        if inspect(self).deleted:
-            self._new_data = {}
-
-    def start_modif_tracking(self):
-        """
-        Call this function when you want to start recording modifications
-        """
-        self._old_data = _get_model_dict(self)
-        self._new_data = None
-
-
-class RubyHashModificationTracker(ModificationTracker):
-    """
-    Define a class on which you can record modification and get the result as
-    ruby/hash modification (like ADH5 does), it also returns the adherent linked
-    to the modification.
-    Override this function if you want to add information (for instance the
-    adhrent linked to the modification, since this function will always return
-    None.)
-    """
-
-    def get_ruby_modif(self):
-        self._end_modif_tracking()
-
-        txt = []
-        for key in sorted(set().union(
-                self._new_data.keys(),
-                self._old_data.keys()
-        )):
-            old = self._old_data.get(key)
-            new = self._new_data.get(key)
-
-            old = old if old is not None else ""
-            new = new if new is not None else ""
-
-            if old != new:
-                txt += ["{}:\n- {}\n- {}\n".format(key, old, new)]
-
-        return "".join(txt), None
 
 
 class Vlan(Base):
@@ -166,7 +102,7 @@ class Chambre(Base):
             yield "vlan", self.vlan.numero
 
 
-class Adherent(Base, RubyHashModificationTracker):
+class Adherent(Base, RubyHashTrackable):
     __tablename__ = 'adherents'
 
     id = Column(Integer, primary_key=True)
@@ -187,15 +123,17 @@ class Adherent(Base, RubyHashModificationTracker):
     )
     access_token = Column(String(255))
 
-    def get_ruby_modif(self):
+    def serialize_snapshot_diff(self, snap_before: dict, snap_after: dict) -> str:
         """
-        Override this method to add the prefix and to return the Adherent as
-        second argument
+        Override this method to add the prefix.
         """
-        modif, adh = super(Adherent, self).get_ruby_modif()
-        modif = '--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
-                modif
-        return modif, self
+
+        modif = rubydiff(snap_before, snap_after)
+        modif = '--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + modif
+        return modif
+
+    def get_related_member(self):
+        return self
 
     @staticmethod
     def find(session, username):
@@ -325,7 +263,7 @@ class Modification(Base):
     @staticmethod
     def add(session, object_updated, admin):
         now = datetime.datetime.now()
-        action, adherent = object_updated.get_ruby_modif()
+        # action, adherent = object_updated.get_ruby_modif()
         m = Modification(
             adherent_id=adherent.id,
             action=action,
@@ -336,7 +274,7 @@ class Modification(Base):
         session.add(m)
 
 
-class Ordinateur(Base, RubyHashModificationTracker):
+class Ordinateur(Base, RubyHashTrackable):
     __tablename__ = 'ordinateurs'
 
     id = Column(Integer, primary_key=True)
@@ -350,22 +288,20 @@ class Ordinateur(Base, RubyHashModificationTracker):
     last_seen = Column(DateTime)
     ipv6 = Column(String(255))
 
-    def get_ruby_modif(self):
+    def serialize_snapshot_diff(self, snap_before: dict, snap_after: dict) -> str:
         """
-        Override this method to add the prefix and to return the Adherent as
-        second argument
+        Override this method to add the prefix.
         """
-        modif, adh = super(Ordinateur, self).get_ruby_modif()
-        if not self._new_data:
-            proper_mac = self.mac.upper().replace(":", "-")
+        modif, adh = rubydiff(snap_before, snap_after)
+        if snap_after is None:
+            proper_mac = snap_before.get('mac').upper().replace(":", "-")
             return (
-                       "---\n"
-                       "ordinateur: Suppression de l'ordinateur {}\n".format(proper_mac)
-                   ), self.adherent
+                "---\n"
+                "ordinateur: Suppression de l'ordinateur {}\n".format(proper_mac)
+            )
 
-        modif = 'ordinateur: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
-                modif
-        return modif, self.adherent
+        modif = 'ordinateur: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + modif
+        return modif
 
     @validates('mac')
     def mac_valid(self, key, mac):
@@ -396,7 +332,7 @@ class Ordinateur(Base, RubyHashModificationTracker):
             yield "username", self.adherent.login
 
 
-class Portable(Base, RubyHashModificationTracker):
+class Portable(Base, RubyHashTrackable):
     __tablename__ = 'portables'
 
     id = Column(Integer, primary_key=True)
@@ -407,21 +343,19 @@ class Portable(Base, RubyHashModificationTracker):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
 
-    def get_ruby_modif(self):
+    def serialize_snapshot_diff(self, snap_before: dict, snap_after: dict) -> str:
         """
-        Override this method to add the prefix and to return the Adherent as
-        second argument
+        Override this method to add the prefix.
         """
-        modif, adh = super(Portable, self).get_ruby_modif()
-        if not self._new_data:
-            proper_mac = self.mac.upper().replace(":", "-")
+        modif = super(RubyHashTrackable, self).serialize_snapshot_diff(snap_before, snap_after)
+        if snap_after is None:
+            proper_mac = snap_before.get('mac').upper().replace(":", "-")
             return (
-                       "---\n"
-                       "portable: Suppression du portable {}\n".format(proper_mac)
-                   ), self.adherent
-        modif = 'portable: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + \
-                modif
-        return modif, self.adherent
+                "---\n"
+                "portable: Suppression du portable {}\n".format(proper_mac)
+            )
+        modif = 'portable: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + modif
+        return modif
 
     @validates('mac')
     def mac_valid(self, key, mac):
@@ -589,6 +523,7 @@ class NainA(Base):
     # Administrator who created that temporary account.
     admin = Column(Text, nullable=False)
 
+
 class AccountType(Base):
     __tablename__ = 'account_type'
 
@@ -629,7 +564,7 @@ class Transaction(Base):
     id = Column(Integer, primary_key=True)
     product = Column(ForeignKey('product.id'), nullable=False, index=True)
     value = Column(DECIMAL(8, 2), nullable=False)
-    timestamp = Column(TIMESTAMP, nullable=False) 
+    timestamp = Column(TIMESTAMP, nullable=False)
     src = Column(ForeignKey('account.id'), nullable=False, index=True)
     dst = Column(ForeignKey('account.id'), nullable=False, index=True)
     name = Column(String(255), nullable=False)

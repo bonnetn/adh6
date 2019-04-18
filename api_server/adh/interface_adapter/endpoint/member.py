@@ -66,27 +66,16 @@ def get(username):
 @auth_regular_admin
 def delete(username):
     """ [API] Delete the specified User from the database """
-    s = g.session
-
-    # Find the soon-to-be deleted user
+    ctx = build_context(
+        session=g.session,
+        admin=g.admin,
+    )
     try:
-        a = Adherent.find(s, username)
+        member_manager.delete(ctx, username)
+        return NoContent, 204
+
     except MemberNotFound:
         return NoContent, 404
-
-    try:
-        # if so, start tracking for modifications
-        a.start_modif_tracking()
-
-        # Actually delete it
-        s.delete(a)
-
-        # Write it in the modification table
-        Modification.add(s, a, g.admin)
-    except Exception:
-        raise
-    logging.info("%s deleted the member %s", g.admin.login, username)
-    return NoContent, 204
 
 
 @require_sql
