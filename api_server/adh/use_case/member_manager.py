@@ -74,7 +74,8 @@ class MemberManager:
             raise MemberNotFound()
 
         # Log action.
-        logging.info("%s fetched the member %s", ctx.get(CTX_ADMIN), username)
+        admin = ctx.get(CTX_ADMIN)
+        logging.info("%s fetched the member %s", admin.login, username)
         return result[0]
 
     def search(self, ctx, limit, offset=0, room_number=None, terms=None):
@@ -102,7 +103,8 @@ class MemberManager:
             self.member_storage.delete_member(ctx, username)
 
             # Log action.
-            logging.info("%s deleted the member %s", ctx.get(CTX_ADMIN), username)
+            admin = ctx.get(CTX_ADMIN)
+            logging.info("%s deleted the member %s", admin.login, username)
         except ValueError:
             raise MemberNotFound()
 

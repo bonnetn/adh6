@@ -684,7 +684,7 @@ def test_member_log_add_membership(api_client, caplog):
     with caplog.at_level(logging.INFO):
         test_member_post_add_membership_ok(api_client)
 
-    log = 'TestingClient created the membership record dubois_j'
+    log = 'TestingClient created a membership record for dubois_j of 360 days starting from 2000-01-23T04:56:07+00:00'
     assert logs_contains(caplog, log)
 
 
