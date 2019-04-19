@@ -1,13 +1,19 @@
+import datetime
 import json
 import logging
 from enum import Enum
 
 from attr import dataclass, asdict
 
+from CONFIGURATION import PRICES
 from adh.constants import CTX_ADMIN
 from adh.exceptions import IntMustBePositiveException, MemberNotFound, StringMustNotBeEmptyException
+from adh.interface_adapter.sql.sql_storage import NotFoundError
 from adh.use_case.interface.member_repository import MemberRepository
+from adh.use_case.interface.membership_repository import MembershipRepository
 from adh.util.checks import is_email
+from adh.util.date import string_to_date
+from adh.util.hash import ntlm_hash
 
 
 class Mutation(Enum):
@@ -28,8 +34,36 @@ class MutationRequest:
 
 class MemberManager:
     def __init__(self,
-                 member_storage: MemberRepository):
+                 member_storage: MemberRepository,
+                 membership_storage: MembershipRepository):
         self.member_storage = member_storage
+        self.membership_storage = membership_storage
+
+    def change_password(self, ctx, username, password):
+        """
+        Change the password of a member.
+        BE CAREFUL: do not log the password or store it unhashed.
+        """
+        if username is None:
+            raise ValueError('username is required')
+
+        if password is None:
+            raise ValueError('password is required')
+
+        if len(password) <= 6:  # It's a bit low but eh...
+            raise ValueError('password should be longer')
+
+        # Overwrite password variable by its hash, now that the checks are done, we don't need the cleartext anymore.
+        # Still, be careful not to log this field!
+        password = ntlm_hash(password)
+
+        try:
+            self.member_storage.update_member(ctx, username, password=password)
+        except NotFoundError:
+            raise MemberNotFound()
+
+        admin = ctx.get(CTX_ADMIN)
+        logging.info("%s updated the password of %s", admin.login, username)
 
     def get_by_username(self, ctx, username):
         if not username:
@@ -86,7 +120,7 @@ class MemberManager:
         # Log action.
         admin = ctx.get(CTX_ADMIN)
         logging.info("%s updated the member %s\n%s",
-                     admin.login, username, json.dumps(fields_to_update, sort_keys=True))
+                     admin.login, username, json.dumps(fields_to_update, sort_keys=True, default=str))
 
     def create_or_update(self, ctx, username, mutation_request: MutationRequest) -> bool:
         """
@@ -106,7 +140,6 @@ class MemberManager:
             if not _is_set(mutation_request.username):
                 raise ValueError('username is a required field')
 
-
             # Create a dict with fields to update. If field is not provided in the mutation request, consider that it
             # should be None as it is a full update of the member.
             fields_to_update = asdict(mutation_request)
@@ -116,7 +149,7 @@ class MemberManager:
 
             # Log action.
             logging.info("%s updated the member %s\n%s",
-                         admin.login, username, json.dumps(fields_to_update, sort_keys=True))
+                         admin.login, username, json.dumps(fields_to_update, sort_keys=True, default=str))
 
             return False
         else:
@@ -135,9 +168,47 @@ class MemberManager:
 
             # Log action
             logging.info("%s created the member %s\n%s",
-                         admin.login, username, json.dumps(fields, sort_keys=True))
+                         admin.login, username, json.dumps(fields, sort_keys=True, default=str))
 
             return True
+
+    def new_membership(self, ctx, username, duration, start_str=None):
+        """
+        Core use case of ADH. Registers a membership.
+        :param duration: duration of the membership in days
+        :param start_str: optional start date of the membership
+        """
+        if username is None:
+            raise ValueError('username is required')
+
+        if duration is None:
+            raise ValueError('duration is required')
+
+        if start_str is None:
+            raise ValueError('start date is required')
+
+        if duration < 0:
+            raise IntMustBePositiveException('duration')
+
+        if duration not in PRICES:
+            raise ValueError('there is no price assigned to that duration')
+
+        if start_str is None:
+            start = datetime.datetime.now().date()
+        else:
+            start = string_to_date(start_str)
+
+        end = start + datetime.timedelta(days=duration)
+
+        try:
+            self.membership_storage.add_membership(ctx, username, start, end)
+            self.member_storage.update_member(ctx, username, departure_date=end)
+        except NotFoundError:
+            raise MemberNotFound()
+
+        admin = ctx.get(CTX_ADMIN)
+        logging.info("%s created a membership record for %s of %s days starting from %s",
+                     admin.login, username, duration, start.isoformat())
 
 
 def _is_set(v):

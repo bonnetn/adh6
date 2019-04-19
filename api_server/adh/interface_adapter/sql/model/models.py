@@ -123,6 +123,12 @@ class Adherent(Base, RubyHashTrackable):
     )
     access_token = Column(String(255))
 
+    def take_snapshot(self) -> dict:
+        snap = super().take_snapshot()
+        if 'password' in snap:
+            del snap['password']  # Let's not track the password changes, this is none of our business. :)
+        return snap
+
     def serialize_snapshot_diff(self, snap_before: dict, snap_after: dict) -> str:
         """
         Override this method to add the prefix.

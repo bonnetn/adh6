@@ -13,7 +13,7 @@ from adh.use_case.member_manager import MemberManager
 Database.init_db(DATABASE)
 
 sql_storage = SQLStorage()
-member_manager = MemberManager(sql_storage)
+member_manager = MemberManager(member_storage=sql_storage, membership_storage=sql_storage)
 
 logging.basicConfig(level=logging.INFO)
 app = connexion.FlaskApp(__name__)

@@ -4,13 +4,30 @@ import sqlalchemy
 
 from adh.constants import CTX_SQL_SESSION
 from adh.exceptions import MemberNotFound
-from adh.interface_adapter.sql.model.models import Adherent, Chambre
+from adh.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion
 from adh.interface_adapter.sql.track_modifications import track_modifications
 from adh.use_case.interface.member_repository import MemberRepository
-from adh.util.date import string_to_date
+from adh.use_case.interface.membership_repository import MembershipRepository
 
 
-class SQLStorage(MemberRepository):
+class NotFoundError(ValueError):
+    pass
+
+
+class SQLStorage(MemberRepository, MembershipRepository):
+    def add_membership(self, ctx, username, start, end):
+        s = ctx.get(CTX_SQL_SESSION)
+
+        member = _get_member_by_login(s, username)
+        if member is None:
+            raise NotFoundError('cannot find any member with that username')
+
+        s.add(Adhesion(
+            adherent=member,
+            depart=start,
+            fin=end
+        ))
+
     def create_member(self, ctx,
                       last_name=None, first_name=None, email=None, username=None, comment=None,
                       room_number=None, departure_date=None, association_mode=None
@@ -33,8 +50,8 @@ class SQLStorage(MemberRepository):
             created_at=now,
             updated_at=now,
             commentaires=comment,
-            date_de_depart=string_to_date(departure_date),
-            mode_association=string_to_date(association_mode),
+            date_de_depart=departure_date,
+            mode_association=association_mode,
         )
 
         with track_modifications(ctx, s, member):
@@ -42,7 +59,7 @@ class SQLStorage(MemberRepository):
 
     def update_member(self, ctx, member_to_update,
                       last_name=None, first_name=None, email=None, username=None, comment=None,
-                      room_number=None, departure_date=None, association_mode=None,
+                      room_number=None, departure_date=None, association_mode=None, password=None
                       ) -> None:
         s = ctx.get(CTX_SQL_SESSION)
 
@@ -58,15 +75,17 @@ class SQLStorage(MemberRepository):
             member.login = username or member.login
 
             if departure_date is not None:
-                member.date_de_depart = string_to_date(departure_date)
+                member.date_de_depart = departure_date
 
             if association_mode is not None:
-                member.mode_association = string_to_date(association_mode)
+                member.mode_association = association_mode
 
             if room_number is not None:
                 member.chambre = Chambre.find(s, room_number)
 
             member.updated_at = datetime.now()
+
+        member.password = password or member.password  # Will not be tracked.
 
     def delete_member(self, ctx, username=None) -> None:
         s = ctx.get(CTX_SQL_SESSION)
@@ -79,9 +98,6 @@ class SQLStorage(MemberRepository):
         with track_modifications(ctx, s, member):
             # Actually delete it
             s.delete(member)
-
-        # Write it in the modification table
-        # Modification.add(s, member, ctx.get(CTX_ADMIN).admin)
 
     def search_member_by(self, ctx, limit=None, offset=None, room_number=None, terms=None, username=None) -> (
             list, int):

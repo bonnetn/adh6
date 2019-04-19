@@ -1,6 +1,3 @@
-import datetime
-import hashlib
-import json
 import logging
 import string
 
@@ -9,15 +6,15 @@ from elasticsearch5 import Elasticsearch
 from flask import current_app, g
 
 from CONFIGURATION import ELK_HOSTS
-from CONFIGURATION import PRICES
 from adh.exceptions import MemberNotFound
 from adh.interface_adapter.endpoint.auth import auth_regular_admin
 from adh.interface_adapter.endpoint.decorator.session_decorator import require_sql
 from adh.interface_adapter.endpoint.device_utils import get_all_devices
-from adh.interface_adapter.sql.model.models import Adherent, Adhesion, Modification
+from adh.interface_adapter.sql.model.models import Adherent, Modification
 from adh.use_case.member_manager import MutationRequest, Mutation
 from adh.util.context import build_context
 from adh.util.date import string_to_date
+from adh.util.hash import ntlm_hash
 from main import member_manager
 
 
@@ -119,72 +116,40 @@ def put(username, body):
         return f"Invalid parameter: {e}", 400  # 400 Bad Request
 
 
-
 @require_sql
 @auth_regular_admin
 def post_membership(username, body):
-    """ [API] Add a membership record in the database """
-    s = g.session
-
-    start = datetime.datetime.now().date()
-    if "start" in body:
-        start = string_to_date(body["start"])
-
-    duration = body["duration"]
-    end = start + datetime.timedelta(days=duration)
-
-    if duration not in PRICES:
-        return "There is no price assigned to that duration", 400
-
+    """ Add a membership record in the database """
+    ctx = build_context(
+        session=g.session,
+        admin=g.admin,
+    )
     try:
-        adh = Adherent.find(s, username)
-        s.add(Adhesion(
-            adherent=adh,
-            depart=start,
-            fin=end
-        ))
-        adh.start_modif_tracking()
-        adh.date_de_depart = end
-
+        member_manager.new_membership(ctx, username, body.get('duration'), start_str=body.get('start'))
     except MemberNotFound:
-        return NoContent, 404
+        return NoContent, 404  # 404 Not Found
+    except ValueError as e:
+        return f'Wrong argument: {e}.', 400  # 400 Bad Request
 
-    Modification.add(s, adh, g.admin)
-    logging.info("%s created the membership record %s\n%s",
-                 g.admin.login, username, json.dumps(body, sort_keys=True))
-    return NoContent, 200, {'Location': 'test'}  # TODO: finish that!
-
-
-def ntlm_hash(txt):
-    """
-    NTLM hashing function
-    wow much security such hashing function
-    Needed by MSCHAPv2.
-    """
-
-    return hashlib.new('md4', txt.encode('utf-16le')).hexdigest()
+    return NoContent, 200  # 200 OK
 
 
 @require_sql
 @auth_regular_admin
 def put_password(username, body):
-    password = body["password"]
-    s = g.session
+    ctx = build_context(
+        session=g.session,
+        admin=g.admin,
+    )
 
     try:
-        a = Adherent.find(s, username)
+        member_manager.change_password(ctx, username, body.get('password'))
     except MemberNotFound:
-        return NoContent, 404
+        return NoContent, 404  # 404 Not Found
+    except ValueError as e:
+        return f"Wrong argument: {e}", 400  # 400 Bad Request
 
-    a.start_modif_tracking()
-    a.password = ntlm_hash(password)
-
-    # Build the corresponding modification
-    Modification.add(s, a, g.admin)
-
-    logging.info("%s updated the password of %s",
-                 g.admin.login, username)
-    return NoContent, 204
+    return NoContent, 204  # 204 No Content
 
 
 def _get_mac_variations(addr):
@@ -231,7 +196,7 @@ def get_logs(username):
                 "minimum_should_match": 1,
             },
         },
-        "_source": ["@timestamp", "message"],  # discard any other field than timestamp & message
+        "_source": ["@   timestamp", "message"],  # discard any other field than timestamp & message
         "size": 100,  # TODO(insolentbacon): make a parameter in the request to change this value
     }
 
@@ -264,14 +229,24 @@ def get_logs(username):
     )), 200
 
 
+def _string_to_date_or_unset(d):
+    if d is None:
+        return Mutation.NOT_SET
+
+    if isinstance(d, str):
+        return string_to_date(d)
+
+    return d
+
+
 def _build_mutation_request_from_body(body) -> MutationRequest:
     return MutationRequest(
         email=body.get('email', Mutation.NOT_SET),
         first_name=body.get('firstName', Mutation.NOT_SET),
         last_name=body.get('lastName', Mutation.NOT_SET),
         username=body.get('username', Mutation.NOT_SET),
-        departure_date=body.get('departureDate', Mutation.NOT_SET),
+        departure_date=_string_to_date_or_unset(body.get('departureDate')),
         comment=body.get('comment', Mutation.NOT_SET),
-        association_mode=body.get('associationMode', Mutation.NOT_SET),
+        association_mode=_string_to_date_or_unset(body.get('associationMode')),
         room_number=body.get('roomNumber', Mutation.NOT_SET),
     )

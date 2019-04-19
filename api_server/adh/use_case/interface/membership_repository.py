@@ -1,7 +1,7 @@
 import abc
 
-from adh.interface_adapter.sql.model.models import Chambre
 
-
-class RoomRepository(metaclass=abc.ABCMeta):
-    pass
+class MembershipRepository(metaclass=abc.ABCMeta):
+    @abc.abstractmethod
+    def add_membership(self, ctx, username, start, end):
+        pass
