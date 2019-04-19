@@ -9,7 +9,7 @@ class LogFetchError(RuntimeError):
     """
     Cannot fetch the logs error.
     """
-    pass
+    pass  # pragma: no cover
 
 
 class LogsRepository(metaclass=abc.ABCMeta):
@@ -21,4 +21,4 @@ class LogsRepository(metaclass=abc.ABCMeta):
         """
         Get all the logs concerning the provided username and MAC addresses.
         """
-        pass
+        pass  # pragma: no cover

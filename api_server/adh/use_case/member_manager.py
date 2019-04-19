@@ -64,15 +64,6 @@ class MemberManager:
         :param duration: duration of the membership in days
         :param start_str: optional start date of the membership
         """
-        if username is None:
-            raise ValueError('username is required')
-
-        if duration is None:
-            raise ValueError('duration is required')
-
-        if start_str is None:
-            raise ValueError('start date is required')
-
         if duration < 0:
             raise IntMustBePositiveException('duration')
 
@@ -214,11 +205,6 @@ class MemberManager:
 
         BE CAREFUL: do not log the password or store it unhashed.
         """
-        if username is None:
-            raise ValueError('username is required')
-
-        if password is None:
-            raise ValueError('password is required')
 
         if len(password) <= 6:  # It's a bit low but eh...
             raise ValueError('password should be longer')
@@ -256,6 +242,13 @@ class MemberManager:
         User story: As an admin, I can retrieve the logs of a member, so I can help him troubleshoot their connection
         issues.
         """
+        # Fetch all the devices of the member to put them in the request
+        # all_devices = get_all_devices(s)
+        # q = s.query(all_devices, Adherent.login.label("login"))
+        # q = q.join(Adherent, Adherent.id == all_devices.columns.adherent_id)
+        # q = q.filter(Adherent.login == username)
+        # mac_tbl = list(map(lambda x: x.mac, q.all()))
+
         if not username:
             raise ValueError('username not provided')
 
@@ -276,13 +269,6 @@ class MemberManager:
         except LogFetchError:
             logging.warning("Log fetching failed, returning empty response.")
             return []  # We fail open here.
-
-        # Fetch all the devices of the member to put them in the request
-        # all_devices = get_all_devices(s)
-        # q = s.query(all_devices, Adherent.login.label("login"))
-        # q = q.join(Adherent, Adherent.id == all_devices.columns.adherent_id)
-        # q = q.filter(Adherent.login == username)
-        # mac_tbl = list(map(lambda x: x.mac, q.all()))
 
 
 def _is_set(v):

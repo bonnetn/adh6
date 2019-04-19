@@ -16,31 +16,32 @@ class MemberRepository(metaclass=abc.ABCMeta):
     """
     Abstract interface to manipulate the members.
     """
+
     @abc.abstractmethod
     def search_member_by(self, ctx, limit=None, offset=None, room_number=None, terms=None, username=None) -> (
             list, int):
         """
         Search members.
         """
-        pass
+        pass  # pragma: no cover
 
     @abc.abstractmethod
     def create_member(self, ctx, **fields) -> None:
         """
         Create a member.
         """
-        pass
+        pass  # pragma: no cover
 
     @abc.abstractmethod
     def update_member(self, ctx, member_to_update, **fields_to_update) -> None:
         """
         Update a member.
         """
-        pass
+        pass  # pragma: no cover
 
     @abc.abstractmethod
     def delete_member(self, ctx, username=None) -> None:
         """
         Delete a member.
         """
-        pass
+        pass  # pragma: no cover
