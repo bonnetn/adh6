@@ -6,6 +6,7 @@ from connexion.resolver import RestyResolver
 
 from CONFIGURATION import API_CONF
 from CONFIGURATION import PROD_DATABASE as DATABASE
+from adh.interface_adapter.elasticsearch.storage import ElasticSearchStorage
 from adh.interface_adapter.sql.model.database import Database
 from adh.interface_adapter.sql.sql_storage import SQLStorage
 from adh.use_case.member_manager import MemberManager
@@ -13,7 +14,12 @@ from adh.use_case.member_manager import MemberManager
 Database.init_db(DATABASE)
 
 sql_storage = SQLStorage()
-member_manager = MemberManager(member_storage=sql_storage, membership_storage=sql_storage)
+elk_storage = ElasticSearchStorage()
+member_manager = MemberManager(
+    member_storage=sql_storage,
+    membership_storage=sql_storage,
+    logs_storage=elk_storage
+)
 
 logging.basicConfig(level=logging.INFO)
 app = connexion.FlaskApp(__name__)

@@ -10,11 +10,10 @@ from adh.exceptions import MemberNotFound
 from adh.interface_adapter.endpoint.auth import auth_regular_admin
 from adh.interface_adapter.endpoint.decorator.session_decorator import require_sql
 from adh.interface_adapter.endpoint.device_utils import get_all_devices
-from adh.interface_adapter.sql.model.models import Adherent, Modification
+from adh.interface_adapter.sql.model.models import Adherent
 from adh.use_case.member_manager import MutationRequest, Mutation
 from adh.util.context import build_context
 from adh.util.date import string_to_date
-from adh.util.hash import ntlm_hash
 from main import member_manager
 
 

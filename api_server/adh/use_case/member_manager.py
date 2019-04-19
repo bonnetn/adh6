@@ -8,8 +8,8 @@ from attr import dataclass, asdict
 from CONFIGURATION import PRICES
 from adh.constants import CTX_ADMIN
 from adh.exceptions import IntMustBePositiveException, MemberNotFound, StringMustNotBeEmptyException
-from adh.interface_adapter.sql.sql_storage import NotFoundError
-from adh.use_case.interface.member_repository import MemberRepository
+from adh.use_case.interface.logs_repository import LogsRepository, LogFetchError
+from adh.use_case.interface.member_repository import MemberRepository, NotFoundError
 from adh.use_case.interface.membership_repository import MembershipRepository
 from adh.util.checks import is_email
 from adh.util.date import string_to_date
@@ -35,37 +35,56 @@ class MutationRequest:
 class MemberManager:
     def __init__(self,
                  member_storage: MemberRepository,
-                 membership_storage: MembershipRepository):
+                 membership_storage: MembershipRepository,
+                 logs_storage: LogsRepository):
         self.member_storage = member_storage
         self.membership_storage = membership_storage
+        self.logs_storage = logs_storage
 
-    def change_password(self, ctx, username, password):
+    def new_membership(self, ctx, username, duration, start_str=None):
         """
-        Change the password of a member.
-        BE CAREFUL: do not log the password or store it unhashed.
+        Core use case of ADH. Registers a membership.
+
+        User story: As an admin, I can create a new membership record, so that a member can have internet access.
+        :param duration: duration of the membership in days
+        :param start_str: optional start date of the membership
         """
         if username is None:
             raise ValueError('username is required')
 
-        if password is None:
-            raise ValueError('password is required')
+        if duration is None:
+            raise ValueError('duration is required')
 
-        if len(password) <= 6:  # It's a bit low but eh...
-            raise ValueError('password should be longer')
+        if start_str is None:
+            raise ValueError('start date is required')
 
-        # Overwrite password variable by its hash, now that the checks are done, we don't need the cleartext anymore.
-        # Still, be careful not to log this field!
-        password = ntlm_hash(password)
+        if duration < 0:
+            raise IntMustBePositiveException('duration')
+
+        if duration not in PRICES:
+            raise ValueError('there is no price assigned to that duration')
+
+        if start_str is None:
+            start = datetime.datetime.now().date()
+        else:
+            start = string_to_date(start_str)
+
+        end = start + datetime.timedelta(days=duration)
 
         try:
-            self.member_storage.update_member(ctx, username, password=password)
+            self.membership_storage.add_membership(ctx, username, start, end)
+            self.member_storage.update_member(ctx, username, departure_date=end)
         except NotFoundError:
             raise MemberNotFound()
 
         admin = ctx.get(CTX_ADMIN)
-        logging.info("%s updated the password of %s", admin.login, username)
+        logging.info("%s created a membership record for %s of %s days starting from %s",
+                     admin.login, username, duration, start.isoformat())
 
     def get_by_username(self, ctx, username):
+        """
+        User story: As an admin, I can see the profile of a member, so that I can help her/him.
+        """
         if not username:
             raise ValueError('username not provided')
 
@@ -95,38 +114,10 @@ class MemberManager:
         logging.info("%s fetched the member list", ctx.get(CTX_ADMIN))
         return result, count
 
-    def delete(self, ctx, username):
-        if not username:
-            raise ValueError('username not provided')
-
-        try:
-            self.member_storage.delete_member(ctx, username)
-
-            # Log action.
-            admin = ctx.get(CTX_ADMIN)
-            logging.info("%s deleted the member %s", admin.login, username)
-        except ValueError:
-            raise MemberNotFound()
-
-    def update_partially(self, ctx, username, mutation_request: MutationRequest):
-        # Perform all the checks on the validity of the data in the mutation request.
-        _validate_mutation_request(mutation_request)
-
-        # Create a dict with all the changed field. If a field in 'NOT_SET' it will not be put in the dict, and the
-        # field will not be updated.
-        fields_to_update = asdict(mutation_request)
-        fields_to_update = {k: v for k, v in fields_to_update.items() if _is_set(v)}
-
-        self.member_storage.update_member(ctx, username, **fields_to_update)
-
-        # Log action.
-        admin = ctx.get(CTX_ADMIN)
-        logging.info("%s updated the member %s\n%s",
-                     admin.login, username, json.dumps(fields_to_update, sort_keys=True, default=str))
-
     def create_or_update(self, ctx, username, mutation_request: MutationRequest) -> bool:
         """
         Create/Update member from the database.
+        User story: As an admin, I can register a new profile, so that I can add a membership with their profile.
         :return: True if the member was created, false otherwise.
         """
         admin = ctx.get(CTX_ADMIN)
@@ -174,43 +165,101 @@ class MemberManager:
 
             return True
 
-    def new_membership(self, ctx, username, duration, start_str=None):
+    def update_partially(self, ctx, username, mutation_request: MutationRequest):
         """
-        Core use case of ADH. Registers a membership.
-        :param duration: duration of the membership in days
-        :param start_str: optional start date of the membership
+        User story: As an admin, I can modify some of the fields of a profile, so that I can update the information of
+        a member.
+        """
+        # Perform all the checks on the validity of the data in the mutation request.
+        _validate_mutation_request(mutation_request)
+
+        # Create a dict with all the changed field. If a field in 'NOT_SET' it will not be put in the dict, and the
+        # field will not be updated.
+        fields_to_update = asdict(mutation_request)
+        fields_to_update = {k: v for k, v in fields_to_update.items() if _is_set(v)}
+
+        self.member_storage.update_member(ctx, username, **fields_to_update)
+
+        # Log action.
+        admin = ctx.get(CTX_ADMIN)
+        logging.info("%s updated the member %s\n%s",
+                     admin.login, username, json.dumps(fields_to_update, sort_keys=True, default=str))
+
+    def change_password(self, ctx, username, password):
+        """
+        User story: As an admin, I can set the password of a user, so that they can connect using their credentials.
+        Change the password of a member.
+        BE CAREFUL: do not log the password or store it unhashed.
         """
         if username is None:
             raise ValueError('username is required')
 
-        if duration is None:
-            raise ValueError('duration is required')
+        if password is None:
+            raise ValueError('password is required')
 
-        if start_str is None:
-            raise ValueError('start date is required')
+        if len(password) <= 6:  # It's a bit low but eh...
+            raise ValueError('password should be longer')
 
-        if duration < 0:
-            raise IntMustBePositiveException('duration')
-
-        if duration not in PRICES:
-            raise ValueError('there is no price assigned to that duration')
-
-        if start_str is None:
-            start = datetime.datetime.now().date()
-        else:
-            start = string_to_date(start_str)
-
-        end = start + datetime.timedelta(days=duration)
+        # Overwrite password variable by its hash, now that the checks are done, we don't need the cleartext anymore.
+        # Still, be careful not to log this field!
+        password = ntlm_hash(password)
 
         try:
-            self.membership_storage.add_membership(ctx, username, start, end)
-            self.member_storage.update_member(ctx, username, departure_date=end)
+            self.member_storage.update_member(ctx, username, password=password)
         except NotFoundError:
             raise MemberNotFound()
 
         admin = ctx.get(CTX_ADMIN)
-        logging.info("%s created a membership record for %s of %s days starting from %s",
-                     admin.login, username, duration, start.isoformat())
+        logging.info("%s updated the password of %s", admin.login, username)
+
+    def delete(self, ctx, username):
+        """
+        User story: As an admin, I can remove a profile, so that their information is not in our system.
+        """
+        if not username:
+            raise ValueError('username not provided')
+
+        try:
+            self.member_storage.delete_member(ctx, username)
+
+            # Log action.
+            admin = ctx.get(CTX_ADMIN)
+            logging.info("%s deleted the member %s", admin.login, username)
+        except ValueError:
+            raise MemberNotFound()
+
+    def get_logs(self, ctx, username):
+        """
+        User story: As an admin, I can retrieve the logs of a member, so I can help him troubleshoot their connection
+        issues.
+        """
+        if not username:
+            raise ValueError('username not provided')
+
+        # Check that the user exists in the system.
+        result, _ = self.member_storage.search_member_by(ctx, username=username)
+        if not result:
+            raise MemberNotFound()
+
+        # Do the actual log fetching.
+        try:
+            logs = self.logs_storage.get_logs(ctx, username, [])
+
+            admin = ctx.get(CTX_ADMIN)
+            logging.info("%s fetched the logs of %s", admin.login, username)
+
+            return logs, 200
+
+        except LogFetchError:
+            logging.warn("Log fetching failed, returning empty response.")
+            return [], 200  # We fail open here.
+
+        # Fetch all the devices of the member to put them in the request
+        # all_devices = get_all_devices(s)
+        # q = s.query(all_devices, Adherent.login.label("login"))
+        # q = q.join(Adherent, Adherent.id == all_devices.columns.adherent_id)
+        # q = q.filter(Adherent.login == username)
+        # mac_tbl = list(map(lambda x: x.mac, q.all()))
 
 
 def _is_set(v):

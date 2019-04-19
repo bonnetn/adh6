@@ -6,9 +6,9 @@ import pytest
 from dateutil import parser
 
 from CONFIGURATION import TEST_DATABASE as db_settings, PRICES
-from adh.interface_adapter.endpoint.member import ntlm_hash
 from adh.interface_adapter.sql.model.database import Database as db
 from adh.interface_adapter.sql.model.models import Adherent
+from adh.util.hash import ntlm_hash
 from test.resource import (
     base_url, TEST_HEADERS, assert_modification_was_created,
     logs_contains)

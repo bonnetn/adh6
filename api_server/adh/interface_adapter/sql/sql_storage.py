@@ -6,12 +6,8 @@ from adh.constants import CTX_SQL_SESSION
 from adh.exceptions import MemberNotFound
 from adh.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion
 from adh.interface_adapter.sql.track_modifications import track_modifications
-from adh.use_case.interface.member_repository import MemberRepository
+from adh.use_case.interface.member_repository import MemberRepository, NotFoundError
 from adh.use_case.interface.membership_repository import MembershipRepository
-
-
-class NotFoundError(ValueError):
-    pass
 
 
 class SQLStorage(MemberRepository, MembershipRepository):
