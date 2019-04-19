@@ -1,3 +1,7 @@
+# coding=utf-8
+"""
+Logs repository.
+"""
 from elasticsearch import Elasticsearch
 
 from CONFIGURATION import ELK_HOSTS
@@ -7,7 +11,18 @@ from adh.util.mac import get_mac_variations
 
 
 class ElasticSearchStorage(LogsRepository):
+    """
+    Interface to the log repository.
+    """
     def get_logs(self, ctx, username=None, devices=None, limit=100):
+        """
+        Get the logs related to the username and to the devices.
+        :param ctx:  context
+        :param username:  username
+        :param devices:  MAC addresses of the devices
+        :param limit: limit result
+        :return: logs
+        """
         if not ELK_HOSTS:
             raise LogFetchError('no elk host configured')
 

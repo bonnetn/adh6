@@ -1,5 +1,8 @@
+# coding=utf-8
+"""
+Auth decorators.
+"""
 import logging
-from functools import wraps
 
 from connexion import NoContent
 
@@ -10,10 +13,16 @@ from adh.util.context import build_context
 
 
 def auth_regular_admin(f):
+    """
+    Authenticate a regular admin.
+    """
     # @wraps(f) # Cannot wrap this function, because connexion needs to know we have the user and token_info...
     def wrapper(ctx, *args, user, token_info, **kwargs):
+        """
+        Wrap endpoint function.
+        """
         if not ctx.get(CTX_TESTING) and (user is None or token_info is None):
-            logging.warn('Could not extract user and token_info kwargs.')
+            logging.warning('Could not extract user and token_info kwargs.')
             return NoContent, 401
 
         if not ctx.get(CTX_TESTING) and ADH6_USER not in token_info["groups"]:
@@ -29,8 +38,13 @@ def auth_regular_admin(f):
 
 
 def auth_super_admin(f):
+    """
+    Authenticate a super admin.
+    """
     def wrapper(ctx, *args, user, token_info, **kwargs):
-        print('auth', kwds)
+        """
+        Wrap endpoint function.
+        """
         if not ctx.get(CTX_TESTING) and ADH6_ADMIN not in token_info["groups"]:
             # User is not in the right group and we are not testing, do not allow.
             return NoContent, 401

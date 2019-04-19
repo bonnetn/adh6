@@ -1,6 +1,10 @@
+# coding=utf-8
+"""
+Implements everything related to actions on the SQL database.
+"""
 from datetime import datetime
 
-import sqlalchemy
+from sqlalchemy.orm.exc import NoResultFound
 
 from adh.constants import CTX_SQL_SESSION
 from adh.exceptions import MemberNotFound
@@ -11,7 +15,14 @@ from adh.use_case.interface.membership_repository import MembershipRepository
 
 
 class SQLStorage(MemberRepository, MembershipRepository):
+    """
+    Represent the interface to the SQL database.
+    """
+
     def add_membership(self, ctx, username, start, end):
+        """
+        Add a membership record.
+        """
         s = ctx.get(CTX_SQL_SESSION)
 
         member = _get_member_by_login(s, username)
@@ -28,6 +39,9 @@ class SQLStorage(MemberRepository, MembershipRepository):
                       last_name=None, first_name=None, email=None, username=None, comment=None,
                       room_number=None, departure_date=None, association_mode=None
                       ) -> None:
+        """
+        Create a member.
+        """
         s = ctx.get(CTX_SQL_SESSION)
         now = datetime.now()
 
@@ -57,6 +71,9 @@ class SQLStorage(MemberRepository, MembershipRepository):
                       last_name=None, first_name=None, email=None, username=None, comment=None,
                       room_number=None, departure_date=None, association_mode=None, password=None
                       ) -> None:
+        """
+        Update a member.
+        """
         s = ctx.get(CTX_SQL_SESSION)
 
         member = _get_member_by_login(s, member_to_update)
@@ -84,6 +101,9 @@ class SQLStorage(MemberRepository, MembershipRepository):
         member.password = password or member.password  # Will not be tracked.
 
     def delete_member(self, ctx, username=None) -> None:
+        """
+        Delete a member.
+        """
         s = ctx.get(CTX_SQL_SESSION)
 
         # Find the soon-to-be deleted user
@@ -97,6 +117,9 @@ class SQLStorage(MemberRepository, MembershipRepository):
 
     def search_member_by(self, ctx, limit=None, offset=None, room_number=None, terms=None, username=None) -> (
             list, int):
+        """
+        Search a member.
+        """
         s = ctx.get(CTX_SQL_SESSION)
         q = s.query(Adherent)
 
@@ -108,7 +131,7 @@ class SQLStorage(MemberRepository, MembershipRepository):
                 q2 = s.query(Chambre)
                 q2 = q2.filter(Chambre.numero == room_number)
                 result = q2.one()
-            except sqlalchemy.orm.exc.NoResultFound:
+            except NoResultFound:
                 return [], 0
 
             q = q.filter(Adherent.chambre == result)

@@ -1,9 +1,12 @@
+# coding=utf-8
+"""
+Use cases (business rule layer) of everything related to members.
+"""
 import datetime
 import json
 import logging
+from dataclasses import dataclass, asdict
 from enum import Enum
-
-from attr import dataclass, asdict
 
 from CONFIGURATION import PRICES
 from adh.constants import CTX_ADMIN
@@ -17,11 +20,17 @@ from adh.util.hash import ntlm_hash
 
 
 class Mutation(Enum):
+    """
+    Mutation state.
+    """
     NOT_SET = 1
 
 
 @dataclass
 class MutationRequest:
+    """
+    Mutation request for a member. This represents the 'diff', that is going to be applied on the member object.
+    """
     email: str = Mutation.NOT_SET
     first_name: str = Mutation.NOT_SET
     last_name: str = Mutation.NOT_SET
@@ -33,6 +42,10 @@ class MutationRequest:
 
 
 class MemberManager:
+    """
+    Implements all the use cases related to member management.
+    """
+
     def __init__(self,
                  member_storage: MemberRepository,
                  membership_storage: MembershipRepository,
@@ -46,6 +59,8 @@ class MemberManager:
         Core use case of ADH. Registers a membership.
 
         User story: As an admin, I can create a new membership record, so that a member can have internet access.
+        :param ctx: context
+        :param username: username
         :param duration: duration of the membership in days
         :param start_str: optional start date of the membership
         """
@@ -98,6 +113,12 @@ class MemberManager:
         return result[0]
 
     def search(self, ctx, limit, offset=0, room_number=None, terms=None):
+        """
+        Search member in the database.
+
+        User story: As an admin, I want to have a list of members with some filters, so that I can browse and find
+        members.
+        """
         if limit < 0:
             raise IntMustBePositiveException('limit')
 
@@ -117,6 +138,7 @@ class MemberManager:
     def create_or_update(self, ctx, username, mutation_request: MutationRequest) -> bool:
         """
         Create/Update member from the database.
+
         User story: As an admin, I can register a new profile, so that I can add a membership with their profile.
         :return: True if the member was created, false otherwise.
         """
@@ -156,7 +178,6 @@ class MemberManager:
             mutation_request.username = username  # Just in case it has not been specified in the body.
             fields = asdict(mutation_request)
             fields = {k: v if _is_set(v) else None for k, v in fields.items()}
-            object
 
             self.member_storage.create_member(ctx, **fields)
 
@@ -190,6 +211,7 @@ class MemberManager:
         """
         User story: As an admin, I can set the password of a user, so that they can connect using their credentials.
         Change the password of a member.
+
         BE CAREFUL: do not log the password or store it unhashed.
         """
         if username is None:
@@ -252,7 +274,7 @@ class MemberManager:
             return logs
 
         except LogFetchError:
-            logging.warn("Log fetching failed, returning empty response.")
+            logging.warning("Log fetching failed, returning empty response.")
             return []  # We fail open here.
 
         # Fetch all the devices of the member to put them in the request

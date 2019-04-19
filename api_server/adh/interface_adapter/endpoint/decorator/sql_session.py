@@ -1,3 +1,7 @@
+# coding=utf-8
+"""
+SQL session decorator.
+"""
 import logging
 from functools import wraps
 
@@ -15,6 +19,9 @@ def require_sql(f):
 
     @wraps(f)
     def wrapper(ctx, *args, **kwds):
+        """
+        Wrap endpoint function.
+        """
         if ctx.get(CTX_SQL_SESSION):
             return f(ctx, *args, **kwds)
 
@@ -37,7 +44,7 @@ def require_sql(f):
             return result
 
         except Exception:
-            logging.warn("Exception caught, rollbacking.")
+            logging.warning("Exception caught, rollbacking.")
             s.rollback()
             raise
 

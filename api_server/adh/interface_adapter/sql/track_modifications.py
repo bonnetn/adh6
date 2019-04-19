@@ -1,3 +1,7 @@
+# coding=utf-8
+"""
+Track modification on SQLAlchemy objects.
+"""
 from contextlib import contextmanager
 from datetime import datetime
 
@@ -8,6 +12,11 @@ from adh.interface_adapter.sql.model.trackable import RubyHashTrackable
 
 @contextmanager
 def track_modifications(ctx, session, obj: RubyHashTrackable):
+    """
+    Track the modifications of the specified entry and create a new entry in the modification table containing the diff.
+
+    Object must inherit from RubyHashTrackable.
+    """
     snap_before = obj.take_snapshot()  # Save the state of the object before actually modifying it.
     try:
         yield
