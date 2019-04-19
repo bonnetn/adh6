@@ -5,10 +5,10 @@ from connexion import NoContent
 from flask import g
 from sqlalchemy import or_
 
-from adh.interface_adapter.endpoint.auth import auth_regular_admin, auth_super_admin
 from adh.exceptions import RoomNotFound, VlanNotFound
+from adh.interface_adapter.endpoint.decorator.auth import auth_regular_admin, auth_super_admin
 from adh.interface_adapter.sql.model.models import Chambre
-from adh.interface_adapter.endpoint.decorator.session_decorator import require_sql
+from adh.interface_adapter.endpoint.decorator.sql_session import require_sql
 
 
 def room_exists(session, roomNumber):

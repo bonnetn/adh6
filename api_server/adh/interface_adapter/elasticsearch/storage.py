@@ -1,6 +1,7 @@
 from elasticsearch import Elasticsearch
 
 from CONFIGURATION import ELK_HOSTS
+from adh.constants import CTX_TESTING
 from adh.use_case.interface.logs_repository import LogsRepository, LogFetchError
 from adh.util.mac import get_mac_variations
 
@@ -10,7 +11,7 @@ class ElasticSearchStorage(LogsRepository):
         if not ELK_HOSTS:
             raise LogFetchError('no elk host configured')
 
-        if ctx.get("TESTING"):  # Do not actually query elasticsearch if testing...
+        if ctx.get(CTX_TESTING):  # Do not actually query elasticsearch if testing...
             return ["test_log"]
 
         # Prepare the elasticsearch query...

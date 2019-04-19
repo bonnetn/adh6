@@ -249,11 +249,11 @@ class MemberManager:
             admin = ctx.get(CTX_ADMIN)
             logging.info("%s fetched the logs of %s", admin.login, username)
 
-            return logs, 200
+            return logs
 
         except LogFetchError:
             logging.warn("Log fetching failed, returning empty response.")
-            return [], 200  # We fail open here.
+            return []  # We fail open here.
 
         # Fetch all the devices of the member to put them in the request
         # all_devices = get_all_devices(s)

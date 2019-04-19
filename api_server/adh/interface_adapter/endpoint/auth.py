@@ -2,12 +2,11 @@ import datetime
 
 import requests
 import requests.exceptions
-from connexion import NoContent
-from flask import current_app, g
+from flask import current_app
 from sqlalchemy.orm.exc import NoResultFound
 
 from adh.interface_adapter.sql.model.database import Database as Db
-from adh.interface_adapter.sql.model.models import Utilisateur, NainA
+from adh.interface_adapter.sql.model.models import NainA
 from adh.util.env import isDevelopmentEnvironment
 
 ADH6_USER = "adh6_user"
@@ -25,28 +24,6 @@ def token_info(access_token) -> dict:
             "groups": []
         }
     return authenticate_against_sso(access_token)
-
-
-def auth_regular_admin(f):
-    def wrapper(*args, user, token_info, **kwargs):
-        if current_app.config["TESTING"] \
-                or ADH6_USER in token_info["groups"]:
-            g.admin = Utilisateur.find_or_create(g.session, user)
-            return f(*args, **kwargs)
-        return NoContent, 401
-
-    return wrapper
-
-
-def auth_super_admin(f):
-    def wrapper(*args, user, token_info, **kwargs):
-        if current_app.config["TESTING"] \
-                or ADH6_ADMIN in token_info["groups"]:
-            g.admin = Utilisateur.find_or_create(g.session, user)
-            return f(*args, **kwargs)
-        return NoContent, 401
-
-    return wrapper
 
 
 def authenticate_temp_account(access_token):

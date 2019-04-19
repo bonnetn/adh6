@@ -425,7 +425,6 @@ def test_member_patch_departuredate(api_client):
         "username": "dubois_j"
     })
 
-
 def test_member_patch_comment(api_client):
     body = {
         "comment": "TEST",
