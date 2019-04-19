@@ -156,6 +156,7 @@ class MemberManager:
             mutation_request.username = username  # Just in case it has not been specified in the body.
             fields = asdict(mutation_request)
             fields = {k: v if _is_set(v) else None for k, v in fields.items()}
+            object
 
             self.member_storage.create_member(ctx, **fields)
 
