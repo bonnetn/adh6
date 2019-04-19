@@ -7,7 +7,11 @@ class MemberRepository(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def update_partially_member(self, ctx, member_to_update, **fields_to_update) -> None:
+    def create_member(self, ctx, **fields) -> None:
+        pass
+
+    @abc.abstractmethod
+    def update_member(self, ctx, member_to_update, **fields_to_update) -> None:
         pass
 
     @abc.abstractmethod

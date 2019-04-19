@@ -34,5 +34,9 @@ class RoomNotFound(ValueError):
     pass
 
 
-def MustBePositiveException(name):
+def IntMustBePositiveException(name):
     return ValueError(f'{name} must be positive')
+
+
+def StringMustNotBeEmptyException(name):
+    return ValueError(f'{name} must not be empty')

@@ -10,12 +10,12 @@ from flask import current_app, g
 
 from CONFIGURATION import ELK_HOSTS
 from CONFIGURATION import PRICES
-from adh.exceptions import InvalidEmail, RoomNotFound, MemberNotFound
+from adh.exceptions import MemberNotFound
 from adh.interface_adapter.endpoint.auth import auth_regular_admin
 from adh.interface_adapter.endpoint.decorator.session_decorator import require_sql
 from adh.interface_adapter.endpoint.device_utils import get_all_devices
 from adh.interface_adapter.sql.model.models import Adherent, Adhesion, Modification
-from adh.use_case.member_manager import MutationRequest
+from adh.use_case.member_manager import MutationRequest, Mutation
 from adh.util.context import build_context
 from adh.util.date import string_to_date
 from main import member_manager
@@ -44,9 +44,9 @@ def search(limit=100, offset=0, terms=None, roomNumber=None):
             "X-Total-Count": str(total_count),
             'access-control-expose-headers': 'X-Total-Count'
         }
-        return result, 200, headers
+        return result, 200, headers  # 200 OK
     except ValueError as e:
-        return f'Wrong argument: {e}.', 400
+        return f'Wrong argument: {e}.', 400  # 400 Bad Request
 
 
 @require_sql
@@ -60,7 +60,7 @@ def get(username):
     try:
         return member_manager.get_by_username(ctx, username), 200
     except MemberNotFound:
-        return NoContent, 404
+        return NoContent, 404  # 404 Not Found
 
 
 @require_sql
@@ -73,10 +73,10 @@ def delete(username):
     )
     try:
         member_manager.delete(ctx, username)
-        return NoContent, 204
+        return NoContent, 204  # 204 No Content
 
     except MemberNotFound:
-        return NoContent, 404
+        return NoContent, 404  # 404 Not Found
 
 
 @require_sql
@@ -88,62 +88,36 @@ def patch(username, body):
         admin=g.admin,
     )
     try:
-
-        mutation_request = MutationRequest(
-            email=body.get('email'),
-            first_name=body.get('firstName'),
-            last_name=body.get('lastName'),
-            username=body.get('username'),
-            departure_date=body.get('departureDate'),
-            comment=body.get('comment'),
-            association_mode=body.get('associationMode'),
-            room_number=body.get('roomNumber'),
-        )
+        mutation_request = _build_mutation_request_from_body(body)
         member_manager.update_partially(ctx, username, mutation_request)
-        return NoContent, 204
+        return NoContent, 204  # 204 No Content
+
+    except MemberNotFound:
+        return NoContent, 404  # 404 Not Found
 
     except ValueError as e:
-        return f"Invalid parameter: {e}", 400
+        return f"Invalid parameter: {e}", 400  # 400 Bad Request
 
 
 @require_sql
 @auth_regular_admin
 def put(username, body):
     """ [API] Create/Update member from the database """
-    s = g.session
+    ctx = build_context(
+        session=g.session,
+        admin=g.admin,
+    )
 
-    # Create a valid object
+    mutation_request = _build_mutation_request_from_body(body)
     try:
-        new_member = Adherent.from_dict(s, body)
-    except InvalidEmail:
-        return "Invalid email", 400
-    except RoomNotFound:
-        return "No room found", 400
-    except ValueError:
-        return "String must not be empty", 400
+        created = member_manager.create_or_update(ctx, username, mutation_request)
+        if created:
+            return NoContent, 201  # 201 Created
+        else:
+            return NoContent, 204  # 204 No Content
+    except ValueError as e:
+        return f"Invalid parameter: {e}", 400  # 400 Bad Request
 
-    # Check if it already exists
-    update = adherent_exists(s, username)
-
-    if update:
-        current_adh = Adherent.find(s, username)
-        new_member.id = current_adh.id
-        current_adh.start_modif_tracking()
-
-    # Merge the object (will create a new if it doesn't exist)
-    new_member = s.merge(new_member)
-
-    # Create the corresponding modification
-    Modification.add(s, new_member, g.admin)
-
-    if update:
-        logging.info("%s updated the member %s\n%s",
-                     g.admin.login, username, json.dumps(body, sort_keys=True))
-        return NoContent, 204
-    else:
-        logging.info("%s created the member %s\n%s",
-                     g.admin.login, username, json.dumps(body, sort_keys=True))
-        return NoContent, 201
 
 
 @require_sql
@@ -241,7 +215,7 @@ def get_logs(username):
     try:
         Adherent.find(s, username)
     except MemberNotFound:
-        return NoContent, 404
+        return NoContent, 404  # 404 Not Found
 
     # Prepare the elasticsearch query...
     query = {
@@ -278,7 +252,7 @@ def get_logs(username):
 
     logging.info("%s fetched the logs of %s", g.admin.login, username)
     if current_app.config["TESTING"]:  # Do not actually query elasticsearch if testing...
-        return ["test_log"], 200
+        return ["test_log"], 200  # 200 OK
 
     # TODO(insolentbacon): instantiate only once the Elasticsearch client
     es = Elasticsearch(ELK_HOSTS)
@@ -288,3 +262,16 @@ def get_logs(username):
         lambda x: "{} {}".format(x["_source"]["@timestamp"], x["_source"]["message"]),
         res
     )), 200
+
+
+def _build_mutation_request_from_body(body) -> MutationRequest:
+    return MutationRequest(
+        email=body.get('email', Mutation.NOT_SET),
+        first_name=body.get('firstName', Mutation.NOT_SET),
+        last_name=body.get('lastName', Mutation.NOT_SET),
+        username=body.get('username', Mutation.NOT_SET),
+        departure_date=body.get('departureDate', Mutation.NOT_SET),
+        comment=body.get('comment', Mutation.NOT_SET),
+        association_mode=body.get('associationMode', Mutation.NOT_SET),
+        room_number=body.get('roomNumber', Mutation.NOT_SET),
+    )

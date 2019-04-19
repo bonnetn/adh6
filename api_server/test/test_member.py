@@ -304,7 +304,7 @@ def test_member_put_member_create_unknown_room(api_client):
         content_type='application/json',
         headers=TEST_HEADERS
     )
-    assert res.status_code == 400
+    assert 400 == res.status_code
 
 
 def test_member_put_member_create(api_client):
@@ -324,7 +324,7 @@ def test_member_put_member_create(api_client):
         content_type='application/json',
         headers=TEST_HEADERS
     )
-    assert res.status_code == 201
+    assert 201 == res.status_code
     assert_modification_was_created(db.get_db().get_session())
 
     assert_member_in_db(body)
