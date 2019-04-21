@@ -62,6 +62,7 @@ class MemberManager:
         self.logs_storage = logs_storage
         self.config = configuration
 
+    @catches
     def new_membership(self, ctx, username, duration, start_str=None) -> None:
         """
         Core use case of ADH. Registers a membership.
@@ -71,6 +72,10 @@ class MemberManager:
         :param username: username
         :param duration: duration of the membership in days
         :param start_str: optional start date of the membership
+
+        :raises IntMustBePositiveException
+        :raises NoPriceAssignedToThatDurationException
+        :raises MemberNotFound
         """
         if start_str is None:
             return self.new_membership(ctx, username, duration, start_str=datetime.datetime.now().isoformat())
@@ -98,6 +103,8 @@ class MemberManager:
     def get_by_username(self, ctx, username) -> Member:
         """
         User story: As an admin, I can see the profile of a member, so that I can help her/him.
+
+        :raises MemberNotFound
         """
         result, _ = self.member_storage.search_member_by(ctx, username=username)
         if not result:
@@ -114,6 +121,8 @@ class MemberManager:
 
         User story: As an admin, I want to have a list of members with some filters, so that I can browse and find
         members.
+
+        :raises IntMustBePositiveException
         """
         if limit < 0:
             raise IntMustBePositiveException('limit')
@@ -137,6 +146,10 @@ class MemberManager:
 
         User story: As an admin, I can register a new profile, so that I can add a membership with their profile.
         :return: True if the member was created, false otherwise.
+
+        :raises MissingRequiredFieldError
+        :raises UsernameMismatchError
+        :raises InvalidRoomNumberError
         """
         admin = ctx.get(CTX_ADMIN)
 
@@ -156,7 +169,10 @@ class MemberManager:
             fields_to_update = asdict(mutation_request)
             fields_to_update = {k: v if _is_set(v) else None for k, v in fields_to_update.items()}
 
-            self.member_storage.update_member(ctx, username, **fields_to_update)
+            try:
+                self.member_storage.update_member(ctx, username, **fields_to_update)
+            except NotFoundError:
+                raise RuntimeError('user should exist')
 
             # Log action.
             logging.info("%s updated the member %s\n%s",
@@ -175,7 +191,10 @@ class MemberManager:
             fields = asdict(mutation_request)
             fields = {k: v if _is_set(v) else None for k, v in fields.items()}
 
-            self.member_storage.create_member(ctx, **fields)
+            try:
+                self.member_storage.create_member(ctx, **fields)
+            except NotFoundError:
+                raise InvalidRoomNumberError()
 
             # Log action
             logging.info("%s created the member %s\n%s",
@@ -187,6 +206,8 @@ class MemberManager:
         """
         User story: As an admin, I can modify some of the fields of a profile, so that I can update the information of
         a member.
+
+        :raises MemberNotFound
         """
         # Perform all the checks on the validity of the data in the mutation request.
         _validate_mutation_request(mutation_request)
@@ -196,7 +217,10 @@ class MemberManager:
         fields_to_update = asdict(mutation_request)
         fields_to_update = {k: v for k, v in fields_to_update.items() if _is_set(v)}
 
-        self.member_storage.update_member(ctx, username, **fields_to_update)
+        try:
+            self.member_storage.update_member(ctx, username, **fields_to_update)
+        except NotFoundError:
+            raise MemberNotFound()
 
         # Log action.
         admin = ctx.get(CTX_ADMIN)
@@ -209,6 +233,9 @@ class MemberManager:
         Change the password of a member.
 
         BE CAREFUL: do not log the password or store it unhashed.
+
+        :raises PasswordTooShortError
+        :raises MemberNotFound
         """
 
         if len(password) <= 6:  # It's a bit low but eh...
@@ -229,6 +256,8 @@ class MemberManager:
     def delete(self, ctx, username) -> None:
         """
         User story: As an admin, I can remove a profile, so that their information is not in our system.
+
+        :raises MemberNotFound
         """
 
         try:
@@ -244,6 +273,8 @@ class MemberManager:
         """
         User story: As an admin, I can retrieve the logs of a member, so I can help him troubleshoot their connection
         issues.
+
+        :raises MemberNotFound
         """
         # Fetch all the devices of the member to put them in the request
         # all_devices = get_all_devices(s)
@@ -283,7 +314,7 @@ def _validate_mutation_request(req: MutationRequest):
     Validate the fields that are set in a MutationRequest.
     """
     if _is_set(req.email) and not is_email(req.email):
-        raise ValueError('invalid email')
+        raise InvalidEmailError()
 
     if req.first_name == '':
         raise StringMustNotBeEmptyException('first_name')
@@ -315,4 +346,14 @@ class MissingRequiredFieldError(ValueError):
 
 class PasswordTooShortError(ValueError):
     def __init__(self):
-        super().__init__(f'password is too short')
+        super().__init__('password is too short')
+
+
+class InvalidEmailError(ValueError):
+    def __init__(self):
+        super().__init__('email is invalid')
+
+
+class InvalidRoomNumberError(ValueError):
+    def __init__(self):
+        super().__init__('invalid room number')

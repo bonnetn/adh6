@@ -5,14 +5,15 @@ Contain all the http http_api functions.
 from connexion import NoContent
 from dataclasses import asdict
 
-from src.exceptions import MemberNotFound
+from main import member_manager
+from src.exceptions import MemberNotFound, IntMustBePositiveException
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
-from src.use_case.member_manager import MutationRequest, Mutation
+from src.use_case.member_manager import MutationRequest, Mutation, NoPriceAssignedToThatDurationException, \
+    UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, InvalidRoomNumberError
 from src.util.date import string_to_date
-from main import member_manager
 
 
 @with_context
@@ -31,7 +32,7 @@ def search(ctx, limit=100, offset=0, terms=None, roomNumber=None):
         result = list(map(asdict, result))
         return result, 200, headers  # 200 OK
 
-    except ValueError as e:
+    except IntMustBePositiveException as e:
         return bad_request(e), 400  # 400 Bad Request
 
 
@@ -48,9 +49,6 @@ def get(ctx, username):
     except MemberNotFound:
         return NoContent, 404  # 404 Not Found
 
-    except ValueError as e:
-        return bad_request(e), 400  # 400 Bad Request
-
 
 @with_context
 @require_sql
@@ -63,9 +61,6 @@ def delete(ctx, username):
 
     except MemberNotFound:
         return NoContent, 404  # 404 Not Found
-
-    except ValueError as e:
-        return bad_request(e), 400  # 400 Bad Request
 
 
 @with_context
@@ -81,9 +76,6 @@ def patch(ctx, username, body):
     except MemberNotFound:
         return NoContent, 404  # 404 Not Found
 
-    except ValueError as e:
-        return bad_request(e), 400  # 400 Bad Request
-
 
 @with_context
 @require_sql
@@ -98,10 +90,13 @@ def put(ctx, username, body):
         else:
             return NoContent, 204  # 204 No Content
 
-    except MemberNotFound:
-        return NoContent, 404  # 404 Not Found
+    except InvalidRoomNumberError as e:
+        return bad_request(e), 400  # 400 Bad Request
 
-    except ValueError as e:
+    except MissingRequiredFieldError as e:
+        return bad_request(e), 400  # 400 Bad Request
+
+    except UsernameMismatchError as e:
         return bad_request(e), 400  # 400 Bad Request
 
 
@@ -116,7 +111,10 @@ def post_membership(ctx, username, body):
     except MemberNotFound:
         return NoContent, 404  # 404 Not Found
 
-    except ValueError as e:
+    except IntMustBePositiveException:
+        return bad_request(e), 400  # 400 Bad Request
+
+    except NoPriceAssignedToThatDurationException:
         return bad_request(e), 400  # 400 Bad Request
 
     return NoContent, 200  # 200 OK
@@ -135,7 +133,7 @@ def put_password(ctx, username, body):
     except MemberNotFound:
         return NoContent, 404  # 404 Not Found
 
-    except ValueError as e:
+    except PasswordTooShortError as e:
         return bad_request(e), 400  # 400 Bad Request
 
     return NoContent, 204  # 204 No Content
@@ -153,9 +151,6 @@ def get_logs(ctx, username):
 
     except MemberNotFound:
         return NoContent, 404
-
-    except ValueError as e:
-        return bad_request(e), 400
 
 
 def _string_to_date_or_unset(d):

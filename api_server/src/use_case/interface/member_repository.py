@@ -29,6 +29,8 @@ class MemberRepository(metaclass=abc.ABCMeta):
     def create_member(self, ctx, **fields) -> None:
         """
         Create a member.
+
+        :raises NotFoundError
         """
         pass  # pragma: no cover
 
@@ -36,6 +38,8 @@ class MemberRepository(metaclass=abc.ABCMeta):
     def update_member(self, ctx, member_to_update, **fields_to_update) -> None:
         """
         Update a member.
+
+        :raises NotFoundError
         """
         pass  # pragma: no cover
 
@@ -43,5 +47,7 @@ class MemberRepository(metaclass=abc.ABCMeta):
     def delete_member(self, ctx, username=None) -> None:
         """
         Delete a member.
+
+        :raises NotFoundError
         """
         pass  # pragma: no cover

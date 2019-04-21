@@ -8,7 +8,6 @@ from typing import List
 
 from src.constants import CTX_SQL_SESSION
 from src.entity.member import Member
-from src.exceptions import MemberNotFound
 from src.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion
 from src.interface_adapter.sql.track_modifications import track_modifications
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
@@ -23,6 +22,8 @@ class SQLStorage(MemberRepository, MembershipRepository):
     def add_membership(self, ctx, username, start, end) -> None:
         """
         Add a membership record.
+
+        :raises NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
 
@@ -42,6 +43,8 @@ class SQLStorage(MemberRepository, MembershipRepository):
                       ) -> None:
         """
         Create a member.
+
+        :raises NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
         now = datetime.now()
@@ -74,12 +77,14 @@ class SQLStorage(MemberRepository, MembershipRepository):
                       ) -> None:
         """
         Update a member.
+
+        :raises NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
 
         member = _get_member_by_login(s, member_to_update)
         if member is None:
-            raise MemberNotFound()
+            raise NotFoundError()
 
         with track_modifications(ctx, s, member):
             member.nom = last_name or member.nom
@@ -104,6 +109,8 @@ class SQLStorage(MemberRepository, MembershipRepository):
     def delete_member(self, ctx, username=None) -> None:
         """
         Delete a member.
+
+        :raises NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
 
