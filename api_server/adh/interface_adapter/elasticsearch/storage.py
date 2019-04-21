@@ -4,7 +4,6 @@ Logs repository.
 """
 from elasticsearch import Elasticsearch
 
-from adh.config.CONFIGURATION import ELK_HOSTS
 from adh.constants import CTX_TESTING
 from adh.use_case.interface.logs_repository import LogsRepository, LogFetchError
 from adh.util.mac import get_mac_variations
@@ -14,6 +13,10 @@ class ElasticSearchStorage(LogsRepository):
     """
     Interface to the log repository.
     """
+
+    def __init__(self, configuration):
+        self.config = configuration
+
     def get_logs(self, ctx, username=None, devices=None, limit=100):
         """
         Get the logs related to the username and to the devices.
@@ -23,7 +26,7 @@ class ElasticSearchStorage(LogsRepository):
         :param limit: limit result
         :return: logs
         """
-        if not ELK_HOSTS:
+        if not self.config.ELK_HOSTS:
             raise LogFetchError('no elk host configured')
 
         if ctx.get(CTX_TESTING):  # Do not actually query elasticsearch if testing...

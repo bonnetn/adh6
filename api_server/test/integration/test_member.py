@@ -2,10 +2,10 @@ import datetime
 import json
 from dateutil import parser
 
-from adh.config.TEST_CONFIGURATION import PRICES
 from adh.interface_adapter.sql.model.database import Database as db
 from adh.interface_adapter.sql.model.models import Adherent
 from adh.util.hash import ntlm_hash
+from config.TEST_CONFIGURATION import PRICES
 from test.integration.resource import (
     base_url, TEST_HEADERS, assert_modification_was_created)
 

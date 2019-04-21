@@ -5,7 +5,7 @@ from pytest import fixture, raises, mark
 from unittest import mock
 from unittest.mock import MagicMock
 
-from adh.config import TEST_CONFIGURATION
+from config import TEST_CONFIGURATION
 from adh.entity.member import Member
 from adh.exceptions import IntMustBePositiveException, MemberNotFound
 from adh.use_case.interface.logs_repository import LogsRepository, LogFetchError

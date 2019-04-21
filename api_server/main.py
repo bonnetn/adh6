@@ -3,18 +3,17 @@ import connexion
 import logging
 from connexion.resolver import RestyResolver
 
-from adh.config import CONFIGURATION
-from adh.config.CONFIGURATION import API_CONF
-from adh.config.CONFIGURATION import PROD_DATABASE as DATABASE
+from config import CONFIGURATION
 from adh.interface_adapter.elasticsearch.storage import ElasticSearchStorage
 from adh.interface_adapter.sql.model.database import Database
 from adh.interface_adapter.sql.sql_storage import SQLStorage
 from adh.use_case.member_manager import MemberManager
+from config.CONFIGURATION import API_CONF, PROD_DATABASE
 
-Database.init_db(DATABASE)
+Database.init_db(PROD_DATABASE)
 
 sql_storage = SQLStorage()
-elk_storage = ElasticSearchStorage()
+elk_storage = ElasticSearchStorage(CONFIGURATION)
 member_manager = MemberManager(
     member_storage=sql_storage,
     membership_storage=sql_storage,
