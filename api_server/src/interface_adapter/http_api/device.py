@@ -20,7 +20,6 @@ from src.interface_adapter.http_api.device_utils import is_wired, is_wireless, \
     get_all_devices, \
     dev_to_dict
 from src.exceptions import InvalidIPv4, InvalidIPv6, InvalidMac
-from src.exceptions import MemberNotFound
 from src.interface_adapter.sql.model import models
 from src.interface_adapter.sql.model.models import Adherent, Modification
 from src.interface_adapter.http_api.decorator.sql_session import require_sql

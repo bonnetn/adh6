@@ -9,10 +9,11 @@ from sqlalchemy.orm import relationship, validates
 from sqlalchemy.orm.exc import NoResultFound
 
 from src.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
-from src.exceptions import MemberNotFound, RoomNotFound, SwitchNotFound
+from src.exceptions import RoomNotFound, SwitchNotFound
 from src.exceptions import VlanNotFound, PortNotFound
 from src.interface_adapter.sql.model.trackable import RubyHashTrackable
 from src.interface_adapter.sql.util.rubydiff import rubydiff
+from src.use_case.member_manager import MemberNotFound
 from src.util import checks
 from src.util.date import string_to_date
 

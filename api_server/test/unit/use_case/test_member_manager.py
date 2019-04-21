@@ -7,12 +7,12 @@ from unittest.mock import MagicMock
 
 from config import TEST_CONFIGURATION
 from src.entity.member import Member
-from src.exceptions import IntMustBePositiveException, MemberNotFound
 from src.use_case.interface.logs_repository import LogsRepository, LogFetchError
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.membership_repository import MembershipRepository
 from src.use_case.member_manager import MemberManager, NoPriceAssignedToThatDurationException, MutationRequest, \
-    UsernameMismatchError, MissingRequiredFieldError, Mutation, PasswordTooShortError
+    UsernameMismatchError, MissingRequiredFieldError, Mutation, PasswordTooShortError, MemberNotFound, \
+    IntMustBePositiveException
 from src.util.context import build_context
 from src.util.hash import ntlm_hash
 
@@ -278,6 +278,16 @@ class TestUpdatePartially:
 
         # Expect...
         mock_member_repository.update_member.assert_called_once_with(ctx, TEST_USERNAME, comment=updated_comment)
+
+    def test_not_found(self, ctx,
+                       mock_member_repository: MagicMock,
+                       member_manager: MemberManager):
+        mock_member_repository.update_member = MagicMock(side_effect=NotFoundError)
+
+        # When...
+        with raises(MemberNotFound):
+            member_manager.update_partially(ctx, TEST_USERNAME, MutationRequest(comment='Abc.'))
+
 
     @mark.parametrize('test_name, req', INVALID_MUTATION_REQ)
     def test_invalid_mutation_req(self, ctx,

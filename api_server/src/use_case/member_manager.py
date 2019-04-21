@@ -11,7 +11,6 @@ from typing import List
 
 from src.constants import CTX_ADMIN
 from src.entity.member import Member
-from src.exceptions import IntMustBePositiveException, MemberNotFound, StringMustNotBeEmptyException
 from src.use_case.interface.logs_repository import LogsRepository, LogFetchError
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.membership_repository import MembershipRepository
@@ -170,10 +169,8 @@ class MemberManager:
             fields_to_update = asdict(mutation_request)
             fields_to_update = {k: v if _is_set(v) else None for k, v in fields_to_update.items()}
 
-            try:
-                self.member_storage.update_member(ctx, username, **fields_to_update)
-            except NotFoundError:
-                raise RuntimeError('user should exist')
+            # This call will never throw a NotFoundError because we checked for the object existence before.
+            self.member_storage.update_member(ctx, username, **fields_to_update)
 
             # Log action.
             logging.info("%s updated the member %s\n%s",
