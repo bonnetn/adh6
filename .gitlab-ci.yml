@@ -5,6 +5,6 @@ test:
   - apt update -q
   - apt install -qy sqlite3 libmariadbclient-dev
   - pip3 install -r requirements.txt
-  - cp CONFIGURATION.py{.example,}
+  - cp config/CONFIGURATION.py{.example,}
   script:
   - pytest -vv
