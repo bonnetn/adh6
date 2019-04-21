@@ -49,7 +49,7 @@ class SQLStorage(MemberRepository, MembershipRepository):
         if room_number is not None:
             room = s.query(Chambre).filter(Chambre.numero == room_number).one_or_none()
             if not room:
-                raise ValueError('room not found')
+                raise NotFoundError('room not found')
 
         member = Adherent(
             nom=last_name,
@@ -109,7 +109,7 @@ class SQLStorage(MemberRepository, MembershipRepository):
         # Find the soon-to-be deleted user
         member = _get_member_by_login(s, username)
         if not member:
-            raise ValueError(f"could not find user '{username}'")
+            raise NotFoundError(f"could not find user '{username}'")
 
         with track_modifications(ctx, s, member):
             # Actually delete it
