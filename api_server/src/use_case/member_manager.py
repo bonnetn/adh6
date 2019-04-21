@@ -146,9 +146,11 @@ class MemberManager:
         User story: As an admin, I can register a new profile, so that I can add a membership with their profile.
         :return: True if the member was created, false otherwise.
 
-        :raises MissingRequiredFieldError
-        :raises UsernameMismatchError
+        :raises InvalidEmailError
         :raises InvalidRoomNumberError
+        :raises MissingRequiredFieldError
+        :raises StringMustNotBeEmptyException
+        :raises UsernameMismatchError
         """
         admin = ctx.get(CTX_ADMIN)
 

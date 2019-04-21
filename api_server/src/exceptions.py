@@ -39,5 +39,6 @@ class IntMustBePositiveException(ValueError):
         super().__init__(f'{msg} must be positive')
 
 
-def StringMustNotBeEmptyException(name):
-    return ValueError(f'{name} must not be empty')
+class StringMustNotBeEmptyException(ValueError):
+    def __init__(self, msg):
+        super().__init__(f'{msg} must not be empty')

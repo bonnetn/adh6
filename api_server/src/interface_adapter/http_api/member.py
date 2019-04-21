@@ -6,13 +6,13 @@ from connexion import NoContent
 from dataclasses import asdict
 
 from main import member_manager
-from src.exceptions import MemberNotFound, IntMustBePositiveException
+from src.exceptions import MemberNotFound, IntMustBePositiveException, StringMustNotBeEmptyException
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
 from src.use_case.member_manager import MutationRequest, Mutation, NoPriceAssignedToThatDurationException, \
-    UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, InvalidRoomNumberError
+    UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, InvalidRoomNumberError, InvalidEmailError
 from src.util.date import string_to_date
 
 
@@ -90,13 +90,8 @@ def put(ctx, username, body):
         else:
             return NoContent, 204  # 204 No Content
 
-    except InvalidRoomNumberError as e:
-        return bad_request(e), 400  # 400 Bad Request
-
-    except MissingRequiredFieldError as e:
-        return bad_request(e), 400  # 400 Bad Request
-
-    except UsernameMismatchError as e:
+    except (InvalidRoomNumberError, MissingRequiredFieldError, UsernameMismatchError, InvalidEmailError,
+            StringMustNotBeEmptyException) as e:
         return bad_request(e), 400  # 400 Bad Request
 
 
@@ -108,13 +103,10 @@ def post_membership(ctx, username, body):
     try:
         member_manager.new_membership(ctx, username, body.get('duration'), start_str=body.get('start'))
 
-    except MemberNotFound:
+    except MemberNotFound as e:
         return NoContent, 404  # 404 Not Found
 
-    except IntMustBePositiveException:
-        return bad_request(e), 400  # 400 Bad Request
-
-    except NoPriceAssignedToThatDurationException:
+    except (IntMustBePositiveException, NoPriceAssignedToThatDurationException) as e:
         return bad_request(e), 400  # 400 Bad Request
 
     return NoContent, 200  # 200 OK
