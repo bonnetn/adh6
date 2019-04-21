@@ -1,15 +1,19 @@
 import datetime
+import dateutil
 import json
 import logging
 import requests
-
-import dateutil
 from connexion import NoContent
+from dataclasses import asdict
 from flask import g
 from sqlalchemy.orm.exc import MultipleResultsFound
 
+from main import device_manager
+from src.entity.device import DeviceType
+from src.exceptions import InvalidIPv4, InvalidIPv6, InvalidMac
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
-from src.interface_adapter.http_api.util import ip_controller
+from src.interface_adapter.http_api.decorator.sql_session import require_sql
+from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.device_utils import is_wired, is_wireless, \
     delete_wireless_device, \
     delete_wired_device, \
@@ -19,52 +23,29 @@ from src.interface_adapter.http_api.device_utils import is_wired, is_wireless, \
     create_wired_device, \
     get_all_devices, \
     dev_to_dict
-from src.exceptions import InvalidIPv4, InvalidIPv6, InvalidMac
+from src.interface_adapter.http_api.util import ip_controller
+from src.interface_adapter.http_api.util.error import bad_request
 from src.interface_adapter.sql.model import models
 from src.interface_adapter.sql.model.models import Adherent, Modification
-from src.interface_adapter.http_api.decorator.sql_session import require_sql
+from src.use_case.exceptions import IntMustBePositiveException
 
 
+@with_context
 @require_sql
 @auth_regular_admin
-def search(limit=100, offset=0, username=None, terms=None):
-    """ [API] Filter the list of the devices according to some criterias """
-    s = g.session
-    if limit < 0:
-        return 'Limit must be a positive number', 400
+def search(ctx, limit=100, offset=0, username=None, terms=None):
+    """ Filter the list of the devices according to some criterias """
+    try:
+        result, count = device_manager.search(ctx, limit, offset, username, terms)
 
-    # Return a subquery with all devices (wired & wireless)
-    # The fields, ip, ipv6, dns, etc, are set to None for wireless devices
-    # There is also a field "type" wich is wired and wireless
-    all_devices = get_all_devices(s)
-
-    # Query all devices and their owner's unsername
-    q = s.query(all_devices, Adherent.login.label("login"))
-    q = q.join(Adherent, Adherent.id == all_devices.columns.adherent_id)
-
-    if username:
-        q = q.filter(Adherent.login == username)
-
-    if terms:
-        q = q.filter(
-            (all_devices.columns.mac.contains(terms)) |
-            (all_devices.columns.ip.contains(terms)) |
-            (all_devices.columns.ipv6.contains(terms)) |
-            (Adherent.login.contains(terms))
-        )
-    count = q.count()
-    q = q.order_by(all_devices.columns.mac.asc())
-    q = q.offset(offset)
-    q = q.limit(limit)
-    r = q.all()
-    results = list(map(dev_to_dict, r))
+    except IntMustBePositiveException as e:
+        return bad_request(e), 400
 
     headers = {
         "X-Total-Count": count,
         "access-control-expose-headers": "X-Total-Count"
     }
-    logging.info("%s fetched the device list", g.admin.login)
-    return results, 200, headers
+    return list(map(asdict, result)), 200, headers
 
 
 @require_sql
@@ -197,6 +178,7 @@ def delete(mac_address):
     else:
         return NoContent, 404
 
+
 @require_sql
 @auth_regular_admin
 def get_vendor(mac_address):
@@ -210,6 +192,7 @@ def get_vendor(mac_address):
 
     else:
         return NoContent, 404
+
 
 def allocate_ip_for_device(s, dev, admin):
     date_de_depart = dev.adherent.date_de_depart

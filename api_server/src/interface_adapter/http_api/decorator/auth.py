@@ -7,7 +7,7 @@ import logging
 from connexion import NoContent
 
 from src.constants import CTX_TESTING, CTX_SQL_SESSION
-from src.entity.member import Admin
+from src.entity.admin import Admin
 from src.interface_adapter.http_api.auth import ADH6_USER, ADH6_ADMIN
 from src.interface_adapter.sql.model.models import Utilisateur
 from src.util.context import build_context

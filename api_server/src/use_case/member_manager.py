@@ -10,6 +10,9 @@ from typing import List
 
 from src.entity.member import Member
 from src.log import LOG
+from src.use_case.exceptions import StringMustNotBeEmptyException, InvalidEmailError, MemberNotFound, \
+    MissingRequiredFieldError, IntMustBePositiveException, InvalidRoomNumberError, PasswordTooShortError, \
+    UsernameMismatchError
 from src.use_case.interface.logs_repository import LogsRepository, LogFetchError
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.membership_repository import MembershipRepository
@@ -347,46 +350,3 @@ def _validate_mutation_request(req: MutationRequest):
     if req.room_number == '':
         raise StringMustNotBeEmptyException('room number')
 
-
-class MemberNotFound(ValueError):
-    pass
-
-
-class UsernameMismatchError(ValueError):
-    """
-    Thrown when you try to create a member given a username and a mutation request and in the mutation request the
-    username does not match the first argument.
-    """
-
-    def __init__(self):
-        super().__init__('cannot create member with 2 different usernames')
-
-
-class MissingRequiredFieldError(ValueError):
-    def __init__(self, msg):
-        super().__init__(f'{msg} is missing')
-
-
-class PasswordTooShortError(ValueError):
-    def __init__(self):
-        super().__init__('password is too short')
-
-
-class InvalidEmailError(ValueError):
-    def __init__(self):
-        super().__init__('email is invalid')
-
-
-class InvalidRoomNumberError(ValueError):
-    def __init__(self):
-        super().__init__('invalid room number')
-
-
-class IntMustBePositiveException(ValueError):
-    def __init__(self, msg):
-        super().__init__(f'{msg} must be positive')
-
-
-class StringMustNotBeEmptyException(ValueError):
-    def __init__(self, msg):
-        super().__init__(f'{msg} must not be empty')

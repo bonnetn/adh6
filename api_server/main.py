@@ -7,18 +7,21 @@ from config.CONFIGURATION import API_CONF, PROD_DATABASE
 from src.interface_adapter.elasticsearch.storage import ElasticSearchStorage
 from src.interface_adapter.sql.model.database import Database
 from src.interface_adapter.sql.sql_storage import SQLStorage
+from src.use_case.device_manager import DeviceManager
 from src.use_case.member_manager import MemberManager
 
 Database.init_db(PROD_DATABASE)
 
 sql_storage = SQLStorage()
 elk_storage = ElasticSearchStorage(CONFIGURATION)
+device_manager = DeviceManager(
+    device_storage=sql_storage,
+)
 member_manager = MemberManager(
     member_storage=sql_storage,
     membership_storage=sql_storage,
     logs_storage=elk_storage,
     configuration=CONFIGURATION,
-
 )
 
 app = connexion.FlaskApp(__name__)

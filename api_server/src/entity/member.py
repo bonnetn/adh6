@@ -13,6 +13,3 @@ class Member:
     room_number: str
 
 
-@dataclass
-class Admin:
-    login: str

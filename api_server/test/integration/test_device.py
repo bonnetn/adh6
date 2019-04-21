@@ -3,9 +3,10 @@ import logging
 
 import pytest
 
-from CONFIGURATION import TEST_DATABASE as db_settings
-from adh.interface_adapter.sql.model.database import Database as db
-from adh.interface_adapter.sql.model.models import Ordinateur, Portable
+from src.interface_adapter.sql.model.database import Database as db
+from src.interface_adapter.sql.model.models import Ordinateur, Portable
+
+from config.TEST_CONFIGURATION import TEST_DATABASE
 from .resource import (
     base_url, INVALID_MAC, INVALID_IP, INVALID_IPv6, TEST_HEADERS,
     assert_modification_was_created,
@@ -30,7 +31,7 @@ def api_client(wired_device,
                sample_member3):
     from .context import app
     with app.app.test_client() as c:
-        db.init_db(db_settings, testing=True)
+        db.init_db(TEST_DATABASE, testing=True)
         prep_db(db.get_db().get_session(),
                 wired_device,
                 wireless_device,
