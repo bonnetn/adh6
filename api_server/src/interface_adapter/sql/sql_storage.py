@@ -12,6 +12,7 @@ from src.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion
 from src.interface_adapter.sql.track_modifications import track_modifications
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.membership_repository import MembershipRepository
+from src.util.date import date_to_string
 
 
 class SQLStorage(MemberRepository, MembershipRepository):
@@ -166,8 +167,8 @@ def _map_member_sql_to_entity(adh: Adherent) -> Member:
     """
     Map a Adherent object from SQLAlchemy to a Member (from the entity folder/layer).
     """
-    departure_date = _date_to_string(adh.date_de_depart)
-    association_mode = _date_to_string(adh.mode_association)
+    departure_date = date_to_string(adh.date_de_depart)
+    association_mode = date_to_string(adh.mode_association)
 
     room_number = None
     if adh.chambre is not None:
@@ -187,10 +188,3 @@ def _map_member_sql_to_entity(adh: Adherent) -> Member:
 
 def _get_member_by_login(s, login) -> Adherent:
     return s.query(Adherent).filter(Adherent.login == login).one_or_none()
-
-
-def _date_to_string(d) -> str:
-    if d is None:
-        return d
-
-    return d.isoformat()

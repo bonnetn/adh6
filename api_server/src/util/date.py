@@ -7,3 +7,10 @@ def string_to_date(s):
         return None
 
     return parser.parse(s)
+
+
+def date_to_string(d) -> str:
+    if d is None:
+        return d
+
+    return d.isoformat()
