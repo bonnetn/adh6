@@ -330,6 +330,10 @@ def _validate_mutation_request(req: MutationRequest):
         raise StringMustNotBeEmptyException('room number')
 
 
+class MemberNotFound(ValueError):
+    pass
+
+
 class UsernameMismatchError(ValueError):
     """
     Thrown when you try to create a member given a username and a mutation request and in the mutation request the
@@ -358,3 +362,13 @@ class InvalidEmailError(ValueError):
 class InvalidRoomNumberError(ValueError):
     def __init__(self):
         super().__init__('invalid room number')
+
+
+class IntMustBePositiveException(ValueError):
+    def __init__(self, msg):
+        super().__init__(f'{msg} must be positive')
+
+
+class StringMustNotBeEmptyException(ValueError):
+    def __init__(self, msg):
+        super().__init__(f'{msg} must not be empty')

@@ -6,13 +6,13 @@ from connexion import NoContent
 from dataclasses import asdict
 
 from main import member_manager
-from src.exceptions import MemberNotFound, IntMustBePositiveException, StringMustNotBeEmptyException
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
 from src.use_case.member_manager import MutationRequest, Mutation, NoPriceAssignedToThatDurationException, \
-    UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, InvalidRoomNumberError, InvalidEmailError
+    UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, InvalidRoomNumberError, InvalidEmailError, \
+    MemberNotFound, IntMustBePositiveException, StringMustNotBeEmptyException
 from src.util.date import string_to_date
 
 
@@ -44,7 +44,7 @@ def get(ctx, username):
     Get a specific member.
     """
     try:
-        return asdict(member_manager.get_by_username(ctx, username)), 200
+        return asdict(member_manager.get_by_username(ctx, username)), 200  # 200 OK
 
     except MemberNotFound:
         return NoContent, 404  # 404 Not Found
