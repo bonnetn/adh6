@@ -1,10 +1,12 @@
 import datetime
-
 import pytest
 
+from adh.config.TEST_CONFIGURATION import TEST_DATABASE
+from adh.interface_adapter.sql.model.database import Database as db
 from adh.interface_adapter.sql.model.models import (
     Adherent, Chambre, Vlan, Ordinateur, Portable, Switch, Port,
     NainA)
+from test.integration.test_member import prep_db
 
 
 @pytest.fixture
@@ -131,6 +133,19 @@ def sample_member3(sample_room1):
 
 
 @pytest.fixture
+def sample_member13(sample_room2):
+    """ Membre sans chambre """
+    yield Adherent(
+        nom='Robert',
+        prenom='Dupond',
+        mail='robi@hotmail.fr',
+        login='dupond_r',
+        commentaires='a',
+        password='a',
+    )
+
+
+@pytest.fixture
 def sample_switch1():
     yield Switch(
         description="Switch sample 1",
@@ -194,3 +209,22 @@ def sample_naina_expired():
         expiration_time=datetime.datetime.now() - datetime.timedelta(hours=1),
         admin="admin_who_created_naina",
     )
+
+
+@pytest.fixture
+def api_client(sample_member1, sample_member2, sample_member13,
+               wired_device, wireless_device,
+               sample_room1, sample_room2, sample_vlan):
+    from .context import app
+    with app.app.test_client() as c:
+        db.init_db(TEST_DATABASE, testing=True)
+        prep_db(db.get_db().get_session(),
+                sample_member1,
+                sample_member2,
+                sample_member13,
+                wired_device,
+                wireless_device,
+                sample_room1,
+                sample_room2,
+                sample_vlan)
+        yield c
