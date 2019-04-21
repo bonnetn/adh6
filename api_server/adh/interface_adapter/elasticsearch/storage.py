@@ -4,7 +4,7 @@ Logs repository.
 """
 from elasticsearch import Elasticsearch
 
-from CONFIGURATION import ELK_HOSTS
+from adh.config.CONFIGURATION import ELK_HOSTS
 from adh.constants import CTX_TESTING
 from adh.use_case.interface.logs_repository import LogsRepository, LogFetchError
 from adh.util.mac import get_mac_variations

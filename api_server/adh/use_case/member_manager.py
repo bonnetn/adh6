@@ -8,8 +8,8 @@ import logging
 from dataclasses import dataclass, asdict
 from enum import Enum
 
-from CONFIGURATION import PRICES
 from adh.constants import CTX_ADMIN
+from adh.entity.member import Member
 from adh.exceptions import IntMustBePositiveException, MemberNotFound, StringMustNotBeEmptyException
 from adh.use_case.interface.logs_repository import LogsRepository, LogFetchError
 from adh.use_case.interface.member_repository import MemberRepository, NotFoundError
@@ -27,7 +27,7 @@ class Mutation(Enum):
 
 
 @dataclass
-class MutationRequest:
+class MutationRequest(Member):
     """
     Mutation request for a member. This represents the 'diff', that is going to be applied on the member object.
     """
@@ -38,7 +38,12 @@ class MutationRequest:
     departure_date: str = Mutation.NOT_SET
     comment: str = Mutation.NOT_SET
     association_mode: str = Mutation.NOT_SET
-    room_number: int = Mutation.NOT_SET
+    room_number: str = Mutation.NOT_SET
+
+
+class NoPriceAssignedToThatDurationException(ValueError):
+    def __init__(self):
+        super().__init__('there is no price assigned to that duration')
 
 
 class MemberManager:
@@ -49,10 +54,12 @@ class MemberManager:
     def __init__(self,
                  member_storage: MemberRepository,
                  membership_storage: MembershipRepository,
-                 logs_storage: LogsRepository):
+                 logs_storage: LogsRepository,
+                 configuration):
         self.member_storage = member_storage
         self.membership_storage = membership_storage
         self.logs_storage = logs_storage
+        self.config = configuration
 
     def new_membership(self, ctx, username, duration, start_str=None):
         """
@@ -64,16 +71,16 @@ class MemberManager:
         :param duration: duration of the membership in days
         :param start_str: optional start date of the membership
         """
+        if start_str is None:
+            return self.new_membership(ctx, username, duration, start_str=datetime.datetime.now().isoformat())
+
         if duration < 0:
             raise IntMustBePositiveException('duration')
 
-        if duration not in PRICES:
-            raise ValueError('there is no price assigned to that duration')
+        if duration not in self.config.PRICES:
+            raise NoPriceAssignedToThatDurationException()
 
-        if start_str is None:
-            start = datetime.datetime.now().date()
-        else:
-            start = string_to_date(start_str)
+        start = string_to_date(start_str)
 
         end = start + datetime.timedelta(days=duration)
 
@@ -91,9 +98,6 @@ class MemberManager:
         """
         User story: As an admin, I can see the profile of a member, so that I can help her/him.
         """
-        if not username:
-            raise ValueError('username not provided')
-
         result, _ = self.member_storage.search_member_by(ctx, username=username)
         if not result:
             raise MemberNotFound()
@@ -103,7 +107,7 @@ class MemberManager:
         logging.info("%s fetched the member %s", admin.login, username)
         return result[0]
 
-    def search(self, ctx, limit, offset=0, room_number=None, terms=None):
+    def search(self, ctx, limit, offset=0, room_number=None, terms=None) -> (list, int):
         """
         Search member in the database.
 
@@ -138,13 +142,13 @@ class MemberManager:
         # Make sure all the fields set are valid.
         _validate_mutation_request(mutation_request)
 
+        # Make sure all the necessary fields are set.
+        if not _is_set(mutation_request.username):
+            raise MissingRequiredFieldError('username')
+
         member, _ = self.member_storage.search_member_by(ctx, username=username)
         if member:
             # [UPDATE] Member already exists, perform a whole update.
-
-            # Make sure all the necessary fields are set.
-            if not _is_set(mutation_request.username):
-                raise ValueError('username is a required field')
 
             # Create a dict with fields to update. If field is not provided in the mutation request, consider that it
             # should be None as it is a full update of the member.
@@ -163,8 +167,8 @@ class MemberManager:
 
             # Build a dict that will be transformed into a member. If a field is not set, consider that it should be
             # None.
-            if _is_set(mutation_request.username) and username != mutation_request.username:
-                raise ValueError('cannot create member with 2 different usernames')
+            if username != mutation_request.username:
+                raise UsernameMismatchError()
 
             mutation_request.username = username  # Just in case it has not been specified in the body.
             fields = asdict(mutation_request)
@@ -207,7 +211,7 @@ class MemberManager:
         """
 
         if len(password) <= 6:  # It's a bit low but eh...
-            raise ValueError('password should be longer')
+            raise PasswordTooShortError()
 
         # Overwrite password variable by its hash, now that the checks are done, we don't need the cleartext anymore.
         # Still, be careful not to log this field!
@@ -225,8 +229,6 @@ class MemberManager:
         """
         User story: As an admin, I can remove a profile, so that their information is not in our system.
         """
-        if not username:
-            raise ValueError('username not provided')
 
         try:
             self.member_storage.delete_member(ctx, username)
@@ -234,7 +236,7 @@ class MemberManager:
             # Log action.
             admin = ctx.get(CTX_ADMIN)
             logging.info("%s deleted the member %s", admin.login, username)
-        except ValueError:
+        except NotFoundError:
             raise MemberNotFound()
 
     def get_logs(self, ctx, username):
@@ -248,9 +250,6 @@ class MemberManager:
         # q = q.join(Adherent, Adherent.id == all_devices.columns.adherent_id)
         # q = q.filter(Adherent.login == username)
         # mac_tbl = list(map(lambda x: x.mac, q.all()))
-
-        if not username:
-            raise ValueError('username not provided')
 
         # Check that the user exists in the system.
         result, _ = self.member_storage.search_member_by(ctx, username=username)
@@ -294,8 +293,25 @@ def _validate_mutation_request(req: MutationRequest):
     if req.username == '':
         raise StringMustNotBeEmptyException('username')
 
-    if req.comment == '':
-        raise StringMustNotBeEmptyException('comment')
-
-    if _is_set(req.room_number) and req.room_number < 0:
+    if req.room_number == '':
         raise StringMustNotBeEmptyException('room number')
+
+
+class UsernameMismatchError(ValueError):
+    """
+    Thrown when you try to create a member given a username and a mutation request and in the mutation request the
+    username does not match the first argument.
+    """
+
+    def __init__(self):
+        super().__init__('cannot create member with 2 different usernames')
+
+
+class MissingRequiredFieldError(ValueError):
+    def __init__(self, msg):
+        super().__init__(f'{msg} is missing')
+
+
+class PasswordTooShortError(ValueError):
+    def __init__(self):
+        super().__init__(f'password is too short')

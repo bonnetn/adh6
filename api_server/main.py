@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-import logging
-
 import connexion
+import logging
 from connexion.resolver import RestyResolver
 
-from CONFIGURATION import API_CONF
-from CONFIGURATION import PROD_DATABASE as DATABASE
+from adh.config import CONFIGURATION
+from adh.config.CONFIGURATION import API_CONF
+from adh.config.CONFIGURATION import PROD_DATABASE as DATABASE
 from adh.interface_adapter.elasticsearch.storage import ElasticSearchStorage
 from adh.interface_adapter.sql.model.database import Database
 from adh.interface_adapter.sql.sql_storage import SQLStorage
@@ -18,7 +18,9 @@ elk_storage = ElasticSearchStorage()
 member_manager = MemberManager(
     member_storage=sql_storage,
     membership_storage=sql_storage,
-    logs_storage=elk_storage
+    logs_storage=elk_storage,
+    configuration=CONFIGURATION,
+
 )
 
 logging.basicConfig(level=logging.INFO)

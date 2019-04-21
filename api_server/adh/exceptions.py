@@ -34,8 +34,9 @@ class RoomNotFound(ValueError):
     pass
 
 
-def IntMustBePositiveException(name):
-    return ValueError(f'{name} must be positive')
+class IntMustBePositiveException(ValueError):
+    def __init__(self, msg):
+        super().__init__(f'{msg} must be positive')
 
 
 def StringMustNotBeEmptyException(name):

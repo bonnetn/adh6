@@ -4,6 +4,10 @@ from adh.constants import CTX_SQL_SESSION, CTX_ADMIN, CTX_TESTING
 
 
 def build_context(ctx: MappingProxyType = None, session=None, admin=None, testing=None):
+    """
+
+    :rtype:
+    """
     new_fields = {
         CTX_SQL_SESSION: session,
         CTX_ADMIN: admin,
