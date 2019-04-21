@@ -3,6 +3,7 @@
 Contain all the http http_api functions.
 """
 from connexion import NoContent
+from dataclasses import asdict
 
 from adh.exceptions import MemberNotFound
 from adh.interface_adapter.http_api.decorator.auth import auth_regular_admin
@@ -27,6 +28,7 @@ def search(ctx, limit=100, offset=0, terms=None, roomNumber=None):
             "X-Total-Count": str(total_count),
             'access-control-expose-headers': 'X-Total-Count'
         }
+        result = list(map(asdict, result))
         return result, 200, headers  # 200 OK
 
     except ValueError as e:
@@ -41,7 +43,7 @@ def get(ctx, username):
     Get a specific member.
     """
     try:
-        return member_manager.get_by_username(ctx, username), 200
+        return asdict(member_manager.get_by_username(ctx, username)), 200
 
     except MemberNotFound:
         return NoContent, 404  # 404 Not Found

@@ -7,6 +7,7 @@ import json
 import logging
 from dataclasses import dataclass, asdict
 from enum import Enum
+from typing import List
 
 from adh.constants import CTX_ADMIN
 from adh.entity.member import Member
@@ -61,7 +62,7 @@ class MemberManager:
         self.logs_storage = logs_storage
         self.config = configuration
 
-    def new_membership(self, ctx, username, duration, start_str=None):
+    def new_membership(self, ctx, username, duration, start_str=None) -> None:
         """
         Core use case of ADH. Registers a membership.
 
@@ -94,7 +95,7 @@ class MemberManager:
         logging.info("%s created a membership record for %s of %s days starting from %s",
                      admin.login, username, duration, start.isoformat())
 
-    def get_by_username(self, ctx, username):
+    def get_by_username(self, ctx, username) -> Member:
         """
         User story: As an admin, I can see the profile of a member, so that I can help her/him.
         """
@@ -107,7 +108,7 @@ class MemberManager:
         logging.info("%s fetched the member %s", admin.login, username)
         return result[0]
 
-    def search(self, ctx, limit, offset=0, room_number=None, terms=None) -> (list, int):
+    def search(self, ctx, limit, offset=0, room_number=None, terms=None) -> (List[Member], int):
         """
         Search member in the database.
 
@@ -182,7 +183,7 @@ class MemberManager:
 
             return True
 
-    def update_partially(self, ctx, username, mutation_request: MutationRequest):
+    def update_partially(self, ctx, username, mutation_request: MutationRequest) -> None:
         """
         User story: As an admin, I can modify some of the fields of a profile, so that I can update the information of
         a member.
@@ -202,7 +203,7 @@ class MemberManager:
         logging.info("%s updated the member %s\n%s",
                      admin.login, username, json.dumps(fields_to_update, sort_keys=True, default=str))
 
-    def change_password(self, ctx, username, password):
+    def change_password(self, ctx, username, password) -> None:
         """
         User story: As an admin, I can set the password of a user, so that they can connect using their credentials.
         Change the password of a member.
@@ -225,7 +226,7 @@ class MemberManager:
         admin = ctx.get(CTX_ADMIN)
         logging.info("%s updated the password of %s", admin.login, username)
 
-    def delete(self, ctx, username):
+    def delete(self, ctx, username) -> None:
         """
         User story: As an admin, I can remove a profile, so that their information is not in our system.
         """
@@ -239,7 +240,7 @@ class MemberManager:
         except NotFoundError:
             raise MemberNotFound()
 
-    def get_logs(self, ctx, username):
+    def get_logs(self, ctx, username) -> List[str]:
         """
         User story: As an admin, I can retrieve the logs of a member, so I can help him troubleshoot their connection
         issues.
