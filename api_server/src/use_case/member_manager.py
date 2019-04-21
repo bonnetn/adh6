@@ -62,7 +62,6 @@ class MemberManager:
         self.logs_storage = logs_storage
         self.config = configuration
 
-    @catches
     def new_membership(self, ctx, username, duration, start_str=None) -> None:
         """
         Core use case of ADH. Registers a membership.
