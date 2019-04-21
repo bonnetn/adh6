@@ -1,8 +1,8 @@
 import datetime
 import pytest
 
-from adh.interface_adapter.sql.model.database import Database as db
-from adh.interface_adapter.sql.model.models import (
+from src.interface_adapter.sql.model.database import Database as db
+from src.interface_adapter.sql.model.models import (
     Adherent, Chambre, Vlan, Ordinateur, Portable, Switch, Port,
     NainA)
 from config.TEST_CONFIGURATION import TEST_DATABASE

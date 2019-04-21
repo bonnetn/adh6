@@ -4,10 +4,10 @@ import logging
 from connexion.resolver import RestyResolver
 
 from config import CONFIGURATION
-from adh.interface_adapter.elasticsearch.storage import ElasticSearchStorage
-from adh.interface_adapter.sql.model.database import Database
-from adh.interface_adapter.sql.sql_storage import SQLStorage
-from adh.use_case.member_manager import MemberManager
+from src.interface_adapter.elasticsearch.storage import ElasticSearchStorage
+from src.interface_adapter.sql.model.database import Database
+from src.interface_adapter.sql.sql_storage import SQLStorage
+from src.use_case.member_manager import MemberManager
 from config.CONFIGURATION import API_CONF, PROD_DATABASE
 
 Database.init_db(PROD_DATABASE)
@@ -26,7 +26,7 @@ logging.basicConfig(level=logging.INFO)
 app = connexion.FlaskApp(__name__)
 app.app.config.update(API_CONF)
 app.add_api('swagger.yaml',
-            resolver=RestyResolver('adh.interface_adapter.http_api'),
+            resolver=RestyResolver('src.interface_adapter.http_api'),
             strict_validation=True)
 # set the WSGI application callable to allow using uWSGI:
 # uwsgi --http :8080 -w app

@@ -1,4 +1,4 @@
-from adh.interface_adapter.sql.model.models import Modification
+from src.interface_adapter.sql.model.models import Modification
 
 base_url = "api"
 device_cazal = {

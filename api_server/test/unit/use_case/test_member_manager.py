@@ -6,15 +6,15 @@ from unittest import mock
 from unittest.mock import MagicMock
 
 from config import TEST_CONFIGURATION
-from adh.entity.member import Member
-from adh.exceptions import IntMustBePositiveException, MemberNotFound
-from adh.use_case.interface.logs_repository import LogsRepository, LogFetchError
-from adh.use_case.interface.member_repository import MemberRepository, NotFoundError
-from adh.use_case.interface.membership_repository import MembershipRepository
-from adh.use_case.member_manager import MemberManager, NoPriceAssignedToThatDurationException, MutationRequest, \
+from src.entity.member import Member
+from src.exceptions import IntMustBePositiveException, MemberNotFound
+from src.use_case.interface.logs_repository import LogsRepository, LogFetchError
+from src.use_case.interface.member_repository import MemberRepository, NotFoundError
+from src.use_case.interface.membership_repository import MembershipRepository
+from src.use_case.member_manager import MemberManager, NoPriceAssignedToThatDurationException, MutationRequest, \
     UsernameMismatchError, MissingRequiredFieldError, Mutation, PasswordTooShortError
-from adh.util.context import build_context
-from adh.util.hash import ntlm_hash
+from src.util.context import build_context
+from src.util.hash import ntlm_hash
 
 TEST_USERNAME = 'my_test_user'
 TEST_EMAIL = 'hello@hello.fr'
