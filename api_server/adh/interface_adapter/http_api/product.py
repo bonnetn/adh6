@@ -1,5 +1,5 @@
-from adh.interface_adapter.endpoint.decorator.auth import auth_regular_admin
-from adh.interface_adapter.endpoint.decorator.sql_session import require_sql
+from adh.interface_adapter.http_api.decorator.auth import auth_regular_admin
+from adh.interface_adapter.http_api.decorator.sql_session import require_sql
 
 
 @require_sql
@@ -16,11 +16,11 @@ def post(body):
 
 @require_sql
 @auth_regular_admin
-def get(payment_method_id):
+def get(product_id):
     pass
 
 
 @require_sql
 @auth_regular_admin
-def patch(payment_method_id, body):
+def patch(product_id, body):
     pass

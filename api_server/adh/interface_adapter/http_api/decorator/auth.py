@@ -7,7 +7,7 @@ import logging
 from connexion import NoContent
 
 from adh.constants import CTX_TESTING, CTX_SQL_SESSION
-from adh.interface_adapter.endpoint.auth import ADH6_USER, ADH6_ADMIN
+from adh.interface_adapter.http_api.auth import ADH6_USER, ADH6_ADMIN
 from adh.interface_adapter.sql.model.models import Utilisateur
 from adh.util.context import build_context
 
@@ -19,7 +19,7 @@ def auth_regular_admin(f):
     # @wraps(f) # Cannot wrap this function, because connexion needs to know we have the user and token_info...
     def wrapper(ctx, *args, user, token_info, **kwargs):
         """
-        Wrap endpoint function.
+        Wrap http_api function.
         """
         if not ctx.get(CTX_TESTING) and (user is None or token_info is None):
             logging.warning('Could not extract user and token_info kwargs.')
@@ -43,7 +43,7 @@ def auth_super_admin(f):
     """
     def wrapper(ctx, *args, user, token_info, **kwargs):
         """
-        Wrap endpoint function.
+        Wrap http_api function.
         """
         if not ctx.get(CTX_TESTING) and ADH6_ADMIN not in token_info["groups"]:
             # User is not in the right group and we are not testing, do not allow.

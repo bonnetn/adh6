@@ -8,9 +8,9 @@ from connexion import NoContent
 from flask import g
 from sqlalchemy.orm.exc import MultipleResultsFound
 
-from adh.interface_adapter.endpoint.decorator.auth import auth_regular_admin
-from adh.interface_adapter.endpoint.util import ip_controller
-from adh.interface_adapter.endpoint.device_utils import is_wired, is_wireless, \
+from adh.interface_adapter.http_api.decorator.auth import auth_regular_admin
+from adh.interface_adapter.http_api.util import ip_controller
+from adh.interface_adapter.http_api.device_utils import is_wired, is_wireless, \
     delete_wireless_device, \
     delete_wired_device, \
     update_wireless_device, \
@@ -23,7 +23,7 @@ from adh.exceptions import InvalidIPv4, InvalidIPv6, InvalidMac
 from adh.exceptions import MemberNotFound
 from adh.interface_adapter.sql.model import models
 from adh.interface_adapter.sql.model.models import Adherent, Modification
-from adh.interface_adapter.endpoint.decorator.sql_session import require_sql
+from adh.interface_adapter.http_api.decorator.sql_session import require_sql
 
 
 @require_sql

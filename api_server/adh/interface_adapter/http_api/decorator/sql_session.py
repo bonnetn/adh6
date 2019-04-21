@@ -20,7 +20,7 @@ def require_sql(f):
     @wraps(f)
     def wrapper(ctx, *args, **kwds):
         """
-        Wrap endpoint function.
+        Wrap http_api function.
         """
         if ctx.get(CTX_SQL_SESSION):
             return f(ctx, *args, **kwds)

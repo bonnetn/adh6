@@ -256,7 +256,7 @@ paths:
       - oauth2: ["profile"]
   /member/{username}/password/:
     put:
-      operationId: adh.interface_adapter.endpoint.member.put_password
+      operationId: adh.interface_adapter.http_api.member.put_password
       tags:
       - "member"
       summary: "Update password"
@@ -289,7 +289,7 @@ paths:
       - oauth2: ["profile"]
   /member/{username}/logs/:
     get:
-      operationId: adh.interface_adapter.endpoint.member.get_logs
+      operationId: adh.interface_adapter.http_api.member.get_logs
       tags:
       - "member"
       summary: "Get the most recent logs"
@@ -315,7 +315,7 @@ paths:
       - oauth2: ["profile"]
   /member/{username}/membership/:
     post:
-      operationId: adh.interface_adapter.endpoint.member.post_membership
+      operationId: adh.interface_adapter.http_api.member.post_membership
       tags:
       - "membership"
       summary: "Add a membership record for an member"
@@ -465,7 +465,7 @@ paths:
       - oauth2: ["profile"]
   /device/{mac_address}/vendor:
     get:
-      operationId: adh.interface_adapter.endpoint.device.get_vendor
+      operationId: adh.interface_adapter.http_api.device.get_vendor
       tags:
       - "device"
       summary: "Retrieve the vendor of a device based on its MAC"
@@ -868,7 +868,7 @@ paths:
       - oauth2: ["profile"]
   /port/{port_id}/state/:
     get:
-      operationId: adh.interface_adapter.endpoint.port.get_state
+      operationId: adh.interface_adapter.http_api.port.get_state
       tags:
       - "port"
       summary: "Retrieve the status of a port."
@@ -889,7 +889,7 @@ paths:
       security:
       - oauth2: ["profile"]
     put:
-      operationId: adh.interface_adapter.endpoint.port.put_state
+      operationId: adh.interface_adapter.http_api.port.put_state
       tags:
       - "port"
       summary: "Shutdown/enable a port"
@@ -917,7 +917,7 @@ paths:
       - oauth2: ["profile"]
   /port/{port_id}/mab/:
     get:
-      operationId: adh.interface_adapter.endpoint.port.get_mab
+      operationId: adh.interface_adapter.http_api.port.get_mab
       tags:
       - "port"
       summary: "Check whether MAB is enable on this port or not."
@@ -938,7 +938,7 @@ paths:
       security:
       - oauth2: ["profile"]
     put:
-      operationId: adh.interface_adapter.endpoint.port.put_mab
+      operationId: adh.interface_adapter.http_api.port.put_mab
       tags:
       - "port"
       summary: "Enable/disable MAB on a port"
@@ -965,7 +965,7 @@ paths:
 
   /port/{port_id}/vlan/:
     get:
-      operationId: adh.interface_adapter.endpoint.port.get_vlan
+      operationId: adh.interface_adapter.http_api.port.get_vlan
       tags:
       - "port"
       summary: "Retrieve the VLAN assigned to the port."
@@ -987,7 +987,7 @@ paths:
       security:
       - oauth2: ["profile"]
     put:
-      operationId: adh.interface_adapter.endpoint.port.put_vlan
+      operationId: adh.interface_adapter.http_api.port.put_vlan
       tags:
       - "port"
       summary: "Change the VLAN assigned a to port"
@@ -1498,7 +1498,7 @@ securityDefinitions:
     type: "oauth2"
     authorizationUrl: "http://localhost:5000/oauth/authorize"
     flow: "implicit"
-    x-tokenInfoFunc: adh.interface_adapter.endpoint.auth.token_info
+    x-tokenInfoFunc: adh.interface_adapter.http_api.auth.token_info
     scopes:
       profile: "access username & adh groups of admins from LDAP"
       picsou: "manage the flow of value between accounts"

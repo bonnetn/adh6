@@ -1,14 +1,14 @@
 # coding=utf-8
 """
-Contain all the http endpoint functions.
+Contain all the http http_api functions.
 """
 from connexion import NoContent
 
 from adh.exceptions import MemberNotFound
-from adh.interface_adapter.endpoint.decorator.auth import auth_regular_admin
-from adh.interface_adapter.endpoint.decorator.sql_session import require_sql
-from adh.interface_adapter.endpoint.decorator.with_context import with_context
-from adh.interface_adapter.endpoint.util.error import bad_request
+from adh.interface_adapter.http_api.decorator.auth import auth_regular_admin
+from adh.interface_adapter.http_api.decorator.sql_session import require_sql
+from adh.interface_adapter.http_api.decorator.with_context import with_context
+from adh.interface_adapter.http_api.util.error import bad_request
 from adh.use_case.member_manager import MutationRequest, Mutation
 from adh.util.date import string_to_date
 from main import member_manager

@@ -6,9 +6,9 @@ from flask import g
 from sqlalchemy import or_
 
 from adh.exceptions import InvalidIPv4, SwitchNotFound
-from adh.interface_adapter.endpoint.decorator.auth import auth_regular_admin, auth_super_admin
+from adh.interface_adapter.http_api.decorator.auth import auth_regular_admin, auth_super_admin
 from adh.interface_adapter.sql.model.models import Switch
-from adh.interface_adapter.endpoint.decorator.sql_session import require_sql
+from adh.interface_adapter.http_api.decorator.sql_session import require_sql
 
 
 def switch_exists(session, switchID):

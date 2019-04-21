@@ -5,9 +5,9 @@ import secrets
 from connexion import NoContent
 from flask import g
 
-from adh.interface_adapter.endpoint.decorator.auth import auth_super_admin
+from adh.interface_adapter.http_api.decorator.auth import auth_super_admin
 from adh.interface_adapter.sql.model.models import NainA
-from adh.interface_adapter.endpoint.decorator.sql_session import require_sql
+from adh.interface_adapter.http_api.decorator.sql_session import require_sql
 
 TOKEN_SIZE = 32
 
