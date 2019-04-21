@@ -12,6 +12,7 @@ from src.util.env import isDevelopmentEnvironment
 ADH6_USER = "adh6_user"
 ADH6_ADMIN = "adh6_admin"
 
+TESTING_CLIENT = 'TestingClient'
 
 def token_info(access_token) -> dict:
     if access_token.startswith("NAINA_"):
@@ -19,7 +20,7 @@ def token_info(access_token) -> dict:
 
     if current_app.config["TESTING"]:
         return {
-            "uid": "TestingClient",
+            "uid": TESTING_CLIENT,
             "scope": ["profile"],
             "groups": []
         }

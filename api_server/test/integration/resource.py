@@ -1,3 +1,5 @@
+from logging import LogRecord
+
 from src.interface_adapter.sql.model.models import Modification
 
 base_url = "api"
@@ -55,5 +57,29 @@ def assert_modification_was_created(s):
     assert q.count() >= 1
 
 
-def logs_contains(caplog, log):
-    return any(log in msg for msg in caplog.messages) is True
+def _records_contains_fields(record: LogRecord, fields: dict):
+    if not fields:
+        return True
+
+    try:
+        record.extra
+    except AttributeError:
+        return False
+
+    for k,v in fields.items():
+        if k not in record.extra:
+            return False
+
+        if record.extra[k] != v:
+            return False
+
+    return True
+
+
+
+
+def logs_contains(caplog, log_msg, **extra_fields):
+    if any(log_msg in m for m in caplog.messages) is False:
+        return False
+
+    return any(_records_contains_fields(r, extra_fields) for r in caplog.records)

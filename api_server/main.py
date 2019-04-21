@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 import connexion
-import logging
 from connexion.resolver import RestyResolver
 
 from config import CONFIGURATION
+from config.CONFIGURATION import API_CONF, PROD_DATABASE
 from src.interface_adapter.elasticsearch.storage import ElasticSearchStorage
 from src.interface_adapter.sql.model.database import Database
 from src.interface_adapter.sql.sql_storage import SQLStorage
 from src.use_case.member_manager import MemberManager
-from config.CONFIGURATION import API_CONF, PROD_DATABASE
 
 Database.init_db(PROD_DATABASE)
 
@@ -22,7 +21,6 @@ member_manager = MemberManager(
 
 )
 
-logging.basicConfig(level=logging.INFO)
 app = connexion.FlaskApp(__name__)
 app.app.config.update(API_CONF)
 app.add_api('swagger.yaml',

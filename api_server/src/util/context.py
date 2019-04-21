@@ -21,3 +21,17 @@ def build_context(ctx: MappingProxyType = None, session=None, admin=None, testin
     merged = {**new_fields, **old_fields}  # Merge old and new context, with priority for the new one.
 
     return MappingProxyType(merged)
+
+
+def build_log_extra(context: MappingProxyType, **extra_fields):
+    admin_login = None
+    if context.get(CTX_ADMIN):
+        admin_login = context.get(CTX_ADMIN).login
+
+    infos = {
+        'admin': admin_login,
+        'testing': str(context.get(CTX_TESTING) or False),
+    }
+    return {
+        'extra': {**infos, **extra_fields},
+    }

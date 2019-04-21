@@ -4,17 +4,17 @@ Use cases (business rule layer) of everything related to members.
 """
 import datetime
 import json
-import logging
 from dataclasses import dataclass, asdict
 from enum import Enum
 from typing import List
 
-from src.constants import CTX_ADMIN
 from src.entity.member import Member
+from src.log import LOG
 from src.use_case.interface.logs_repository import LogsRepository, LogFetchError
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.membership_repository import MembershipRepository
 from src.util.checks import is_email
+from src.util.context import build_log_extra
 from src.util.date import string_to_date
 from src.util.hash import ntlm_hash
 
@@ -94,9 +94,12 @@ class MemberManager:
         except NotFoundError:
             raise MemberNotFound()
 
-        admin = ctx.get(CTX_ADMIN)
-        logging.info("%s created a membership record for %s of %s days starting from %s",
-                     admin.login, username, duration, start.isoformat())
+        LOG.info("create_membership_record", extra=build_log_extra(
+            ctx,
+            username=username,
+            duration_in_days=duration,
+            start_date=start.isoformat()
+        ))
 
     def get_by_username(self, ctx, username) -> Member:
         """
@@ -109,8 +112,10 @@ class MemberManager:
             raise MemberNotFound()
 
         # Log action.
-        admin = ctx.get(CTX_ADMIN)
-        logging.info("%s fetched the member %s", admin.login, username)
+        LOG.info('member_get_by_username', extra=build_log_extra(
+            ctx,
+            username='username'
+        ))
         return result[0]
 
     def search(self, ctx, limit, offset=0, room_number=None, terms=None) -> (List[Member], int):
@@ -135,7 +140,11 @@ class MemberManager:
                                                              terms=terms)
 
         # Log action.
-        logging.info("%s fetched the member list", ctx.get(CTX_ADMIN))
+        LOG.info('member_search', extra=build_log_extra(
+            ctx,
+            room_number=room_number,
+            terms=terms,
+        ))
         return result, count
 
     def create_or_update(self, ctx, username, mutation_request: MutationRequest) -> bool:
@@ -151,8 +160,6 @@ class MemberManager:
         :raises StringMustNotBeEmptyException
         :raises UsernameMismatchError
         """
-        admin = ctx.get(CTX_ADMIN)
-
         # Make sure all the fields set are valid.
         _validate_mutation_request(mutation_request)
 
@@ -173,8 +180,11 @@ class MemberManager:
             self.member_storage.update_member(ctx, username, **fields_to_update)
 
             # Log action.
-            logging.info("%s updated the member %s\n%s",
-                         admin.login, username, json.dumps(fields_to_update, sort_keys=True, default=str))
+            LOG.info('member_whole_update', extra=build_log_extra(
+                ctx,
+                username=username,
+                mutation=json.dumps(fields_to_update, sort_keys=True, default=str),
+            ))
 
             return False
         else:
@@ -195,8 +205,11 @@ class MemberManager:
                 raise InvalidRoomNumberError()
 
             # Log action
-            logging.info("%s created the member %s\n%s",
-                         admin.login, username, json.dumps(fields, sort_keys=True, default=str))
+            LOG.info('member_create', extra=build_log_extra(
+                ctx,
+                username=username,
+                mutation=json.dumps(fields, sort_keys=True, default=str)
+            ))
 
             return True
 
@@ -221,9 +234,11 @@ class MemberManager:
             raise MemberNotFound()
 
         # Log action.
-        admin = ctx.get(CTX_ADMIN)
-        logging.info("%s updated the member %s\n%s",
-                     admin.login, username, json.dumps(fields_to_update, sort_keys=True, default=str))
+        LOG.info('member_partial_update', extra=build_log_extra(
+            ctx,
+            username=username,
+            mutation=json.dumps(fields_to_update, sort_keys=True, default=str)
+        ))
 
     def change_password(self, ctx, username, password) -> None:
         """
@@ -248,8 +263,10 @@ class MemberManager:
         except NotFoundError:
             raise MemberNotFound()
 
-        admin = ctx.get(CTX_ADMIN)
-        logging.info("%s updated the password of %s", admin.login, username)
+        LOG.info('member_password_update', extra=build_log_extra(
+            ctx,
+            username=username,
+        ))
 
     def delete(self, ctx, username) -> None:
         """
@@ -262,8 +279,10 @@ class MemberManager:
             self.member_storage.delete_member(ctx, username)
 
             # Log action.
-            admin = ctx.get(CTX_ADMIN)
-            logging.info("%s deleted the member %s", admin.login, username)
+            LOG.info('member_delete', extra=build_log_extra(
+                ctx,
+                username=username,
+            ))
         except NotFoundError:
             raise MemberNotFound()
 
@@ -290,13 +309,15 @@ class MemberManager:
         try:
             logs = self.logs_storage.get_logs(ctx, username, [])
 
-            admin = ctx.get(CTX_ADMIN)
-            logging.info("%s fetched the logs of %s", admin.login, username)
+            LOG.info('member_get_logs', extra=build_log_extra(
+                ctx,
+                username=username,
+            ))
 
             return logs
 
         except LogFetchError:
-            logging.warning("Log fetching failed, returning empty response.")
+            LOG.warning("Log fetching failed, returning empty response.")
             return []  # We fail open here.
 
 
