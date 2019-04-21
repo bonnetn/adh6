@@ -11,3 +11,8 @@ class Member:
     comment: str
     association_mode: str
     room_number: str
+
+
+@dataclass
+class Admin:
+    login: str
