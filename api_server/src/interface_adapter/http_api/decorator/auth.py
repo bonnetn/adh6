@@ -3,7 +3,6 @@
 Auth decorators.
 """
 import logging
-
 from connexion import NoContent
 
 from src.constants import CTX_TESTING, CTX_SQL_SESSION
@@ -17,6 +16,7 @@ def auth_regular_admin(f):
     """
     Authenticate a regular admin.
     """
+
     # @wraps(f) # Cannot wrap this function, because connexion needs to know we have the user and token_info...
     def wrapper(ctx, *args, user, token_info, **kwargs):
         """
@@ -42,6 +42,7 @@ def auth_super_admin(f):
     """
     Authenticate a super admin.
     """
+
     def wrapper(ctx, *args, user, token_info, **kwargs):
         """
         Wrap http_api function.
@@ -51,7 +52,7 @@ def auth_super_admin(f):
             return NoContent, 401
 
         admin = Utilisateur.find_or_create(ctx.get(CTX_SQL_SESSION), user)
-        ctx = build_context(ctx=ctx, admin=Admin(login=admin.login))
+        ctx = build_context(ctx=ctx, admin=Admin(login=admin.login))  # TODO: remove dep from sqlalchemy...
         return f(ctx, *args, **kwargs)  # Discard the user and token_info.
 
     return wrapper

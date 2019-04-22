@@ -84,7 +84,7 @@ def put(ctx, username, body):
     """ [API] Create/Update member from the database """
     mutation_request = _build_mutation_request_from_body(body)
     try:
-        created = member_manager.create_or_update(ctx, username, mutation_request)
+        created = member_manager.update_or_create(ctx, username, mutation_request)
         if created:
             return NoContent, 201  # 201 Created
         else:

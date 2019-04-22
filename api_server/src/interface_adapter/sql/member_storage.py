@@ -3,22 +3,19 @@
 Implements everything related to actions on the SQL database.
 """
 from datetime import datetime
-from sqlalchemy import literal, String
 from sqlalchemy.orm.exc import NoResultFound
 from typing import List
 
 from src.constants import CTX_SQL_SESSION
-from src.entity.device import DeviceInfo, DeviceType
 from src.entity.member import Member
-from src.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion, Ordinateur, Portable
+from src.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion
 from src.interface_adapter.sql.track_modifications import track_modifications
-from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.membership_repository import MembershipRepository
 from src.util.date import date_to_string
 
 
-class SQLStorage(MemberRepository, MembershipRepository, DeviceRepository):
+class MemberSQLStorage(MemberRepository, MembershipRepository):
     """
     Represent the interface to the SQL database.
     """
@@ -167,55 +164,6 @@ class SQLStorage(MemberRepository, MembershipRepository, DeviceRepository):
 
         return list(map(_map_member_sql_to_entity, r)), count
 
-    def search_device_by(self, ctx, limit=None, offset=None, username=None, terms=None) -> (List[DeviceInfo], int):
-        s = ctx.get(CTX_SQL_SESSION)
-
-        # Return a subquery with all devices (wired & wireless)
-        # The fields, ip, ipv6, dns, etc, are set to None for wireless devices
-        # There is also a field "type" wich is wired and wireless
-        all_devices = _get_all_devices(s)
-
-        # Query all devices and their owner's unsername
-        q = s.query(all_devices, Adherent.login.label("login"))
-        q = q.join(Adherent, Adherent.id == all_devices.columns.adherent_id)
-
-        if username:
-            q = q.filter(Adherent.login == username)
-
-        if terms:
-            q = q.filter(
-                (all_devices.columns.mac.contains(terms)) |
-                (all_devices.columns.ip.contains(terms)) |
-                (all_devices.columns.ipv6.contains(terms)) |
-                (Adherent.login.contains(terms))
-            )
-        count = q.count()
-        q = q.order_by(all_devices.columns.mac.asc())
-        if offset is not None:
-            q = q.offset(offset)
-        if limit is not None:
-            q = q.limit(limit)
-        r = q.all()
-        results = list(map(_map_device_sql_to_entity, r))
-
-        return results, count
-
-
-def _map_device_sql_to_entity(d) -> DeviceInfo:
-    """
-    Map a Device object from SQLAlchemy to a Device (from the entity folder/layer).
-    """
-    t = DeviceType.Wired
-    if d.type == 'wireless':
-        t = DeviceType.Wireless
-    return DeviceInfo(
-        mac=d.mac,
-        owner_username=d.login,
-        connection_type=t,
-        ip_address=d.ip,
-        ipv6_address=d.ipv6,
-    )
-
 
 def _map_member_sql_to_entity(adh: Adherent) -> Member:
     """
@@ -242,23 +190,3 @@ def _map_member_sql_to_entity(adh: Adherent) -> Member:
 
 def _get_member_by_login(s, login) -> Adherent:
     return s.query(Adherent).filter(Adherent.login == login).one_or_none()
-
-
-def _get_all_devices(s):
-    q_wired = s.query(
-        Ordinateur.mac.label("mac"),
-        Ordinateur.ip.label("ip"),
-        Ordinateur.ipv6.label("ipv6"),
-        Ordinateur.adherent_id.label("adherent_id"),
-        literal("wired", type_=String).label("type"),
-    )
-
-    q_wireless = s.query(
-        Portable.mac.label("mac"),
-        literal(None, type_=String).label("ip"),
-        literal(None, type_=String).label("ipv6"),
-        Portable.adherent_id.label("adherent_id"),
-        literal("wireless", type_=String).label("type"),
-    )
-    q = q_wireless.union_all(q_wired)
-    return q.subquery()

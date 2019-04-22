@@ -123,12 +123,12 @@ class MemberManager:
 
     def search(self, ctx, limit, offset=0, room_number=None, terms=None) -> (List[Member], int):
         """
-        Search member in the database.
+        search member in the database.
 
-        User story: As an admin, I want to have a list of members with some filters, so that I can browse and find
+        user story: as an admin, i want to have a list of members with some filters, so that i can browse and find
         members.
 
-        :raises IntMustBePositiveException
+        :raises intmustbepositiveexception
         """
         if limit < 0:
             raise IntMustBePositiveException('limit')
@@ -150,7 +150,7 @@ class MemberManager:
         ))
         return result, count
 
-    def create_or_update(self, ctx, username, mutation_request: MutationRequest) -> bool:
+    def update_or_create(self, ctx, username, mutation_request: MutationRequest) -> bool:
         """
         Create/Update member from the database.
 
@@ -310,6 +310,7 @@ class MemberManager:
 
         # Do the actual log fetching.
         try:
+            # TODO: Fetch all the devices and put them into this request.
             logs = self.logs_storage.get_logs(ctx, username, [])
 
             LOG.info('member_get_logs', extra=build_log_extra(

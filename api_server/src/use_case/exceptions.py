@@ -40,3 +40,7 @@ class IntMustBePositiveException(ValueError):
 class StringMustNotBeEmptyException(ValueError):
     def __init__(self, msg):
         super().__init__(f'{msg} must not be empty')
+
+
+class DeviceNotFound(Exception):
+    pass

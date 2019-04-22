@@ -22,6 +22,7 @@ def require_sql(f):
         """
         Wrap http_api function.
         """
+        # TODO: Remove dep from SQLAlchemy?
         if ctx.get(CTX_SQL_SESSION):
             return f(ctx, *args, **kwds)
 

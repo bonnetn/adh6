@@ -180,7 +180,7 @@ class TestCreateOrUpdate:
         mock_member_repository.search_member_by = MagicMock(return_value=([], 0))
 
         # When...
-        member_manager.create_or_update(ctx, TEST_USERNAME, sample_mutation_request)
+        member_manager.update_or_create(ctx, TEST_USERNAME, sample_mutation_request)
 
         # Expect...
         mock_member_repository.create_member.assert_called_once_with(ctx, **asdict(sample_mutation_request))
@@ -200,7 +200,7 @@ class TestCreateOrUpdate:
         req.last_name = "Dupuis"
 
         # When...
-        member_manager.create_or_update(ctx, TEST_USERNAME, req)
+        member_manager.update_or_create(ctx, TEST_USERNAME, req)
 
         # Expect...
         mock_member_repository.update_member.assert_called_once_with(ctx, TEST_USERNAME, **asdict(req))
@@ -219,7 +219,7 @@ class TestCreateOrUpdate:
 
         # When...
         with raises(UsernameMismatchError):
-            member_manager.create_or_update(ctx, TEST_USERNAME, req)
+            member_manager.update_or_create(ctx, TEST_USERNAME, req)
 
         # Expect...
         mock_member_repository.create_member.assert_not_called()
@@ -228,6 +228,7 @@ class TestCreateOrUpdate:
     def test_without_required_field(self, ctx,
                                     mock_member_repository: MagicMock,
                                     sample_mutation_request: MutationRequest,
+                                    sample_member: Member,
                                     member_manager: MemberManager):
         # Given a request that does not contain all the required fields .
         req = sample_mutation_request
@@ -238,7 +239,7 @@ class TestCreateOrUpdate:
 
         # When...
         with raises(MissingRequiredFieldError):
-            member_manager.create_or_update(ctx, TEST_USERNAME, req)
+            member_manager.update_or_create(ctx, TEST_USERNAME, req)
 
         # Expect...
         mock_member_repository.create_member.assert_not_called()
@@ -342,6 +343,7 @@ class TestGetLogs:
     def test_happy_path(self, ctx,
                         mock_logs_repository: MagicMock,
                         mock_member_repository: MagicMock,
+                        sample_member: Member,
                         member_manager: MemberManager):
         # Given...
         mock_member_repository.search_member_by = MagicMock(return_value=([sample_member], 1))
@@ -356,6 +358,7 @@ class TestGetLogs:
     def test_fetch_failed(self, ctx,
                           mock_logs_repository: MagicMock,
                           mock_member_repository: MagicMock,
+                          sample_member: Member,
                           member_manager: MemberManager):
         # Given...
         mock_member_repository.search_member_by = MagicMock(return_value=([sample_member], 1))
@@ -421,19 +424,5 @@ def mock_logs_repository():
     r = MagicMock(spec=LogsRepository)
     r.get_logs = MagicMock(return_value=TEST_LOGS)
     return r
-
-
-@fixture
-def sample_member():
-    return Member(
-        username=TEST_USERNAME,
-        email=TEST_EMAIL,
-        first_name=TEST_FIRST_NAME,
-        last_name=TEST_LAST_NAME,
-        departure_date=TEST_DATE1.isoformat(),
-        comment=TEST_COMMENT,
-        association_mode=TEST_DATE2.isoformat(),
-        room_number=str(TEST_ROOM_NUMBER),
-    )
 
 

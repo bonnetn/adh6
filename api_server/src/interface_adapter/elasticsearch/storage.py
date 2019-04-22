@@ -58,7 +58,7 @@ class ElasticSearchStorage(LogsRepository):
             )
             query["query"]["bool"]["should"] += list(variations)
 
-        # TODO(insolentbacon): instantiate only once the Elasticsearch client
+        # TODO: instantiate only once the Elasticsearch client
         es = Elasticsearch(ELK_HOSTS)
         res = es.search(index="", body=query)['hits']['hits']
 

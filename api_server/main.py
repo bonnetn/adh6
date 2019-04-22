@@ -5,21 +5,24 @@ from connexion.resolver import RestyResolver
 from config import CONFIGURATION
 from config.CONFIGURATION import API_CONF, PROD_DATABASE
 from src.interface_adapter.elasticsearch.storage import ElasticSearchStorage
+from src.interface_adapter.sql.device_storage import DeviceSQLStorage
 from src.interface_adapter.sql.model.database import Database
-from src.interface_adapter.sql.sql_storage import SQLStorage
+from src.interface_adapter.sql.member_storage import MemberSQLStorage
 from src.use_case.device_manager import DeviceManager
 from src.use_case.member_manager import MemberManager
 
 Database.init_db(PROD_DATABASE)
 
-sql_storage = SQLStorage()
+member_sql_storage = MemberSQLStorage()
+device_sql_storage = DeviceSQLStorage()
 elk_storage = ElasticSearchStorage(CONFIGURATION)
+
 device_manager = DeviceManager(
-    device_storage=sql_storage,
+    device_storage=device_sql_storage,
 )
 member_manager = MemberManager(
-    member_storage=sql_storage,
-    membership_storage=sql_storage,
+    member_storage=member_sql_storage,
+    membership_storage=member_sql_storage,
     logs_storage=elk_storage,
     configuration=CONFIGURATION,
 )

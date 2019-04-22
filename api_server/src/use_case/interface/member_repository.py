@@ -30,7 +30,7 @@ class MemberRepository(metaclass=abc.ABCMeta):
         """
         Create a member.
 
-        :raises NotFoundError
+        :raises NotFoundError thrown if the room number is not found
         """
         pass  # pragma: no cover
 
