@@ -13,7 +13,7 @@ from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator
 
 
-class NoMoreIPAvailable(Exception):
+class NoMoreIPAvailable(RuntimeError):
     pass
 
 
@@ -62,11 +62,19 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
 
     def allocate_ip_v4(self, ctx, ip_range: str) -> str:
         s = ctx.get(CTX_SQL_SESSION)
-        return _get_available_ip(ip_range, _get_all_used_ipv4(s))
+        result = _get_available_ip(ip_range, _get_all_used_ipv4(s))
+        if result is None:
+            raise NoMoreIPAvailable()
+
+        return result
 
     def allocate_ip_v6(self, ctx, ip_range: str) -> str:
         s = ctx.get(CTX_SQL_SESSION)
-        return _get_available_ip(ip_range, _get_all_used_ipv6(s))
+        result = _get_available_ip(ip_range, _get_all_used_ipv6(s))
+        if result is None:
+            raise NoMoreIPAvailable()
+
+        return result
 
 
 def _map_device_sql_to_entity(d) -> Device:

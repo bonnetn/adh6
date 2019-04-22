@@ -2,7 +2,6 @@ import datetime
 
 import ipaddress
 
-from src.interface_adapter.sql.device_storage import NoMoreIPAvailable
 from src.interface_adapter.sql.model.models import Ordinateur, Adherent
 
 
@@ -16,7 +15,7 @@ def _get_available_ip(network, ip_taken):
         next(available)
         ip = next(available)
     except StopIteration:
-        raise NoMoreIPAvailable
+        return None
 
     return str(ip)
 
