@@ -1,10 +1,31 @@
-test:
-  image: python:3.7-stretch
-  before_script:
-  - cd api_server/
+image: python:3.7-stretch
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+before_script:
+  - uname -a
+  - python -V
   - apt update -q
   - apt install -qy sqlite3 libmariadbclient-dev
-  - pip3 install -r requirements.txt
-  - cp config/CONFIGURATION.py{.example,}
+  - pip install virtualenv
+  - virtualenv -p python3 venv
+  - source venv/bin/activate
+  - pip install -r api_server/requirements.txt
+
+stages:
+  - test
+
+python_unit_test:
+  stage: test
   script:
-  - pytest -vv
+  - cd api_server/
+  - pytest test/unit -vv
+
+python_integration_test:
+  stage: test
+  script:
+  - cd api_server/
+  - pytest test/integration -vv
