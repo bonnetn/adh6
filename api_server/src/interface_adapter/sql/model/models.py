@@ -299,7 +299,7 @@ class Ordinateur(Base, RubyHashTrackable):
         """
         Override this method to add the prefix.
         """
-        modif, adh = rubydiff(snap_before, snap_after)
+        modif = rubydiff(snap_before, snap_after)
         if snap_after is None:
             proper_mac = snap_before.get('mac').upper().replace(":", "-")
             return (
@@ -309,6 +309,9 @@ class Ordinateur(Base, RubyHashTrackable):
 
         modif = 'ordinateur: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + modif
         return modif
+
+    def get_related_member(self):
+        return self.adherent
 
     @validates('mac')
     def mac_valid(self, key, mac):
@@ -354,7 +357,7 @@ class Portable(Base, RubyHashTrackable):
         """
         Override this method to add the prefix.
         """
-        modif = super(RubyHashTrackable, self).serialize_snapshot_diff(snap_before, snap_after)
+        modif = rubydiff(snap_before, snap_after)
         if snap_after is None:
             proper_mac = snap_before.get('mac').upper().replace(":", "-")
             return (
@@ -363,6 +366,9 @@ class Portable(Base, RubyHashTrackable):
             )
         modif = 'portable: !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + modif
         return modif
+
+    def get_related_member(self):
+        return self.adherent
 
     @validates('mac')
     def mac_valid(self, key, mac):

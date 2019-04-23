@@ -45,13 +45,18 @@ def put(ctx, mac_address, body):
     """ [API] Put (update or create) a new device in the database """
 
     try:
-        device_manager.update_or_create(ctx,
+        created = device_manager.update_or_create(ctx,
                                         mac_address=mac_address,
                                         owner_username=body.get('username'),
                                         connection_type=body.get('connectionType'),
                                         ip_v4_address=body.get('ipAddress'),
                                         ip_v6_address=body.get('ipv6Address'),
                                         )
+
+        if created:
+            return NoContent, 201  # 201 Created
+        else:
+            return NoContent, 204  # 204 No Content
     except IPAllocationFailedError:
         return "IP allocation failed.", 503
 

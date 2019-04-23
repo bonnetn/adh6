@@ -1,3 +1,7 @@
+class MemberAlreadyExist(ValueError):
+    pass
+
+
 class MemberNotFound(ValueError):
     pass
 
@@ -42,8 +46,13 @@ class StringMustNotBeEmptyException(ValueError):
         super().__init__(f'{msg} must not be empty')
 
 
+class DeviceAlreadyExist(Exception):
+    pass
+
+
 class DeviceNotFound(Exception):
     pass
+
 
 class IPAllocationFailedError(RuntimeError):
     pass

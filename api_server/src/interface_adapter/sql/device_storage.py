@@ -2,13 +2,16 @@
 """
 Implements everything related to actions on the SQL database.
 """
-from sqlalchemy import literal, String
+from sqlalchemy.orm.exc import MultipleResultsFound
 from typing import List
 
 from src.constants import CTX_SQL_SESSION
 from src.entity.device import Device, DeviceType
-from src.interface_adapter.sql.model.models import Adherent, Ordinateur, Portable
+from src.interface_adapter.sql.model.models import Adherent
+from src.interface_adapter.sql.util.device_helper import get_all_devices, is_wired, update_wired_device, \
+    update_wireless_device, delete_wired_device, create_wireless_device, delete_wireless_device, create_wired_device
 from src.interface_adapter.sql.util.ip_controller import _get_available_ip, _get_all_used_ipv4, _get_all_used_ipv6
+from src.use_case.exceptions import DeviceNotFound, DeviceAlreadyExist
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
 
@@ -22,7 +25,7 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
         # Return a subquery with all devices (wired & wireless)
         # The fields, ip, ipv6, dns, etc, are set to None for wireless devices
         # There is also a field "type" wich is wired and wireless
-        all_devices = _get_all_devices(s)
+        all_devices = get_all_devices(s)
 
         # Query all devices and their owner's unsername
         q = s.query(all_devices, Adherent.login.label("login"))
@@ -52,9 +55,93 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
 
         return results, count
 
-    def create_device(self, ctx, mac_address=None, owner_username=None, connection_type=None, ip_address=None,
-                      ipv6_address=None):
-        pass
+    def create_device(self, ctx, mac_address=None, owner_username=None, connection_type=None, ip_v4_address=None,
+                      ip_v6_address=None):
+        s = ctx.get(CTX_SQL_SESSION)
+
+        all_devices = get_all_devices(s)
+        device = s.query(all_devices).filter(all_devices.columns.mac == mac_address).one_or_none()
+
+        if device is not None:
+            raise DeviceAlreadyExist()
+
+        # If the user do not change the connection type, we just need to update...
+        if connection_type == DeviceType.Wired:
+            create_wired_device(
+                ctx,
+                s=s,
+                mac_address=mac_address,
+                ip_v4_address=ip_v4_address,
+                ip_v6_address=ip_v6_address,
+                username=owner_username,
+            )
+        else:
+            create_wireless_device(
+                ctx,
+                s=s,
+                mac_address=mac_address,
+                username=owner_username,
+            )
+
+    def update_device(self, ctx, mac_address, owner_username=None, connection_type=None, ip_v4_address=None,
+                      ip_v6_address=None):
+        s = ctx.get(CTX_SQL_SESSION)
+
+        all_devices = get_all_devices(s)
+        device = s.query(all_devices).filter(all_devices.columns.mac == mac_address).one_or_none()
+
+        if device is None:
+            return DeviceNotFound()
+
+        # If the user do not change the connection type, we just need to update...
+        if device.type == connection_type:
+            if is_wired(mac_address, s):
+                update_wired_device(
+                    ctx,
+                    s=s,
+                    mac_address=mac_address,
+                    ip_v4_address=ip_v4_address,
+                    ip_v6_address=ip_v6_address,
+                    username=owner_username,
+                )
+            else:
+                update_wireless_device(
+                    ctx,
+                    s=s,
+                    mac_address=mac_address,
+                    username=owner_username,
+                )
+            return
+
+        # If the user change the connection type, we have to move the Device row from one table to another
+        # (Wired table to Wireless table or the other way around)
+        # To do that, we first delete the device and then re-create it in the other table.
+        if is_wired(mac_address, s):
+            delete_wired_device(
+                ctx,
+                s=s,
+                mac_address=mac_address,
+            )
+            create_wireless_device(
+                ctx,
+                s=s,
+                mac_address=mac_address,
+                username=owner_username,
+            )
+        else:
+            delete_wireless_device(
+                ctx,
+                s=s,
+                mac_address=mac_address,
+            )
+            create_wired_device(
+                ctx,
+                s=s,
+                mac_address=mac_address,
+                ip_v4_address=ip_v4_address,
+                ip_v6_address=ip_v6_address,
+                username=owner_username,
+            )
 
     def allocate_ip_v4(self, ctx, ip_range: str) -> str:
         s = ctx.get(CTX_SQL_SESSION)
@@ -81,29 +168,9 @@ def _map_device_sql_to_entity(d) -> Device:
     if d.type == 'wireless':
         t = DeviceType.Wireless
     return Device(
-        mac=d.mac,
+        mac_address=d.mac,
         owner_username=d.login,
         connection_type=t,
-        ip_address=d.ip,
-        ipv6_address=d.ipv6,
+        ip_v4_address=d.ip,
+        ip_v6_address=d.ipv6,
     )
-
-
-def _get_all_devices(s):
-    q_wired = s.query(
-        Ordinateur.mac.label("mac"),
-        Ordinateur.ip.label("ip"),
-        Ordinateur.ipv6.label("ipv6"),
-        Ordinateur.adherent_id.label("adherent_id"),
-        literal("wired", type_=String).label("type"),
-    )
-
-    q_wireless = s.query(
-        Portable.mac.label("mac"),
-        literal(None, type_=String).label("ip"),
-        literal(None, type_=String).label("ipv6"),
-        Portable.adherent_id.label("adherent_id"),
-        literal("wireless", type_=String).label("type"),
-    )
-    q = q_wireless.union_all(q_wired)
-    return q.subquery()

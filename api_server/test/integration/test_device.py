@@ -1,16 +1,12 @@
 import json
-import logging
-
 import pytest
 
+from config.TEST_CONFIGURATION import TEST_DATABASE
 from src.interface_adapter.sql.model.database import Database as db
 from src.interface_adapter.sql.model.models import Ordinateur, Portable
-
-from config.TEST_CONFIGURATION import TEST_DATABASE
 from .resource import (
     base_url, INVALID_MAC, INVALID_IP, INVALID_IPv6, TEST_HEADERS,
-    assert_modification_was_created,
-    logs_contains)
+    assert_modification_was_created)
 
 
 def prep_db(session,
@@ -188,16 +184,6 @@ def test_device_put_create_wired(api_client, wired_device_dict):
     assert dev.ip == "127.0.0.1"
 
 
-def test_device_put_create_different_mac_addresses(api_client,
-                                                   wired_device_dict):
-    ''' Create with invalid mac address '''
-    wired_device_dict['mac'] = "11-11-11-11-11-11"
-    r = api_client.put('{}/device/{}'.format(base_url, "22-22-22-22-22-22"),
-                       data=json.dumps(wired_device_dict),
-                       content_type='application/json',
-                       headers=TEST_HEADERS)
-    assert r.status_code == 400
-
 
 @pytest.mark.parametrize('test_mac', INVALID_MAC)
 def test_device_put_create_invalid_mac_address(api_client,
@@ -302,61 +288,6 @@ def test_device_put_update_wireless_to_wired(api_client,
     assert_modification_was_created(db.get_db().get_session())
 
 
-def test_device_put_update_wired_and_wireless_to_wireless(
-        api_client,
-        wired_device,
-        wireless_device_dict):
-    '''
-    Test if the controller is able to handle the case where the MAC address is
-    in the Wireless table _AND_ the Wired table
-    Tests the case where we want to move the mac to the wireless table
-    '''
-    # Add a wireless device that has the same mac as WIRED_DEVICE
-    dev_with_same_mac = Portable(
-        mac=wired_device.mac,
-        adherent_id=1,
-    )
-    s = db.get_db().get_session()
-    s.add(dev_with_same_mac)
-    s.commit()
-
-    # Then try to update it...
-    r = api_client.put(
-        '{}/device/{}'.format(base_url, wired_device.mac),
-        data=json.dumps(wireless_device_dict),
-        content_type='application/json',
-        headers=TEST_HEADERS)
-    assert r.status_code == 204
-    assert_modification_was_created(db.get_db().get_session())
-
-
-def test_device_put_update_wired_and_wireless_to_wired(api_client,
-                                                       wireless_device,
-                                                       wired_device_dict):
-    '''
-    Test if the controller is able to handle the case where the MAC address is
-    in the Wireless table _AND_ the Wired table
-    Tests the case where we want to move the mac to the wired table
-    '''
-    # Add a wired device that has the same mac as WIRELESS_DEVICE
-    dev_with_same_mac = Ordinateur(
-        mac=wireless_device.mac,
-        adherent_id=1,
-    )
-    s = db.get_db().get_session()
-    s.add(dev_with_same_mac)
-    s.commit()
-
-    # Then try to update it...
-    r = api_client.put(
-        '{}/device/{}'.format(base_url, wireless_device.mac),
-        data=json.dumps(wired_device_dict),
-        content_type='application/json',
-        headers=TEST_HEADERS)
-    assert r.status_code == 204
-    assert_modification_was_created(db.get_db().get_session())
-
-
 def test_device_get_unknown_mac(api_client):
     mac = '00-00-00-00-00-00'
     r = api_client.get(
@@ -423,5 +354,3 @@ def test_device_delete_unexistant(api_client):
         headers=TEST_HEADERS,
     )
     assert r.status_code == 404
-
-

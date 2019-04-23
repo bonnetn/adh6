@@ -21,6 +21,7 @@ def track_modifications(ctx, session, obj: RubyHashTrackable):
     try:
         yield
     finally:
+        session.flush()
         diff = None
 
         if obj in session.new:

@@ -10,6 +10,7 @@ from src.constants import CTX_SQL_SESSION
 from src.entity.member import Member
 from src.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion
 from src.interface_adapter.sql.track_modifications import track_modifications
+from src.use_case.exceptions import MemberAlreadyExist
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.membership_repository import MembershipRepository
 from src.util.date import date_to_string
@@ -55,6 +56,10 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
             room = s.query(Chambre).filter(Chambre.numero == room_number).one_or_none()
             if not room:
                 raise NotFoundError('room not found')
+
+        member = s.query(Adherent).filter(Adherent.login == username).one_or_none()
+        if member is not None:
+            raise MemberAlreadyExist()
 
         member = Adherent(
             nom=last_name,

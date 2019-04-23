@@ -26,9 +26,12 @@ class DeviceRepository(metaclass=abc.ABCMeta):
                       ip_v6_address=None):
         """
         Create a device.
+
+        :raises DeviceAlreadyExist
         """
         pass  # pragma: no cover
 
+    @abc.abstractmethod
     def update_device(self, ctx, mac_address, owner_username=None, connection_type=None, ip_v4_address=None,
                       ip_v6_address=None):
         """
