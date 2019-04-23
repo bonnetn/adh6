@@ -44,3 +44,6 @@ class StringMustNotBeEmptyException(ValueError):
 
 class DeviceNotFound(Exception):
     pass
+
+class IPAllocationFailedError(RuntimeError):
+    pass

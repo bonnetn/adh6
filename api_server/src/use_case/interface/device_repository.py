@@ -33,5 +33,7 @@ class DeviceRepository(metaclass=abc.ABCMeta):
                       ip_v6_address=None):
         """
         Update a device.
+
+        :raises DeviceNotFound
         """
         pass  # pragma: no cover

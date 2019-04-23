@@ -5,9 +5,9 @@ from typing import List
 from src.entity.device import Device, DeviceType
 from src.entity.room import Vlan
 from src.log import LOG
-from src.use_case.exceptions import IntMustBePositiveException, MemberNotFound
+from src.use_case.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError
 from src.use_case.interface.device_repository import DeviceRepository
-from src.use_case.interface.ip_allocator import IPAllocator
+from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
 from src.use_case.interface.member_repository import MemberRepository
 from src.use_case.interface.room_repository import RoomRepository
 from src.util.context import build_log_extra
@@ -49,7 +49,9 @@ class DeviceManager:
 
         return result, count
 
-    def update_or_create(self, ctx, mac_address: str, owner_username: str, connection_type):
+    def update_or_create(self, ctx, mac_address: str, owner_username: str, connection_type: str,
+                         ip_v4_address=None,
+                         ip_v6_address=None):
         """
         Create/Update a device from the database.
 
@@ -57,6 +59,8 @@ class DeviceManager:
 
         :return: True if the device was created, false otherwise.
 
+        :raises MemberNotFound
+        :raises IPAllocationFailedError
         """
 
         # Make sure the provided owner username is valid.
@@ -65,15 +69,18 @@ class DeviceManager:
             raise MemberNotFound()
 
         # Allocate IP address.
-        ip_v4_address = None
-        ip_v6_address = None
         if connection_type == DeviceType.Wired:
             ip_v4_range, ip_v6_range = self._get_ip_range_for_user(ctx, owner_username)
 
             # TODO: Free addresses if cannot allocate.
-            # TODO: Catch the exception if allocation failed.
-            ip_v4_address = self.ip_allocator.allocate_ip_v4(ctx, ip_v4_range)
-            ip_v6_address = self.ip_allocator.allocate_ip_v6(ctx, ip_v6_range)
+            try:
+                if not ip_v4_address:
+                    ip_v4_address = self.ip_allocator.allocate_ip_v4(ctx, ip_v4_range)
+                if not ip_v6_address:
+                    ip_v6_address = self.ip_allocator.allocate_ip_v6(ctx, ip_v6_range)
+
+            except NoMoreIPAvailableException as e:
+                raise IPAllocationFailedError() from e
 
         result, _ = self.device_storage.search_device_by(ctx, mac_address=mac_address)
         if not result:
@@ -98,6 +105,8 @@ class DeviceManager:
 
         else:
             # A device exists, updating it.
+
+            # The following will never throw DeviceNotFound since we check beforehand.
             self.device_storage.update_device(ctx, mac_address=mac_address, owner_username=owner_username,
                                               connection_type=connection_type, ip_v4_address=ip_v4_address,
                                               ip_v6_address=ip_v6_address)

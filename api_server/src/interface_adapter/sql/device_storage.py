@@ -10,11 +10,7 @@ from src.entity.device import Device, DeviceType
 from src.interface_adapter.sql.model.models import Adherent, Ordinateur, Portable
 from src.interface_adapter.sql.util.ip_controller import _get_available_ip, _get_all_used_ipv4, _get_all_used_ipv6
 from src.use_case.interface.device_repository import DeviceRepository
-from src.use_case.interface.ip_allocator import IPAllocator
-
-
-class NoMoreIPAvailable(RuntimeError):
-    pass
+from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
 
 
 class DeviceSQLStorage(DeviceRepository, IPAllocator):
@@ -64,7 +60,7 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
         s = ctx.get(CTX_SQL_SESSION)
         result = _get_available_ip(ip_range, _get_all_used_ipv4(s))
         if result is None:
-            raise NoMoreIPAvailable()
+            raise NoMoreIPAvailableException()
 
         return result
 
@@ -72,7 +68,7 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
         s = ctx.get(CTX_SQL_SESSION)
         result = _get_available_ip(ip_range, _get_all_used_ipv6(s))
         if result is None:
-            raise NoMoreIPAvailable()
+            raise NoMoreIPAvailableException()
 
         return result
 
