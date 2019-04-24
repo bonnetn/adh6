@@ -7,7 +7,7 @@ from src.entity.device import Device, DeviceType
 from src.entity.room import Vlan
 from src.log import LOG
 from src.use_case.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError, \
-    InvalidMACAddress, InvalidIPAddress
+    InvalidMACAddress, InvalidIPAddress, DeviceNotFound
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
 from src.use_case.interface.member_repository import MemberRepository
@@ -64,6 +64,25 @@ class DeviceManager:
         ))
 
         return result, count
+
+    def get_by_mac_address(self, ctx, mac_address: str) -> Device:
+        """
+        Get a device from the database.
+
+        User story: As an admin, I can get a device, so I can see its information such as IP address.
+
+        :raises DeviceNotFound
+        """
+        result, count = self.device_storage.search_device_by(ctx, mac_address=mac_address)
+        if not result:
+            raise DeviceNotFound()
+
+        LOG.info("device_get_by_username", extra=build_log_extra(
+            ctx,
+            mac_address=mac_address,
+        ))
+
+        return result[0]
 
     def update_or_create(self, ctx, mac_address: str, req: MutationRequest):
         """

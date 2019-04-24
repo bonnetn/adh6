@@ -15,11 +15,10 @@ from src.interface_adapter.http_api.device_utils import is_wired, is_wireless, \
     delete_wired_device
 from src.interface_adapter.http_api.util import ip_controller
 from src.interface_adapter.http_api.util.error import bad_request
-from src.interface_adapter.sql.model import models
 from src.interface_adapter.sql.model.models import Modification
 from src.use_case.device_manager import MutationRequest
 from src.use_case.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError, \
-    InvalidMACAddress, InvalidIPAddress
+    InvalidMACAddress, InvalidIPAddress, DeviceNotFound
 from src.use_case.mutation import Mutation
 
 
@@ -76,28 +75,15 @@ def put(ctx, mac_address, body):
         return "Invalid IP address.", 400
 
 
+@with_context
 @require_sql
 @auth_regular_admin
-def get(mac_address):
+def get(ctx, mac_address):
     """ [API] Return the device specified by the macAddress """
-    s = g.session
-
-    if is_wireless(mac_address, s):
-        q = s.query(models.Portable)
-        q = q.filter(models.Portable.mac == mac_address)
-        r = q.one()
-        logging.info("%s fetched the device %s", g.admin.login, mac_address)
-        return dict(r), 200
-
-    elif is_wired(mac_address, s):
-        q = s.query(models.Ordinateur)
-        q = q.filter(models.Ordinateur.mac == mac_address)
-        r = q.one()
-        logging.info("%s fetched the device %s", g.admin.login, mac_address)
-        return dict(r), 200
-
-    else:
-        return NoContent, 404
+    try:
+        return asdict(device_manager.get_by_mac_address(ctx, mac_address)), 200  # 200 OK
+    except DeviceNotFound:
+        return NoContent, 404  # 404 Not Found
 
 
 @require_sql
