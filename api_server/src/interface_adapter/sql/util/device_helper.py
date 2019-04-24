@@ -49,32 +49,31 @@ def create_wired_device(ctx, mac_address, ip_v4_address, ip_v6_address, username
     return dev
 
 
-def update_wireless_device(ctx, s, mac_address, username):
+def update_wireless_device(ctx, s, device_to_update, mac_address=None, username=None):
     """ Update a wireless device in the database """
-    q = s.query(Portable).filter(Portable.mac == mac_address)
+    q = s.query(Portable).filter(Portable.mac == device_to_update)
     dev = q.one()
 
     with track_modifications(ctx, s, dev):
-        dev.adherent = Adherent.find(s, username)
+        dev.mac = mac_address or dev.mac
+        if username:
+            dev.adherent = Adherent.find(s, username)
 
     return dev
 
 
-def update_wired_device(ctx, s, mac_address, username, ip_v4_address=None, ip_v6_address=None):
+def update_wired_device(ctx, s, device_to_update, mac_address=None, username=None, ip_v4_address=None,
+                        ip_v6_address=None):
     """ Update a wired device in the database """
-    q = s.query(Ordinateur).filter(Ordinateur.mac == mac_address)
+    q = s.query(Ordinateur).filter(Ordinateur.mac == device_to_update)
     dev = q.one()
 
     with track_modifications(ctx, s, dev):
-        if not ip_v4_address:
-            ip_v4_address = 'En Attente'
-
-        if not ip_v6_address:
-            ip_v6_address = 'En Attente'
-
-        dev.ip = ip_v4_address
-        dev.ipv6 = ip_v6_address
-        dev.adherent = Adherent.find(s, username)
+        dev.ip = ip_v4_address or dev.ip
+        dev.ipv6 = ip_v6_address or dev.ipv6
+        dev.mac = mac_address or dev.mac
+        if username:
+            dev.adherent = Adherent.find(s, username)
 
     return dev
 

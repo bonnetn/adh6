@@ -316,13 +316,13 @@ class Ordinateur(Base, RubyHashTrackable):
     @validates('mac')
     def mac_valid(self, key, mac):
         if not mac or not checks.is_mac_address(mac):
-            raise InvalidMac()
+            raise InvalidMac(mac)
         return mac
 
     @validates('ip')
     def valid_ip(self, key, addr):
         if not addr or (not checks.isIPv4(addr) and addr != "En Attente"):
-            raise InvalidIPv4()
+            raise InvalidIPv4(addr)
         return addr
 
     @validates('ipv6')

@@ -5,7 +5,6 @@ Use cases (business rule layer) of everything related to members.
 import datetime
 import json
 from dataclasses import dataclass, asdict
-from enum import Enum
 from typing import List
 
 from src.entity.member import Member
@@ -16,17 +15,11 @@ from src.use_case.exceptions import StringMustNotBeEmptyException, InvalidEmailE
 from src.use_case.interface.logs_repository import LogsRepository, LogFetchError
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.membership_repository import MembershipRepository
+from src.use_case.mutation import Mutation, _is_set
 from src.util.checks import is_email
 from src.util.context import build_log_extra
 from src.util.date import string_to_date
 from src.util.hash import ntlm_hash
-
-
-class Mutation(Enum):
-    """
-    Mutation state.
-    """
-    NOT_SET = 1
 
 
 @dataclass
@@ -325,13 +318,6 @@ class MemberManager:
             return []  # We fail open here.
 
 
-def _is_set(v):
-    """
-    Check if a field in a MutationRequest is set.
-    """
-    return v != Mutation.NOT_SET
-
-
 def _validate_mutation_request(req: MutationRequest):
     """
     Validate the fields that are set in a MutationRequest.
@@ -350,4 +336,3 @@ def _validate_mutation_request(req: MutationRequest):
 
     if req.room_number == '':
         raise StringMustNotBeEmptyException('room number')
-

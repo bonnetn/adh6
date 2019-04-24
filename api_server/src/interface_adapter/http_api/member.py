@@ -10,9 +10,10 @@ from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
-from src.use_case.member_manager import MutationRequest, Mutation, NoPriceAssignedToThatDurationException, \
+from src.use_case.member_manager import MutationRequest, NoPriceAssignedToThatDurationException, \
     UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, InvalidRoomNumberError, InvalidEmailError, \
     MemberNotFound, IntMustBePositiveException, StringMustNotBeEmptyException
+from src.use_case.mutation import Mutation
 from src.util.date import string_to_date
 
 

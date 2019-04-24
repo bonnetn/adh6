@@ -6,6 +6,22 @@ class MemberNotFound(ValueError):
     pass
 
 
+class DeviceAlreadyExist(Exception):
+    pass
+
+
+class DeviceNotFound(Exception):
+    pass
+
+
+class InvalidIPAddress(ValueError):
+    pass
+
+
+class InvalidMACAddress(ValueError):
+    pass
+
+
 class UsernameMismatchError(ValueError):
     """
     Thrown when you try to create a member given a username and a mutation request and in the mutation request the
@@ -44,14 +60,6 @@ class IntMustBePositiveException(ValueError):
 class StringMustNotBeEmptyException(ValueError):
     def __init__(self, msg):
         super().__init__(f'{msg} must not be empty')
-
-
-class DeviceAlreadyExist(Exception):
-    pass
-
-
-class DeviceNotFound(Exception):
-    pass
 
 
 class IPAllocationFailedError(RuntimeError):

@@ -32,8 +32,8 @@ class DeviceRepository(metaclass=abc.ABCMeta):
         pass  # pragma: no cover
 
     @abc.abstractmethod
-    def update_device(self, ctx, mac_address, owner_username=None, connection_type=None, ip_v4_address=None,
-                      ip_v6_address=None):
+    def update_device(self, ctx, device_to_update, mac_address=None, owner_username=None, connection_type=None,
+                      ip_v4_address=None, ip_v6_address=None):
         """
         Update a device.
 

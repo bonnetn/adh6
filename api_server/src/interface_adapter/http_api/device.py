@@ -17,7 +17,10 @@ from src.interface_adapter.http_api.util import ip_controller
 from src.interface_adapter.http_api.util.error import bad_request
 from src.interface_adapter.sql.model import models
 from src.interface_adapter.sql.model.models import Modification
-from src.use_case.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError
+from src.use_case.device_manager import MutationRequest
+from src.use_case.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError, \
+    InvalidMACAddress, InvalidIPAddress
+from src.use_case.mutation import Mutation
 
 
 @with_context
@@ -46,12 +49,15 @@ def put(ctx, mac_address, body):
 
     try:
         created = device_manager.update_or_create(ctx,
-                                        mac_address=mac_address,
-                                        owner_username=body.get('username'),
-                                        connection_type=body.get('connectionType'),
-                                        ip_v4_address=body.get('ipAddress'),
-                                        ip_v6_address=body.get('ipv6Address'),
-                                        )
+                                                  mac_address=mac_address,
+                                                  req=MutationRequest(
+                                                      owner_username=body.get('username', Mutation.NOT_SET),
+                                                      mac_address=body.get('mac', Mutation.NOT_SET),
+                                                      connection_type=body.get('connectionType', Mutation.NOT_SET),
+                                                      ip_v4_address=body.get('ipAddress', Mutation.NOT_SET),
+                                                      ip_v6_address=body.get('ipv6Address', Mutation.NOT_SET),
+                                                  ),
+                                                  )
 
         if created:
             return NoContent, 201  # 201 Created
@@ -62,6 +68,12 @@ def put(ctx, mac_address, body):
 
     except MemberNotFound:
         return "No member with that username was not found.", 400
+
+    except InvalidMACAddress:
+        return "Invalid MAC address.", 400
+
+    except InvalidIPAddress:
+        return "Invalid IP address.", 400
 
 
 @require_sql

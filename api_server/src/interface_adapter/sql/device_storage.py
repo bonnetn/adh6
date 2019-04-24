@@ -83,22 +83,23 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
                 username=owner_username,
             )
 
-    def update_device(self, ctx, mac_address, owner_username=None, connection_type=None, ip_v4_address=None,
-                      ip_v6_address=None):
+    def update_device(self, ctx, device_to_update, mac_address=None, owner_username=None, connection_type=None,
+                      ip_v4_address=None, ip_v6_address=None):
         s = ctx.get(CTX_SQL_SESSION)
 
         all_devices = get_all_devices(s)
-        device = s.query(all_devices).filter(all_devices.columns.mac == mac_address).one_or_none()
+        device = s.query(all_devices).filter(all_devices.columns.mac == device_to_update).one_or_none()
 
         if device is None:
             return DeviceNotFound()
 
         # If the user do not change the connection type, we just need to update...
         if device.type == connection_type:
-            if is_wired(mac_address, s):
+            if connection_type == DeviceType.Wired:
                 update_wired_device(
                     ctx,
                     s=s,
+                    device_to_update=device_to_update,
                     mac_address=mac_address,
                     ip_v4_address=ip_v4_address,
                     ip_v6_address=ip_v6_address,
@@ -107,6 +108,7 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
             else:
                 update_wireless_device(
                     ctx,
+                    device_to_update=device_to_update,
                     s=s,
                     mac_address=mac_address,
                     username=owner_username,
@@ -116,28 +118,28 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
         # If the user change the connection type, we have to move the Device row from one table to another
         # (Wired table to Wireless table or the other way around)
         # To do that, we first delete the device and then re-create it in the other table.
-        if is_wired(mac_address, s):
+        if device.type == DeviceType.Wired:
             delete_wired_device(
                 ctx,
                 s=s,
-                mac_address=mac_address,
+                mac_address=device_to_update,
             )
             create_wireless_device(
                 ctx,
                 s=s,
-                mac_address=mac_address,
+                mac_address=device_to_update,
                 username=owner_username,
             )
         else:
             delete_wireless_device(
                 ctx,
                 s=s,
-                mac_address=mac_address,
+                mac_address=device_to_update,
             )
             create_wired_device(
                 ctx,
                 s=s,
-                mac_address=mac_address,
+                mac_address=device_to_update,
                 ip_v4_address=ip_v4_address,
                 ip_v6_address=ip_v6_address,
                 username=owner_username,
