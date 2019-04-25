@@ -99,7 +99,7 @@ class DeviceManager:
 
         LOG.info("device_delete", extra=build_log_extra(
             ctx,
-            mac_address=mac_address,
+            mac=mac_address,
         ))
 
     def update_or_create(self, ctx, mac_address: str, req: MutationRequest):
@@ -115,6 +115,9 @@ class DeviceManager:
         :raises InvalidMACAddress
         :raises InvalidIPAddress
         """
+
+        if not _is_set(req.mac_address):
+            req.mac_address = mac_address
 
         _validate_mutation_request(req)
 

@@ -1,5 +1,4 @@
-import datetime
-import dateutil
+import logging
 import logging
 import requests
 from connexion import NoContent
@@ -10,9 +9,7 @@ from main import device_manager
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
-from src.interface_adapter.http_api.util import ip_controller
 from src.interface_adapter.http_api.util.error import bad_request
-from src.interface_adapter.sql.model.models import Modification
 from src.use_case.device_manager import MutationRequest
 from src.use_case.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError, \
     InvalidMACAddress, InvalidIPAddress, DeviceNotFound
@@ -108,39 +105,3 @@ def get_vendor(mac_address):
 
     else:
         return NoContent, 404
-
-
-def allocate_ip_for_device(s, dev, admin):
-    date_de_depart = dev.adherent.date_de_depart
-    if not date_de_depart:
-        return
-
-    # Force convertion in date (it can be a datetime or a date)
-    date_de_depart = dateutil.parser.parse(str(date_de_depart)).date()
-    if not date_de_depart or date_de_depart < datetime.datetime.now().date():
-        return  # No need to allocate ip for someone who is not a member
-
-    dev.start_modif_tracking()
-    if dev.ipv6 == "En Attente":
-        network = dev.adherent.chambre.vlan.adressesv6
-
-        ip_controller.free_expired_devices(s)
-        next_ip = ip_controller.get_available_ip(
-            network,
-            ip_controller.get_all_used_ipv6(s)
-        )
-
-        dev.ipv6 = next_ip
-
-    if dev.ip == "En Attente":
-        network = dev.adherent.chambre.vlan.adresses
-
-        ip_controller.free_expired_devices(s)
-        next_ip = ip_controller.get_available_ip(
-            network,
-            ip_controller.get_all_used_ipv4(s)
-        )
-
-        dev.ip = next_ip
-
-    Modification.add(s, dev, admin)

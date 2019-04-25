@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 from src.entity.device import Device, DeviceType
 from src.entity.member import Member
 from src.entity.room import Room
-from src.use_case.device_manager import DeviceManager
+from src.use_case.device_manager import DeviceManager, MutationRequest
 from src.use_case.exceptions import IntMustBePositiveException, MemberNotFound
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator
@@ -75,7 +75,11 @@ class TestUpdateOrCreate:
 
         # When...
         created = device_manager.update_or_create(ctx, mac_address=TEST_MAC_ADDRESS1,
-                                                  owner_username=TEST_USERNAME, connection_type=DeviceType.Wired)
+                                                  req=MutationRequest(
+                                                      owner_username=TEST_USERNAME,
+                                                      connection_type=DeviceType.Wired,
+                                                  ),
+                                                  )
 
         # Expect...
         assert created is True
@@ -101,12 +105,18 @@ class TestUpdateOrCreate:
         mock_device_repository.search_device_by = MagicMock(return_value=([sample_device], 1))
 
         # When...
-        created = device_manager.update_or_create(ctx, mac_address=sample_device.mac_address,
-                                                  owner_username=TEST_USERNAME, connection_type=DeviceType.Wireless)
+        created = device_manager.update_or_create(ctx,
+                                                  mac_address=sample_device.mac_address,
+                                                  req=MutationRequest(
+                                                      owner_username=TEST_USERNAME,
+                                                      connection_type=DeviceType.Wireless,
+                                                  ),
+                                                  )
 
         # Expect...
         assert created is False
-        mock_device_repository.update_device.assert_called_once_with(ctx, mac_address=sample_device.mac_address,
+        mock_device_repository.update_device.assert_called_once_with(ctx, sample_device.mac_address,
+                                                                     mac_address=sample_device.mac_address,
                                                                      owner_username=TEST_USERNAME,
                                                                      connection_type=DeviceType.Wireless,
                                                                      ip_v4_address=None,
@@ -123,7 +133,11 @@ class TestUpdateOrCreate:
         # When...
         with raises(MemberNotFound):
             device_manager.update_or_create(ctx, mac_address=TEST_MAC_ADDRESS1,
-                                            owner_username='', connection_type=DeviceType.Wired)
+                                            req=MutationRequest(
+                                                owner_username='',
+                                                connection_type=DeviceType.Wired
+                                            ),
+                                            )
 
         # Expect...
         mock_device_repository.create_device.assert_not_called()

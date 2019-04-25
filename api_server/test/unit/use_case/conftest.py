@@ -57,7 +57,7 @@ def sample_member():
 @fixture
 def sample_device():
     return Device(
-        mac_address='FF:FF:FF:FF:FF:FF',
+        mac_address='FF-FF-FF-FF-FF-FF',
         owner_username=TEST_USERNAME,
         connection_type=DeviceType.Wired,
         ip_v4_address='127.0.0.1',
