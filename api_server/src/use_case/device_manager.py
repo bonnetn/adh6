@@ -93,7 +93,7 @@ class DeviceManager:
         :raises DeviceNotFound
         """
         try:
-            self.device_storage.delete(ctx, mac_address=mac_address)
+            self.device_storage.delete_device(ctx, mac_address=mac_address)
         except NotFoundError:
             raise DeviceNotFound()
 

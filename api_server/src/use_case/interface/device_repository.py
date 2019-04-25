@@ -40,3 +40,12 @@ class DeviceRepository(metaclass=abc.ABCMeta):
         :raises DeviceNotFound
         """
         pass  # pragma: no cover
+
+    @abc.abstractmethod
+    def delete_device(self, ctx, mac_address=None):
+        """
+        Delete a device.
+
+        :raises DeviceNotFound
+        """
+        pass  # pragma: no cover

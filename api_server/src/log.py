@@ -5,7 +5,9 @@ import logging
 class JSONFormatter(logging.Formatter):
     def format(self, record):
         msg = super().format(record)
-        if record.extra is None:
+        try:
+            record.extra
+        except AttributeError:
             return msg
 
         extra = json.dumps(record.extra)

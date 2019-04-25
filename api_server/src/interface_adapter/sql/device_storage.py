@@ -145,7 +145,7 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
                 username=owner_username,
             )
 
-    def delete(self, ctx, mac_address=None):
+    def delete_device(self, ctx, mac_address=None):
         s = ctx.get(CTX_SQL_SESSION)
         all_devices = get_all_devices(s)
         device = s.query(all_devices).filter(all_devices.columns.mac == mac_address).one_or_none()
