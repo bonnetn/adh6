@@ -10,9 +10,6 @@ from main import device_manager
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
-from src.interface_adapter.http_api.device_utils import is_wired, is_wireless, \
-    delete_wireless_device, \
-    delete_wired_device
 from src.interface_adapter.http_api.util import ip_controller
 from src.interface_adapter.http_api.util.error import bad_request
 from src.interface_adapter.sql.model.models import Modification
@@ -86,23 +83,15 @@ def get(ctx, mac_address):
         return NoContent, 404  # 404 Not Found
 
 
+@with_context
 @require_sql
 @auth_regular_admin
-def delete(mac_address):
+def delete(ctx, mac_address):
     """ [API] Delete the specified device from the database """
-    s = g.session
-
-    if is_wireless(mac_address, s):
-        delete_wireless_device(g.admin, mac_address, s)
-        logging.info("%s deleted the device %s", g.admin.login, mac_address)
+    try:
+        device_manager.delete(ctx, mac_address)
         return NoContent, 204
-
-    elif is_wired(mac_address, s):
-        delete_wired_device(g.admin, mac_address, s)
-        logging.info("%s deleted the device %s", g.admin.login, mac_address)
-        return NoContent, 204
-
-    else:
+    except DeviceNotFound:
         return NoContent, 404
 
 

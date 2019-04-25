@@ -2,18 +2,18 @@
 """
 Implements everything related to actions on the SQL database.
 """
-from sqlalchemy.orm.exc import MultipleResultsFound
 from typing import List
 
 from src.constants import CTX_SQL_SESSION
 from src.entity.device import Device, DeviceType
 from src.interface_adapter.sql.model.models import Adherent
-from src.interface_adapter.sql.util.device_helper import get_all_devices, is_wired, update_wired_device, \
+from src.interface_adapter.sql.util.device_helper import get_all_devices, update_wired_device, \
     update_wireless_device, delete_wired_device, create_wireless_device, delete_wireless_device, create_wired_device
 from src.interface_adapter.sql.util.ip_controller import _get_available_ip, _get_all_used_ipv4, _get_all_used_ipv6
 from src.use_case.exceptions import DeviceNotFound, DeviceAlreadyExist
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
+from src.use_case.interface.member_repository import NotFoundError
 
 
 class DeviceSQLStorage(DeviceRepository, IPAllocator):
@@ -144,6 +144,18 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
                 ip_v6_address=ip_v6_address,
                 username=owner_username,
             )
+
+    def delete(self, ctx, mac_address=None):
+        s = ctx.get(CTX_SQL_SESSION)
+        all_devices = get_all_devices(s)
+        device = s.query(all_devices).filter(all_devices.columns.mac == mac_address).one_or_none()
+        if not device:
+            raise NotFoundError()
+
+        if device.type == DeviceType.Wired:
+            delete_wired_device(ctx, s, mac_address)
+        else:
+            delete_wireless_device(ctx, s, mac_address)
 
     def allocate_ip_v4(self, ctx, ip_range: str) -> str:
         s = ctx.get(CTX_SQL_SESSION)

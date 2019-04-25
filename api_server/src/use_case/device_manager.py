@@ -10,7 +10,7 @@ from src.use_case.exceptions import IntMustBePositiveException, MemberNotFound, 
     InvalidMACAddress, InvalidIPAddress, DeviceNotFound
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
-from src.use_case.interface.member_repository import MemberRepository
+from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.room_repository import RoomRepository
 from src.use_case.mutation import Mutation, _is_set
 from src.util.checks import is_mac_address, isIPv4, isIPv6
@@ -83,6 +83,24 @@ class DeviceManager:
         ))
 
         return result[0]
+
+    def delete(self, ctx, mac_address: str):
+        """
+        Delete a device from the database.
+
+        User story: As an admin, I delete a device, so I can remove a device from a user profile.
+
+        :raises DeviceNotFound
+        """
+        try:
+            self.device_storage.delete(ctx, mac_address=mac_address)
+        except NotFoundError:
+            raise DeviceNotFound()
+
+        LOG.info("device_delete", extra=build_log_extra(
+            ctx,
+            mac_address=mac_address,
+        ))
 
     def update_or_create(self, ctx, mac_address: str, req: MutationRequest):
         """
