@@ -38,3 +38,14 @@ python_integration_test:
   script:
   - cd api_server/
   - pytest test/integration -vv
+
+python_coverage:
+  stage: test
+  script:
+  - cd api_server/
+  - pip install pytest-cov
+  - pytest -vv --cov --cov-report=html --cov-report=term
+  coverage: '/^TOTAL\s+.*\s+(\d+\.?\d*)%/'
+  artifacts:
+    paths:
+      - api_server/htmlcov/
