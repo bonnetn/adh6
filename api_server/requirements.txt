@@ -18,7 +18,7 @@ python-dateutil==2.8.0
 pysnmp==4.4.9
 
 # ELK communication
-elasticsearch>=5.0.0,<6.0.0
+elasticsearch==5.5.3
 
 # Communicate with other APIs (fetch MAC vendor)
 requests==2.21.0
