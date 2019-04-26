@@ -18,6 +18,14 @@ before_script:
 stages:
   - test
 
+python_check_for_vuln_deps:
+  stage: test
+  script:
+  - cd api_server/
+  - pip install safety
+  - safety check -r requirements.txt
+  - safety check
+
 python_unit_test:
   stage: test
   script:
