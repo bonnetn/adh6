@@ -44,7 +44,7 @@ python_coverage:
   script:
   - cd api_server/
   - pip install pytest-cov
-  - pytest -vv --cov --cov-report=html --cov-report=term
+  - pytest -vv --cov=src --cov-report=html --cov-report=term
   coverage: '/^TOTAL\s+.*\s+(\d+\.?\d*)%/'
   artifacts:
     paths:
