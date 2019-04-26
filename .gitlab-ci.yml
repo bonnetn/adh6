@@ -20,9 +20,10 @@ stages:
 
 python_check_for_vuln_deps:
   stage: test
+  before_script:
+  - pip install safety
   script:
   - cd api_server/
-  - pip install safety
   - safety check -r requirements.txt
   - safety check
 
