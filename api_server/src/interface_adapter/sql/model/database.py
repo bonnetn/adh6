@@ -8,6 +8,7 @@ from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 
 from src.interface_adapter.sql.model.models import Base, NainA
+from src.log import LOG
 
 
 class Database():
@@ -41,14 +42,15 @@ class Database():
             # Create NainA table if not exists. (The other tables should already exist.)
             for retries in range(Database.RETRY_COUNT):
                 try:
-                    logging.info("Connecting to database...")
+                    logging.info("connecting_to_database")
                     Base.metadata.create_all(
                         self.engine,
                         tables=[NainA.__table__]
                     )
-                    logging.info("Connection established, table created.")
+                    logging.info("connection_established")
+                    logging.info("table_created")
                 except OperationalError as e:
-                    logging.warn("Could not connect to database, retrying in 10 seconds...")
+                    LOG.warn("could_not_connect_to_database")
                     if retries + 1 == Database.RETRY_COUNT:
                         raise
                     time.sleep(Database.RETRY_INTERVAL)

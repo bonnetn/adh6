@@ -7,13 +7,16 @@ from typing import List
 from src.constants import CTX_SQL_SESSION
 from src.entity.room import Room, Vlan
 from src.interface_adapter.sql.model.models import Adherent, Chambre
+from src.log import LOG
 from src.use_case.interface.room_repository import RoomRepository
+from src.util.context import log_extra
 
 
 class RoomSQLStorage(RoomRepository):
 
     def search_room_by(self, ctx, owner_username=None) -> (List[Room], int):
         s = ctx.get(CTX_SQL_SESSION)
+        LOG.debug("sql_room_storage_search_room_by_called", extra=log_extra(ctx))
         q = s.query(Chambre).join(Adherent)
         if owner_username:
             q = q.filter(Adherent.login == owner_username)

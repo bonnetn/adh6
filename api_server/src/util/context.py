@@ -1,9 +1,9 @@
 from types import MappingProxyType
 
-from src.constants import CTX_SQL_SESSION, CTX_ADMIN, CTX_TESTING
+from src.constants import CTX_SQL_SESSION, CTX_ADMIN, CTX_TESTING, CTX_REQUEST_ID
 
 
-def build_context(ctx: MappingProxyType = None, session=None, admin=None, testing=None):
+def build_context(ctx: MappingProxyType = None, session=None, admin=None, testing=None, request_id=None):
     """
 
     :rtype:
@@ -12,6 +12,7 @@ def build_context(ctx: MappingProxyType = None, session=None, admin=None, testin
         CTX_SQL_SESSION: session,
         CTX_ADMIN: admin,
         CTX_TESTING: testing,
+        CTX_REQUEST_ID: request_id,
     }
     if ctx is None:
         return MappingProxyType(new_fields)
@@ -23,12 +24,13 @@ def build_context(ctx: MappingProxyType = None, session=None, admin=None, testin
     return MappingProxyType(merged)
 
 
-def build_log_extra(context: MappingProxyType, **extra_fields):
+def log_extra(context: MappingProxyType, **extra_fields):
     admin_login = None
     if context.get(CTX_ADMIN):
         admin_login = context.get(CTX_ADMIN).login
 
     infos = {
+        'request_uuid': context.get(CTX_REQUEST_ID),
         'admin': admin_login,
         'testing': str(context.get(CTX_TESTING) or False),
     }

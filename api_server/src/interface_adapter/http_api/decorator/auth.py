@@ -9,7 +9,8 @@ from src.constants import CTX_TESTING, CTX_SQL_SESSION
 from src.entity.admin import Admin
 from src.interface_adapter.http_api.auth import ADH6_USER, ADH6_ADMIN
 from src.interface_adapter.sql.model.models import Utilisateur
-from src.util.context import build_context
+from src.log import LOG
+from src.util.context import build_context, log_extra
 
 
 def auth_regular_admin(f):
@@ -23,7 +24,7 @@ def auth_regular_admin(f):
         Wrap http_api function.
         """
         if not ctx.get(CTX_TESTING) and (user is None or token_info is None):
-            logging.warning('Could not extract user and token_info kwargs.')
+            LOG.warning('could_not_extract_user_and_token_info_kwargs', extra=log_extra(ctx))
             return NoContent, 401
 
         if not ctx.get(CTX_TESTING) and ADH6_USER not in token_info["groups"]:

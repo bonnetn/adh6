@@ -10,9 +10,11 @@ from src.constants import CTX_SQL_SESSION
 from src.entity.member import Member
 from src.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion
 from src.interface_adapter.sql.track_modifications import track_modifications
+from src.log import LOG
 from src.use_case.exceptions import MemberAlreadyExist
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.membership_repository import MembershipRepository
+from src.util.context import log_extra
 from src.util.date import date_to_string
 
 
@@ -28,6 +30,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
         :raises NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
+        LOG.debug("sql_member_storage_add_membership_called", extra=log_extra(ctx, username=username))
 
         member = _get_member_by_login(s, username)
         if member is None:
@@ -49,6 +52,8 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
         :raises NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
+        LOG.debug("sql_member_storage_create_member_called", extra=log_extra(ctx, username=username))
+
         now = datetime.now()
 
         room = None
@@ -87,6 +92,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
         :raises NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
+        LOG.debug("sql_member_storage_update_member_called", extra=log_extra(ctx, username=member_to_update))
 
         member = _get_member_by_login(s, member_to_update)
         if member is None:
@@ -119,6 +125,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
         :raises NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
+        LOG.debug("sql_member_storage_delete_member_called", extra=log_extra(ctx, username=username))
 
         # Find the soon-to-be deleted user
         member = _get_member_by_login(s, username)
@@ -135,6 +142,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
         Search a member.
         """
         s = ctx.get(CTX_SQL_SESSION)
+        LOG.debug("sql_member_storage_search_member_by_called", extra=log_extra(ctx))
         q = s.query(Adherent)
 
         if username:

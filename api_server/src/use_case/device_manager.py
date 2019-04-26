@@ -14,7 +14,7 @@ from src.use_case.interface.member_repository import MemberRepository, NotFoundE
 from src.use_case.interface.room_repository import RoomRepository
 from src.use_case.mutation import Mutation, _is_set
 from src.util.checks import is_mac_address, isIPv4, isIPv6
-from src.util.context import build_log_extra
+from src.util.context import log_extra
 
 
 @dataclass
@@ -57,7 +57,7 @@ class DeviceManager:
         result, count = self.device_storage.search_device_by(ctx, limit=limit, offset=offset, username=username,
                                                              terms=terms)
 
-        LOG.info("device_search", extra=build_log_extra(
+        LOG.info("device_search", extra=log_extra(
             ctx,
             limit=limit,
             terms=terms,
@@ -77,7 +77,7 @@ class DeviceManager:
         if not result:
             raise DeviceNotFound()
 
-        LOG.info("device_get_by_username", extra=build_log_extra(
+        LOG.info("device_get_by_username", extra=log_extra(
             ctx,
             mac_address=mac_address,
         ))
@@ -97,7 +97,7 @@ class DeviceManager:
         except NotFoundError:
             raise DeviceNotFound()
 
-        LOG.info("device_delete", extra=build_log_extra(
+        LOG.info("device_delete", extra=log_extra(
             ctx,
             mac=mac_address,
         ))
@@ -149,7 +149,7 @@ class DeviceManager:
             # No device with that MAC address, creating one...
             self.device_storage.create_device(ctx, **fields)
 
-            LOG.info('device_create', extra=build_log_extra(
+            LOG.info('device_create', extra=log_extra(
                 ctx,
                 username=req.owner_username,
                 mac=mac_address,
@@ -162,7 +162,7 @@ class DeviceManager:
 
             # The following will never throw DeviceNotFound since we check beforehand.
             self.device_storage.update_device(ctx, mac_address, **fields)
-            LOG.info('device_update', extra=build_log_extra(
+            LOG.info('device_update', extra=log_extra(
                 ctx,
                 username=req.owner_username,
                 mac=mac_address,

@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 import logging
 
@@ -14,7 +15,7 @@ from src.interface_adapter.http_api.decorator.sql_session import require_sql
 @require_sql
 @auth_regular_admin
 def search(limit=100, offset=0,
-                switchID=None, roomNumber=None, terms=None):
+           switchID=None, roomNumber=None, terms=None):
     """ [API] Filter the port list according to some criteria """
     if limit < 0:
         return 'Limit must be a positive number', 400
@@ -123,6 +124,7 @@ def delete(port_id):
                  g.admin.login, port_id)
     return NoContent, 204
 
+
 @auth_regular_admin
 def get_state(switchID, port_id):
     return NoContent, 200, True
@@ -142,9 +144,11 @@ def get_vlan(switchID, port_id):
 def put_vlan(switchID, port_id, vlan):
     return NoContent, 204
 
+
 @auth_regular_admin
 def get_mab(port_id):
     return False, 200
+
 
 @auth_regular_admin
 def put_mab(port_id, mab):

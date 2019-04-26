@@ -1,3 +1,4 @@
+# coding=utf-8
 from pysnmp.hlapi import (
     setCmd, SnmpEngine, CommunityData, ObjectType, ObjectIdentity, Integer,
     UdpTransportTarget, ContextData, getCmd

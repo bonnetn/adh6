@@ -7,7 +7,8 @@ from functools import wraps
 
 from src.constants import CTX_SQL_SESSION, CTX_TESTING
 from src.interface_adapter.sql.model.database import Database as Db
-from src.util.context import build_context
+from src.log import LOG
+from src.util.context import build_context, log_extra
 
 
 def require_sql(f):
@@ -40,12 +41,12 @@ def require_sql(f):
             if status_code and 200 <= status_code <= 299:
                 s.commit()
             else:
-                logging.info("Status code %d not 2XX, something went wrong, rollbacking.", status_code)
+                LOG.info("rollback_sql_transaction_non_200_http_code", extra=log_extra(ctx, code=status_code))
                 s.rollback()
             return result
 
-        except Exception:
-            logging.warning("Exception caught, rollbacking.")
+        except Exception as e:
+            LOG.error("rollback_sql_transaction_exception_caught", extra=log_extra(ctx, exception=str(e)))
             s.rollback()
             raise
 

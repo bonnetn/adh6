@@ -10,10 +10,12 @@ from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
-from src.use_case.member_manager import MutationRequest, NoPriceAssignedToThatDurationException, \
-    UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, InvalidRoomNumberError, InvalidEmailError, \
-    MemberNotFound, IntMustBePositiveException, StringMustNotBeEmptyException
+from src.log import LOG
+from src.use_case.member_manager import MutationRequest, UsernameMismatchError, MissingRequiredFieldError, \
+    PasswordTooShortError, InvalidRoomNumberError, InvalidEmailError, \
+    MemberNotFound, IntMustBePositiveException, StringMustNotBeEmptyException, NoPriceAssignedToThatDurationException
 from src.use_case.mutation import Mutation
+from src.util.context import log_extra
 from src.util.date import string_to_date
 
 
@@ -24,6 +26,11 @@ def search(ctx, limit=100, offset=0, terms=None, roomNumber=None):
     """
     Search all the member.
     """
+    LOG.debug("http_member_search_called", extra=log_extra(ctx,
+                                                           limit=limit,
+                                                           offset=offset,
+                                                           terms=terms,
+                                                           roomNumber=roomNumber))
     try:
         result, total_count = member_manager.search(ctx, limit, offset, roomNumber, terms)
         headers = {
@@ -44,6 +51,7 @@ def get(ctx, username):
     """
     Get a specific member.
     """
+    LOG.debug("http_member_get_called", extra=log_extra(ctx, username=username))
     try:
         return asdict(member_manager.get_by_username(ctx, username)), 200  # 200 OK
 
@@ -56,6 +64,7 @@ def get(ctx, username):
 @auth_regular_admin
 def delete(ctx, username):
     """ [API] Delete the specified User from the database """
+    LOG.debug("http_member_delete_called", extra=log_extra(ctx, username=username))
     try:
         member_manager.delete(ctx, username)
         return NoContent, 204  # 204 No Content
@@ -69,8 +78,9 @@ def delete(ctx, username):
 @auth_regular_admin
 def patch(ctx, username, body):
     """ [API] Partially update a member from the database """
+    LOG.debug("http_member_patch_called", extra=log_extra(ctx, username=username, request=body))
     try:
-        mutation_request = _build_mutation_request_from_body(body)
+        mutation_request = _map_body_to_mutation_request(body)
         member_manager.update_partially(ctx, username, mutation_request)
         return NoContent, 204  # 204 No Content
 
@@ -83,7 +93,9 @@ def patch(ctx, username, body):
 @auth_regular_admin
 def put(ctx, username, body):
     """ [API] Create/Update member from the database """
-    mutation_request = _build_mutation_request_from_body(body)
+    LOG.debug("http_member_put_called", extra=log_extra(ctx, username=username, request=body))
+
+    mutation_request = _map_body_to_mutation_request(body)
     try:
         created = member_manager.update_or_create(ctx, username, mutation_request)
         if created:
@@ -101,6 +113,8 @@ def put(ctx, username, body):
 @auth_regular_admin
 def post_membership(ctx, username, body):
     """ Add a membership record in the database """
+    LOG.debug("http_member_post_membership_called", extra=log_extra(ctx, username=username, request=body))
+
     try:
         member_manager.new_membership(ctx, username, body.get('duration'), start_str=body.get('start'))
 
@@ -120,6 +134,9 @@ def put_password(ctx, username, body):
     """
     Set the password of a member.
     """
+    # Careful not to log the body here!
+    LOG.debug("http_member_put_password_called", extra=log_extra(ctx, username=username, body=None))
+
     try:
         member_manager.change_password(ctx, username, body.get('password'))
 
@@ -139,6 +156,7 @@ def get_logs(ctx, username):
     """
     Get logs from a member.
     """
+    LOG.debug("http_member_get_logs_called", extra=log_extra(ctx, username=username))
     try:
         return member_manager.get_logs(ctx, username), 200
 
@@ -146,17 +164,7 @@ def get_logs(ctx, username):
         return NoContent, 404
 
 
-def _string_to_date_or_unset(d):
-    if d is None:
-        return Mutation.NOT_SET
-
-    if isinstance(d, str):
-        return string_to_date(d)
-
-    return d
-
-
-def _build_mutation_request_from_body(body) -> MutationRequest:
+def _map_body_to_mutation_request(body) -> MutationRequest:
     return MutationRequest(
         email=body.get('email', Mutation.NOT_SET),
         first_name=body.get('firstName', Mutation.NOT_SET),
@@ -167,3 +175,13 @@ def _build_mutation_request_from_body(body) -> MutationRequest:
         association_mode=_string_to_date_or_unset(body.get('associationMode')),
         room_number=body.get('roomNumber', Mutation.NOT_SET),
     )
+
+
+def _string_to_date_or_unset(d):
+    if d is None:
+        return Mutation.NOT_SET
+
+    if isinstance(d, str):
+        return string_to_date(d)
+
+    return d

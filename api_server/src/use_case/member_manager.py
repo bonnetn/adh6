@@ -17,7 +17,7 @@ from src.use_case.interface.member_repository import MemberRepository, NotFoundE
 from src.use_case.interface.membership_repository import MembershipRepository
 from src.use_case.mutation import Mutation, _is_set
 from src.util.checks import is_email
-from src.util.context import build_log_extra
+from src.util.context import log_extra
 from src.util.date import string_to_date
 from src.util.hash import ntlm_hash
 
@@ -90,7 +90,7 @@ class MemberManager:
         except NotFoundError:
             raise MemberNotFound()
 
-        LOG.info("create_membership_record", extra=build_log_extra(
+        LOG.info("create_membership_record", extra=log_extra(
             ctx,
             username=username,
             duration_in_days=duration,
@@ -108,7 +108,7 @@ class MemberManager:
             raise MemberNotFound()
 
         # Log action.
-        LOG.info('member_get_by_username', extra=build_log_extra(
+        LOG.info('member_get_by_username', extra=log_extra(
             ctx,
             username='username'
         ))
@@ -136,7 +136,7 @@ class MemberManager:
                                                              terms=terms)
 
         # Log action.
-        LOG.info('member_search', extra=build_log_extra(
+        LOG.info('member_search', extra=log_extra(
             ctx,
             room_number=room_number,
             terms=terms,
@@ -176,7 +176,7 @@ class MemberManager:
             self.member_storage.update_member(ctx, username, **fields_to_update)
 
             # Log action.
-            LOG.info('member_whole_update', extra=build_log_extra(
+            LOG.info('member_whole_update', extra=log_extra(
                 ctx,
                 username=username,
                 mutation=json.dumps(fields_to_update, sort_keys=True, default=str),
@@ -201,7 +201,7 @@ class MemberManager:
                 raise InvalidRoomNumberError()
 
             # Log action
-            LOG.info('member_create', extra=build_log_extra(
+            LOG.info('member_create', extra=log_extra(
                 ctx,
                 username=username,
                 mutation=json.dumps(fields, sort_keys=True, default=str)
@@ -230,7 +230,7 @@ class MemberManager:
             raise MemberNotFound()
 
         # Log action.
-        LOG.info('member_partial_update', extra=build_log_extra(
+        LOG.info('member_partial_update', extra=log_extra(
             ctx,
             username=username,
             mutation=json.dumps(fields_to_update, sort_keys=True, default=str)
@@ -259,7 +259,7 @@ class MemberManager:
         except NotFoundError:
             raise MemberNotFound()
 
-        LOG.info('member_password_update', extra=build_log_extra(
+        LOG.info('member_password_update', extra=log_extra(
             ctx,
             username=username,
         ))
@@ -275,7 +275,7 @@ class MemberManager:
             self.member_storage.delete_member(ctx, username)
 
             # Log action.
-            LOG.info('member_delete', extra=build_log_extra(
+            LOG.info('member_delete', extra=log_extra(
                 ctx,
                 username=username,
             ))
@@ -306,7 +306,7 @@ class MemberManager:
             # TODO: Fetch all the devices and put them into this request.
             logs = self.logs_storage.get_logs(ctx, username, [])
 
-            LOG.info('member_get_logs', extra=build_log_extra(
+            LOG.info('member_get_logs', extra=log_extra(
                 ctx,
                 username=username,
             ))
@@ -314,7 +314,7 @@ class MemberManager:
             return logs
 
         except LogFetchError:
-            LOG.warning("Log fetching failed, returning empty response.")
+            LOG.warning("log_fetch_failed", extra=log_extra(ctx, username=username))
             return []  # We fail open here.
 
 

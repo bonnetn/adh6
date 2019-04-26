@@ -10,16 +10,19 @@ from src.interface_adapter.sql.model.models import Adherent
 from src.interface_adapter.sql.util.device_helper import get_all_devices, update_wired_device, \
     update_wireless_device, delete_wired_device, create_wireless_device, delete_wireless_device, create_wired_device
 from src.interface_adapter.sql.util.ip_controller import _get_available_ip, _get_all_used_ipv4, _get_all_used_ipv6
+from src.log import LOG
 from src.use_case.exceptions import DeviceNotFound, DeviceAlreadyExist
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
 from src.use_case.interface.member_repository import NotFoundError
+from src.util.context import log_extra
 
 
 class DeviceSQLStorage(DeviceRepository, IPAllocator):
 
     def search_device_by(self, ctx, limit=None, offset=None, mac_address=None, username=None, terms=None) \
             -> (List[Device], int):
+        LOG.debug("sql_device_storage_search_called", extra=log_extra(ctx))
         s = ctx.get(CTX_SQL_SESSION)
 
         # Return a subquery with all devices (wired & wireless)
@@ -57,6 +60,7 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
 
     def create_device(self, ctx, mac_address=None, owner_username=None, connection_type=None, ip_v4_address=None,
                       ip_v6_address=None):
+        LOG.debug("sql_device_storage_create_device_called", extra=log_extra(ctx, mac=mac_address))
         s = ctx.get(CTX_SQL_SESSION)
 
         all_devices = get_all_devices(s)
@@ -86,6 +90,7 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
     def update_device(self, ctx, device_to_update, mac_address=None, owner_username=None, connection_type=None,
                       ip_v4_address=None, ip_v6_address=None):
         s = ctx.get(CTX_SQL_SESSION)
+        LOG.debug("sql_device_storage_update_device_called", extra=log_extra(ctx, mac=device_to_update))
 
         all_devices = get_all_devices(s)
         device = s.query(all_devices).filter(all_devices.columns.mac == device_to_update).one_or_none()
@@ -147,6 +152,8 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
 
     def delete_device(self, ctx, mac_address=None):
         s = ctx.get(CTX_SQL_SESSION)
+        LOG.debug("sql_device_storage_delete_device_called", extra=log_extra(ctx, mac=mac_address))
+
         all_devices = get_all_devices(s)
         device = s.query(all_devices).filter(all_devices.columns.mac == mac_address).one_or_none()
         if not device:
@@ -159,6 +166,8 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
 
     def allocate_ip_v4(self, ctx, ip_range: str) -> str:
         s = ctx.get(CTX_SQL_SESSION)
+        LOG.debug("sql_device_storage_allocate_ip_v4_called", extra=log_extra(ctx))
+
         result = _get_available_ip(ip_range, _get_all_used_ipv4(s))
         if result is None:
             raise NoMoreIPAvailableException()
@@ -167,6 +176,8 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
 
     def allocate_ip_v6(self, ctx, ip_range: str) -> str:
         s = ctx.get(CTX_SQL_SESSION)
+        LOG.debug("sql_device_storage_allocate_ip_v6_called", extra=log_extra(ctx))
+
         result = _get_available_ip(ip_range, _get_all_used_ipv6(s))
         if result is None:
             raise NoMoreIPAvailableException()
