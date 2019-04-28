@@ -4,6 +4,7 @@ from pytest import fixture
 from src.entity.admin import Admin
 from src.entity.device import Device, DeviceType
 from src.entity.member import Member
+from src.entity.port import Port, SwitchInfo
 from src.entity.room import Room, Vlan
 from src.use_case.member_manager import MutationRequest
 from src.util.context import build_context
@@ -76,4 +77,18 @@ def sample_room():
             ip_v6_range='fe80::/10',
         ),
         phone_number=None,
+    )
+
+
+@fixture
+def sample_port():
+    return Port(
+        id="1",
+        port_number="test number",
+        room_number="1234",
+        switch_info=SwitchInfo(
+            switch_id="1",
+            rcom=42,
+            oid="1.2.3"
+        ),
     )

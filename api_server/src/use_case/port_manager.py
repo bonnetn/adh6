@@ -69,9 +69,8 @@ class PortManager:
         # Make sure the request is valid.
         _validate_mutation_request(mutation_request)
 
-        # Make sure the user is not trying to control the ID (it will be automatically populated).
         if not _is_set(mutation_request.id):
-            raise ReadOnlyField()
+            raise MissingRequiredFieldError('id')
 
         fields_to_update = asdict(mutation_request)
         fields_to_update = {k: v for k, v in fields_to_update.items() if _is_set(v)}
@@ -103,7 +102,7 @@ class PortManager:
         _validate_mutation_request(mutation_request)
 
         if _is_set(mutation_request.id):
-            raise MissingRequiredFieldError('id')
+            raise ReadOnlyField()
 
         fields_to_update = asdict(mutation_request)
         fields_to_update = {k: v for k, v in fields_to_update.items() if _is_set(v)}
