@@ -1,52 +1,39 @@
 # coding=utf-8
 import json
 import logging
-
 from connexion import NoContent
 from flask import g
-from sqlalchemy import or_
 
+from main import port_manager
 from src.exceptions import RoomNotFound, SwitchNotFound, PortNotFound
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin, auth_super_admin
-from src.interface_adapter.sql.model.models import Port, Chambre, Switch
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
+from src.interface_adapter.http_api.decorator.with_context import with_context
+from src.interface_adapter.http_api.util.error import bad_request
+from src.interface_adapter.sql.model.models import Port
+from src.log import LOG
+from src.use_case.exceptions import IntMustBePositiveException
+from src.util.context import log_extra
 
 
+@with_context
 @require_sql
 @auth_regular_admin
-def search(limit=100, offset=0,
+def search(ctx, limit=100, offset=0,
            switchID=None, roomNumber=None, terms=None):
     """ [API] Filter the port list according to some criteria """
-    if limit < 0:
-        return 'Limit must be a positive number', 400
+    LOG.debug("http_port_search_called", extra=log_extra(ctx, switch_id=switchID, room_number=roomNumber, terms=terms))
 
-    s = g.session
-    q = s.query(Port)
-    if switchID:
-        q = q.join(Switch)
-        q = q.filter(Switch.id == switchID)
-    if roomNumber:
-        q = q.join(Chambre)
-        q = q.filter(Chambre.numero == roomNumber)
-    if terms:
-        q = q.filter(or_(
-            Port.numero.contains(terms),
-            Port.oid.contains(terms),
-        ))
+    try:
+        result, count = port_manager.search(ctx, limit=limit, offset=offset, switch_id=switchID, room_number=roomNumber,
+                                            terms=terms)
+    except IntMustBePositiveException as e:
+        return bad_request(e), 400
 
-    count = q.count()
-    q = q.order_by(Port.switch_id.asc(), Port.numero.asc())
-    q = q.offset(offset)
-    q = q.limit(limit)
-    result = q.all()
-
-    result = map(dict, result)
-    result = list(result)
     headers = {
         'access-control-expose-headers': 'X-Total-Count',
         'X-Total-Count': str(count)
     }
-    logging.info("%s fetched the port list", g.admin.login)
     return result, 200, headers
 
 

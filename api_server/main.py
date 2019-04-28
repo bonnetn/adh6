@@ -8,17 +8,23 @@ from src.interface_adapter.elasticsearch.storage import ElasticSearchStorage
 from src.interface_adapter.sql.device_storage import DeviceSQLStorage
 from src.interface_adapter.sql.model.database import Database
 from src.interface_adapter.sql.member_storage import MemberSQLStorage
+from src.interface_adapter.sql.port_storage import PortSQLStorage
 from src.interface_adapter.sql.room_storage import RoomSQLStorage
 from src.use_case.device_manager import DeviceManager
 from src.use_case.member_manager import MemberManager
+from src.use_case.port_manager import PortManager
 
 Database.init_db(PROD_DATABASE)
 
 member_sql_storage = MemberSQLStorage()
+port_sql_storage = PortSQLStorage()
 device_sql_storage = DeviceSQLStorage()
 room_sql_storage = RoomSQLStorage()
 elk_storage = ElasticSearchStorage(CONFIGURATION)
 
+port_manager = PortManager(
+    port_storage=port_sql_storage,
+)
 device_manager = DeviceManager(
     device_storage=device_sql_storage,
     member_storage=member_sql_storage,
