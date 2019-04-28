@@ -7,8 +7,6 @@ cache:
 before_script:
   - uname -a
   - python -V
-  - apt update -q
-  - apt install -qy sqlite3 libmariadbclient-dev
   - pip install virtualenv
   - virtualenv -p python3 venv
   - source venv/bin/activate
@@ -34,15 +32,19 @@ python_unit_test:
 
 python_integration_test:
   stage: test
+  before_script:
+  - apt update -q
+  - apt install -qy sqlite3 libmariadbclient-dev
   script:
   - cd api_server/
   - pytest test/integration -vv
 
 python_coverage:
   stage: test
+  before_script:
+  - pip install pytest-cov
   script:
   - cd api_server/
-  - pip install pytest-cov
   - pytest -vv --cov=src --cov-report=html --cov-report=term --cov-fail-under=75
   coverage: '/^TOTAL\s+.*\s+(\d+\.?\d*)%/'
   artifacts:
