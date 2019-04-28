@@ -1,7 +1,7 @@
 import logging
 import pytest
 
-from CONFIGURATION import TEST_DATABASE as db_settings
+from config.TEST_CONFIGURATION import TEST_DATABASE as db_settings
 from src.interface_adapter.http_api.auth import TESTING_CLIENT
 from src.interface_adapter.sql.model.database import Database as db
 from test.integration.resource import logs_contains
