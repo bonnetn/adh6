@@ -2,12 +2,11 @@
 """
 SQL session decorator.
 """
-import logging
 from functools import wraps
 
 from src.constants import CTX_SQL_SESSION, CTX_TESTING
 from src.interface_adapter.sql.model.database import Database as Db
-from src.log import LOG
+from src.util.log import LOG
 from src.util.context import build_context, log_extra
 
 

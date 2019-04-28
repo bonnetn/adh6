@@ -8,7 +8,7 @@ from dataclasses import dataclass, asdict
 from typing import List
 
 from src.entity.member import Member
-from src.log import LOG
+from src.util.log import LOG
 from src.use_case.exceptions import StringMustNotBeEmptyException, InvalidEmailError, MemberNotFound, \
     MissingRequiredFieldError, IntMustBePositiveException, InvalidRoomNumberError, PasswordTooShortError, \
     UsernameMismatchError

@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from src.entity.device import Device, DeviceType
 from src.entity.room import Vlan
-from src.log import LOG
+from src.util.log import LOG
 from src.use_case.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError, \
     InvalidMACAddress, InvalidIPAddress, DeviceNotFound
 from src.use_case.interface.device_repository import DeviceRepository

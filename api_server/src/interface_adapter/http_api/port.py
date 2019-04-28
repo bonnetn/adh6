@@ -11,7 +11,7 @@ from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
 from src.interface_adapter.sql.model.models import Port
-from src.log import LOG
+from src.util.log import LOG
 from src.use_case.exceptions import IntMustBePositiveException
 from src.util.context import log_extra
 

@@ -8,7 +8,7 @@ from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
-from src.log import LOG
+from src.util.log import LOG
 from src.use_case.device_manager import MutationRequest
 from src.use_case.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError, \
     InvalidMACAddress, InvalidIPAddress, DeviceNotFound

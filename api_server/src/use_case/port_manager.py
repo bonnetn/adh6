@@ -2,7 +2,7 @@
 from typing import List
 
 from src.entity.port import Port
-from src.log import LOG
+from src.util.log import LOG
 from src.use_case.exceptions import IntMustBePositiveException
 from src.use_case.interface.port_repository import PortRepository
 from src.util.context import log_extra

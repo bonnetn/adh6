@@ -8,7 +8,7 @@ from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 
 from src.interface_adapter.sql.model.models import Base, NainA
-from src.log import LOG
+from src.util.log import LOG
 
 
 class Database():
