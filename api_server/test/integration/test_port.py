@@ -1,7 +1,7 @@
 import json
 import pytest
 
-from CONFIGURATION import TEST_DATABASE as db_settings
+from config.TEST_CONFIGURATION import TEST_DATABASE as db_settings
 from src.interface_adapter.sql.model.database import Database as db
 from src.interface_adapter.sql.model.models import Port
 from test.integration.resource import base_url, TEST_HEADERS
@@ -253,7 +253,7 @@ def test_port_delete_port(api_client, sample_switch1, sample_port1):
 
 
 def test_port_delete_non_existant_port(api_client,
-                                           sample_switch1):
+                                       sample_switch1):
     r = api_client.delete(
         "{}/port/{}".format(base_url, 4242),
         headers=TEST_HEADERS,
