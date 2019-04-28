@@ -38,3 +38,17 @@ class PortRepository(metaclass=abc.ABCMeta):
         :return the newly created port id
         """
         pass  # pragma: no cover
+
+    @abc.abstractmethod
+    def update_port(self, ctx, **fields) -> None:
+        """
+        Update a port.
+        """
+        pass  # pragma: no cover
+
+    @abc.abstractmethod
+    def delete_port(self, ctx, port_id: str) -> None:
+        """
+        Delete a port.
+        """
+        pass  # pragma: no cover

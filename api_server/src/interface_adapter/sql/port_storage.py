@@ -10,6 +10,7 @@ from src.constants import CTX_SQL_SESSION
 from src.entity.port import Port, SwitchInfo
 from src.interface_adapter.sql.model.models import Chambre, Switch
 from src.interface_adapter.sql.model.models import Port as PortSQL
+from src.use_case.interface.member_repository import NotFoundError
 from src.use_case.interface.port_repository import PortRepository, InvalidSwitchID, InvalidRoomNumber
 from src.util.context import log_extra
 from src.util.log import LOG
@@ -19,6 +20,10 @@ class PortSQLStorage(PortRepository):
 
     def search_port_by(self, ctx, limit=0, offset=0, port_id: str = None, switch_id: str = None,
                        room_number: str = None, terms: str = None) -> (List[Port], int):
+        """
+        Search for a port.
+        :return: the ports and the number of matches in the DB.
+        """
         LOG.debug("sql_port_storage_search_port_by",
                   extra=log_extra(ctx, port_id=port_id, switch_id=switch_id, room_number=room_number, terms=terms))
 
@@ -54,7 +59,13 @@ class PortSQLStorage(PortRepository):
         return result, count
 
     def create_port(self, ctx, rcom=None, port_number=None, oid=None, switch_id=None, room_number=None) -> str:
-        """ [API] Create a port in the database """
+        """
+        Create a port in the database
+        :return the newly created port ID
+
+        :raises InvalidRoomNumber
+        :raises InvalidSwitchID
+        """
         LOG.debug("sql_port_storage_create_port",
                   extra=log_extra(ctx, rcom=rcom, port_number=port_number, oid=oid, switch_id=switch_id,
                                   room_number=room_number))
@@ -83,6 +94,54 @@ class PortSQLStorage(PortRepository):
         s.flush()
 
         return str(port.id)
+
+    def update_port(self, ctx, id=None, rcom=None, port_number=None, oid=None, switch_id=None, room_number=None) -> str:
+        """
+        Update a port in the database
+        :return the newly created port ID
+
+        :raises NotFoundError
+        :raises InvalidRoomNumber
+        :raises InvalidSwitchID
+        """
+        LOG.debug("sql_port_storage_udpate_port",
+                  extra=log_extra(ctx, port_id=id, rcom=rcom, port_number=port_number, oid=oid, switch_id=switch_id,
+                                  room_number=room_number))
+
+        s = ctx.get(CTX_SQL_SESSION)
+        now = datetime.now()
+
+        port = s.query(PortSQL).filter(PortSQL.id == int(id)).one_or_none()
+        if port is None:
+            raise NotFoundError()
+
+        room = s.query(Chambre).filter(Chambre.numero == room_number).one_or_none()
+        if room is None:
+            raise InvalidRoomNumber()
+
+        switch = s.query(Switch).filter(Switch.id == switch_id).one_or_none()
+        if switch is None:
+            raise InvalidSwitchID()
+
+        port.rcom = rcom
+        port.numero = port_number
+        port.oid = oid
+        port.switch = switch
+        port.chambre = room
+        port.updated_at = now
+
+    def delete_port(self, ctx, port_id: str) -> None:
+        """
+        Delete port
+
+        :raises NotFoundError
+        """
+        s = ctx.get(CTX_SQL_SESSION)
+        port = s.query(PortSQL).filter(PortSQL.id == port_id).one_or_none()
+        if port is None:
+            raise NotFoundError()
+
+        s.delete(port)
 
 
 def _map_port_sql_to_entity(r: PortSQL) -> Port:

@@ -23,7 +23,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
     Represent the interface to the SQL database.
     """
 
-    def add_membership(self, ctx, username, start, end) -> None:
+    def create_membership(self, ctx, username, start, end) -> None:
         """
         Add a membership record.
 

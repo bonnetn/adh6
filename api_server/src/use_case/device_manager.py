@@ -162,6 +162,7 @@ class DeviceManager:
 
             # The following will never throw DeviceNotFound since we check beforehand.
             self.device_storage.update_device(ctx, mac_address, **fields)
+
             LOG.info('device_update', extra=log_extra(
                 ctx,
                 username=req.owner_username,

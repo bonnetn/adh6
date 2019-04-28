@@ -23,9 +23,7 @@ from src.util.date import string_to_date
 @require_sql
 @auth_regular_admin
 def search(ctx, limit=100, offset=0, terms=None, roomNumber=None):
-    """
-    Search all the member.
-    """
+    """ Search all the member. """
     LOG.debug("http_member_search_called", extra=log_extra(ctx,
                                                            limit=limit,
                                                            offset=offset,
@@ -48,9 +46,7 @@ def search(ctx, limit=100, offset=0, terms=None, roomNumber=None):
 @require_sql
 @auth_regular_admin
 def get(ctx, username):
-    """
-    Get a specific member.
-    """
+    """ Get a specific member. """
     LOG.debug("http_member_get_called", extra=log_extra(ctx, username=username))
     try:
         return asdict(member_manager.get_by_username(ctx, username)), 200  # 200 OK
@@ -63,7 +59,7 @@ def get(ctx, username):
 @require_sql
 @auth_regular_admin
 def delete(ctx, username):
-    """ [API] Delete the specified User from the database """
+    """ Delete the specified User from the database """
     LOG.debug("http_member_delete_called", extra=log_extra(ctx, username=username))
     try:
         member_manager.delete(ctx, username)
@@ -77,7 +73,7 @@ def delete(ctx, username):
 @require_sql
 @auth_regular_admin
 def patch(ctx, username, body):
-    """ [API] Partially update a member from the database """
+    """ Partially update a member from the database """
     LOG.debug("http_member_patch_called", extra=log_extra(ctx, username=username, request=body))
     try:
         mutation_request = _map_body_to_mutation_request(body)
@@ -92,7 +88,7 @@ def patch(ctx, username, body):
 @require_sql
 @auth_regular_admin
 def put(ctx, username, body):
-    """ [API] Create/Update member from the database """
+    """ Create/Update member from the database """
     LOG.debug("http_member_put_called", extra=log_extra(ctx, username=username, request=body))
 
     mutation_request = _map_body_to_mutation_request(body)
@@ -131,9 +127,7 @@ def post_membership(ctx, username, body):
 @require_sql
 @auth_regular_admin
 def put_password(ctx, username, body):
-    """
-    Set the password of a member.
-    """
+    """ Set the password of a member. """
     # Careful not to log the body here!
     LOG.debug("http_member_put_password_called", extra=log_extra(ctx, username=username, body=None))
 
@@ -153,9 +147,7 @@ def put_password(ctx, username, body):
 @require_sql
 @auth_regular_admin
 def get_logs(ctx, username):
-    """
-    Get logs from a member.
-    """
+    """ Get logs from a member. """
     LOG.debug("http_member_get_logs_called", extra=log_extra(ctx, username=username))
     try:
         return member_manager.get_logs(ctx, username), 200

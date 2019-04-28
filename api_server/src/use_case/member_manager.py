@@ -85,7 +85,7 @@ class MemberManager:
         end = start + datetime.timedelta(days=duration)
 
         try:
-            self.membership_storage.add_membership(ctx, username, start, end)
+            self.membership_storage.create_membership(ctx, username, start, end)
             self.member_storage.update_member(ctx, username, departure_date=end)
         except NotFoundError as e:
             raise MemberNotFound() from e

@@ -1,12 +1,10 @@
 import json
-import logging
-
 import pytest
 
 from CONFIGURATION import TEST_DATABASE as db_settings
-from adh.interface_adapter.sql.model.database import Database as db
-from adh.interface_adapter.sql.model.models import Port
-from .resource import base_url, TEST_HEADERS, logs_contains
+from src.interface_adapter.sql.model.database import Database as db
+from src.interface_adapter.sql.model.models import Port
+from test.integration.resource import base_url, TEST_HEADERS
 
 
 def prep_db(session,
@@ -241,7 +239,7 @@ def test_port_put_update_non_existant_port(api_client,
     assert r.status_code == 404
 
 
-def test_port_put_delete_port(api_client, sample_switch1, sample_port1):
+def test_port_delete_port(api_client, sample_switch1, sample_port1):
     r = api_client.delete(
         "{}/port/{}".format(base_url, sample_port1.id),
         headers=TEST_HEADERS,
@@ -254,36 +252,10 @@ def test_port_put_delete_port(api_client, sample_switch1, sample_port1):
     assert not s.query(q.exists()).scalar()
 
 
-def test_port_put_delete_non_existant_port(api_client,
+def test_port_delete_non_existant_port(api_client,
                                            sample_switch1):
     r = api_client.delete(
         "{}/port/{}".format(base_url, 4242),
         headers=TEST_HEADERS,
     )
     assert r.status_code == 404
-
-
-def test_port_log_create_port(api_client, sample_switch1, caplog):
-    with caplog.at_level(logging.INFO):
-        test_port_post_create_port(api_client, sample_switch1)
-
-    log = 'TestingClient created the port'
-    assert logs_contains(caplog, log)
-
-
-def test_port_log_update_port(api_client, sample_switch1,
-                              sample_port1, caplog):
-    with caplog.at_level(logging.INFO):
-        test_port_put_update_port(api_client, sample_switch1, sample_port1)
-
-    log = 'TestingClient updated the port /port/1'
-    assert logs_contains(caplog, log)
-
-
-def test_port_log_delete_port(api_client, sample_switch1,
-                              sample_port1, caplog):
-    with caplog.at_level(logging.INFO):
-        test_port_put_delete_port(api_client, sample_switch1, sample_port1)
-
-    log = 'TestingClient deleted the port /port/1'
-    assert logs_contains(caplog, log)

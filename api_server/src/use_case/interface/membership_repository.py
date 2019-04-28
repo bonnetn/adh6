@@ -11,7 +11,7 @@ class MembershipRepository(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def add_membership(self, ctx, username, start, end):
+    def create_membership(self, ctx, username, start, end):
         """
         Add a membership.
         """

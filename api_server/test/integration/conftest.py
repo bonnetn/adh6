@@ -1,11 +1,11 @@
 import datetime
 import pytest
 
+from config.TEST_CONFIGURATION import TEST_DATABASE
 from src.interface_adapter.sql.model.database import Database as db
 from src.interface_adapter.sql.model.models import (
     Adherent, Chambre, Vlan, Ordinateur, Portable, Switch, Port,
     NainA)
-from config.TEST_CONFIGURATION import TEST_DATABASE
 from test.integration.test_member import prep_db
 
 
@@ -228,3 +228,27 @@ def api_client(sample_member1, sample_member2, sample_member13,
                 sample_room2,
                 sample_vlan)
         yield c
+
+
+@pytest.fixture
+def sample_port1(sample_switch1):
+    yield Port(
+        rcom=1,
+        numero="0/0/1",
+        oid="1.1.1",
+        switch=sample_switch1,
+        chambre_id=1,
+
+    )
+
+
+@pytest.fixture
+def sample_port2(sample_switch2):
+    yield Port(
+        rcom=2,
+        numero="0/0/2",
+        oid="1.1.2",
+        switch=sample_switch2,
+        chambre_id=1,
+
+    )

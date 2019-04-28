@@ -44,7 +44,7 @@ def search(ctx, limit=100, offset=0, username=None, terms=None):
 @require_sql
 @auth_regular_admin
 def put(ctx, mac_address, body):
-    """ [API] Put (update or create) a new device in the database """
+    """ Put (update or create) a new device in the database """
     LOG.debug("http_device_put_called", extra=log_extra(ctx, mac=mac_address, request=body))
 
     try:
@@ -80,7 +80,7 @@ def put(ctx, mac_address, body):
 @require_sql
 @auth_regular_admin
 def get(ctx, mac_address):
-    """ [API] Return the device specified by the macAddress """
+    """ Return the device specified by the macAddress """
     LOG.debug("http_device_get_called", extra=log_extra(ctx, mac=mac_address))
     try:
         return asdict(device_manager.get_by_mac_address(ctx, mac_address)), 200  # 200 OK
@@ -92,7 +92,7 @@ def get(ctx, mac_address):
 @require_sql
 @auth_regular_admin
 def delete(ctx, mac_address):
-    """ [API] Delete the specified device from the database """
+    """ Delete the specified device from the database """
     LOG.debug("http_device_delete_called", extra=log_extra(ctx, mac=mac_address))
     try:
         device_manager.delete(ctx, mac_address)
@@ -105,7 +105,7 @@ def delete(ctx, mac_address):
 @require_sql
 @auth_regular_admin
 def get_vendor(ctx, mac_address):
-    """ [API] Return the vendor associated with the macAddress """
+    """ Return the vendor associated with the macAddress """
     r = requests.get('https://macvendors.co/api/vendorname/' + str(mac_address))
 
     if r.status_code == 200:

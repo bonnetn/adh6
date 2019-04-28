@@ -73,7 +73,7 @@ class TestNewMembership:
 
         # Expect that the database has not been touched.
         mock_member_repository.update_member.assert_not_called()
-        mock_membership_repository.add_membership.assert_not_called()
+        mock_membership_repository.create_membership.assert_not_called()
 
     def test_no_price_for_duration(self, ctx,
                                    mock_member_repository: MagicMock,
@@ -85,7 +85,7 @@ class TestNewMembership:
 
         # Expect that the database has not been touched.
         mock_member_repository.update_member.assert_not_called()
-        mock_membership_repository.add_membership.assert_not_called()
+        mock_membership_repository.create_membership.assert_not_called()
 
     def test_member_not_found(self, ctx, mock_member_repository: MemberRepository, member_manager: MemberManager):
         # Given that the database cannot find the specified member.
@@ -96,7 +96,7 @@ class TestNewMembership:
 
     @staticmethod
     def _assert_membership_record_was_created(ctx, user, repo, start_time, end_time):
-        repo.add_membership.assert_called_once_with(
+        repo.create_membership.assert_called_once_with(
             ctx,
             user,
             start_time,
