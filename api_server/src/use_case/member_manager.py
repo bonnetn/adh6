@@ -87,8 +87,8 @@ class MemberManager:
         try:
             self.membership_storage.add_membership(ctx, username, start, end)
             self.member_storage.update_member(ctx, username, departure_date=end)
-        except NotFoundError:
-            raise MemberNotFound()
+        except NotFoundError as e:
+            raise MemberNotFound() from e
 
         LOG.info("create_membership_record", extra=log_extra(
             ctx,
@@ -256,8 +256,8 @@ class MemberManager:
 
         try:
             self.member_storage.update_member(ctx, username, password=password)
-        except NotFoundError:
-            raise MemberNotFound()
+        except NotFoundError as e:
+            raise MemberNotFound() from e
 
         LOG.info('member_password_update', extra=log_extra(
             ctx,
@@ -279,8 +279,8 @@ class MemberManager:
                 ctx,
                 username=username,
             ))
-        except NotFoundError:
-            raise MemberNotFound()
+        except NotFoundError as e:
+            raise MemberNotFound() from e
 
     def get_logs(self, ctx, username) -> List[str]:
         """

@@ -94,8 +94,8 @@ class DeviceManager:
         """
         try:
             self.device_storage.delete_device(ctx, mac_address=mac_address)
-        except NotFoundError:
-            raise DeviceNotFound()
+        except NotFoundError as e:
+            raise DeviceNotFound() from e
 
         LOG.info("device_delete", extra=log_extra(
             ctx,

@@ -6,6 +6,15 @@ import abc
 from typing import List
 
 from src.entity.port import Port
+from src.use_case.interface.member_repository import NotFoundError
+
+
+class InvalidRoomNumber(NotFoundError):
+    pass
+
+
+class InvalidSwitchID(NotFoundError):
+    pass
 
 
 class PortRepository(metaclass=abc.ABCMeta):
@@ -18,5 +27,14 @@ class PortRepository(metaclass=abc.ABCMeta):
                        room_number: str = None, terms: str = None) -> (List[Port], int):
         """
         Search ports.
+        """
+        pass  # pragma: no cover
+
+    @abc.abstractmethod
+    def create_port(self, ctx, **fields) -> str:
+        """
+        Create a port.
+
+        :return the newly created port id
         """
         pass  # pragma: no cover

@@ -9,7 +9,9 @@ class NotFoundError(ValueError):
     """
     Object not found in repository.
     """
-    pass
+    def __init__(self, field=None):
+        self.what = field
+        super().__init__(field)
 
 
 class MemberRepository(metaclass=abc.ABCMeta):
