@@ -1,6 +1,5 @@
 # coding: utf-8
 import datetime
-
 from sqlalchemy import Column, DECIMAL, ForeignKey, String, TIMESTAMP, TEXT
 from sqlalchemy import Date, DateTime, Integer, \
     Numeric, Text, text
@@ -9,13 +8,9 @@ from sqlalchemy.orm import relationship, validates
 from sqlalchemy.orm.exc import NoResultFound
 
 from src.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
-from src.exceptions import RoomNotFound, SwitchNotFound
-from src.exceptions import VlanNotFound, PortNotFound
 from src.interface_adapter.sql.model.trackable import RubyHashTrackable
 from src.interface_adapter.sql.util.rubydiff import rubydiff
-from src.use_case.member_manager import MemberNotFound
 from src.util import checks
-from src.util.date import string_to_date
 
 Base = declarative_base()
 
@@ -29,16 +24,6 @@ class Vlan(Base):
     adressesv6 = Column(String(255))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
-
-    @staticmethod
-    def find(session, num):
-        """ [API] Get the specified Vlan from the database """
-        try:
-            q = session.query(Vlan)
-            q = q.filter(Vlan.numero == num)
-            return q.one()
-        except NoResultFound:
-            raise VlanNotFound
 
     @validates('adresses')
     def valid_ipv4(self, key, addr):
@@ -67,40 +52,11 @@ class Chambre(Base):
     vlan_id = Column(Integer, ForeignKey(Vlan.id))
     vlan = relationship(Vlan)
 
-    @staticmethod
-    def from_dict(session, d):
-        return Chambre(
-            numero=d.get("roomNumber"),
-            description=d.get("description"),
-            telephone=d.get("phone"),
-            vlan=Vlan.find(session, d.get("vlan")),
-        )
-
-    @staticmethod
-    def find(session, roomNumber):
-        if not roomNumber:
-            return None
-        q = session.query(Chambre)
-        q = q.filter(Chambre.numero == roomNumber)
-        try:
-            return q.one()
-        except NoResultFound:
-            raise RoomNotFound()
-
     @validates('numero')
     def not_empty(self, key, s):
         if not s:
             raise ValueError("String must not be empty")
         return s
-
-    def __iter__(self):
-        yield "roomNumber", self.numero
-        if self.description:
-            yield "description", self.description
-        if self.telephone:
-            yield "phone", self.telephone
-        if self.vlan:
-            yield "vlan", self.vlan.numero
 
 
 class Adherent(Base, RubyHashTrackable):
@@ -142,30 +98,6 @@ class Adherent(Base, RubyHashTrackable):
     def get_related_member(self):
         return self
 
-    @staticmethod
-    def find(session, username):
-        if not username:
-            return None
-        q = session.query(Adherent)
-        q = q.filter(Adherent.login == username)
-        try:
-            return q.one()
-        except NoResultFound:
-            raise MemberNotFound()
-
-    @staticmethod
-    def from_dict(session, d):
-        return Adherent(
-            mail=d.get("email"),
-            prenom=d.get("firstName"),
-            nom=d.get("lastName"),
-            login=d.get("username"),
-            date_de_depart=string_to_date(d.get('departureDate')),
-            commentaires=d.get('comment'),
-            mode_association=string_to_date(d.get('associationMode')),
-            chambre=Chambre.find(session, d.get("roomNumber")),
-        )
-
     @validates('nom', 'prenom', 'login', 'password')
     def not_empty(self, key, s):
         if not s:
@@ -177,23 +109,6 @@ class Adherent(Base, RubyHashTrackable):
         if not mail or not checks.is_email(mail):
             raise InvalidEmail()
         return mail
-
-    def __iter__(self):
-        yield "email", self.mail
-        yield "firstName", self.prenom
-        yield "lastName", self.nom
-        yield "username", self.login
-        if self.commentaires:
-            yield "comment", self.commentaires
-
-        if self.chambre:
-            yield "roomNumber", self.chambre.numero
-
-        if self.date_de_depart:
-            yield "departureDate", self.date_de_depart
-
-        if self.mode_association:
-            yield "associationMode", self.mode_association
 
 
 class Caisse(Base):
@@ -267,19 +182,6 @@ class Modification(Base):
     updated_at = Column(DateTime)
     utilisateur_id = Column(Integer, index=True)
 
-    @staticmethod
-    def add(session, object_updated, admin):
-        now = datetime.datetime.now()
-        # action, adherent = object_updated.get_ruby_modif()
-        m = Modification(
-            adherent_id=adherent.id,
-            action=action,
-            created_at=now,
-            updated_at=now,
-            utilisateur_id=admin.id
-        )
-        session.add(m)
-
 
 class Ordinateur(Base, RubyHashTrackable):
     __tablename__ = 'ordinateurs'
@@ -331,16 +233,6 @@ class Ordinateur(Base, RubyHashTrackable):
             raise InvalidIPv6()
         return addr
 
-    def __iter__(self):
-        yield "mac", self.mac
-        yield "connectionType", "wired"
-        if self.ip:
-            yield "ipAddress", self.ip
-        if self.ipv6:
-            yield "ipv6Address", self.ipv6
-        if self.adherent:
-            yield "username", self.adherent.login
-
 
 class Portable(Base, RubyHashTrackable):
     __tablename__ = 'portables'
@@ -376,12 +268,6 @@ class Portable(Base, RubyHashTrackable):
             raise InvalidMac()
         return mac
 
-    def __iter__(self):
-        yield "mac", self.mac
-        yield "connectionType", "wireless"
-        if self.adherent:
-            yield "username", self.adherent.login
-
 
 class Switch(Base):
     __tablename__ = 'switches'
@@ -393,37 +279,11 @@ class Switch(Base):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
 
-    @staticmethod
-    def find(session, switchID):
-        """ [API] Get the specified switch from the database """
-        try:
-            q = session.query(Switch)
-            q = q.filter(Switch.id == switchID)
-            return q.one()
-        except NoResultFound:
-            raise SwitchNotFound
-
-    @staticmethod
-    def from_dict(session, body):
-        """ Transforms a dictionary to Switch object """
-        return Switch(
-            description=body.get('description'),
-            ip=body.get('ip'),
-            communaute=body.get('community'),
-        )
-
     @validates('ip')
     def valid_ip(self, key, addr):
         if not addr or not checks.isIPv4(addr):
             raise InvalidIPv4()
         return addr
-
-    def __iter__(self):
-        yield "id", self.id
-        yield "ip", self.ip
-        yield "community", self.communaute
-        if self.description:
-            yield "description", self.description
 
 
 class Port(Base):
@@ -440,38 +300,11 @@ class Port(Base):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
 
-    @staticmethod
-    def find(session, port_id):
-        """ [API] Get the specified Port from the database """
-        try:
-            q = session.query(Port)
-            q = q.filter(Port.id == port_id)
-            return q.one()
-        except NoResultFound:
-            raise PortNotFound
-
-    @staticmethod
-    def from_dict(session, d):
-        """ Creates a Port object from a request """
-        return Port(
-            chambre=Chambre.find(session, d.get("roomNumber")),
-            switch=Switch.find(session, d.get("switchID")),
-            numero=d.get("portNumber"),
-        )
-
     @validates('numero')
     def not_empty(self, key, s):
         if not s:
             raise ValueError("String must not be empty")
         return s
-
-    def __iter__(self):
-        yield "id", self.id
-        yield "portNumber", self.numero
-        if self.chambre:
-            yield "roomNumber", self.chambre.numero
-        if self.switch_id:
-            yield "switchID", self.switch_id
 
 
 class Utilisateur(Base):

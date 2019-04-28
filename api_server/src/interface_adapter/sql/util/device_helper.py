@@ -25,7 +25,7 @@ def create_wireless_device(ctx, mac_address, username, s):
     """ Create a wireless device in the database """
     dev = Portable(
         mac=mac_address,
-        adherent=Adherent.find(s, username),
+        adherent=s.query(Adherent).filter(Adherent.login == username).one(),
     )
 
     with track_modifications(ctx, s, dev):
@@ -40,7 +40,7 @@ def create_wired_device(ctx, mac_address, ip_v4_address, ip_v6_address, username
         mac=mac_address,
         ip=ip_v4_address,
         ipv6=ip_v6_address,
-        adherent=Adherent.find(s, username),
+        adherent=s.query(Adherent).filter(Adherent.login == username).one(),
     )
 
     with track_modifications(ctx, s, dev):
@@ -57,7 +57,7 @@ def update_wireless_device(ctx, s, device_to_update, mac_address=None, username=
     with track_modifications(ctx, s, dev):
         dev.mac = mac_address or dev.mac
         if username:
-            dev.adherent = Adherent.find(s, username)
+            dev.adherent = s.query(Adherent).filter(Adherent.login == username).one()
 
     return dev
 
@@ -73,7 +73,7 @@ def update_wired_device(ctx, s, device_to_update, mac_address=None, username=Non
         dev.ipv6 = ip_v6_address or dev.ipv6
         dev.mac = mac_address or dev.mac
         if username:
-            dev.adherent = Adherent.find(s, username)
+            dev.adherent = s.query(Adherent).filter(Adherent.login == username).one()
 
     return dev
 

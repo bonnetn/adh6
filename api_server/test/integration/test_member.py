@@ -2,10 +2,10 @@ import datetime
 import json
 from dateutil import parser
 
+from config.TEST_CONFIGURATION import PRICES
 from src.interface_adapter.sql.model.database import Database as db
 from src.interface_adapter.sql.model.models import Adherent
 from src.util.hash import ntlm_hash
-from config.TEST_CONFIGURATION import PRICES
 from test.integration.resource import (
     base_url, TEST_HEADERS, assert_modification_was_created)
 
@@ -36,18 +36,6 @@ def assert_member_in_db(body):
     assert r.chambre.numero == body["roomNumber"]
     assert r.commentaires == body["comment"]
     assert r.login == body["username"]
-
-
-def test_member_to_dict(sample_member1):
-    t = datetime.datetime(2011, 4, 30, 17, 50, 17)
-    dict_member = {'email': 'j.dubois@free.fr',
-                   'firstName': 'Jean-Louis',
-                   'lastName': 'Dubois',
-                   'username': 'dubois_j',
-                   'roomNumber': 5110,
-                   'departureDate': datetime.datetime(2005, 7, 14, 12, 30)}
-
-    assert dict(sample_member1) == dict_member
 
 
 def test_member_filter_all(api_client):

@@ -41,10 +41,6 @@ def assert_port_in_db(body):
     assert body["switchID"] == p.switch.id
 
 
-def test_port_to_dict(sample_port1):
-    assert dict(sample_port1) == {'id': None, 'portNumber': '0/0/1'}
-
-
 def test_port_get_filter_all(api_client):
     r = api_client.get(
         "{}/port/".format(base_url),

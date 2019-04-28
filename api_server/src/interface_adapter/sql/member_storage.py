@@ -112,7 +112,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
                 member.mode_association = association_mode
 
             if room_number is not None:
-                member.chambre = Chambre.find(s, room_number)
+                member.chambre = s.query(Chambre).filter(Chambre.numero == room_number).one()
 
             member.updated_at = datetime.now()
 
