@@ -8,7 +8,7 @@ from src.interface_adapter.http_api.decorator.auth import auth_regular_admin, au
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
-from src.use_case.exceptions import IntMustBePositiveException
+from src.use_case.util.exceptions import IntMustBePositiveException
 from src.use_case.port_manager import MutationRequest
 from src.util.context import log_extra
 from src.util.log import LOG

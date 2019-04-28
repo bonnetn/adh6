@@ -13,7 +13,7 @@ from src.use_case.interface.membership_repository import MembershipRepository
 from src.use_case.member_manager import MemberManager, NoPriceAssignedToThatDurationException, MutationRequest, \
     UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, MemberNotFound, \
     IntMustBePositiveException
-from src.use_case.mutation import Mutation
+from src.use_case.util.mutation import Mutation
 from src.util.hash import ntlm_hash
 from test.unit.use_case.conftest import TEST_USERNAME, TEST_EMAIL, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_COMMENT, \
     TEST_ROOM_NUMBER, TEST_DATE1, TEST_DATE2, TEST_LOGS, INVALID_MUTATION_REQ

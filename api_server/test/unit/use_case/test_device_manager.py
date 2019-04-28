@@ -6,7 +6,7 @@ from src.entity.device import Device, DeviceType
 from src.entity.member import Member
 from src.entity.room import Room
 from src.use_case.device_manager import DeviceManager, MutationRequest
-from src.use_case.exceptions import IntMustBePositiveException, MemberNotFound, DeviceNotFound, IPAllocationFailedError, \
+from src.use_case.util.exceptions import IntMustBePositiveException, MemberNotFound, DeviceNotFound, IPAllocationFailedError, \
     InvalidMACAddress, InvalidIPAddress
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException

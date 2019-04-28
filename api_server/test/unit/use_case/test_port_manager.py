@@ -4,10 +4,10 @@ from unittest.mock import MagicMock
 
 from src.entity.port import Port
 from src.exceptions import SwitchNotFound, RoomNotFound, PortNotFound
-from src.use_case.exceptions import IntMustBePositiveException, MissingRequiredFieldError
+from src.use_case.util.exceptions import IntMustBePositiveException, MissingRequiredFieldError
 from src.use_case.interface.member_repository import NotFoundError
 from src.use_case.interface.port_repository import PortRepository, InvalidSwitchID, InvalidRoomNumber
-from src.use_case.mutation import Mutation
+from src.use_case.util.mutation import Mutation
 from src.use_case.port_manager import PortManager, MutationRequest, ReadOnlyField
 
 

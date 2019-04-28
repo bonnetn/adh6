@@ -10,9 +10,9 @@ from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
 from src.util.log import LOG
 from src.use_case.device_manager import MutationRequest
-from src.use_case.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError, \
+from src.use_case.util.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError, \
     InvalidMACAddress, InvalidIPAddress, DeviceNotFound
-from src.use_case.mutation import Mutation
+from src.use_case.util.mutation import Mutation
 from src.util.context import log_extra
 
 

@@ -5,10 +5,10 @@ from typing import List
 
 from src.entity.port import Port
 from src.exceptions import RoomNotFound, SwitchNotFound, PortNotFound
-from src.use_case.exceptions import IntMustBePositiveException, MissingRequiredFieldError
+from src.use_case.util.exceptions import IntMustBePositiveException, MissingRequiredFieldError
 from src.use_case.interface.member_repository import NotFoundError
 from src.use_case.interface.port_repository import PortRepository, InvalidRoomNumber, InvalidSwitchID
-from src.use_case.mutation import Mutation, _is_set
+from src.use_case.util.mutation import Mutation, _is_set
 from src.util.context import log_extra
 from src.util.log import LOG
 

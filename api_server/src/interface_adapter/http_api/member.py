@@ -14,7 +14,7 @@ from src.util.log import LOG
 from src.use_case.member_manager import MutationRequest, UsernameMismatchError, MissingRequiredFieldError, \
     PasswordTooShortError, InvalidRoomNumberError, InvalidEmailError, \
     MemberNotFound, IntMustBePositiveException, StringMustNotBeEmptyException, NoPriceAssignedToThatDurationException
-from src.use_case.mutation import Mutation
+from src.use_case.util.mutation import Mutation
 from src.util.context import log_extra
 from src.util.date import string_to_date
 
