@@ -3,19 +3,13 @@ API_CONF = {
     'APPLICATION_ROOT': '{{ APPLICATION_ROOT }}',
 }
 
-PROD_DATABASE = {
+DATABASE = {
     'drivername': 'mysql+mysqldb',
     'host': 'database',
     'port': '3306',
     'username': 'adh6',
     'password': 'adh6_pass',
     'database': 'adh6'
-}
-
-
-TEST_DATABASE = {
-    'drivername': 'sqlite',
-    'database': ':memory:',
 }
 
 PRICES = {

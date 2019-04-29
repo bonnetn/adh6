@@ -5,7 +5,7 @@ API_CONF = {
 }
                               
 # Permanent database, used to store every object
-# PROD_DATABASE = {
+# DATABASE = {
 #     'drivername': '',  # if using MySQL: 'mysql+mysqldb'
 #     'host': '',
 #     'port': '',
@@ -13,14 +13,7 @@ API_CONF = {
 #     'password': '',
 #     'database': ''
 # }
-PROD_DATABASE = {
-    'drivername': 'sqlite',
-    'database': ':memory:',
-}
-
-# Temporary database, that will be clear at every test, used when you launch
-# the unit tests. Default settings is in RAM memory.
-TEST_DATABASE = {
+DATABASE = {
     'drivername': 'sqlite',
     'database': ':memory:',
 }

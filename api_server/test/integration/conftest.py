@@ -1,7 +1,7 @@
 import datetime
 import pytest
 
-from config.TEST_CONFIGURATION import TEST_DATABASE
+from config.TEST_CONFIGURATION import DATABASE
 from src.interface_adapter.sql.model.database import Database as db
 from src.interface_adapter.sql.model.models import (
     Adherent, Chambre, Vlan, Ordinateur, Portable, Switch, Port,
@@ -217,7 +217,7 @@ def api_client(sample_member1, sample_member2, sample_member13,
                sample_room1, sample_room2, sample_vlan):
     from .context import app
     with app.app.test_client() as c:
-        db.init_db(TEST_DATABASE, testing=True)
+        db.init_db(DATABASE, testing=True)
         prep_db(db.get_db().get_session(),
                 sample_member1,
                 sample_member2,

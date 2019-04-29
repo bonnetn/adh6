@@ -1,17 +1,17 @@
+# coding=utf-8
+"""
+This is the configuration file that is used during the unit and integration tests.
+It is safe to be committed.
+"""
 # API server options general
 API_CONF = {
     'AUTH_SERVER_ADDRESS': 'https://adh6.minet.net/oauth',
     'APPLICATION_ROOT': '/api',
 }
 
-PROD_DATABASE = {
-    'drivername': 'sqlite',
-    'database': ':memory:',
-}
-
-# Temporary database, that will be clear at every test, used when you launch
+# Temporary database, that will be cleared at every test, used when you launch
 # the unit tests. Default settings is in RAM memory.
-TEST_DATABASE = {
+DATABASE = {
     'drivername': 'sqlite',
     'database': ':memory:',
 }

@@ -1,7 +1,7 @@
 import json
 import pytest
 
-from config.TEST_CONFIGURATION import TEST_DATABASE
+from config.TEST_CONFIGURATION import DATABASE
 from src.interface_adapter.sql.model.database import Database as db
 from src.interface_adapter.sql.model.models import Ordinateur, Portable
 from .resource import (
@@ -27,7 +27,7 @@ def api_client(wired_device,
                sample_member3):
     from .context import app
     with app.app.test_client() as c:
-        db.init_db(TEST_DATABASE, testing=True)
+        db.init_db(DATABASE, testing=True)
         prep_db(db.get_db().get_session(),
                 wired_device,
                 wireless_device,
