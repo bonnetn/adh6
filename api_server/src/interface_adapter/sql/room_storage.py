@@ -7,9 +7,9 @@ from typing import List
 from src.constants import CTX_SQL_SESSION
 from src.entity.room import Room, Vlan
 from src.interface_adapter.sql.model.models import Adherent, Chambre
-from src.util.log import LOG
 from src.use_case.interface.room_repository import RoomRepository
 from src.util.context import log_extra
+from src.util.log import LOG
 
 
 class RoomSQLStorage(RoomRepository):

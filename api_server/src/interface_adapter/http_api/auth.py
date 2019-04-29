@@ -1,5 +1,4 @@
 import datetime
-
 import requests
 import requests.exceptions
 from flask import current_app
@@ -13,6 +12,7 @@ ADH6_USER = "adh6_user"
 ADH6_ADMIN = "adh6_admin"
 
 TESTING_CLIENT = 'TestingClient'
+
 
 def token_info(access_token) -> dict:
     if access_token.startswith("NAINA_"):

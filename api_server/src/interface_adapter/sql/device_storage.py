@@ -10,12 +10,12 @@ from src.interface_adapter.sql.model.models import Adherent
 from src.interface_adapter.sql.util.device_helper import get_all_devices, update_wired_device, \
     update_wireless_device, delete_wired_device, create_wireless_device, delete_wireless_device, create_wired_device
 from src.interface_adapter.sql.util.ip_controller import _get_available_ip, _get_all_used_ipv4, _get_all_used_ipv6
-from src.util.log import LOG
-from src.use_case.util.exceptions import DeviceNotFound, DeviceAlreadyExist
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
 from src.use_case.interface.member_repository import NotFoundError
+from src.use_case.util.exceptions import DeviceNotFound, DeviceAlreadyExist
 from src.util.context import log_extra
+from src.util.log import LOG
 
 
 class DeviceSQLStorage(DeviceRepository, IPAllocator):

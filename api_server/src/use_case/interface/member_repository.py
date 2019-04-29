@@ -9,6 +9,7 @@ class NotFoundError(ValueError):
     """
     Object not found in repository.
     """
+
     def __init__(self, field=None):
         self.what = field
         super().__init__(field)

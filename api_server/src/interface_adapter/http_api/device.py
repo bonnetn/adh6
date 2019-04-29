@@ -1,7 +1,6 @@
 # coding=utf-8
 import requests
 from connexion import NoContent
-from dataclasses import asdict
 
 from main import device_manager
 from src.entity.device import DeviceType, Device

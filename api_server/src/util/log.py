@@ -14,7 +14,6 @@ class JSONFormatter(logging.Formatter):
         return f'{msg} | {extra}'
 
 
-
 # create logger
 logger = logging.getLogger('simple_example')
 logger.setLevel(logging.DEBUG)

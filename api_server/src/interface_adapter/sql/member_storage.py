@@ -10,12 +10,12 @@ from src.constants import CTX_SQL_SESSION
 from src.entity.member import Member
 from src.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion
 from src.interface_adapter.sql.track_modifications import track_modifications
-from src.util.log import LOG
-from src.use_case.util.exceptions import MemberAlreadyExist
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.membership_repository import MembershipRepository
+from src.use_case.util.exceptions import MemberAlreadyExist
 from src.util.context import log_extra
 from src.util.date import date_to_string
+from src.util.log import LOG
 
 
 class MemberSQLStorage(MemberRepository, MembershipRepository):

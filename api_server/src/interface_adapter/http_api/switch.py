@@ -1,15 +1,14 @@
 # coding=utf-8
 import json
 import logging
-
 from connexion import NoContent
 from flask import g
 from sqlalchemy import or_
 
 from src.exceptions import InvalidIPv4, SwitchNotFound
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin, auth_super_admin
-from src.interface_adapter.sql.model.models import Switch
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
+from src.interface_adapter.sql.model.models import Switch
 
 
 def switch_exists(session, switchID):

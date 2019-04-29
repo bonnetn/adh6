@@ -5,16 +5,16 @@ from typing import List, Optional
 
 from src.entity.device import Device, DeviceType
 from src.entity.room import Vlan
-from src.util.log import LOG
-from src.use_case.util.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError, \
-    InvalidMACAddress, InvalidIPAddress, DeviceNotFound
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.room_repository import RoomRepository
+from src.use_case.util.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError, \
+    InvalidMACAddress, InvalidIPAddress, DeviceNotFound
 from src.use_case.util.mutation import Mutation, _is_set
 from src.util.checks import is_mac_address, isIPv4, isIPv6
 from src.util.context import log_extra
+from src.util.log import LOG
 
 
 @dataclass

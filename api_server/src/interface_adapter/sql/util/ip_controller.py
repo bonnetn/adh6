@@ -1,5 +1,4 @@
 import datetime
-
 import ipaddress
 
 from src.interface_adapter.sql.model.models import Ordinateur, Adherent

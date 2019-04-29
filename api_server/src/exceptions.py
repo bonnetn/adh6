@@ -14,7 +14,6 @@ class InvalidMac(ValueError):
     pass
 
 
-
 class SwitchNotFound(ValueError):
     pass
 
@@ -29,5 +28,3 @@ class VlanNotFound(ValueError):
 
 class RoomNotFound(ValueError):
     pass
-
-

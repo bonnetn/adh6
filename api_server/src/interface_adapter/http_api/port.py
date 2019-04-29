@@ -1,6 +1,5 @@
 # coding=utf-8
 from connexion import NoContent
-from dataclasses import asdict
 
 from main import port_manager
 from src.entity.port import Port
