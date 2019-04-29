@@ -56,10 +56,11 @@ class ElasticSearchStorage(LogsRepository):
                 lambda x: {"match_phrase": {"message": x}},
                 get_mac_variations(addr)
             )
+            # noinspection PyTypeChecker
             query["query"]["bool"]["should"] += list(variations)
 
         # TODO: instantiate only once the Elasticsearch client
-        es = Elasticsearch(ELK_HOSTS)
+        es = Elasticsearch(self.config.ELK_HOSTS)
         res = es.search(index="", body=query)['hits']['hits']
 
         return list(map(

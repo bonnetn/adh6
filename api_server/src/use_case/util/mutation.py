@@ -1,3 +1,4 @@
+# coding=utf-8
 from enum import Enum
 
 
@@ -8,7 +9,7 @@ class Mutation(Enum):
     NOT_SET = 1
 
 
-def _is_set(v):
+def is_set(v):
     """
     Check if a field in a MutationRequest is set.
     """

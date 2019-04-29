@@ -1,6 +1,6 @@
+# coding=utf-8
 import json
-from attr import dataclass
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from typing import List, Optional
 
 from src.entity.device import Device, DeviceType
@@ -11,8 +11,8 @@ from src.use_case.interface.member_repository import MemberRepository, NotFoundE
 from src.use_case.interface.room_repository import RoomRepository
 from src.use_case.util.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError, \
     InvalidMACAddress, InvalidIPAddress, DeviceNotFound
-from src.use_case.util.mutation import Mutation, _is_set
-from src.util.checks import is_mac_address, isIPv4, isIPv6
+from src.use_case.util.mutation import Mutation, is_set
+from src.util.checks import is_mac_address, is_ip_v4, is_ip_v6
 from src.util.context import log_extra
 from src.util.log import LOG
 
@@ -116,7 +116,7 @@ class DeviceManager:
         :raises InvalidIPAddress
         """
 
-        if not _is_set(req.mac_address):
+        if not is_set(req.mac_address):
             req.mac_address = mac_address
 
         _validate_mutation_request(req)
@@ -132,15 +132,15 @@ class DeviceManager:
 
             # TODO: Free addresses if cannot allocate.
             try:
-                if not _is_set(req.ip_v4_address) and ip_v4_range:
+                if not is_set(req.ip_v4_address) and ip_v4_range:
                     req.ip_v4_address = self.ip_allocator.allocate_ip_v4(ctx, ip_v4_range)
-                if not _is_set(req.ip_v6_address) and ip_v6_range:
+                if not is_set(req.ip_v6_address) and ip_v6_range:
                     req.ip_v6_address = self.ip_allocator.allocate_ip_v6(ctx, ip_v6_range)
 
             except NoMoreIPAvailableException as e:
                 raise IPAllocationFailedError() from e
 
-        fields = {k: v if _is_set(v) else None for k, v in asdict(req).items()}
+        fields = {k: v if is_set(v) else None for k, v in asdict(req).items()}
         result, _ = self.device_storage.search_device_by(ctx, mac_address=mac_address)
 
         req.ip_v4_address = req.ip_v4_address or 'En Attente'
@@ -188,8 +188,8 @@ def _validate_mutation_request(req: MutationRequest):
     if not is_mac_address(req.mac_address):
         raise InvalidMACAddress()
 
-    if _is_set(req.ip_v4_address) and not isIPv4(req.ip_v4_address):
+    if is_set(req.ip_v4_address) and not is_ip_v4(req.ip_v4_address):
         raise InvalidIPAddress()
 
-    if _is_set(req.ip_v6_address) and not isIPv6(req.ip_v6_address):
+    if is_set(req.ip_v6_address) and not is_ip_v6(req.ip_v6_address):
         raise InvalidIPAddress()

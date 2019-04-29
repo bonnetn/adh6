@@ -1,3 +1,4 @@
+# coding=utf-8
 # from datetime import datetime
 import re
 from ipaddress import IPv4Address, IPv4Network
@@ -11,10 +12,10 @@ def is_email(mail):
     return EMAIL_REGEX.match(mail)
 
 
-def is_mac_address(macAddress):
+def is_mac_address(mac_address):
     """ Allowed MAC address format: DE-AD-BE-EF-01-23 """
-    macAddress = str(macAddress).upper()
-    return bool(MAC_REGEX.match(macAddress))
+    mac_address = str(mac_address).upper()
+    return bool(MAC_REGEX.match(mac_address))
 
 
 # def checkDate(dateString):
@@ -35,7 +36,7 @@ def is_mac_address(macAddress):
 #     return True
 
 
-def isIPv4Network(ipAddress):
+def is_ip_v4_network(ipAddress):
     """ Allowed format: 192.168.0.1/24 """
     try:
         IPv4Network(ipAddress)
@@ -44,7 +45,7 @@ def isIPv4Network(ipAddress):
     return True
 
 
-def isIPv6Network(ipAddress):
+def is_ip_v6_network(ipAddress):
     try:
         IPv6Network(ipAddress)
     except AddressValueError:
@@ -52,7 +53,7 @@ def isIPv6Network(ipAddress):
     return True
 
 
-def isIPv4(ipAddress):
+def is_ip_v4(ipAddress):
     """ Allowed format: 192.168.0.1 """
     try:
         IPv4Address(ipAddress)
@@ -61,7 +62,7 @@ def isIPv4(ipAddress):
     return True
 
 
-def isIPv6(ipAddress):
+def is_ip_v6(ipAddress):
     """ Allowed format: fe80:0000:0000:0000:62eb:69ff:feec:c643 """
     try:
         IPv6Address(ipAddress)

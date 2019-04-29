@@ -115,7 +115,7 @@ def post_membership(ctx, username, body):
     try:
         member_manager.new_membership(ctx, username, body.get('duration'), start_str=body.get('start'))
 
-    except MemberNotFound as e:
+    except MemberNotFound:
         return NoContent, 404  # 404 Not Found
 
     except (IntMustBePositiveException, NoPriceAssignedToThatDurationException) as e:

@@ -9,7 +9,7 @@ from src.entity.device import Device, DeviceType
 from src.interface_adapter.sql.model.models import Adherent
 from src.interface_adapter.sql.util.device_helper import get_all_devices, update_wired_device, \
     update_wireless_device, delete_wired_device, create_wireless_device, delete_wireless_device, create_wired_device
-from src.interface_adapter.sql.util.ip_controller import _get_available_ip, _get_all_used_ipv4, _get_all_used_ipv6
+from src.interface_adapter.sql.util.ip_controller import get_available_ip, get_all_used_ipv4, get_all_used_ipv6
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
 from src.use_case.interface.member_repository import NotFoundError
@@ -168,7 +168,7 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
         s = ctx.get(CTX_SQL_SESSION)
         LOG.debug("sql_device_storage_allocate_ip_v4_called", extra=log_extra(ctx))
 
-        result = _get_available_ip(ip_range, _get_all_used_ipv4(s))
+        result = get_available_ip(ip_range, get_all_used_ipv4(s))
         if result is None:
             raise NoMoreIPAvailableException()
 
@@ -178,7 +178,7 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
         s = ctx.get(CTX_SQL_SESSION)
         LOG.debug("sql_device_storage_allocate_ip_v6_called", extra=log_extra(ctx))
 
-        result = _get_available_ip(ip_range, _get_all_used_ipv6(s))
+        result = get_available_ip(ip_range, get_all_used_ipv6(s))
         if result is None:
             raise NoMoreIPAvailableException()
 

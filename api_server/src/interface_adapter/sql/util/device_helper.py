@@ -1,3 +1,4 @@
+# coding=utf-8
 from sqlalchemy.sql.expression import literal
 from sqlalchemy.types import String
 

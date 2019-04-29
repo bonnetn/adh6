@@ -1,3 +1,4 @@
+# coding=utf-8
 import time
 
 import logging
@@ -11,7 +12,7 @@ from src.interface_adapter.sql.model.models import Base, NainA
 from src.util.log import LOG
 
 
-class Database():
+class Database:
     RETRY_COUNT = 10
     RETRY_INTERVAL = 10
 
@@ -25,6 +26,7 @@ class Database():
             pool_pre_ping=True,  # Make sure the connection is OK before using it.
         )
 
+        # noinspection PyArgumentEqualDefault
         self.session_maker = sessionmaker(
             bind=self.engine,
             autoflush=True,  # Flush at each query so that we can see our changes in the current session.
@@ -50,7 +52,7 @@ class Database():
                     logging.info("connection_established")
                     logging.info("table_created")
                 except OperationalError as e:
-                    LOG.warn("could_not_connect_to_database")
+                    LOG.warn("could_not_connect_to_database", extra={'exception': e})
                     if retries + 1 == Database.RETRY_COUNT:
                         raise
                     time.sleep(Database.RETRY_INTERVAL)

@@ -14,7 +14,7 @@ from src.use_case.interface.membership_repository import MembershipRepository
 from src.use_case.util.exceptions import StringMustNotBeEmptyException, InvalidEmailError, MemberNotFound, \
     MissingRequiredFieldError, IntMustBePositiveException, InvalidRoomNumberError, PasswordTooShortError, \
     UsernameMismatchError
-from src.use_case.util.mutation import Mutation, _is_set
+from src.use_case.util.mutation import Mutation, is_set
 from src.util.checks import is_email
 from src.util.context import log_extra
 from src.util.date import string_to_date
@@ -160,7 +160,7 @@ class MemberManager:
         _validate_mutation_request(mutation_request)
 
         # Make sure all the necessary fields are set.
-        if not _is_set(mutation_request.username):
+        if not is_set(mutation_request.username):
             raise MissingRequiredFieldError('username')
 
         member, _ = self.member_storage.search_member_by(ctx, username=username)
@@ -170,7 +170,7 @@ class MemberManager:
             # Create a dict with fields to update. If field is not provided in the mutation request, consider that it
             # should be None as it is a full update of the member.
             fields_to_update = asdict(mutation_request)
-            fields_to_update = {k: v if _is_set(v) else None for k, v in fields_to_update.items()}
+            fields_to_update = {k: v if is_set(v) else None for k, v in fields_to_update.items()}
 
             # This call will never throw a NotFoundError because we checked for the object existence before.
             self.member_storage.update_member(ctx, username, **fields_to_update)
@@ -193,7 +193,7 @@ class MemberManager:
 
             mutation_request.username = username  # Just in case it has not been specified in the body.
             fields = asdict(mutation_request)
-            fields = {k: v if _is_set(v) else None for k, v in fields.items()}
+            fields = {k: v if is_set(v) else None for k, v in fields.items()}
 
             try:
                 self.member_storage.create_member(ctx, **fields)
@@ -222,7 +222,7 @@ class MemberManager:
         # Create a dict with all the changed field. If a field in 'NOT_SET' it will not be put in the dict, and the
         # field will not be updated.
         fields_to_update = asdict(mutation_request)
-        fields_to_update = {k: v for k, v in fields_to_update.items() if _is_set(v)}
+        fields_to_update = {k: v for k, v in fields_to_update.items() if is_set(v)}
 
         try:
             self.member_storage.update_member(ctx, username, **fields_to_update)
@@ -322,7 +322,7 @@ def _validate_mutation_request(req: MutationRequest):
     """
     Validate the fields that are set in a MutationRequest.
     """
-    if _is_set(req.email) and not is_email(req.email):
+    if is_set(req.email) and not is_email(req.email):
         raise InvalidEmailError()
 
     if req.first_name == '':

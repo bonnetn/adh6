@@ -1,3 +1,4 @@
+# coding=utf-8
 from types import MappingProxyType
 
 from src.constants import CTX_SQL_SESSION, CTX_ADMIN, CTX_TESTING, CTX_REQUEST_ID

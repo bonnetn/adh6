@@ -1,3 +1,7 @@
+# coding=utf-8
+import string
+
+
 def get_mac_variations(addr):
     addr = filter(lambda x: x in string.hexdigits, addr)
     addr = "".join(addr)

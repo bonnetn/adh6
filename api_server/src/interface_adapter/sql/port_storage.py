@@ -95,7 +95,8 @@ class PortSQLStorage(PortRepository):
 
         return str(port.id)
 
-    def update_port(self, ctx, id=None, rcom=None, port_number=None, oid=None, switch_id=None, room_number=None) -> str:
+    def update_port(self, ctx, port_id=None, rcom=None, port_number=None, oid=None, switch_id=None,
+                    room_number=None) -> None:
         """
         Update a port in the database
         :return the newly created port ID
@@ -105,13 +106,13 @@ class PortSQLStorage(PortRepository):
         :raises InvalidSwitchID
         """
         LOG.debug("sql_port_storage_udpate_port",
-                  extra=log_extra(ctx, port_id=id, rcom=rcom, port_number=port_number, oid=oid, switch_id=switch_id,
-                                  room_number=room_number))
+                  extra=log_extra(ctx, port_id=port_id, rcom=rcom, port_number=port_number, oid=oid,
+                                  switch_id=switch_id, room_number=room_number))
 
         s = ctx.get(CTX_SQL_SESSION)
         now = datetime.now()
 
-        port = s.query(PortSQL).filter(PortSQL.id == int(id)).one_or_none()
+        port = s.query(PortSQL).filter(PortSQL.id == int(port_id)).one_or_none()
         if port is None:
             raise NotFoundError()
 

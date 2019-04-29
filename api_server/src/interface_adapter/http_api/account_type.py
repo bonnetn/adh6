@@ -1,3 +1,4 @@
+# coding=utf-8
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 

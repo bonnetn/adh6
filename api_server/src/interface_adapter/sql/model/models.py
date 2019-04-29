@@ -27,13 +27,13 @@ class Vlan(Base):
 
     @validates('adresses')
     def valid_ipv4(self, key, addr):
-        if not checks.isIPv4Network(addr):
+        if not checks.is_ip_v4_network(addr):
             raise InvalidIPv4()
         return addr
 
     @validates('adressesv6')
     def valid_ipv6(self, key, addr):
-        if not checks.isIPv6Network(addr):
+        if not checks.is_ip_v6_network(addr):
             raise InvalidIPv4()
         return addr
 
@@ -223,13 +223,13 @@ class Ordinateur(Base, RubyHashTrackable):
 
     @validates('ip')
     def valid_ip(self, key, addr):
-        if not addr or (not checks.isIPv4(addr) and addr != "En Attente"):
+        if not addr or (not checks.is_ip_v4(addr) and addr != "En Attente"):
             raise InvalidIPv4(addr)
         return addr
 
     @validates('ipv6')
     def valid_ipv6(self, key, addr):
-        if not addr or (not checks.isIPv6(addr) and addr != "En Attente"):
+        if not addr or (not checks.is_ip_v6(addr) and addr != "En Attente"):
             raise InvalidIPv6()
         return addr
 
@@ -281,7 +281,7 @@ class Switch(Base):
 
     @validates('ip')
     def valid_ip(self, key, addr):
-        if not addr or not checks.isIPv4(addr):
+        if not addr or not checks.is_ip_v4(addr):
             raise InvalidIPv4()
         return addr
 

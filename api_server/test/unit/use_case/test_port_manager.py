@@ -66,7 +66,7 @@ class TestCreate:
 
         # Expect...
         args = asdict(sample_mutation_req)
-        del args['id']
+        del args['port_id']
         mock_port_repository.create_port.assert_called_once_with(ctx, **args)
 
     def test_set_readonly_id(self,
@@ -76,7 +76,7 @@ class TestCreate:
                              port_manager: PortManager):
         # Given...
         mock_port_repository.create_port = MagicMock()
-        sample_mutation_req.id = 'test'
+        sample_mutation_req.port_id = 'test'
 
         # When...
         with raises(ReadOnlyField):
@@ -121,7 +121,7 @@ class TestUpdate:
     @fixture
     def sample_mutation_req(self):
         return MutationRequest(
-            id='id',
+            port_id='id',
             port_number='port',
             room_number='room',
             switch_id='switch',
@@ -151,7 +151,7 @@ class TestUpdate:
                               port_manager: PortManager):
         # Given...
         mock_port_repository.update_port = MagicMock()
-        sample_mutation_req.id = Mutation.NOT_SET
+        sample_mutation_req.port_id = Mutation.NOT_SET
 
         # When...
         with raises(MissingRequiredFieldError):

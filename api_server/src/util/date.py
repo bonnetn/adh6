@@ -1,4 +1,6 @@
+# coding=utf-8
 from dateutil import parser
+from typing import Optional
 
 
 def string_to_date(s):
@@ -9,7 +11,7 @@ def string_to_date(s):
     return parser.parse(s)
 
 
-def date_to_string(d) -> str:
+def date_to_string(d) -> Optional[str]:
     if d is None:
         return d
 

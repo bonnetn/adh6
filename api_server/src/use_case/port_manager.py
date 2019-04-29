@@ -8,7 +8,7 @@ from src.exceptions import RoomNotFound, SwitchNotFound, PortNotFound
 from src.use_case.interface.member_repository import NotFoundError
 from src.use_case.interface.port_repository import PortRepository, InvalidRoomNumber, InvalidSwitchID
 from src.use_case.util.exceptions import IntMustBePositiveException, MissingRequiredFieldError
-from src.use_case.util.mutation import Mutation, _is_set
+from src.use_case.util.mutation import Mutation, is_set
 from src.util.context import log_extra
 from src.util.log import LOG
 
@@ -22,7 +22,7 @@ class MutationRequest:
     """
     Mutation request for a port. This represents the 'diff', that is going to be applied on the port object.
     """
-    id: str = Mutation.NOT_SET
+    port_id: str = Mutation.NOT_SET
     port_number: str = Mutation.NOT_SET
     room_number: str = Mutation.NOT_SET
     switch_id: str = Mutation.NOT_SET
@@ -69,11 +69,11 @@ class PortManager:
         # Make sure the request is valid.
         _validate_mutation_request(mutation_request)
 
-        if not _is_set(mutation_request.id):
+        if not is_set(mutation_request.port_id):
             raise MissingRequiredFieldError('id')
 
         fields_to_update = asdict(mutation_request)
-        fields_to_update = {k: v for k, v in fields_to_update.items() if _is_set(v)}
+        fields_to_update = {k: v for k, v in fields_to_update.items() if is_set(v)}
         try:
             self.port_storage.update_port(ctx, **fields_to_update)
             LOG.info("port_update", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))
@@ -101,11 +101,11 @@ class PortManager:
         # Make sure the request is valid.
         _validate_mutation_request(mutation_request)
 
-        if _is_set(mutation_request.id):
+        if is_set(mutation_request.port_id):
             raise ReadOnlyField()
 
         fields_to_update = asdict(mutation_request)
-        fields_to_update = {k: v for k, v in fields_to_update.items() if _is_set(v)}
+        fields_to_update = {k: v for k, v in fields_to_update.items() if is_set(v)}
         try:
             port_id = self.port_storage.create_port(ctx, **fields_to_update)
             LOG.info("port_create", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))

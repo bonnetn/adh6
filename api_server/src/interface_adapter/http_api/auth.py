@@ -1,3 +1,4 @@
+# coding=utf-8
 import datetime
 import requests
 import requests.exceptions
@@ -6,7 +7,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from src.interface_adapter.sql.model.database import Database as Db
 from src.interface_adapter.sql.model.models import NainA
-from src.util.env import isDevelopmentEnvironment
+from src.util.env import is_development_environment
 
 ADH6_USER = "adh6_user"
 ADH6_ADMIN = "adh6_admin"
@@ -52,7 +53,7 @@ def authenticate_temp_account(access_token):
 def get_sso_groups(token):
     try:
         verify_cert = True
-        if isDevelopmentEnvironment():
+        if is_development_environment():
             verify_cert = False
 
         headers = {"Authorization": "Bearer " + token}
@@ -69,7 +70,7 @@ def get_sso_groups(token):
         return None
 
     result = r.json()
-    if isDevelopmentEnvironment():
+    if is_development_environment():
         result["groups"] = [ADH6_USER, ADH6_ADMIN]  # If we are testing, consider the user asg.admin
     return result
 
