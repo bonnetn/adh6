@@ -3,20 +3,21 @@
 Contain all the http http_api functions.
 """
 from connexion import NoContent
-from dataclasses import asdict
 
 from main import member_manager
+from src.entity.member import Member
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
-from src.util.log import LOG
 from src.use_case.member_manager import MutationRequest, UsernameMismatchError, MissingRequiredFieldError, \
     PasswordTooShortError, InvalidRoomNumberError, InvalidEmailError, \
     MemberNotFound, IntMustBePositiveException, StringMustNotBeEmptyException, NoPriceAssignedToThatDurationException
 from src.use_case.util.mutation import Mutation
 from src.util.context import log_extra
 from src.util.date import string_to_date
+from src.util.int_or_none import int_or_none
+from src.util.log import LOG
 
 
 @with_context
@@ -35,7 +36,7 @@ def search(ctx, limit=100, offset=0, terms=None, roomNumber=None):
             "X-Total-Count": str(total_count),
             'access-control-expose-headers': 'X-Total-Count'
         }
-        result = list(map(asdict, result))
+        result = list(map(_map_member_to_http_response, result))
         return result, 200, headers  # 200 OK
 
     except IntMustBePositiveException as e:
@@ -49,7 +50,7 @@ def get(ctx, username):
     """ Get a specific member. """
     LOG.debug("http_member_get_called", extra=log_extra(ctx, username=username))
     try:
-        return asdict(member_manager.get_by_username(ctx, username)), 200  # 200 OK
+        return _map_member_to_http_response(member_manager.get_by_username(ctx, username)), 200  # 200 OK
 
     except MemberNotFound:
         return NoContent, 404  # 404 Not Found
@@ -76,7 +77,7 @@ def patch(ctx, username, body):
     """ Partially update a member from the database """
     LOG.debug("http_member_patch_called", extra=log_extra(ctx, username=username, request=body))
     try:
-        mutation_request = _map_body_to_mutation_request(body)
+        mutation_request = _map_http_request_to_mutation_request(body)
         member_manager.update_partially(ctx, username, mutation_request)
         return NoContent, 204  # 204 No Content
 
@@ -91,7 +92,7 @@ def put(ctx, username, body):
     """ Create/Update member from the database """
     LOG.debug("http_member_put_called", extra=log_extra(ctx, username=username, request=body))
 
-    mutation_request = _map_body_to_mutation_request(body)
+    mutation_request = _map_http_request_to_mutation_request(body)
     try:
         created = member_manager.update_or_create(ctx, username, mutation_request)
         if created:
@@ -156,7 +157,22 @@ def get_logs(ctx, username):
         return NoContent, 404
 
 
-def _map_body_to_mutation_request(body) -> MutationRequest:
+def _map_member_to_http_response(member: Member) -> dict:
+    fields = {
+        'email': member.email,
+        'firstName': member.first_name,
+        'lastName': member.last_name,
+        'username': member.username,
+        'departureDate': member.departure_date,
+        'comment': member.comment,
+        'associationMode': member.association_mode,
+        'roomNumber': int_or_none(member.room_number),
+    }
+
+    return {k: v for k, v in fields.items() if v is not None}
+
+
+def _map_http_request_to_mutation_request(body) -> MutationRequest:
     return MutationRequest(
         email=body.get('email', Mutation.NOT_SET),
         first_name=body.get('firstName', Mutation.NOT_SET),

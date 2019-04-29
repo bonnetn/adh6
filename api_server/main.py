@@ -6,8 +6,8 @@ from config import CONFIGURATION
 from config.CONFIGURATION import API_CONF, PROD_DATABASE
 from src.interface_adapter.elasticsearch.storage import ElasticSearchStorage
 from src.interface_adapter.sql.device_storage import DeviceSQLStorage
-from src.interface_adapter.sql.model.database import Database
 from src.interface_adapter.sql.member_storage import MemberSQLStorage
+from src.interface_adapter.sql.model.database import Database
 from src.interface_adapter.sql.port_storage import PortSQLStorage
 from src.interface_adapter.sql.room_storage import RoomSQLStorage
 from src.use_case.device_manager import DeviceManager
@@ -42,7 +42,10 @@ app = connexion.FlaskApp(__name__)
 app.app.config.update(API_CONF)
 app.add_api('swagger.yaml',
             resolver=RestyResolver('src.interface_adapter.http_api'),
-            strict_validation=True)
+            validate_responses=True,
+            strict_validation=True,
+            # pythonic_params=True
+            )
 # set the WSGI application callable to allow using uWSGI:
 # uwsgi --http :8080 -w app
 application = app.app

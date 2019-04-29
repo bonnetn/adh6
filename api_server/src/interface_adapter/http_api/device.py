@@ -4,16 +4,17 @@ from connexion import NoContent
 from dataclasses import asdict
 
 from main import device_manager
+from src.entity.device import DeviceType, Device
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
-from src.util.log import LOG
 from src.use_case.device_manager import MutationRequest
 from src.use_case.util.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError, \
     InvalidMACAddress, InvalidIPAddress, DeviceNotFound
 from src.use_case.util.mutation import Mutation
 from src.util.context import log_extra
+from src.util.log import LOG
 
 
 @with_context
@@ -37,7 +38,7 @@ def search(ctx, limit=100, offset=0, username=None, terms=None):
         "X-Total-Count": count,
         "access-control-expose-headers": "X-Total-Count"
     }
-    return list(map(asdict, result)), 200, headers
+    return list(map(_map_device_to_http_response, result)), 200, headers
 
 
 @with_context
@@ -83,7 +84,7 @@ def get(ctx, mac_address):
     """ Return the device specified by the macAddress """
     LOG.debug("http_device_get_called", extra=log_extra(ctx, mac=mac_address))
     try:
-        return asdict(device_manager.get_by_mac_address(ctx, mac_address)), 200  # 200 OK
+        return _map_device_to_http_response(device_manager.get_by_mac_address(ctx, mac_address)), 200  # 200 OK
     except DeviceNotFound:
         return NoContent, 404  # 404 Not Found
 
@@ -114,3 +115,18 @@ def get_vendor(ctx, mac_address):
 
     else:
         return NoContent, 404
+
+
+def _map_device_to_http_response(device: Device) -> dict:
+    con_types = {
+        DeviceType.Wired: 'wired',
+        DeviceType.Wireless: 'wireless',
+    }
+    fields = {
+        'mac': device.mac_address,
+        'ipAddress': device.ip_v4_address,
+        'ipv6Address': device.ip_v6_address,
+        'connectionType': con_types.get(device.connection_type),
+        'username': device.owner_username,
+    }
+    return {k: v for k, v in fields.items() if v is not None}
