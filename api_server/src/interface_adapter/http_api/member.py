@@ -23,15 +23,15 @@ from src.util.log import LOG
 @with_context
 @require_sql
 @auth_regular_admin
-def search(ctx, limit=100, offset=0, terms=None, roomNumber=None):
+def search(ctx, limit=100, offset=0, terms=None, room_number=None):
     """ Search all the member. """
     LOG.debug("http_member_search_called", extra=log_extra(ctx,
                                                            limit=limit,
                                                            offset=offset,
                                                            terms=terms,
-                                                           roomNumber=roomNumber))
+                                                           room_number=room_number))
     try:
-        result, total_count = member_manager.search(ctx, limit, offset, roomNumber, terms)
+        result, total_count = member_manager.search(ctx, limit, offset, room_number, terms)
         headers = {
             "X-Total-Count": str(total_count),
             'access-control-expose-headers': 'X-Total-Count'

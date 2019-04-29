@@ -18,12 +18,12 @@ from src.util.log import LOG
 @with_context
 @require_sql
 @auth_regular_admin
-def search(ctx, limit=100, offset=0, switchID=None, roomNumber=None, terms=None):
+def search(ctx, limit=100, offset=0, switch_id=None, room_number=None, terms=None):
     """ Filter the port list according to some criteria """
-    LOG.debug("http_port_search_called", extra=log_extra(ctx, switch_id=switchID, room_number=roomNumber, terms=terms))
+    LOG.debug("http_port_search_called", extra=log_extra(ctx, switch_id=switch_id, room_number=room_number, terms=terms))
 
     try:
-        result, count = port_manager.search(ctx, limit=limit, offset=offset, switch_id=switchID, room_number=roomNumber,
+        result, count = port_manager.search(ctx, limit=limit, offset=offset, switch_id=switch_id, room_number=room_number,
                                             terms=terms)
     except IntMustBePositiveException as e:
         return bad_request(e), 400

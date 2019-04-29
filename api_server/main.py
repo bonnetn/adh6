@@ -44,7 +44,7 @@ app.add_api('swagger.yaml',
             resolver=RestyResolver('src.interface_adapter.http_api'),
             validate_responses=True,
             strict_validation=True,
-            # pythonic_params=True
+            pythonic_params=True,
             )
 # set the WSGI application callable to allow using uWSGI:
 # uwsgi --http :8080 -w app
