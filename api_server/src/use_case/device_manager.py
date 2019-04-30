@@ -4,11 +4,11 @@ from dataclasses import asdict, dataclass
 from typing import List, Optional
 
 from src.entity.device import Device, DeviceType
-from src.entity.room import Vlan
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.room_repository import RoomRepository
+from src.use_case.interface.vlan_repository import VLANRepository
 from src.use_case.util.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError, \
     InvalidMACAddress, InvalidIPAddress, DeviceNotFound
 from src.use_case.util.mutation import Mutation, is_set
@@ -34,10 +34,12 @@ class DeviceManager:
                  member_storage: MemberRepository,
                  device_storage: DeviceRepository,
                  room_storage: RoomRepository,
+                 vlan_storage: VLANRepository,
                  ip_allocator: IPAllocator):
         self.device_storage = device_storage
         self.member_storage = member_storage
         self.room_storage = room_storage
+        self.vlan_storage = vlan_storage
         self.ip_allocator = ip_allocator
 
     def search(self, ctx, limit=100, offset=0, username=None, terms=None) -> (List[Device], int):
@@ -180,7 +182,7 @@ class DeviceManager:
         if not result:
             return None, None
 
-        vlan: Vlan = result[0].vlan
+        vlan = self.vlan_storage.get_vlan(ctx, result[0].vlan_number)
         return vlan.ip_v4_range, vlan.ip_v6_range
 
 

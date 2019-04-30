@@ -52,6 +52,7 @@ def init(m, testing=True):
         device_storage=m.device_sql_storage,
         member_storage=m.member_sql_storage,
         room_storage=m.room_sql_storage,
+        vlan_storage=m.port_sql_storage,
         ip_allocator=m.device_sql_storage,
     )
     m.member_manager = MemberManager(

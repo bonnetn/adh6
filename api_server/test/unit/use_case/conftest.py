@@ -71,11 +71,7 @@ def sample_room():
     return Room(
         room_number='1234',
         description='Test room.',
-        vlan=Vlan(
-            number='42',
-            ip_v4_range='192.0.0.0/24',
-            ip_v6_range='fe80::/10',
-        ),
+        vlan_number='42',
         phone_number=None,
     )
 

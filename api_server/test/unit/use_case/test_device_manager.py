@@ -6,6 +6,7 @@ from src.entity.device import Device, DeviceType
 from src.entity.member import Member
 from src.entity.room import Room
 from src.use_case.device_manager import DeviceManager, MutationRequest
+from src.use_case.interface.vlan_repository import VLANRepository
 from src.use_case.util.exceptions import IntMustBePositiveException, MemberNotFound, DeviceNotFound, IPAllocationFailedError, \
     InvalidMACAddress, InvalidIPAddress
 from src.use_case.interface.device_repository import DeviceRepository
@@ -384,15 +385,21 @@ def device_manager(
         mock_device_repository: DeviceRepository,
         mock_member_repository: MemberRepository,
         mock_room_repository: RoomRepository,
+        mock_vlan_repository: VLANRepository,
         mock_ip_allocator: IPAllocator,
 ):
     return DeviceManager(
         device_storage=mock_device_repository,
         member_storage=mock_member_repository,
         room_storage=mock_room_repository,
+        vlan_storage=mock_vlan_repository,
         ip_allocator=mock_ip_allocator,
     )
 
+
+@fixture
+def mock_vlan_repository():
+    return MagicMock(spec=VLANRepository)
 
 @fixture
 def mock_ip_allocator():

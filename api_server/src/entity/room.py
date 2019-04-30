@@ -15,4 +15,4 @@ class Room:
     room_number: str
     description: str
     phone_number: Optional[str]  # legacy
-    vlan: Vlan
+    vlan_number: str

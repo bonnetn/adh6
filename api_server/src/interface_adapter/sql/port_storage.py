@@ -8,15 +8,33 @@ from typing import List
 
 from src.constants import CTX_SQL_SESSION
 from src.entity.port import Port, SwitchInfo
+from src.entity.room import Vlan
 from src.interface_adapter.sql.model.models import Chambre, Switch
 from src.interface_adapter.sql.model.models import Port as PortSQL
+from src.interface_adapter.sql.model.models import Vlan as VlanSQL
 from src.use_case.interface.member_repository import NotFoundError
 from src.use_case.interface.port_repository import PortRepository, InvalidSwitchID, InvalidRoomNumber
+from src.use_case.interface.vlan_repository import VLANRepository
 from src.util.context import log_extra
 from src.util.log import LOG
 
 
-class PortSQLStorage(PortRepository):
+class PortSQLStorage(PortRepository, VLANRepository):
+
+    def get_vlan(self, ctx, vlan_number) -> Vlan:
+        """
+        Get a VLAN.
+
+        :raises NotFoundError
+        """
+        LOG.debug("sql_port_storage_get_vlan", extra=log_extra(ctx, vlan_number=vlan_number))
+
+        s = ctx.get(CTX_SQL_SESSION)
+        result = s.query(VlanSQL).filter(VlanSQL.numero == vlan_number).one_or_none()
+        if not result:
+            raise NotFoundError()
+
+        return _map_vlan_sql_to_entity(result)
 
     def search_port_by(self, ctx, limit=0, offset=0, port_id: str = None, switch_id: str = None,
                        room_number: str = None, terms: str = None) -> (List[Port], int):
@@ -143,6 +161,14 @@ class PortSQLStorage(PortRepository):
             raise NotFoundError()
 
         s.delete(port)
+
+
+def _map_vlan_sql_to_entity(r: VlanSQL) -> Vlan:
+    return Vlan(
+        number=str(r.numero),
+        ip_v4_range=r.adresses,
+        ip_v6_range=r.adressesv6,
+    )
 
 
 def _map_port_sql_to_entity(r: PortSQL) -> Port:
