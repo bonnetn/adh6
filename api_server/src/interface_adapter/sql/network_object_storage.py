@@ -1,6 +1,7 @@
 # coding=utf-8
 """
 Implements everything related to actions on the SQL database.
+This deals with all the network objects (except the member's devices).
 """
 from datetime import datetime
 from sqlalchemy import or_
@@ -19,7 +20,7 @@ from src.util.context import log_extra
 from src.util.log import LOG
 
 
-class PortSQLStorage(PortRepository, VLANRepository):
+class NetworkObjectSQLStorage(PortRepository, VLANRepository):
 
     def get_vlan(self, ctx, vlan_number) -> Vlan:
         """
