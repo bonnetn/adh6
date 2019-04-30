@@ -197,6 +197,7 @@ class MemberManager:
 
             try:
                 self.member_storage.create_member(ctx, **fields)
+
             except NotFoundError:
                 raise InvalidRoomNumberError()
 

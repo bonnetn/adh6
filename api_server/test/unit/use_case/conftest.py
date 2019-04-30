@@ -6,7 +6,7 @@ from src.entity.device import Device, DeviceType
 from src.entity.member import Member
 from src.entity.port import Port, SwitchInfo
 from src.entity.room import Room
-from src.entity.vlan import Vlan
+from src.entity.switch import Switch
 from src.use_case.member_manager import MutationRequest
 from src.util.context import build_context
 
@@ -88,4 +88,14 @@ def sample_port():
             rcom=42,
             oid="1.2.3"
         ),
+    )
+
+
+@fixture
+def sample_switch():
+    return Switch(
+        id='1',
+        ip_v4='127.0.0.1',
+        description='description',
+        community='community',
     )
