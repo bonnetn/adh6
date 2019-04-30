@@ -38,7 +38,7 @@ def authenticate_temp_account(access_token):
         now = datetime.datetime.now()
         if naina.expiration_time > now > naina.start_time:  # Make sure the token is still valid.
             return {
-                "uid": "TEMP_ACCOUNT({})[{} {}]".format(naina.id, naina.first_name, naina.last_name),
+                "uid": f"TEMP_ACCOUNT({naina.id})[{naina.first_name} {naina.last_name}]",
                 "scope": ["profile"],
                 "groups": [ADH6_USER]
             }

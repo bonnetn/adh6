@@ -1,9 +1,9 @@
 import pytest
 
-from CONFIGURATION import TEST_DATABASE as db_settings
-from adh.interface_adapter.endpoint.auth import authenticate_temp_account, token_info
-from adh.interface_adapter.sql.model.database import Database as db
-from .context import app
+from config.TEST_CONFIGURATION import DATABASE as db_settings
+from src.interface_adapter.http_api.auth import authenticate_temp_account, token_info
+from src.interface_adapter.sql.model.database import Database as db
+from test.integration.context import app
 
 
 @pytest.fixture

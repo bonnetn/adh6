@@ -73,7 +73,7 @@ def init(m, testing=True):
     m.app = app
 
 
-if __name__ == 'main':
+if __name__ == 'main' and not hasattr(sys, '_called_from_test'):
     init(sys.modules[__name__], testing=False)
     # set the WSGI application callable to allow using uWSGI:
     # uwsgi --http :8080 -w app
