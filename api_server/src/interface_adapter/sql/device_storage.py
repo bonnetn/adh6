@@ -20,7 +20,7 @@ from src.util.log import LOG
 
 class DeviceSQLStorage(DeviceRepository, IPAllocator):
 
-    def search_device_by(self, ctx, limit=None, offset=None, mac_address=None, username=None, terms=None) \
+    def search_device_by(self, ctx, limit=100, offset=0, mac_address=None, username=None, terms=None) \
             -> (List[Device], int):
         LOG.debug("sql_device_storage_search_called", extra=log_extra(ctx))
         s = ctx.get(CTX_SQL_SESSION)
@@ -49,10 +49,8 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
             )
         count = q.count()
         q = q.order_by(all_devices.columns.mac.asc())
-        if offset is not None:
-            q = q.offset(offset)
-        if limit is not None:
-            q = q.limit(limit)
+        q = q.offset(offset)
+        q = q.limit(limit)
         r = q.all()
         results = list(map(_map_device_sql_to_entity, r))
 

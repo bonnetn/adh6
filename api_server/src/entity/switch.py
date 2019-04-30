@@ -6,5 +6,5 @@ from dataclasses import dataclass
 class Switch:
     id: str
     description: str
-    ip: str
-    communaute: str
+    ip_v4: str
+    community: str

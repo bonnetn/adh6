@@ -14,8 +14,9 @@ from src.interface_adapter.sql.room_storage import RoomSQLStorage
 from src.use_case.device_manager import DeviceManager
 from src.use_case.member_manager import MemberManager
 from src.use_case.port_manager import PortManager
-
 # Global variables that you can use in the app.
+from src.use_case.switch_manager import SwitchManager
+
 configuration = None
 member_sql_storage = None
 port_sql_storage = None
@@ -25,6 +26,7 @@ elk_storage = None
 port_manager = None
 device_manager = None
 member_manager = None
+switch_manager: SwitchManager = None
 app = None
 
 
@@ -45,6 +47,9 @@ def init(m, testing=True):
     m.room_sql_storage = RoomSQLStorage()
     m.elk_storage = ElasticSearchStorage(m.configuration)
 
+    m.switch_manager = SwitchManager(
+        switch_storage=m.network_object_sql_storage,
+    )
     m.port_manager = PortManager(
         port_storage=m.network_object_sql_storage,
     )

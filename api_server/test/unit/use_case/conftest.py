@@ -5,7 +5,8 @@ from src.entity.admin import Admin
 from src.entity.device import Device, DeviceType
 from src.entity.member import Member
 from src.entity.port import Port, SwitchInfo
-from src.entity.room import Room, Vlan
+from src.entity.room import Room
+from src.entity.vlan import Vlan
 from src.use_case.member_manager import MutationRequest
 from src.util.context import build_context
 

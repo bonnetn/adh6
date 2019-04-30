@@ -136,7 +136,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
             # Actually delete it
             s.delete(member)
 
-    def search_member_by(self, ctx, limit=None, offset=None, room_number=None, terms=None, username=None) -> (
+    def search_member_by(self, ctx, limit=100, offset=0, room_number=None, terms=None, username=None) -> (
             List[Member], int):
         """
         Search a member.
@@ -169,10 +169,8 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
 
         count = q.count()
         q = q.order_by(Adherent.login.asc())
-        if offset is not None:
-            q = q.offset(offset)
-        if limit is not None:
-            q = q.limit(limit)
+        q = q.offset(offset)
+        q = q.limit(limit)
         r = q.all()
 
         return list(map(_map_member_sql_to_entity, r)), count

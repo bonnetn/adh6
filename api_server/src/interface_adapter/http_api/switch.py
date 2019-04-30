@@ -1,124 +1,116 @@
 # coding=utf-8
-import json
-import logging
 from connexion import NoContent
-from flask import g
-from sqlalchemy import or_
 
-from src.exceptions import InvalidIPv4, SwitchNotFound
+from main import switch_manager
+from src.entity.switch import Switch
+from src.exceptions import SwitchNotFound, InvalidIPv4
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin, auth_super_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
-from src.interface_adapter.sql.model.models import Switch
+from src.interface_adapter.http_api.decorator.with_context import with_context
+from src.interface_adapter.http_api.util.error import bad_request
+from src.use_case.switch_manager import MutationRequest
+from src.use_case.util.exceptions import IntMustBePositiveException
+from src.use_case.util.mutation import Mutation
+from src.util.context import log_extra
+from src.util.log import LOG
 
 
-def switch_exists(session, switchID):
-    """ Return true if the switch exists """
-    try:
-        Switch.find(session, switchID)
-    except SwitchNotFound:
-        return False
-    return True
-
-
+@with_context
 @require_sql
 @auth_regular_admin
-def search(limit=100, offset=0, terms=None):
-    """ [API] Filter the switch list """
-    if limit < 0:
-        return "Limit must be positive", 400
-    q = g.session.query(Switch)
-    # Filter by terms
-    if terms:
-        q = q.filter(or_(
-            Switch.description.contains(terms),
-            Switch.ip.contains(terms),
-            Switch.communaute.contains(terms),
+def search(ctx, limit=100, offset=0, terms=None):
+    """ Filter the switch list """
+    LOG.debug("http_switch_search_called", extra=log_extra(ctx, terms=terms))
+
+    try:
+        result, count = switch_manager.search(ctx, limit=limit, offset=offset, terms=terms)
+        headers = {
+            'access-control-expose-headers': 'X-Total-Count',
+            'X-Total-Count': str(count)
+        }
+        result = list(map(_map_switch_to_http_response, result))
+        return result, 200, headers
+
+    except IntMustBePositiveException:
+        return NoContent, 400
+
+
+@with_context
+@require_sql
+@auth_super_admin
+def post(ctx, body):
+    """ Create a switch in the database """
+    LOG.debug("http_switch_post_called", extra=log_extra(ctx, request=body))
+
+    try:
+        switch_id = switch_manager.create(ctx, MutationRequest(
+            ip_v4=body.get('ip'),
+            description=body.get('description'),
+            community=body.get('community'),
         ))
-    count = q.count()
-    q = q.order_by(Switch.description.asc())
-    q = q.offset(offset)
-    q = q.limit(limit)  # Limit the number of matches
-    q = q.all()
+        return NoContent, 201, {'Location': f'/switch/{switch_id}'}
 
-    # Convert the qs into data suited for the API
-    q = map(lambda x: dict(x), q)
-    result = list(q)  # Cast generator as list
-
-    headers = {
-        'access-control-expose-headers': 'X-Total-Count',
-        'X-Total-Count': str(count)
-    }
-    logging.info("%s fetched the switch list", g.admin.login)
-    return result, 200, headers
+    except InvalidIPv4 as e:
+        return bad_request(e), 400
 
 
-@require_sql
-@auth_super_admin
-def post(body):
-    """ [API] Create a switch in the database """
-    if "id" in body:
-        return "You cannot set the id", 400
-    s = g.session
-    try:
-        switch = Switch.from_dict(s, body)
-    except InvalidIPv4:
-        return "Invalid IPv4", 400
-    s.add(switch)
-
-    logging.info("%s created a switch\n%s", g.admin.login, json.dumps(body,
-                                                                      sort_keys=True))
-    s.flush()  # Needed to set the switch.id
-    return NoContent, 201, {'Location': '/switch/{}'.format(switch.id)}
-
-
+@with_context
 @require_sql
 @auth_regular_admin
-def get(switchID):
-    """ [API] Get the specified switch from the database """
-    s = g.session
+def get(ctx, switch_id):
+    """ Get the specified switch from the database """
+    LOG.debug("http_switch_get_called", extra=log_extra(ctx, switch_id=switch_id))
+
     try:
-        logging.info("%s fetched the switch %d", g.admin.login, switchID)
-        return dict(Switch.find(s, switchID)), 200
+        switch = switch_manager.get_by_id(ctx, switch_id)
+        return _map_switch_to_http_response(switch), 200
+
     except SwitchNotFound:
         return NoContent, 404
 
 
+@with_context
 @require_sql
 @auth_super_admin
-def put(switchID, body):
-    """ [API] Update the specified switch from the database """
-    if "id" in body:
-        return "You cannot update the id", 400
-
-    s = g.session
-    if not switch_exists(s, switchID):
-        return NoContent, 404
+def put(ctx, switch_id, body):
+    """ Update the specified switch from the database """
+    LOG.debug("http_switch_put_called", extra=log_extra(ctx, switch_id=switch_id, request=body))
 
     try:
-        switch = Switch.from_dict(s, body)
-        switch.id = switchID
-    except InvalidIPv4:
-        return "Invalid IPv4", 400
+        switch_manager.update(ctx, MutationRequest(
+            switch_id=switch_id,
+            ip_v4=body.get('ip', Mutation.NOT_SET),
+            description=body.get('description', Mutation.NOT_SET),
+            community=body.get('community', Mutation.NOT_SET),
+        ))
+        return NoContent, 204
 
-    s.merge(switch)
-
-    logging.info("%s updated the switch %d\n%s",
-                 g.admin.login, switchID, json.dumps(body, sort_keys=True))
-    return NoContent, 204
-
-
-@require_sql
-@auth_super_admin
-def delete(switchID):
-    """ [API] Delete the specified switch from the database """
-    s = g.session
-
-    try:
-        switch = Switch.find(s, switchID)
     except SwitchNotFound:
         return NoContent, 404
 
-    s.delete(switch)
+    except InvalidIPv4 as e:
+        return bad_request(e), 400
 
-    logging.info("%s deleted the switch %d", g.admin.login, switchID)
-    return NoContent, 204
+
+@with_context
+@require_sql
+@auth_super_admin
+def delete(ctx, switch_id):
+    """ Delete the specified switch from the database """
+    LOG.debug("http_switch_delete_called", extra=log_extra(ctx, switch_id=switch_id))
+    try:
+        switch_manager.delete(ctx, switch_id)
+        return NoContent, 204
+
+    except SwitchNotFound:
+        return NoContent, 404
+
+
+def _map_switch_to_http_response(switch: Switch) -> dict:
+    fields = {
+        'id': int(switch.id),
+        'ip': switch.ip_v4,
+        'description': switch.description,
+        'community': switch.community,
+    }
+    return {k: v for k, v in fields.items() if v is not None}

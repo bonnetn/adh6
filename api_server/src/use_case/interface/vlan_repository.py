@@ -1,6 +1,6 @@
 import abc
 
-from src.entity.room import Vlan
+from src.entity.vlan import Vlan
 
 
 class VLANRepository(metaclass=abc.ABCMeta):

@@ -14,7 +14,7 @@ from src.util.log import LOG
 
 class RoomSQLStorage(RoomRepository):
 
-    def search_room_by(self, ctx, owner_username=None) -> (List[Room], int):
+    def search_room_by(self, ctx, limit=100, offset=0, owner_username=None) -> (List[Room], int):
         s = ctx.get(CTX_SQL_SESSION)
         LOG.debug("sql_room_storage_search_room_by_called", extra=log_extra(ctx))
         q = s.query(Chambre).join(Adherent)
@@ -23,10 +23,8 @@ class RoomSQLStorage(RoomRepository):
 
         count = q.count()
         q = q.order_by(Chambre.numero.asc())
-        # if offset is not None:
-        #     q = q.offset(offset)
-        # if limit is not None:
-        #     q = q.limit(limit)
+        q = q.offset(offset)
+        q = q.limit(limit)
         r = q.all()
         r = list(map(_map_room_sql_to_entity, r))
         return r, count
