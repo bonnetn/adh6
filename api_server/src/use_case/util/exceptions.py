@@ -31,6 +31,14 @@ class UsernameMismatchError(ValueError):
 
     def __init__(self):
         super().__init__('cannot create member with 2 different usernames')
+class RoomNumberMismatchError(ValueError):
+    """
+    Thrown when you try to create a room given a room_number and a mutation request and in the mutation request the
+    room_number does not match the first argument.
+    """
+
+    def __init__(self):
+        super().__init__('cannot create room with 2 different room_numbers')
 
 
 class MissingRequiredFieldError(ValueError):
@@ -48,9 +56,18 @@ class InvalidEmailError(ValueError):
         super().__init__('email is invalid')
 
 
+class InvalidVLANNumberError(ValueError):
+    def __init__(self):
+        super().__init__('invalid room number')
+
+
 class InvalidRoomNumberError(ValueError):
     def __init__(self):
         super().__init__('invalid room number')
+
+
+class RoomAlreadyExists(ValueError):
+    pass
 
 
 class IntMustBePositiveException(ValueError):

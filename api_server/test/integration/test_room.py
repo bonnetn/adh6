@@ -1,12 +1,11 @@
 import json
 import logging
-
 import pytest
 
-from CONFIGURATION import TEST_DATABASE as db_settings
-from adh.interface_adapter.sql.model.database import Database as db
-from adh.interface_adapter.sql.model.models import Chambre
-from .resource import base_url, TEST_HEADERS, logs_contains
+from src.interface_adapter.sql.model.database import Database as db
+from config.TEST_CONFIGURATION import DATABASE as db_settings
+from src.interface_adapter.sql.model.models import Chambre
+from test.integration.resource import TEST_HEADERS, base_url
 
 
 def assert_room_in_db(body):
@@ -37,10 +36,6 @@ def api_client(sample_room1, sample_room2):
         prep_db(db.get_db().get_session(),
                 sample_room1, sample_room2)
         yield c
-
-
-def test_room_to_dict(sample_room1):
-    dict(sample_room1)
 
 
 def test_room_filter_all_rooms(api_client):
@@ -168,27 +163,3 @@ def test_room_delete_non_existant_room(api_client):
         headers=TEST_HEADERS,
     )
     assert r.status_code == 404
-
-
-def test_room_log_create_room(api_client, caplog):
-    with caplog.at_level(logging.INFO):
-        test_room_put_new_room(api_client)
-
-    log = 'TestingClient created the room 5111'
-    assert logs_contains(caplog, log)
-
-
-def test_room_log_update_room(api_client, caplog):
-    with caplog.at_level(logging.INFO):
-        test_room_put_update_room(api_client)
-
-    log = 'TestingClient updated the room 5110'
-    assert logs_contains(caplog, log)
-
-
-def test_room_log_delete_room(api_client, caplog):
-    with caplog.at_level(logging.INFO):
-        test_room_delete_existant_room(api_client)
-
-    log = 'TestingClient deleted the room 5110'
-    assert logs_contains(caplog, log)

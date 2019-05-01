@@ -1,102 +1,94 @@
 # coding=utf-8
-import json
-import logging
 from connexion import NoContent
-from flask import g
-from sqlalchemy import or_
 
+from main import room_manager
+from src.entity.room import Room
 from src.exceptions import RoomNotFound, VlanNotFound
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin, auth_super_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
-from src.interface_adapter.sql.model.models import Chambre
+from src.interface_adapter.http_api.decorator.with_context import with_context
+from src.interface_adapter.http_api.util.error import bad_request
+from src.use_case.room_manager import MutationRequest
+from src.use_case.util.exceptions import IntMustBePositiveException, MissingRequiredFieldError, RoomNumberMismatchError
+from src.util.context import log_extra
+from src.util.log import LOG
 
 
-def room_exists(session, roomNumber):
-    """ Returns true if the room exists in the database """
-    try:
-        Chambre.find(session, roomNumber)
-    except RoomNotFound:
-        return False
-    return True
-
-
+@with_context
 @require_sql
 @auth_regular_admin
-def search(limit=100, offset=0, terms=None):
-    """ [API] Filter the list of the rooms """
-    if limit < 0:
-        return "Limit must be a positive integer", 400
-    s = g.session
-    q = s.query(Chambre)
-    if terms:
-        q = q.filter(or_(
-            Chambre.telephone.contains(terms),
-            Chambre.description.contains(terms),
+def search(ctx, limit=100, offset=0, terms=None):
+    """ Filter the list of the rooms """
+    LOG.debug("http_room_search_called", extra=log_extra(ctx, terms=terms))
+    try:
+        result, count = room_manager.search(ctx, limit=limit, offset=offset, terms=terms)
+        result = map(_map_room_to_http_response, result)
+        result = list(result)
+        headers = {
+            'access-control-expose-headers': 'X-Total-Count',
+            'X-Total-Count': str(count)
+        }
+        return result, 200, headers
+
+    except IntMustBePositiveException as e:
+        return bad_request(e), 400
+
+
+@with_context
+@require_sql
+@auth_super_admin
+def put(ctx, room_number, body):
+    """ Update/create a room in the database """
+    LOG.debug("http_room_put_called", extra=log_extra(ctx, room_manager=room_manager, request=body))
+    try:
+        created = room_manager.update_or_create(ctx, room_number, MutationRequest(
+            room_number=body.get('roomNumber'),
+            description=body.get('description'),
+            phone_number=body.get('phone'),
+            vlan_number=body.get('vlan'),
         ))
-    count = q.count()
-    q = q.order_by(Chambre.id.asc())
-    q = q.offset(offset)
-    q = q.limit(limit)
-    result = q.all()
-    result = map(dict, result)
-    result = list(result)
-    headers = {
-        'access-control-expose-headers': 'X-Total-Count',
-        'X-Total-Count': str(count)
-    }
+    except (MissingRequiredFieldError, VlanNotFound, RoomNumberMismatchError) as e:
+        return bad_request(e), 400
 
-    logging.info("%s fetched the room list", g.admin.login)
-    return result, 200, headers
-
-
-@require_sql
-@auth_super_admin
-def put(roomNumber, body):
-    """ [API] Update/create a room in the database """
-    s = g.session
-
-    try:
-        new_room = Chambre.from_dict(s, body)
-    except VlanNotFound:
-        return "Vlan not found", 400
-    exists = room_exists(s, roomNumber)
-
-    if exists:
-        new_room.id = Chambre.find(s, roomNumber).id
-
-    s.merge(new_room)
-
-    if exists:
-        logging.info("%s updated the room %d\n%s",
-                     g.admin.login, roomNumber, json.dumps(body, sort_keys=True))
-        return NoContent, 204
-    else:
-        logging.info("%s created the room %d\n%s",
-                     g.admin.login, roomNumber, json.dumps(body, sort_keys=True))
+    if created:
         return NoContent, 201
+    else:
+        return NoContent, 204
 
 
+@with_context
 @require_sql
 @auth_regular_admin
-def get(roomNumber):
-    """ [API] Get the room specified """
-    s = g.session
+def get(ctx, room_number):
+    """ Get the room specified """
+    LOG.debug("http_room_get_called", extra=log_extra(ctx, room_number=room_number))
     try:
-        logging.info("%s fetched the room %d", g.admin.login, roomNumber)
-        return dict(Chambre.find(s, roomNumber)), 200
+        result = room_manager.get_by_number(ctx, room_number)
+        return _map_room_to_http_response(result), 200
+
     except RoomNotFound:
         return NoContent, 404
 
 
+@with_context
 @require_sql
 @auth_super_admin
-def delete(roomNumber):
-    """ [API] Delete room from the database """
-    s = g.session
+def delete(ctx, room_number):
+    """ Delete room from the database """
+    LOG.debug("http_room_delete_called", extra=log_extra(ctx, room_number=room_number))
     try:
-        s.delete(Chambre.find(s, roomNumber))
+        room_manager.delete(ctx, room_number)
+        return NoContent, 204
+
     except RoomNotFound:
         return NoContent, 404
 
-    logging.info("%s deleted the room %d", g.admin.login, roomNumber)
-    return NoContent, 204
+
+def _map_room_to_http_response(room: Room) -> dict:
+    fields = {
+        'description': room.description,
+        'roomNumber': int(room.room_number),
+        'phone': int(room.phone_number),
+        'vlan': int(room.vlan_number),
+    }
+    return {k: v for k, v in fields.items() if v is not None}

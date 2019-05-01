@@ -1,5 +1,4 @@
 import json
-import logging
 import pytest
 
 from config.TEST_CONFIGURATION import DATABASE as db_settings
@@ -229,5 +228,3 @@ def test_switch_delete_non_existant_switch(api_client):
         headers=TEST_HEADERS
     )
     assert r.status_code == 404
-
-

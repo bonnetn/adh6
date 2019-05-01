@@ -15,17 +15,19 @@ from src.use_case.device_manager import DeviceManager
 from src.use_case.member_manager import MemberManager
 from src.use_case.port_manager import PortManager
 # Global variables that you can use in the app.
+from src.use_case.room_manager import RoomManager
 from src.use_case.switch_manager import SwitchManager
 
 configuration = None
-member_sql_storage = None
-port_sql_storage = None
-device_sql_storage = None
-room_sql_storage = None
-elk_storage = None
-port_manager = None
-device_manager = None
-member_manager = None
+member_sql_storage: MemberSQLStorage = None
+port_sql_storage: NetworkObjectSQLStorage = None
+device_sql_storage: DeviceSQLStorage = None
+room_sql_storage: RoomSQLStorage = None
+elk_storage: ElasticSearchStorage = None
+port_manager: PortManager = None
+device_manager: DeviceManager = None
+member_manager: MemberManager = None
+room_manager: RoomManager = None
 switch_manager: SwitchManager = None
 app = None
 
@@ -65,6 +67,9 @@ def init(m, testing=True):
         membership_storage=m.member_sql_storage,
         logs_storage=m.elk_storage,
         configuration=m.configuration,
+    )
+    m.room_manager = RoomManager(
+        room_storage=m.room_sql_storage,
     )
 
     app = connexion.FlaskApp(__name__)
