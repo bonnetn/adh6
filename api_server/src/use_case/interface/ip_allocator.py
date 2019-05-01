@@ -12,7 +12,7 @@ class IPAllocator(metaclass=abc.ABCMeta):
         """
         Allocates a new unused IP address.
 
-        :raises NoMoreIPAvailable
+        :raise NoMoreIPAvailable
         """
         pass  # pragma: no cover
 
@@ -21,7 +21,7 @@ class IPAllocator(metaclass=abc.ABCMeta):
         """
         Allocates a new unused IP address.
 
-        :raises NoMoreIPAvailable
+        :raise NoMoreIPAvailable
         """
         pass  # pragma: no cover
 

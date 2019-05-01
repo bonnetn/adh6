@@ -48,7 +48,7 @@ class DeviceManager:
 
         User story: As an admin, I can search all the devices, so I can see the device list of a member.
 
-        :raises IntMustBePositiveException
+        :raise IntMustBePositiveException
         """
         if limit < 0:
             raise IntMustBePositiveException('limit')
@@ -73,7 +73,7 @@ class DeviceManager:
 
         User story: As an admin, I can get a device, so I can see its information such as IP address.
 
-        :raises DeviceNotFound
+        :raise DeviceNotFound
         """
         result, count = self.device_storage.search_device_by(ctx, mac_address=mac_address)
         if not result:
@@ -92,7 +92,7 @@ class DeviceManager:
 
         User story: As an admin, I delete a device, so I can remove a device from a user profile.
 
-        :raises DeviceNotFound
+        :raise DeviceNotFound
         """
         try:
             self.device_storage.delete_device(ctx, mac_address=mac_address)
@@ -112,10 +112,10 @@ class DeviceManager:
 
         :return: True if the device was created, false otherwise.
 
-        :raises MemberNotFound
-        :raises IPAllocationFailedError
-        :raises InvalidMACAddress
-        :raises InvalidIPAddress
+        :raise MemberNotFound
+        :raise IPAllocationFailedError
+        :raise InvalidMACAddress
+        :raise InvalidIPAddress
         """
 
         if not is_set(req.mac_address):

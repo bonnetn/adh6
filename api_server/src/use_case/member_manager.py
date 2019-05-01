@@ -67,9 +67,9 @@ class MemberManager:
         :param duration: duration of the membership in days
         :param start_str: optional start date of the membership
 
-        :raises IntMustBePositiveException
-        :raises NoPriceAssignedToThatDurationException
-        :raises MemberNotFound
+        :raise IntMustBePositiveException
+        :raise NoPriceAssignedToThatDurationException
+        :raise MemberNotFound
         """
         if start_str is None:
             return self.new_membership(ctx, username, duration, start_str=datetime.datetime.now().isoformat())
@@ -101,7 +101,7 @@ class MemberManager:
         """
         User story: As an admin, I can see the profile of a member, so that I can help her/him.
 
-        :raises MemberNotFound
+        :raise MemberNotFound
         """
         result, _ = self.member_storage.search_member_by(ctx, username=username)
         if not result:
@@ -121,7 +121,7 @@ class MemberManager:
         user story: as an admin, i want to have a list of members with some filters, so that i can browse and find
         members.
 
-        :raises intmustbepositiveexception
+        :raise intmustbepositiveexception
         """
         if limit < 0:
             raise IntMustBePositiveException('limit')
@@ -150,11 +150,11 @@ class MemberManager:
         User story: As an admin, I can register a new profile, so that I can add a membership with their profile.
         :return: True if the member was created, false otherwise.
 
-        :raises InvalidEmailError
-        :raises InvalidRoomNumberError
-        :raises MissingRequiredFieldError
-        :raises StringMustNotBeEmptyException
-        :raises UsernameMismatchError
+        :raise InvalidEmailError
+        :raise InvalidRoomNumberError
+        :raise MissingRequiredFieldError
+        :raise StringMustNotBeEmptyException
+        :raise UsernameMismatchError
         """
         # Make sure all the fields set are valid.
         _validate_mutation_request(mutation_request)
@@ -215,7 +215,7 @@ class MemberManager:
         User story: As an admin, I can modify some of the fields of a profile, so that I can update the information of
         a member.
 
-        :raises MemberNotFound
+        :raise MemberNotFound
         """
         # Perform all the checks on the validity of the data in the mutation request.
         _validate_mutation_request(mutation_request)
@@ -244,8 +244,8 @@ class MemberManager:
 
         BE CAREFUL: do not log the password or store it unhashed.
 
-        :raises PasswordTooShortError
-        :raises MemberNotFound
+        :raise PasswordTooShortError
+        :raise MemberNotFound
         """
 
         if len(password) <= 6:  # It's a bit low but eh...
@@ -269,7 +269,7 @@ class MemberManager:
         """
         User story: As an admin, I can remove a profile, so that their information is not in our system.
 
-        :raises MemberNotFound
+        :raise MemberNotFound
         """
 
         try:
@@ -288,7 +288,7 @@ class MemberManager:
         User story: As an admin, I can retrieve the logs of a member, so I can help him troubleshoot their connection
         issues.
 
-        :raises MemberNotFound
+        :raise MemberNotFound
         """
         # Fetch all the devices of the member to put them in the request
         # all_devices = get_all_devices(s)

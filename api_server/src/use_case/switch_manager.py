@@ -33,7 +33,7 @@ class SwitchManager:
         Get a switch in the database.
         User story: As an admin, I can get a switch by its id, so I can see all its informations.
 
-        :raises SwitchNotFound
+        :raise SwitchNotFound
         """
         result, _ = self.switch_storage.search_switches_by(ctx, switch_id=switch_id)
         LOG.info("switch_get_by_id", extra=log_extra(ctx, switch_id=switch_id))
@@ -48,7 +48,7 @@ class SwitchManager:
         Search switches in the database.
         User story: As an admin, I can search switches in the database, so I find the IP associated with a switch.
 
-        :raises IntMustBePositiveException
+        :raise IntMustBePositiveException
         """
         if limit < 0:
             raise IntMustBePositiveException('limit')
@@ -66,7 +66,7 @@ class SwitchManager:
         Update a switch in the database.
         User story: As an admin, I can update a switch in the database, so I update its community string.
 
-        :raises SwitchNotFound
+        :raise SwitchNotFound
         """
         # Make sure the request is valid.
         _validate_mutation_request(mutation_request)
@@ -90,7 +90,7 @@ class SwitchManager:
 
         :return: the newly created switch ID
 
-        :raises ReadOnlyField
+        :raise ReadOnlyField
         """
         # Make sure the request is valid.
         _validate_mutation_request(mutation_request)
@@ -111,7 +111,7 @@ class SwitchManager:
         Delete a switch from the database.
         User story: As an admin, I can switch a port, so I can remove a old switch from the DB.
 
-        :raises SwitchNotFound
+        :raise SwitchNotFound
         """
         try:
             self.switch_storage.delete_switch(ctx, switch_id)

@@ -27,7 +27,7 @@ class DeviceRepository(metaclass=abc.ABCMeta):
         """
         Create a device.
 
-        :raises DeviceAlreadyExist
+        :raise DeviceAlreadyExist
         """
         pass  # pragma: no cover
 
@@ -37,7 +37,7 @@ class DeviceRepository(metaclass=abc.ABCMeta):
         """
         Update a device.
 
-        :raises DeviceNotFound
+        :raise DeviceNotFound
         """
         pass  # pragma: no cover
 
@@ -46,6 +46,6 @@ class DeviceRepository(metaclass=abc.ABCMeta):
         """
         Delete a device.
 
-        :raises DeviceNotFound
+        :raise DeviceNotFound
         """
         pass  # pragma: no cover

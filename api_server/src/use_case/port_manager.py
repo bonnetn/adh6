@@ -42,7 +42,7 @@ class PortManager:
 
         :return: The list of the ports and the number of matches in the entire database.
 
-        :raises IntMustBePositiveException
+        :raise IntMustBePositiveException
         """
         if limit < 0:
             raise IntMustBePositiveException('limit')
@@ -62,9 +62,9 @@ class PortManager:
         Update a port in the database.
         User story: As an admin, I can update a port in the database, so I can modify its description.
 
-        :raises PortNotFound
-        :raises SwitchNotFound
-        :raises RoomNotFound
+        :raise PortNotFound
+        :raise SwitchNotFound
+        :raise RoomNotFound
         """
         # Make sure the request is valid.
         _validate_mutation_request(mutation_request)
@@ -94,9 +94,9 @@ class PortManager:
 
         :return: the newly created port ID
 
-        :raises ReadOnlyField
-        :raises SwitchNotFound
-        :raises RoomNotFound
+        :raise ReadOnlyField
+        :raise SwitchNotFound
+        :raise RoomNotFound
         """
         # Make sure the request is valid.
         _validate_mutation_request(mutation_request)
@@ -122,7 +122,7 @@ class PortManager:
         Delete a port from the database.
         User story: As an admin, I can delete a port, so I can remove old ports from the DB.
 
-        :raises PortNotFound
+        :raise PortNotFound
         """
         try:
             self.port_storage.delete_port(ctx, port_id)

@@ -33,8 +33,8 @@ class MemberRepository(metaclass=abc.ABCMeta):
         """
         Create a member.
 
-        :raises MemberAlreadyExist
-        :raises NotFoundError thrown if the room number is not found
+        :raise MemberAlreadyExist
+        :raise NotFoundError thrown if the room number is not found
         """
         pass  # pragma: no cover
 
@@ -43,7 +43,7 @@ class MemberRepository(metaclass=abc.ABCMeta):
         """
         Update a member.
 
-        :raises NotFoundError
+        :raise NotFoundError
         """
         pass  # pragma: no cover
 
@@ -52,6 +52,6 @@ class MemberRepository(metaclass=abc.ABCMeta):
         """
         Delete a member.
 
-        :raises NotFoundError
+        :raise NotFoundError
         """
         pass  # pragma: no cover

@@ -27,7 +27,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
         """
         Add a membership record.
 
-        :raises NotFoundError
+        :raise NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
         LOG.debug("sql_member_storage_add_membership_called", extra=log_extra(ctx, username=username))
@@ -49,7 +49,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
         """
         Create a member.
 
-        :raises NotFoundError
+        :raise NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
         LOG.debug("sql_member_storage_create_member_called", extra=log_extra(ctx, username=username))
@@ -89,7 +89,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
         """
         Update a member.
 
-        :raises NotFoundError
+        :raise NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
         LOG.debug("sql_member_storage_update_member_called", extra=log_extra(ctx, username=member_to_update))
@@ -122,7 +122,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
         """
         Delete a member.
 
-        :raises NotFoundError
+        :raise NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
         LOG.debug("sql_member_storage_delete_member_called", extra=log_extra(ctx, username=username))

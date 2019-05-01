@@ -32,7 +32,7 @@ class RoomManager:
 
         User story: As an admin, I can delete a room, so I can remove rooms that do not exist.
 
-        :raises RoomNotFound
+        :raise RoomNotFound
         """
         try:
             self.room_storage.delete_room(ctx, room_number=room_number)
@@ -47,7 +47,7 @@ class RoomManager:
 
         User story: As an admin, I can get a room, so that see the room information.
 
-        :raises RoomNotFound
+        :raise RoomNotFound
         """
         result, _ = self.room_storage.search_room_by(ctx, room_number=room_number)
         LOG.info('room_get_by_number', extra=log_extra(ctx, room_number=room_number))
@@ -62,7 +62,7 @@ class RoomManager:
 
         User story: As an admin, I can search rooms, so that see the room information.
 
-        :raises IntMustBePositiveException
+        :raise IntMustBePositiveException
         """
         if limit < 0:
             raise IntMustBePositiveException('limit')
@@ -84,9 +84,9 @@ class RoomManager:
         User story: As an admin, I can modify a room, so that I change its description.
         :return: True if the room was created, false otherwise.
 
-        :raises MissingRequiredFieldError
-        :raises VlanNotFound
-        :raises RoomNumberMismatchError
+        :raise MissingRequiredFieldError
+        :raise VlanNotFound
+        :raise RoomNumberMismatchError
         """
         # Make sure all the fields set are valid.
         _validate_mutation_request(mutation_request)

@@ -141,8 +141,8 @@ class NetworkObjectSQLStorage(PortRepository, VLANRepository, SwitchRepository):
         Create a port in the database
         :return the newly created port ID
 
-        :raises InvalidRoomNumber
-        :raises InvalidSwitchID
+        :raise InvalidRoomNumber
+        :raise InvalidSwitchID
         """
         LOG.debug("sql_network_object_storage_create_port",
                   extra=log_extra(ctx, rcom=rcom, port_number=port_number, oid=oid, switch_id=switch_id,
@@ -179,9 +179,9 @@ class NetworkObjectSQLStorage(PortRepository, VLANRepository, SwitchRepository):
         Update a port in the database
         :return the newly created port ID
 
-        :raises NotFoundError
-        :raises InvalidRoomNumber
-        :raises InvalidSwitchID
+        :raise NotFoundError
+        :raise InvalidRoomNumber
+        :raise InvalidSwitchID
         """
         LOG.debug("sql_network_object_storage_udpate_port",
                   extra=log_extra(ctx, port_id=port_id, rcom=rcom, port_number=port_number, oid=oid,
@@ -213,7 +213,7 @@ class NetworkObjectSQLStorage(PortRepository, VLANRepository, SwitchRepository):
         """
         Delete port
 
-        :raises NotFoundError
+        :raise NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
         port = s.query(PortSQL).filter(PortSQL.id == port_id).one_or_none()
@@ -226,7 +226,7 @@ class NetworkObjectSQLStorage(PortRepository, VLANRepository, SwitchRepository):
         """
         Get a VLAN.
 
-        :raises NotFoundError
+        :raise NotFoundError
         """
         LOG.debug("sql_network_object_storage_get_vlan", extra=log_extra(ctx, vlan_number=vlan_number))
 
