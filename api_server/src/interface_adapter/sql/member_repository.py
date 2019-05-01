@@ -18,7 +18,7 @@ from src.util.date import date_to_string
 from src.util.log import LOG
 
 
-class MemberSQLStorage(MemberRepository, MembershipRepository):
+class MemberSQLRepository(MemberRepository, MembershipRepository):
     """
     Represent the interface to the SQL database.
     """
@@ -30,7 +30,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
         :raise NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
-        LOG.debug("sql_member_storage_add_membership_called", extra=log_extra(ctx, username=username))
+        LOG.debug("sql_member_repository_add_membership_called", extra=log_extra(ctx, username=username))
 
         member = _get_member_by_login(s, username)
         if member is None:
@@ -52,7 +52,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
         :raise NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
-        LOG.debug("sql_member_storage_create_member_called", extra=log_extra(ctx, username=username))
+        LOG.debug("sql_member_repository_create_member_called", extra=log_extra(ctx, username=username))
 
         now = datetime.now()
 
@@ -92,7 +92,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
         :raise NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
-        LOG.debug("sql_member_storage_update_member_called", extra=log_extra(ctx, username=member_to_update))
+        LOG.debug("sql_member_repository_update_member_called", extra=log_extra(ctx, username=member_to_update))
 
         member = _get_member_by_login(s, member_to_update)
         if member is None:
@@ -125,7 +125,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
         :raise NotFoundError
         """
         s = ctx.get(CTX_SQL_SESSION)
-        LOG.debug("sql_member_storage_delete_member_called", extra=log_extra(ctx, username=username))
+        LOG.debug("sql_member_repository_delete_member_called", extra=log_extra(ctx, username=username))
 
         # Find the soon-to-be deleted user
         member = _get_member_by_login(s, username)
@@ -142,7 +142,7 @@ class MemberSQLStorage(MemberRepository, MembershipRepository):
         Search a member.
         """
         s = ctx.get(CTX_SQL_SESSION)
-        LOG.debug("sql_member_storage_search_member_by_called", extra=log_extra(ctx))
+        LOG.debug("sql_member_repository_search_member_by_called", extra=log_extra(ctx))
         q = s.query(Adherent)
 
         if username:

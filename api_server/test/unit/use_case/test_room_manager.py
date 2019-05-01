@@ -168,7 +168,7 @@ class TestDelete:
 @fixture
 def room_manager(mock_room_repository):
     return RoomManager(
-        room_storage=mock_room_repository
+        room_repository=mock_room_repository
     )
 
 

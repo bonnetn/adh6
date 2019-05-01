@@ -25,8 +25,8 @@ class MutationRequest:
 
 
 class SwitchManager:
-    def __init__(self, switch_storage: SwitchRepository):
-        self.switch_storage = switch_storage
+    def __init__(self, switch_repository: SwitchRepository):
+        self.switch_repository = switch_repository
 
     def get_by_id(self, ctx, switch_id) -> Switch:
         """
@@ -35,7 +35,7 @@ class SwitchManager:
 
         :raise SwitchNotFound
         """
-        result, _ = self.switch_storage.search_switches_by(ctx, switch_id=switch_id)
+        result, _ = self.switch_repository.search_switches_by(ctx, switch_id=switch_id)
         LOG.info("switch_get_by_id", extra=log_extra(ctx, switch_id=switch_id))
 
         if not result:
@@ -56,7 +56,7 @@ class SwitchManager:
         if offset < 0:
             raise IntMustBePositiveException('offset')
 
-        result, count = self.switch_storage.search_switches_by(ctx, limit=limit, offset=offset, terms=terms)
+        result, count = self.switch_repository.search_switches_by(ctx, limit=limit, offset=offset, terms=terms)
         LOG.info("switch_search", extra=log_extra(ctx, terms=terms))
 
         return result, count
@@ -77,7 +77,7 @@ class SwitchManager:
         fields_to_update = asdict(mutation_request)
         fields_to_update = {k: v for k, v in fields_to_update.items() if is_set(v)}
         try:
-            self.switch_storage.update_switch(ctx, **fields_to_update)
+            self.switch_repository.update_switch(ctx, **fields_to_update)
             LOG.info("switch_update", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))
 
         except NotFoundError as e:
@@ -101,7 +101,7 @@ class SwitchManager:
         fields_to_update = asdict(mutation_request)
         fields_to_update = {k: v for k, v in fields_to_update.items() if is_set(v)}
 
-        switch_id = self.switch_storage.create_switch(ctx, **fields_to_update)
+        switch_id = self.switch_repository.create_switch(ctx, **fields_to_update)
         LOG.info("switch_create", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))
 
         return switch_id
@@ -114,7 +114,7 @@ class SwitchManager:
         :raise SwitchNotFound
         """
         try:
-            self.switch_storage.delete_switch(ctx, switch_id)
+            self.switch_repository.delete_switch(ctx, switch_id)
 
         except NotFoundError as e:
             raise SwitchNotFound() from e

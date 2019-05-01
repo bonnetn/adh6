@@ -403,9 +403,9 @@ def member_manager(
         mock_logs_repository,
 ):
     return MemberManager(
-        member_storage=mock_member_repository,
-        membership_storage=mock_membership_repository,
-        logs_storage=mock_logs_repository,
+        member_repository=mock_member_repository,
+        membership_repository=mock_membership_repository,
+        logs_repository=mock_logs_repository,
         configuration=TEST_CONFIGURATION,
     )
 

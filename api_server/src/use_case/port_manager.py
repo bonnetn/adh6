@@ -31,8 +31,8 @@ class MutationRequest:
 
 
 class PortManager:
-    def __init__(self, port_storage: PortRepository):
-        self.port_storage = port_storage
+    def __init__(self, port_repository: PortRepository):
+        self.port_repository = port_repository
 
     def search(self, ctx, limit=100, offset=0, port_id=None, switch_id=None, room_number=None, terms=None) -> (
             List[Port], int):
@@ -50,7 +50,7 @@ class PortManager:
         if offset < 0:
             raise IntMustBePositiveException('offset')
 
-        result, count = self.port_storage.search_port_by(ctx, limit=limit, offset=offset, port_id=port_id,
+        result, count = self.port_repository.search_port_by(ctx, limit=limit, offset=offset, port_id=port_id,
                                                          switch_id=switch_id, room_number=room_number, terms=terms)
         LOG.info("port_search",
                  extra=log_extra(ctx, port_id=port_id, switch_id=switch_id, room_number=room_number, terms=terms))
@@ -75,7 +75,7 @@ class PortManager:
         fields_to_update = asdict(mutation_request)
         fields_to_update = {k: v for k, v in fields_to_update.items() if is_set(v)}
         try:
-            self.port_storage.update_port(ctx, **fields_to_update)
+            self.port_repository.update_port(ctx, **fields_to_update)
             LOG.info("port_update", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))
 
         except InvalidSwitchID as e:
@@ -107,7 +107,7 @@ class PortManager:
         fields_to_update = asdict(mutation_request)
         fields_to_update = {k: v for k, v in fields_to_update.items() if is_set(v)}
         try:
-            port_id = self.port_storage.create_port(ctx, **fields_to_update)
+            port_id = self.port_repository.create_port(ctx, **fields_to_update)
             LOG.info("port_create", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))
             return port_id
 
@@ -125,7 +125,7 @@ class PortManager:
         :raise PortNotFound
         """
         try:
-            self.port_storage.delete_port(ctx, port_id)
+            self.port_repository.delete_port(ctx, port_id)
 
         except NotFoundError as e:
             raise PortNotFound() from e

@@ -48,13 +48,13 @@ class MemberManager:
     """
 
     def __init__(self,
-                 member_storage: MemberRepository,
-                 membership_storage: MembershipRepository,
-                 logs_storage: LogsRepository,
+                 member_repository: MemberRepository,
+                 membership_repository: MembershipRepository,
+                 logs_repository: LogsRepository,
                  configuration):
-        self.member_storage = member_storage
-        self.membership_storage = membership_storage
-        self.logs_storage = logs_storage
+        self.member_repository = member_repository
+        self.membership_repository = membership_repository
+        self.logs_repository = logs_repository
         self.config = configuration
 
     def new_membership(self, ctx, username, duration, start_str=None) -> None:
@@ -85,8 +85,8 @@ class MemberManager:
         end = start + datetime.timedelta(days=duration)
 
         try:
-            self.membership_storage.create_membership(ctx, username, start, end)
-            self.member_storage.update_member(ctx, username, departure_date=end)
+            self.membership_repository.create_membership(ctx, username, start, end)
+            self.member_repository.update_member(ctx, username, departure_date=end)
         except NotFoundError as e:
             raise MemberNotFound() from e
 
@@ -103,7 +103,7 @@ class MemberManager:
 
         :raise MemberNotFound
         """
-        result, _ = self.member_storage.search_member_by(ctx, username=username)
+        result, _ = self.member_repository.search_member_by(ctx, username=username)
         if not result:
             raise MemberNotFound()
 
@@ -129,7 +129,7 @@ class MemberManager:
         if offset < 0:
             raise IntMustBePositiveException('offset')
 
-        result, count = self.member_storage.search_member_by(ctx,
+        result, count = self.member_repository.search_member_by(ctx,
                                                              limit=limit,
                                                              offset=offset,
                                                              room_number=room_number,
@@ -163,7 +163,7 @@ class MemberManager:
         if not is_set(mutation_request.username):
             raise MissingRequiredFieldError('username')
 
-        member, _ = self.member_storage.search_member_by(ctx, username=username)
+        member, _ = self.member_repository.search_member_by(ctx, username=username)
         if member:
             # [UPDATE] Member already exists, perform a whole update.
 
@@ -173,7 +173,7 @@ class MemberManager:
             fields_to_update = {k: v if is_set(v) else None for k, v in fields_to_update.items()}
 
             # This call will never throw a NotFoundError because we checked for the object existence before.
-            self.member_storage.update_member(ctx, username, **fields_to_update)
+            self.member_repository.update_member(ctx, username, **fields_to_update)
 
             # Log action.
             LOG.info('member_whole_update', extra=log_extra(
@@ -196,7 +196,7 @@ class MemberManager:
             fields = {k: v if is_set(v) else None for k, v in fields.items()}
 
             try:
-                self.member_storage.create_member(ctx, **fields)
+                self.member_repository.create_member(ctx, **fields)
 
             except NotFoundError:
                 raise InvalidRoomNumberError()
@@ -226,7 +226,7 @@ class MemberManager:
         fields_to_update = {k: v for k, v in fields_to_update.items() if is_set(v)}
 
         try:
-            self.member_storage.update_member(ctx, username, **fields_to_update)
+            self.member_repository.update_member(ctx, username, **fields_to_update)
         except NotFoundError:
             raise MemberNotFound()
 
@@ -256,7 +256,7 @@ class MemberManager:
         password = ntlm_hash(password)
 
         try:
-            self.member_storage.update_member(ctx, username, password=password)
+            self.member_repository.update_member(ctx, username, password=password)
         except NotFoundError as e:
             raise MemberNotFound() from e
 
@@ -273,7 +273,7 @@ class MemberManager:
         """
 
         try:
-            self.member_storage.delete_member(ctx, username)
+            self.member_repository.delete_member(ctx, username)
 
             # Log action.
             LOG.info('member_delete', extra=log_extra(
@@ -298,14 +298,14 @@ class MemberManager:
         # mac_tbl = list(map(lambda x: x.mac, q.all()))
 
         # Check that the user exists in the system.
-        result, _ = self.member_storage.search_member_by(ctx, username=username)
+        result, _ = self.member_repository.search_member_by(ctx, username=username)
         if not result:
             raise MemberNotFound()
 
         # Do the actual log fetching.
         try:
             # TODO: Fetch all the devices and put them into this request.
-            logs = self.logs_storage.get_logs(ctx, username, [])
+            logs = self.logs_repository.get_logs(ctx, username, [])
 
             LOG.info('member_get_logs', extra=log_extra(
                 ctx,

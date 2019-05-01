@@ -389,10 +389,10 @@ def device_manager(
         mock_ip_allocator: IPAllocator,
 ):
     return DeviceManager(
-        device_storage=mock_device_repository,
-        member_storage=mock_member_repository,
-        room_storage=mock_room_repository,
-        vlan_storage=mock_vlan_repository,
+        device_repository=mock_device_repository,
+        member_repository=mock_member_repository,
+        room_repository=mock_room_repository,
+        vlan_repository=mock_vlan_repository,
         ip_allocator=mock_ip_allocator,
     )
 

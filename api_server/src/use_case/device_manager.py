@@ -31,15 +31,15 @@ class MutationRequest(Device):
 
 class DeviceManager:
     def __init__(self,
-                 member_storage: MemberRepository,
-                 device_storage: DeviceRepository,
-                 room_storage: RoomRepository,
-                 vlan_storage: VLANRepository,
+                 member_repository: MemberRepository,
+                 device_repository: DeviceRepository,
+                 room_repository: RoomRepository,
+                 vlan_repository: VLANRepository,
                  ip_allocator: IPAllocator):
-        self.device_storage = device_storage
-        self.member_storage = member_storage
-        self.room_storage = room_storage
-        self.vlan_storage = vlan_storage
+        self.device_repository = device_repository
+        self.member_repository = member_repository
+        self.room_repository = room_repository
+        self.vlan_repository = vlan_repository
         self.ip_allocator = ip_allocator
 
     def search(self, ctx, limit=100, offset=0, username=None, terms=None) -> (List[Device], int):
@@ -56,7 +56,7 @@ class DeviceManager:
         if offset < 0:
             raise IntMustBePositiveException('offset')
 
-        result, count = self.device_storage.search_device_by(ctx, limit=limit, offset=offset, username=username,
+        result, count = self.device_repository.search_device_by(ctx, limit=limit, offset=offset, username=username,
                                                              terms=terms)
 
         LOG.info("device_search", extra=log_extra(
@@ -75,7 +75,7 @@ class DeviceManager:
 
         :raise DeviceNotFound
         """
-        result, count = self.device_storage.search_device_by(ctx, mac_address=mac_address)
+        result, count = self.device_repository.search_device_by(ctx, mac_address=mac_address)
         if not result:
             raise DeviceNotFound()
 
@@ -95,7 +95,7 @@ class DeviceManager:
         :raise DeviceNotFound
         """
         try:
-            self.device_storage.delete_device(ctx, mac_address=mac_address)
+            self.device_repository.delete_device(ctx, mac_address=mac_address)
         except NotFoundError as e:
             raise DeviceNotFound() from e
 
@@ -124,7 +124,7 @@ class DeviceManager:
         _validate_mutation_request(req)
 
         # Make sure the provided owner username is valid.
-        owner, _ = self.member_storage.search_member_by(ctx, username=req.owner_username)
+        owner, _ = self.member_repository.search_member_by(ctx, username=req.owner_username)
         if not owner:
             raise MemberNotFound()
 
@@ -143,13 +143,13 @@ class DeviceManager:
                 raise IPAllocationFailedError() from e
 
         fields = {k: v if is_set(v) else None for k, v in asdict(req).items()}
-        result, _ = self.device_storage.search_device_by(ctx, mac_address=mac_address)
+        result, _ = self.device_repository.search_device_by(ctx, mac_address=mac_address)
 
         req.ip_v4_address = req.ip_v4_address or 'En Attente'
         req.ip_v6_address = req.ip_v6_address or 'En Attente'
         if not result:
             # No device with that MAC address, creating one...
-            self.device_storage.create_device(ctx, **fields)
+            self.device_repository.create_device(ctx, **fields)
 
             LOG.info('device_create', extra=log_extra(
                 ctx,
@@ -163,7 +163,7 @@ class DeviceManager:
             # A device exists, updating it.
 
             # The following will never throw DeviceNotFound since we check beforehand.
-            self.device_storage.update_device(ctx, mac_address, **fields)
+            self.device_repository.update_device(ctx, mac_address, **fields)
 
             LOG.info('device_update', extra=log_extra(
                 ctx,
@@ -178,11 +178,11 @@ class DeviceManager:
         Return the IP range that that a user should be assigned to.
         :return: IPv4 range and IPv6 range of the user
         """
-        result, count = self.room_storage.search_room_by(ctx, owner_username=username)
+        result, count = self.room_repository.search_room_by(ctx, owner_username=username)
         if not result:
             return None, None
 
-        vlan = self.vlan_storage.get_vlan(ctx, result[0].vlan_number)
+        vlan = self.vlan_repository.get_vlan(ctx, result[0].vlan_number)
         return vlan.ip_v4_range, vlan.ip_v6_range
 
 

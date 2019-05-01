@@ -5,30 +5,36 @@ import connexion
 from connexion.resolver import RestyResolver
 
 from config import CONFIGURATION, TEST_CONFIGURATION
-from src.interface_adapter.elasticsearch.storage import ElasticSearchStorage
-from src.interface_adapter.sql.device_storage import DeviceSQLStorage
-from src.interface_adapter.sql.member_storage import MemberSQLStorage
+from src.interface_adapter.elasticsearch.repository import ElasticSearchRepository
+from src.interface_adapter.sql.device_repository import DeviceSQLRepository
+from src.interface_adapter.sql.member_repository import MemberSQLRepository
 from src.interface_adapter.sql.model.database import Database
-from src.interface_adapter.sql.network_object_storage import NetworkObjectSQLStorage
-from src.interface_adapter.sql.room_storage import RoomSQLStorage
+from src.interface_adapter.sql.network_object_repository import NetworkObjectSQLRepository
+from src.interface_adapter.sql.room_repository import RoomSQLRepository
 from src.use_case.device_manager import DeviceManager
 from src.use_case.member_manager import MemberManager
 from src.use_case.port_manager import PortManager
-# Global variables that you can use in the app.
 from src.use_case.room_manager import RoomManager
 from src.use_case.switch_manager import SwitchManager
 
+# Global variables that you can use in the app.
 configuration = None
-member_sql_storage: MemberSQLStorage = None
-port_sql_storage: NetworkObjectSQLStorage = None
-device_sql_storage: DeviceSQLStorage = None
-room_sql_storage: RoomSQLStorage = None
-elk_storage: ElasticSearchStorage = None
+
+# Interface handlers.
+member_sql_repository: MemberSQLRepository = None
+port_sql_repository: NetworkObjectSQLRepository = None
+device_sql_repository: DeviceSQLRepository = None
+room_sql_repository: RoomSQLRepository = None
+elk_repository: ElasticSearchRepository = None
+
+# Use cases.
 port_manager: PortManager = None
 device_manager: DeviceManager = None
 member_manager: MemberManager = None
 room_manager: RoomManager = None
 switch_manager: SwitchManager = None
+
+# Application.
 app = None
 
 
@@ -43,33 +49,33 @@ def init(m, testing=True):
 
     Database.init_db(m.configuration.DATABASE)
 
-    m.member_sql_storage = MemberSQLStorage()
-    m.network_object_sql_storage = NetworkObjectSQLStorage()
-    m.device_sql_storage = DeviceSQLStorage()
-    m.room_sql_storage = RoomSQLStorage()
-    m.elk_storage = ElasticSearchStorage(m.configuration)
+    m.member_sql_repository = MemberSQLRepository()
+    m.network_object_sql_repository = NetworkObjectSQLRepository()
+    m.device_sql_repository = DeviceSQLRepository()
+    m.room_sql_repository = RoomSQLRepository()
+    m.elk_repository = ElasticSearchRepository(m.configuration)
 
     m.switch_manager = SwitchManager(
-        switch_storage=m.network_object_sql_storage,
+        switch_repository=m.network_object_sql_repository,
     )
     m.port_manager = PortManager(
-        port_storage=m.network_object_sql_storage,
+        port_repository=m.network_object_sql_repository,
     )
     m.device_manager = DeviceManager(
-        device_storage=m.device_sql_storage,
-        member_storage=m.member_sql_storage,
-        room_storage=m.room_sql_storage,
-        vlan_storage=m.network_object_sql_storage,
-        ip_allocator=m.device_sql_storage,
+        device_repository=m.device_sql_repository,
+        member_repository=m.member_sql_repository,
+        room_repository=m.room_sql_repository,
+        vlan_repository=m.network_object_sql_repository,
+        ip_allocator=m.device_sql_repository,
     )
     m.member_manager = MemberManager(
-        member_storage=m.member_sql_storage,
-        membership_storage=m.member_sql_storage,
-        logs_storage=m.elk_storage,
+        member_repository=m.member_sql_repository,
+        membership_repository=m.member_sql_repository,
+        logs_repository=m.elk_repository,
         configuration=m.configuration,
     )
     m.room_manager = RoomManager(
-        room_storage=m.room_sql_storage,
+        room_repository=m.room_sql_repository,
     )
 
     app = connexion.FlaskApp(__name__)

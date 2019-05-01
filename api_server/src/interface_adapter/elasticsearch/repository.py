@@ -9,7 +9,7 @@ from src.use_case.interface.logs_repository import LogsRepository, LogFetchError
 from src.util.mac import get_mac_variations
 
 
-class ElasticSearchStorage(LogsRepository):
+class ElasticSearchRepository(LogsRepository):
     """
     Interface to the log repository.
     """

@@ -23,8 +23,8 @@ class MutationRequest:
 
 
 class RoomManager:
-    def __init__(self, room_storage: RoomRepository):
-        self.room_storage = room_storage
+    def __init__(self, room_repository: RoomRepository):
+        self.room_repository = room_repository
 
     def delete(self, ctx, room_number) -> None:
         """
@@ -35,7 +35,7 @@ class RoomManager:
         :raise RoomNotFound
         """
         try:
-            self.room_storage.delete_room(ctx, room_number=room_number)
+            self.room_repository.delete_room(ctx, room_number=room_number)
             LOG.info('room_delete', extra=log_extra(ctx, room_number=room_number))
 
         except NotFoundError as e:
@@ -49,7 +49,7 @@ class RoomManager:
 
         :raise RoomNotFound
         """
-        result, _ = self.room_storage.search_room_by(ctx, room_number=room_number)
+        result, _ = self.room_repository.search_room_by(ctx, room_number=room_number)
         LOG.info('room_get_by_number', extra=log_extra(ctx, room_number=room_number))
         if not result:
             raise RoomNotFound()
@@ -70,7 +70,7 @@ class RoomManager:
         if offset < 0:
             raise IntMustBePositiveException('offset')
 
-        result, count = self.room_storage.search_room_by(ctx, limit=limit, offset=offset, terms=terms)
+        result, count = self.room_repository.search_room_by(ctx, limit=limit, offset=offset, terms=terms)
         LOG.info('room_search', extra=log_extra(
             ctx,
             terms=terms,
@@ -95,7 +95,7 @@ class RoomManager:
         if not is_set(mutation_request.room_number):
             raise MissingRequiredFieldError('room_number')
 
-        room, _ = self.room_storage.search_room_by(ctx, room_number=room_number)
+        room, _ = self.room_repository.search_room_by(ctx, room_number=room_number)
         if room:
             # [UPDATE] Room already exists, perform a whole update.
 
@@ -106,7 +106,7 @@ class RoomManager:
 
             # This call will never throw a NotFoundError because we checked for the object existence before.
             try:
-                self.room_storage.update_room(ctx, room_number, **fields_to_update)
+                self.room_repository.update_room(ctx, room_number, **fields_to_update)
 
             except InvalidVLANNumberError as e:
                 raise VlanNotFound() from e
@@ -131,7 +131,7 @@ class RoomManager:
             fields = {k: v if is_set(v) else None for k, v in fields.items()}
 
             try:
-                self.room_storage.create_room(ctx, **fields)
+                self.room_repository.create_room(ctx, **fields)
 
             except InvalidVLANNumberError as e:
                 raise VlanNotFound() from e

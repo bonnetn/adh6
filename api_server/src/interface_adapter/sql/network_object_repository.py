@@ -23,14 +23,14 @@ from src.util.context import log_extra
 from src.util.log import LOG
 
 
-class NetworkObjectSQLStorage(PortRepository, VLANRepository, SwitchRepository):
+class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepository):
 
     def search_switches_by(self, ctx, limit=100, offset=0, switch_id: str = None, terms: str = None) -> (
             List[Switch], int):
         """
         Search for a switch.
         """
-        LOG.debug("sql_network_object_storage_search_switch_by",
+        LOG.debug("sql_network_object_repository_search_switch_by",
                   extra=log_extra(ctx, switch_id=switch_id, terms=terms))
 
         s = ctx.get(CTX_SQL_SESSION)
@@ -58,7 +58,7 @@ class NetworkObjectSQLStorage(PortRepository, VLANRepository, SwitchRepository):
 
     def create_switch(self, ctx, ip_v4=None, description=None, community=None) -> str:
         # Please do not log community...
-        LOG.debug("sql_network_object_storage_create_switch",
+        LOG.debug("sql_network_object_repository_create_switch",
                   extra=log_extra(ctx, ip_v4=ip_v4, description=description))
 
         s = ctx.get(CTX_SQL_SESSION)
@@ -74,7 +74,7 @@ class NetworkObjectSQLStorage(PortRepository, VLANRepository, SwitchRepository):
 
     def update_switch(self, ctx, switch_id, ip_v4=None, description=None, community=None) -> None:
         # Please do not log community...
-        LOG.debug("sql_network_object_storage_update_switch",
+        LOG.debug("sql_network_object_repository_update_switch",
                   extra=log_extra(ctx, switch_id=switch_id, ip_v4=ip_v4, description=description))
 
         s = ctx.get(CTX_SQL_SESSION)
@@ -87,7 +87,7 @@ class NetworkObjectSQLStorage(PortRepository, VLANRepository, SwitchRepository):
         result.description = description
 
     def delete_switch(self, ctx, switch_id: str) -> None:
-        LOG.debug("sql_network_object_storage_delete_switch", extra=log_extra(ctx, switch_id=switch_id))
+        LOG.debug("sql_network_object_repository_delete_switch", extra=log_extra(ctx, switch_id=switch_id))
 
         s = ctx.get(CTX_SQL_SESSION)
         result: SwitchSQL = s.query(SwitchSQL).filter(SwitchSQL.id == int(switch_id)).one_or_none()
@@ -102,7 +102,7 @@ class NetworkObjectSQLStorage(PortRepository, VLANRepository, SwitchRepository):
         Search for a port.
         :return: the ports and the number of matches in the DB.
         """
-        LOG.debug("sql_network_object_storage_search_port_by",
+        LOG.debug("sql_network_object_repository_search_port_by",
                   extra=log_extra(ctx, port_id=port_id, switch_id=switch_id, room_number=room_number, terms=terms))
 
         s = ctx.get(CTX_SQL_SESSION)
@@ -144,7 +144,7 @@ class NetworkObjectSQLStorage(PortRepository, VLANRepository, SwitchRepository):
         :raise InvalidRoomNumber
         :raise InvalidSwitchID
         """
-        LOG.debug("sql_network_object_storage_create_port",
+        LOG.debug("sql_network_object_repository_create_port",
                   extra=log_extra(ctx, rcom=rcom, port_number=port_number, oid=oid, switch_id=switch_id,
                                   room_number=room_number))
 
@@ -183,7 +183,7 @@ class NetworkObjectSQLStorage(PortRepository, VLANRepository, SwitchRepository):
         :raise InvalidRoomNumber
         :raise InvalidSwitchID
         """
-        LOG.debug("sql_network_object_storage_udpate_port",
+        LOG.debug("sql_network_object_repository_udpate_port",
                   extra=log_extra(ctx, port_id=port_id, rcom=rcom, port_number=port_number, oid=oid,
                                   switch_id=switch_id, room_number=room_number))
 
@@ -228,7 +228,7 @@ class NetworkObjectSQLStorage(PortRepository, VLANRepository, SwitchRepository):
 
         :raise NotFoundError
         """
-        LOG.debug("sql_network_object_storage_get_vlan", extra=log_extra(ctx, vlan_number=vlan_number))
+        LOG.debug("sql_network_object_repository_get_vlan", extra=log_extra(ctx, vlan_number=vlan_number))
 
         s = ctx.get(CTX_SQL_SESSION)
         result = s.query(VlanSQL).filter(VlanSQL.numero == vlan_number).one_or_none()

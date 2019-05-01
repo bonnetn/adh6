@@ -167,7 +167,7 @@ class TestDelete:
 @fixture
 def switch_manager(mock_switch_repository, ):
     return SwitchManager(
-        switch_storage=mock_switch_repository
+        switch_repository=mock_switch_repository
     )
 
 

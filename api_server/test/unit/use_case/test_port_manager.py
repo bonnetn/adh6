@@ -237,7 +237,7 @@ def port_manager(
         mock_port_repository,
 ):
     return PortManager(
-        port_storage=mock_port_repository
+        port_repository=mock_port_repository
     )
 
 

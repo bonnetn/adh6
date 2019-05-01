@@ -16,10 +16,10 @@ from src.util.context import log_extra
 from src.util.log import LOG
 
 
-class RoomSQLStorage(RoomRepository):
+class RoomSQLRepository(RoomRepository):
     def search_room_by(self, ctx, limit=100, offset=0, room_number=None, owner_username=None, terms=None) -> (
             List[Room], int):
-        LOG.debug("sql_room_storage_search_room_by_called", extra=log_extra(ctx, username=owner_username, terms=terms))
+        LOG.debug("sql_room_repository_search_room_by_called", extra=log_extra(ctx, username=owner_username, terms=terms))
         s = ctx.get(CTX_SQL_SESSION)
         q = s.query(Chambre)
 
@@ -46,7 +46,7 @@ class RoomSQLStorage(RoomRepository):
 
     def update_room(self, ctx, room_to_update, room_number=None, description=None, phone_number=None,
                     vlan_number=None) -> None:
-        LOG.debug("sql_room_storage_update_room_called",
+        LOG.debug("sql_room_repository_update_room_called",
                   extra=log_extra(ctx, room_number=room_number, description=description, phone_number=phone_number,
                                   vlan_number=vlan_number))
         s = ctx.get(CTX_SQL_SESSION)
@@ -67,7 +67,7 @@ class RoomSQLStorage(RoomRepository):
         room.vlan = vlan
 
     def create_room(self, ctx, room_number=None, description=None, phone_number=None, vlan_number=None) -> None:
-        LOG.debug("sql_room_storage_create_room_called",
+        LOG.debug("sql_room_repository_create_room_called",
                   extra=log_extra(ctx, room_number=room_number, description=description, phone_number=phone_number,
                                   vlan_number=vlan_number))
         s = ctx.get(CTX_SQL_SESSION)
@@ -93,7 +93,7 @@ class RoomSQLStorage(RoomRepository):
         s.add(room)
 
     def delete_room(self, ctx, room_number) -> None:
-        LOG.debug("sql_room_storage_delete_room_called", extra=log_extra(ctx, room_number=room_number))
+        LOG.debug("sql_room_repository_delete_room_called", extra=log_extra(ctx, room_number=room_number))
         s = ctx.get(CTX_SQL_SESSION)
 
         room = s.query(Chambre).filter(Chambre.numero == room_number).one_or_none()

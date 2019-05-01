@@ -18,11 +18,11 @@ from src.util.context import log_extra
 from src.util.log import LOG
 
 
-class DeviceSQLStorage(DeviceRepository, IPAllocator):
+class DeviceSQLRepository(DeviceRepository, IPAllocator):
 
     def search_device_by(self, ctx, limit=100, offset=0, mac_address=None, username=None, terms=None) \
             -> (List[Device], int):
-        LOG.debug("sql_device_storage_search_called", extra=log_extra(ctx))
+        LOG.debug("sql_device_repository_search_called", extra=log_extra(ctx))
         s = ctx.get(CTX_SQL_SESSION)
 
         # Return a subquery with all devices (wired & wireless)
@@ -58,7 +58,7 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
 
     def create_device(self, ctx, mac_address=None, owner_username=None, connection_type=None, ip_v4_address=None,
                       ip_v6_address=None):
-        LOG.debug("sql_device_storage_create_device_called", extra=log_extra(ctx, mac=mac_address))
+        LOG.debug("sql_device_repository_create_device_called", extra=log_extra(ctx, mac=mac_address))
         s = ctx.get(CTX_SQL_SESSION)
 
         all_devices = get_all_devices(s)
@@ -88,7 +88,7 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
     def update_device(self, ctx, device_to_update, mac_address=None, owner_username=None, connection_type=None,
                       ip_v4_address=None, ip_v6_address=None):
         s = ctx.get(CTX_SQL_SESSION)
-        LOG.debug("sql_device_storage_update_device_called", extra=log_extra(ctx, mac=device_to_update))
+        LOG.debug("sql_device_repository_update_device_called", extra=log_extra(ctx, mac=device_to_update))
 
         all_devices = get_all_devices(s)
         device = s.query(all_devices).filter(all_devices.columns.mac == device_to_update).one_or_none()
@@ -150,7 +150,7 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
 
     def delete_device(self, ctx, mac_address=None):
         s = ctx.get(CTX_SQL_SESSION)
-        LOG.debug("sql_device_storage_delete_device_called", extra=log_extra(ctx, mac=mac_address))
+        LOG.debug("sql_device_repository_delete_device_called", extra=log_extra(ctx, mac=mac_address))
 
         all_devices = get_all_devices(s)
         device = s.query(all_devices).filter(all_devices.columns.mac == mac_address).one_or_none()
@@ -164,7 +164,7 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
 
     def allocate_ip_v4(self, ctx, ip_range: str) -> str:
         s = ctx.get(CTX_SQL_SESSION)
-        LOG.debug("sql_device_storage_allocate_ip_v4_called", extra=log_extra(ctx))
+        LOG.debug("sql_device_repository_allocate_ip_v4_called", extra=log_extra(ctx))
 
         result = get_available_ip(ip_range, get_all_used_ipv4(s))
         if result is None:
@@ -174,7 +174,7 @@ class DeviceSQLStorage(DeviceRepository, IPAllocator):
 
     def allocate_ip_v6(self, ctx, ip_range: str) -> str:
         s = ctx.get(CTX_SQL_SESSION)
-        LOG.debug("sql_device_storage_allocate_ip_v6_called", extra=log_extra(ctx))
+        LOG.debug("sql_device_repository_allocate_ip_v6_called", extra=log_extra(ctx))
 
         result = get_available_ip(ip_range, get_all_used_ipv6(s))
         if result is None:
