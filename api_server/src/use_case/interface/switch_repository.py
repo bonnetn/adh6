@@ -15,7 +15,7 @@ class SwitchRepository(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def search_switches_by(self, ctx, limit=100, offset=0, switch_id: str = None, terms: str = None) -> (
-    List[Switch], int):
+            List[Switch], int):
         """
         Search switches.
         """
@@ -41,4 +41,3 @@ class SwitchRepository(metaclass=abc.ABCMeta):
         Delete a switch.
         """
         pass  # pragma: no cover
-

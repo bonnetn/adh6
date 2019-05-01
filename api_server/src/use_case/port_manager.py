@@ -51,7 +51,7 @@ class PortManager:
             raise IntMustBePositiveException('offset')
 
         result, count = self.port_repository.search_port_by(ctx, limit=limit, offset=offset, port_id=port_id,
-                                                         switch_id=switch_id, room_number=room_number, terms=terms)
+                                                            switch_id=switch_id, room_number=room_number, terms=terms)
         LOG.info("port_search",
                  extra=log_extra(ctx, port_id=port_id, switch_id=switch_id, room_number=room_number, terms=terms))
 

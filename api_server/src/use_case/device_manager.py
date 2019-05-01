@@ -57,7 +57,7 @@ class DeviceManager:
             raise IntMustBePositiveException('offset')
 
         result, count = self.device_repository.search_device_by(ctx, limit=limit, offset=offset, username=username,
-                                                             terms=terms)
+                                                                terms=terms)
 
         LOG.info("device_search", extra=log_extra(
             ctx,

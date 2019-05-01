@@ -1,6 +1,5 @@
 # coding=utf-8
 import datetime
-import logging
 import secrets
 from connexion import NoContent
 from flask import g
@@ -8,6 +7,7 @@ from flask import g
 from src.interface_adapter.http_api.decorator.auth import auth_super_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.sql.model.models import NainA
+from src.util.log import LOG
 
 TOKEN_SIZE = 32
 
@@ -34,7 +34,7 @@ def post(body):
     )
     s.add(naina)
 
-    logging.info("%s created a temporary account for '%s %s'", g.admin.login, firstname, lastname)
+    LOG.info("%s created a temporary account for '%s %s'", g.admin.login, firstname, lastname)
 
     return {"accessToken": "NAINA_{}".format(token)}, 200
 
@@ -49,5 +49,5 @@ def delete():
     q = q.filter(NainA.expiration_time > now)
     q.update({"expiration_time": now})
     s.commit()
-    logging.info("%s revoked all temporary accounts.", g.admin.login)
+    LOG.info("%s revoked all temporary accounts.", g.admin.login)
     return NoContent, 204

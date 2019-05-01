@@ -130,10 +130,10 @@ class MemberManager:
             raise IntMustBePositiveException('offset')
 
         result, count = self.member_repository.search_member_by(ctx,
-                                                             limit=limit,
-                                                             offset=offset,
-                                                             room_number=room_number,
-                                                             terms=terms)
+                                                                limit=limit,
+                                                                offset=offset,
+                                                                room_number=room_number,
+                                                                terms=terms)
 
         # Log action.
         LOG.info('member_search', extra=log_extra(

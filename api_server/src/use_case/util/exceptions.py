@@ -31,6 +31,8 @@ class UsernameMismatchError(ValueError):
 
     def __init__(self):
         super().__init__('cannot create member with 2 different usernames')
+
+
 class RoomNumberMismatchError(ValueError):
     """
     Thrown when you try to create a room given a room_number and a mutation request and in the mutation request the

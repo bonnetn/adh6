@@ -1,7 +1,6 @@
 # coding=utf-8
 import time
 
-import logging
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy.exc import OperationalError
@@ -44,13 +43,13 @@ class Database:
             # Create NainA table if not exists. (The other tables should already exist.)
             for retries in range(Database.RETRY_COUNT):
                 try:
-                    logging.info("connecting_to_database")
+                    LOG.info("connecting_to_database")
                     Base.metadata.create_all(
                         self.engine,
                         tables=[NainA.__table__]
                     )
-                    logging.info("connection_established")
-                    logging.info("table_created")
+                    LOG.info("connection_established")
+                    LOG.info("table_created")
                 except OperationalError as e:
                     LOG.warn("could_not_connect_to_database", extra={'exception': e})
                     if retries + 1 == Database.RETRY_COUNT:
