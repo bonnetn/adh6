@@ -7,6 +7,7 @@ import json
 from dataclasses import dataclass, asdict
 from typing import List
 
+from src.constants import DEFAULT_OFFSET, DEFAULT_LIMIT
 from src.entity.member import Member
 from src.exceptions import InvalidAdmin, UnknownPaymentMethod
 from src.use_case.interface.logs_repository import LogsRepository, LogFetchError
@@ -138,7 +139,7 @@ class MemberManager:
         ))
         return result[0]
 
-    def search(self, ctx, limit, offset=0, room_number=None, terms=None) -> (List[Member], int):
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, room_number=None, terms=None) -> (List[Member], int):
         """
         search member in the database.
 

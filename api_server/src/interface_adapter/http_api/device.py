@@ -3,6 +3,7 @@ import requests
 from connexion import NoContent
 
 from main import device_manager
+from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.device import DeviceType, Device
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
@@ -19,7 +20,7 @@ from src.util.log import LOG
 @with_context
 @require_sql
 @auth_regular_admin
-def search(ctx, limit=100, offset=0, username=None, terms=None):
+def search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, username=None, terms=None):
     """ Filter the list of the devices according to some criterias """
     LOG.debug("http_device_search_called", extra=log_extra(ctx,
                                                            limit=limit,

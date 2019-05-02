@@ -6,7 +6,7 @@ from datetime import datetime
 from sqlalchemy.orm.exc import NoResultFound
 from typing import List
 
-from src.constants import CTX_SQL_SESSION
+from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.member import Member
 from src.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion
 from src.interface_adapter.sql.track_modifications import track_modifications
@@ -136,7 +136,7 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
             # Actually delete it
             s.delete(member)
 
-    def search_member_by(self, ctx, limit=100, offset=0, room_number=None, terms=None, username=None) -> (
+    def search_member_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, room_number=None, terms=None, username=None) -> (
             List[Member], int):
         """
         Search a member.

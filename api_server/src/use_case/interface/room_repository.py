@@ -5,6 +5,7 @@ Room repository.
 import abc
 from typing import List
 
+from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
 
 
@@ -14,7 +15,7 @@ class RoomRepository(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def search_room_by(self, ctx, limit=100, offset=0, room_number=None, owner_username=None, terms=None) -> (
+    def search_room_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, room_number=None, owner_username=None, terms=None) -> (
             List[Room], int):
         """
         Search rooms.

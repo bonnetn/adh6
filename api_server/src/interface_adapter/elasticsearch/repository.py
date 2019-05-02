@@ -4,7 +4,7 @@ Logs repository.
 """
 from elasticsearch import Elasticsearch
 
-from src.constants import CTX_TESTING
+from src.constants import CTX_TESTING, DEFAULT_LIMIT
 from src.use_case.interface.logs_repository import LogsRepository, LogFetchError
 from src.util.mac import get_mac_variations
 
@@ -17,7 +17,7 @@ class ElasticSearchRepository(LogsRepository):
     def __init__(self, configuration):
         self.config = configuration
 
-    def get_logs(self, ctx, username=None, devices=None, limit=100):
+    def get_logs(self, ctx, limit=DEFAULT_LIMIT, username=None, devices=None):
         """
         Get the logs related to the username and to the devices.
         :param ctx:  context

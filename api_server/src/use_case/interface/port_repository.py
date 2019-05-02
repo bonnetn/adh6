@@ -5,6 +5,7 @@ Port repository.
 import abc
 from typing import List
 
+from src.constants import DEFAULT_OFFSET, DEFAULT_LIMIT
 from src.entity.port import Port
 from src.use_case.interface.member_repository import NotFoundError
 
@@ -23,7 +24,7 @@ class PortRepository(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def search_port_by(self, ctx, limit=0, offset=0, port_id: str = None, switch_id: str = None,
+    def search_port_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, port_id: str = None, switch_id: str = None,
                        room_number: str = None, terms: str = None) -> (List[Port], int):
         """
         Search ports.

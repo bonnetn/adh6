@@ -6,7 +6,7 @@ from datetime import datetime
 from sqlalchemy import or_
 from typing import List
 
-from src.constants import CTX_SQL_SESSION
+from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
 from src.interface_adapter.sql.model.models import Adherent, Chambre, Vlan
 from src.use_case.interface.member_repository import NotFoundError
@@ -17,7 +17,7 @@ from src.util.log import LOG
 
 
 class RoomSQLRepository(RoomRepository):
-    def search_room_by(self, ctx, limit=100, offset=0, room_number=None, owner_username=None, terms=None) -> (
+    def search_room_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, room_number=None, owner_username=None, terms=None) -> (
             List[Room], int):
         LOG.debug("sql_room_repository_search_room_by_called",
                   extra=log_extra(ctx, username=owner_username, terms=terms))

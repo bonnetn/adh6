@@ -7,7 +7,7 @@ from datetime import datetime
 from sqlalchemy import or_
 from typing import List
 
-from src.constants import CTX_SQL_SESSION
+from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port, SwitchInfo
 from src.entity.switch import Switch
 from src.entity.vlan import Vlan
@@ -25,7 +25,7 @@ from src.util.log import LOG
 
 class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepository):
 
-    def search_switches_by(self, ctx, limit=100, offset=0, switch_id: str = None, terms: str = None) -> (
+    def search_switches_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, switch_id: str = None, terms: str = None) -> (
             List[Switch], int):
         """
         Search for a switch.
@@ -96,7 +96,7 @@ class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepositor
 
         s.delete(result)
 
-    def search_port_by(self, ctx, limit=0, offset=0, port_id: str = None, switch_id: str = None,
+    def search_port_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, port_id: str = None, switch_id: str = None,
                        room_number: str = None, terms: str = None) -> (List[Port], int):
         """
         Search for a port.

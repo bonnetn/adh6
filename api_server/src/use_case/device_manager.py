@@ -3,6 +3,7 @@ import json
 from dataclasses import asdict, dataclass
 from typing import List, Optional
 
+from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.device import Device, DeviceType
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
@@ -42,7 +43,7 @@ class DeviceManager:
         self.vlan_repository = vlan_repository
         self.ip_allocator = ip_allocator
 
-    def search(self, ctx, limit=100, offset=0, username=None, terms=None) -> (List[Device], int):
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, username=None, terms=None) -> (List[Device], int):
         """
         Search a device in the database.
 

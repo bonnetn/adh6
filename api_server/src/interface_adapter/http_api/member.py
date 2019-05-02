@@ -5,6 +5,7 @@ Contain all the http http_api functions.
 from connexion import NoContent
 
 from main import member_manager
+from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.member import Member
 from src.exceptions import InvalidAdmin, UnknownPaymentMethod
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
@@ -24,7 +25,7 @@ from src.util.log import LOG
 @with_context
 @require_sql
 @auth_regular_admin
-def search(ctx, limit=100, offset=0, terms=None, room_number=None):
+def search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None, room_number=None):
     """ Search all the member. """
     LOG.debug("http_member_search_called", extra=log_extra(ctx,
                                                            limit=limit,

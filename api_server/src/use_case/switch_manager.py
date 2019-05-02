@@ -2,6 +2,7 @@ import json
 from dataclasses import dataclass, asdict
 from typing import List
 
+from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.switch import Switch
 from src.exceptions import SwitchNotFound
 from src.use_case.interface.member_repository import NotFoundError
@@ -43,7 +44,7 @@ class SwitchManager:
 
         return result[0]
 
-    def search(self, ctx, limit=100, offset=0, terms=None) -> (List[Switch], int):
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None) -> (List[Switch], int):
         """
         Search switches in the database.
         User story: As an admin, I can search switches in the database, so I find the IP associated with a switch.

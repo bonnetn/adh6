@@ -2,6 +2,7 @@ from dataclasses import asdict
 from pytest import fixture, raises
 from unittest.mock import MagicMock
 
+from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
 from src.exceptions import SwitchNotFound, RoomNotFound, PortNotFound
 from src.use_case.util.exceptions import IntMustBePositiveException, MissingRequiredFieldError
@@ -19,13 +20,13 @@ class TestSearch:
                         port_manager: PortManager):
         mock_port_repository.search_port_by = MagicMock(return_value=([sample_port], 1))
 
-        result, count = port_manager.search(ctx, limit=100, offset=0, port_id='port', switch_id='switch',
+        result, count = port_manager.search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, port_id='port', switch_id='switch',
                                             room_number='room',
                                             terms='terms')
 
         assert [sample_port] == result
         assert 1 == count
-        mock_port_repository.search_port_by.assert_called_once_with(ctx, limit=100, offset=0, port_id='port',
+        mock_port_repository.search_port_by.assert_called_once_with(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, port_id='port',
                                                                     switch_id='switch',
                                                                     room_number='room',
                                                                     terms='terms')

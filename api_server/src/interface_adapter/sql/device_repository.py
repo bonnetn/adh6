@@ -4,7 +4,7 @@ Implements everything related to actions on the SQL database.
 """
 from typing import List
 
-from src.constants import CTX_SQL_SESSION
+from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.device import Device, DeviceType
 from src.interface_adapter.sql.model.models import Adherent
 from src.interface_adapter.sql.util.device_helper import get_all_devices, update_wired_device, \
@@ -20,7 +20,7 @@ from src.util.log import LOG
 
 class DeviceSQLRepository(DeviceRepository, IPAllocator):
 
-    def search_device_by(self, ctx, limit=100, offset=0, mac_address=None, username=None, terms=None) \
+    def search_device_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, mac_address=None, username=None, terms=None) \
             -> (List[Device], int):
         LOG.debug("sql_device_repository_search_called", extra=log_extra(ctx))
         s = ctx.get(CTX_SQL_SESSION)

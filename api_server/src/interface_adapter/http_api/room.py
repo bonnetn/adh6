@@ -2,6 +2,7 @@
 from connexion import NoContent
 
 from main import room_manager
+from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
 from src.exceptions import RoomNotFound, VlanNotFound
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin, auth_super_admin
@@ -17,7 +18,7 @@ from src.util.log import LOG
 @with_context
 @require_sql
 @auth_regular_admin
-def search(ctx, limit=100, offset=0, terms=None):
+def search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None):
     """ Filter the list of the rooms """
     LOG.debug("http_room_search_called", extra=log_extra(ctx, terms=terms))
     try:

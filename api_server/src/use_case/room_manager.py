@@ -3,6 +3,7 @@ import json
 from dataclasses import dataclass, asdict
 from typing import List
 
+from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
 from src.exceptions import VlanNotFound, RoomNotFound
 from src.use_case.interface.member_repository import NotFoundError
@@ -56,7 +57,7 @@ class RoomManager:
 
         return result[0]
 
-    def search(self, ctx, limit=100, offset=0, terms=None) -> (List[Room], int):
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None) -> (List[Room], int):
         """
         Search a room in the database.
 

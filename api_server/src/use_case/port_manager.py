@@ -3,6 +3,7 @@ import json
 from dataclasses import dataclass, asdict
 from typing import List
 
+from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
 from src.exceptions import RoomNotFound, SwitchNotFound, PortNotFound
 from src.use_case.interface.member_repository import NotFoundError
@@ -34,7 +35,7 @@ class PortManager:
     def __init__(self, port_repository: PortRepository):
         self.port_repository = port_repository
 
-    def search(self, ctx, limit=100, offset=0, port_id=None, switch_id=None, room_number=None, terms=None) -> (
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, port_id=None, switch_id=None, room_number=None, terms=None) -> (
             List[Port], int):
         """
         Search ports in the database.
