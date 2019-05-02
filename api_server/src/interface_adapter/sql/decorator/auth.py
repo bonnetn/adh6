@@ -65,7 +65,7 @@ def auth_regular_admin(f):
             return NoContent, 401
 
         assert ctx.get(CTX_SQL_SESSION) is not None, 'You need SQL for authentication.'
-        admin = _find_admin(ctx.get(CTX_SQL_SESSION), user)  # TODO: remove dep from sqlalchemy...
+        admin = _find_admin(ctx.get(CTX_SQL_SESSION), user)
         ctx = build_context(ctx=ctx, admin=Admin(login=admin.login))
         return f(ctx, *args, **kwargs)  # Discard the user and token_info.
 
@@ -86,7 +86,7 @@ def auth_super_admin(f):
             return NoContent, 401
 
         admin = _find_admin(ctx.get(CTX_SQL_SESSION), user)
-        ctx = build_context(ctx=ctx, admin=Admin(login=admin.login))  # TODO: remove dep from sqlalchemy...
+        ctx = build_context(ctx=ctx, admin=Admin(login=admin.login))
         return f(ctx, *args, **kwargs)  # Discard the user and token_info.
 
     return wrapper
