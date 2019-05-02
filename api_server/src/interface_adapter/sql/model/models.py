@@ -7,7 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy.orm.exc import NoResultFound
 
-from src.exceptions import InvalidIPv4, InvalidIPv6, InvalidEmail, InvalidMac
+from src.exceptions import InvalidIPv4, InvalidIPv6, InvalidMACAddress, InvalidEmail
 from src.interface_adapter.sql.model.trackable import RubyHashTrackable
 from src.interface_adapter.sql.util.rubydiff import rubydiff
 from src.util import checks
@@ -203,7 +203,7 @@ class Ordinateur(Base, RubyHashTrackable):
     @validates('mac')
     def mac_valid(self, key, mac):
         if not mac or not checks.is_mac_address(mac):
-            raise InvalidMac(mac)
+            raise InvalidMACAddress(mac)
         return mac
 
     @validates('ip')
@@ -250,7 +250,7 @@ class Portable(Base, RubyHashTrackable):
     @validates('mac')
     def mac_valid(self, key, mac):
         if not mac or not checks.is_mac_address(mac):
-            raise InvalidMac()
+            raise InvalidMACAddress()
         return mac
 
 

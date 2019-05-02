@@ -5,16 +5,6 @@ Member repository interface.
 import abc
 
 
-class NotFoundError(ValueError):
-    """
-    Object not found in repository.
-    """
-
-    def __init__(self, field=None):
-        self.what = field
-        super().__init__(field)
-
-
 class MemberRepository(metaclass=abc.ABCMeta):
     """
     Abstract interface to manipulate the members.
@@ -34,7 +24,7 @@ class MemberRepository(metaclass=abc.ABCMeta):
         Create a member.
 
         :raise MemberAlreadyExist
-        :raise NotFoundError thrown if the room number is not found
+        :raise RoomNotFound
         """
         pass  # pragma: no cover
 
@@ -43,7 +33,8 @@ class MemberRepository(metaclass=abc.ABCMeta):
         """
         Update a member.
 
-        :raise NotFoundError
+        :raise MemberNotFound
+        :raise RoomNotFound
         """
         pass  # pragma: no cover
 
@@ -52,6 +43,6 @@ class MemberRepository(metaclass=abc.ABCMeta):
         """
         Delete a member.
 
-        :raise NotFoundError
+        :raise MemberNotFound
         """
         pass  # pragma: no cover

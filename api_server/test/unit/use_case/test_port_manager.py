@@ -4,12 +4,11 @@ from unittest.mock import MagicMock
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
-from src.exceptions import SwitchNotFound, RoomNotFound, PortNotFound
-from src.use_case.util.exceptions import IntMustBePositiveException, MissingRequiredFieldError
-from src.use_case.interface.member_repository import NotFoundError
-from src.use_case.interface.port_repository import PortRepository, InvalidSwitchID, InvalidRoomNumber
+from src.exceptions import SwitchNotFound, RoomNotFound, PortNotFound, InvalidRoomNumber, InvalidSwitchID, \
+    ReadOnlyField, MissingRequiredFieldError, IntMustBePositiveException
+from src.use_case.interface.port_repository import PortRepository
 from src.use_case.util.mutation import Mutation
-from src.use_case.port_manager import PortManager, MutationRequest, ReadOnlyField
+from src.use_case.port_manager import PortManager, MutationRequest
 
 
 class TestSearch:
@@ -182,7 +181,7 @@ class TestUpdate:
                           sample_mutation_req: MutationRequest,
                           port_manager: PortManager):
         # Given...
-        mock_port_repository.update_port = MagicMock(side_effect=NotFoundError)
+        mock_port_repository.update_port = MagicMock(side_effect=PortNotFound)
 
         # When...
         with raises(PortNotFound):
@@ -226,7 +225,7 @@ class TestDelete:
                             mock_port_repository: PortRepository,
                             port_manager: PortManager):
         # Given...
-        mock_port_repository.delete_port = MagicMock(side_effect=NotFoundError)
+        mock_port_repository.delete_port = MagicMock(side_effect=PortNotFound)
 
         # When...
         with raises(PortNotFound):

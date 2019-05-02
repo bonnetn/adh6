@@ -7,15 +7,6 @@ from typing import List
 
 from src.constants import DEFAULT_OFFSET, DEFAULT_LIMIT
 from src.entity.port import Port
-from src.use_case.interface.member_repository import NotFoundError
-
-
-class InvalidRoomNumber(NotFoundError):
-    pass
-
-
-class InvalidSwitchID(NotFoundError):
-    pass
 
 
 class PortRepository(metaclass=abc.ABCMeta):

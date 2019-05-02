@@ -6,12 +6,13 @@ from typing import List, Optional
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.device import Device, DeviceType
 from src.use_case.interface.device_repository import DeviceRepository
-from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
-from src.use_case.interface.member_repository import MemberRepository, NotFoundError
+from src.use_case.interface.ip_allocator import IPAllocator
+from src.exceptions import NoMoreIPAvailableException, MemberNotFound, DeviceNotFound, InvalidIPAddress, \
+    IntMustBePositiveException, IPAllocationFailedError
+from src.use_case.interface.member_repository import MemberRepository
 from src.use_case.interface.room_repository import RoomRepository
 from src.use_case.interface.vlan_repository import VLANRepository
-from src.use_case.util.exceptions import IntMustBePositiveException, MemberNotFound, IPAllocationFailedError, \
-    InvalidMACAddress, InvalidIPAddress, DeviceNotFound
+from src.exceptions import InvalidMACAddress
 from src.use_case.util.mutation import Mutation, is_set
 from src.util.checks import is_mac_address, is_ip_v4, is_ip_v6
 from src.util.context import log_extra
@@ -95,10 +96,7 @@ class DeviceManager:
 
         :raise DeviceNotFound
         """
-        try:
-            self.device_repository.delete_device(ctx, mac_address=mac_address)
-        except NotFoundError as e:
-            raise DeviceNotFound() from e
+        self.device_repository.delete_device(ctx, mac_address=mac_address)
 
         LOG.info("device_delete", extra=log_extra(
             ctx,

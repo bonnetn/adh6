@@ -5,7 +5,8 @@ Logs repository.
 from elasticsearch import Elasticsearch
 
 from src.constants import CTX_TESTING, DEFAULT_LIMIT
-from src.use_case.interface.logs_repository import LogsRepository, LogFetchError
+from src.use_case.interface.logs_repository import LogsRepository
+from src.exceptions import LogFetchError
 from src.util.mac import get_mac_variations
 
 

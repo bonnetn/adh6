@@ -15,8 +15,8 @@ from src.interface_adapter.sql.model.models import Chambre
 from src.interface_adapter.sql.model.models import Port as PortSQL
 from src.interface_adapter.sql.model.models import Switch as SwitchSQL
 from src.interface_adapter.sql.model.models import Vlan as VlanSQL
-from src.use_case.interface.member_repository import NotFoundError
-from src.use_case.interface.port_repository import PortRepository, InvalidSwitchID, InvalidRoomNumber
+from src.exceptions import SwitchNotFound, PortNotFound, VLANNotFound, InvalidRoomNumber, InvalidSwitchID
+from src.use_case.interface.port_repository import PortRepository
 from src.use_case.interface.switch_repository import SwitchRepository
 from src.use_case.interface.vlan_repository import VLANRepository
 from src.util.context import log_extra
@@ -81,7 +81,7 @@ class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepositor
         s = ctx.get(CTX_SQL_SESSION)
         result: SwitchSQL = s.query(SwitchSQL).filter(SwitchSQL.id == int(switch_id)).one_or_none()
         if not result:
-            raise NotFoundError()
+            raise SwitchNotFound()
 
         result.communaute = community
         result.ip = ip_v4
@@ -93,7 +93,7 @@ class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepositor
         s = ctx.get(CTX_SQL_SESSION)
         result: SwitchSQL = s.query(SwitchSQL).filter(SwitchSQL.id == int(switch_id)).one_or_none()
         if not result:
-            raise NotFoundError()
+            raise SwitchNotFound()
 
         s.delete(result)
 
@@ -181,7 +181,7 @@ class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepositor
         Update a port in the database
         :return the newly created port ID
 
-        :raise NotFoundError
+        :raise PortNotFound
         :raise InvalidRoomNumber
         :raise InvalidSwitchID
         """
@@ -194,7 +194,7 @@ class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepositor
 
         port = s.query(PortSQL).filter(PortSQL.id == int(port_id)).one_or_none()
         if port is None:
-            raise NotFoundError()
+            raise PortNotFound()
 
         room = s.query(Chambre).filter(Chambre.numero == room_number).one_or_none()
         if room is None:
@@ -215,12 +215,12 @@ class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepositor
         """
         Delete port
 
-        :raise NotFoundError
+        :raise PortNotFound
         """
         s = ctx.get(CTX_SQL_SESSION)
         port = s.query(PortSQL).filter(PortSQL.id == port_id).one_or_none()
         if port is None:
-            raise NotFoundError()
+            raise PortNotFound()
 
         s.delete(port)
 
@@ -228,14 +228,14 @@ class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepositor
         """
         Get a VLAN.
 
-        :raise NotFoundError
+        :raise VlanNotFound
         """
         LOG.debug("sql_network_object_repository_get_vlan", extra=log_extra(ctx, vlan_number=vlan_number))
 
         s = ctx.get(CTX_SQL_SESSION)
         result = s.query(VlanSQL).filter(VlanSQL.numero == vlan_number).one_or_none()
         if not result:
-            raise NotFoundError()
+            raise VLANNotFound()
 
         return _map_vlan_sql_to_entity(result)
 

@@ -7,14 +7,14 @@ from connexion import NoContent
 from main import member_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.member import Member
-from src.exceptions import InvalidAdmin, UnknownPaymentMethod
+from src.exceptions import InvalidAdmin, UnknownPaymentMethod, RoomNotFound, NoPriceAssignedToThatDurationException, \
+    MemberNotFound, UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, InvalidEmail, \
+    IntMustBePositiveException, StringMustNotBeEmptyException
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
-from src.use_case.member_manager import MutationRequest, UsernameMismatchError, MissingRequiredFieldError, \
-    PasswordTooShortError, InvalidRoomNumberError, InvalidEmailError, \
-    MemberNotFound, IntMustBePositiveException, StringMustNotBeEmptyException, NoPriceAssignedToThatDurationException
+from src.use_case.member_manager import MutationRequest
 from src.use_case.util.mutation import Mutation
 from src.util.context import log_extra
 from src.util.date import string_to_date
@@ -102,8 +102,8 @@ def put(ctx, username, body):
         else:
             return NoContent, 204  # 204 No Content
 
-    except (InvalidRoomNumberError, MissingRequiredFieldError, UsernameMismatchError, InvalidEmailError,
-            StringMustNotBeEmptyException) as e:
+    except (MissingRequiredFieldError, UsernameMismatchError, InvalidEmail, StringMustNotBeEmptyException,
+            RoomNotFound) as e:
         return bad_request(e), 400  # 400 Bad Request
 
 

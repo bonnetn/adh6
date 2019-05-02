@@ -9,14 +9,13 @@ from typing import List
 
 from src.constants import DEFAULT_OFFSET, DEFAULT_LIMIT
 from src.entity.member import Member
-from src.exceptions import InvalidAdmin, UnknownPaymentMethod
-from src.use_case.interface.logs_repository import LogsRepository, LogFetchError
-from src.use_case.interface.member_repository import MemberRepository, NotFoundError
+from src.exceptions import InvalidAdmin, UnknownPaymentMethod, LogFetchError, NoPriceAssignedToThatDurationException, \
+    MemberNotFound, UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, InvalidEmail, \
+    IntMustBePositiveException, StringMustNotBeEmptyException
+from src.use_case.interface.logs_repository import LogsRepository
+from src.use_case.interface.member_repository import MemberRepository
 from src.use_case.interface.membership_repository import MembershipRepository
 from src.use_case.interface.money_repository import MoneyRepository
-from src.use_case.util.exceptions import StringMustNotBeEmptyException, InvalidEmailError, MemberNotFound, \
-    MissingRequiredFieldError, IntMustBePositiveException, InvalidRoomNumberError, PasswordTooShortError, \
-    UsernameMismatchError
 from src.use_case.util.mutation import Mutation, is_set
 from src.util.checks import is_email
 from src.util.context import log_extra
@@ -38,11 +37,6 @@ class MutationRequest(Member):
     comment: str = Mutation.NOT_SET
     association_mode: str = Mutation.NOT_SET
     room_number: str = Mutation.NOT_SET
-
-
-class NoPriceAssignedToThatDurationException(ValueError):
-    def __init__(self):
-        super().__init__('there is no price assigned to that duration')
 
 
 class MemberManager:
@@ -112,9 +106,6 @@ class MemberManager:
                      extra=log_extra(ctx, payment_method=payment_method))
             raise
 
-        except NotFoundError as e:
-            raise MemberNotFound() from e
-
         LOG.info("create_membership_record", extra=log_extra(
             ctx,
             username=username,
@@ -140,7 +131,7 @@ class MemberManager:
         return result[0]
 
     def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, room_number=None, terms=None) -> (
-    List[Member], int):
+            List[Member], int):
         """
         search member in the database.
 
@@ -198,7 +189,7 @@ class MemberManager:
             fields_to_update = asdict(mutation_request)
             fields_to_update = {k: v if is_set(v) else None for k, v in fields_to_update.items()}
 
-            # This call will never throw a NotFoundError because we checked for the object existence before.
+            # This call will never throw a MemberNotFound because we checked for the object existence before.
             self.member_repository.update_member(ctx, username, **fields_to_update)
 
             # Log action.
@@ -221,11 +212,7 @@ class MemberManager:
             fields = asdict(mutation_request)
             fields = {k: v if is_set(v) else None for k, v in fields.items()}
 
-            try:
-                self.member_repository.create_member(ctx, **fields)
-
-            except NotFoundError:
-                raise InvalidRoomNumberError()
+            self.member_repository.create_member(ctx, **fields)
 
             # Log action
             LOG.info('member_create', extra=log_extra(
@@ -251,10 +238,7 @@ class MemberManager:
         fields_to_update = asdict(mutation_request)
         fields_to_update = {k: v for k, v in fields_to_update.items() if is_set(v)}
 
-        try:
-            self.member_repository.update_member(ctx, username, **fields_to_update)
-        except NotFoundError:
-            raise MemberNotFound()
+        self.member_repository.update_member(ctx, username, **fields_to_update)
 
         # Log action.
         LOG.info('member_partial_update', extra=log_extra(
@@ -281,10 +265,7 @@ class MemberManager:
         # Still, be careful not to log this field!
         password = ntlm_hash(password)
 
-        try:
-            self.member_repository.update_member(ctx, username, password=password)
-        except NotFoundError as e:
-            raise MemberNotFound() from e
+        self.member_repository.update_member(ctx, username, password=password)
 
         LOG.info('member_password_update', extra=log_extra(
             ctx,
@@ -298,16 +279,13 @@ class MemberManager:
         :raise MemberNotFound
         """
 
-        try:
-            self.member_repository.delete_member(ctx, username)
+        self.member_repository.delete_member(ctx, username)
 
-            # Log action.
-            LOG.info('member_delete', extra=log_extra(
-                ctx,
-                username=username,
-            ))
-        except NotFoundError as e:
-            raise MemberNotFound() from e
+        # Log action.
+        LOG.info('member_delete', extra=log_extra(
+            ctx,
+            username=username,
+        ))
 
     def get_logs(self, ctx, username) -> List[str]:
         """
@@ -350,7 +328,7 @@ def _validate_mutation_request(req: MutationRequest):
     Validate the fields that are set in a MutationRequest.
     """
     if is_set(req.email) and not is_email(req.email):
-        raise InvalidEmailError()
+        raise InvalidEmail()
 
     if req.first_name == '':
         raise StringMustNotBeEmptyException('first_name')

@@ -7,13 +7,13 @@ from unittest.mock import MagicMock
 
 from config import TEST_CONFIGURATION
 from src.entity.member import Member
-from src.use_case.interface.logs_repository import LogsRepository, LogFetchError
-from src.use_case.interface.member_repository import MemberRepository, NotFoundError
+from src.use_case.interface.logs_repository import LogsRepository
+from src.use_case.interface.member_repository import MemberRepository
+from src.exceptions import LogFetchError, NoPriceAssignedToThatDurationException, MemberNotFound, UsernameMismatchError, \
+    MissingRequiredFieldError, PasswordTooShortError, IntMustBePositiveException
 from src.use_case.interface.membership_repository import MembershipRepository
 from src.use_case.interface.money_repository import MoneyRepository
-from src.use_case.member_manager import MemberManager, NoPriceAssignedToThatDurationException, MutationRequest, \
-    UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, MemberNotFound, \
-    IntMustBePositiveException
+from src.use_case.member_manager import MemberManager, MutationRequest
 from src.use_case.util.mutation import Mutation
 from src.util.hash import ntlm_hash
 from test.unit.use_case.conftest import TEST_USERNAME, TEST_EMAIL, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_COMMENT, \
@@ -90,7 +90,7 @@ class TestNewMembership:
 
     def test_member_not_found(self, ctx, mock_member_repository: MemberRepository, member_manager: MemberManager):
         # Given that the database cannot find the specified member.
-        mock_member_repository.update_member = MagicMock(side_effect=NotFoundError)
+        mock_member_repository.update_member = MagicMock(side_effect=MemberNotFound)
 
         with raises(MemberNotFound):
             member_manager.new_membership(ctx, TEST_USERNAME, 1, 'card')
@@ -264,7 +264,7 @@ class TestUpdatePartially:
     def test_not_found(self, ctx,
                        mock_member_repository: MagicMock,
                        member_manager: MemberManager):
-        mock_member_repository.update_member = MagicMock(side_effect=NotFoundError)
+        mock_member_repository.update_member = MagicMock(side_effect=MemberNotFound)
 
         # When...
         with raises(MemberNotFound):
@@ -312,7 +312,7 @@ class TestChangePassword:
                               member_manager: MemberManager):
         # Given...
         new_password = 'updated password'
-        mock_member_repository.update_member = MagicMock(side_effect=NotFoundError)
+        mock_member_repository.update_member = MagicMock(side_effect=MemberNotFound)
 
         # When...
         with raises(MemberNotFound):
@@ -333,7 +333,7 @@ class TestDelete:
                        mock_member_repository: MagicMock,
                        member_manager: MemberManager):
         # Given...
-        mock_member_repository.delete_member = MagicMock(side_effect=NotFoundError)
+        mock_member_repository.delete_member = MagicMock(side_effect=MemberNotFound)
 
         # When...
         with raises(MemberNotFound):

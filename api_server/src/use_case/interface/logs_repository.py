@@ -5,13 +5,6 @@ Logs repository interface.
 import abc
 
 
-class LogFetchError(RuntimeError):
-    """
-    Cannot fetch the logs error.
-    """
-    pass  # pragma: no cover
-
-
 class LogsRepository(metaclass=abc.ABCMeta):
     """
     Abstract interface to access the logs.

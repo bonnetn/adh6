@@ -5,17 +5,12 @@ from typing import List
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
-from src.exceptions import RoomNotFound, SwitchNotFound, PortNotFound
-from src.use_case.interface.member_repository import NotFoundError
-from src.use_case.interface.port_repository import PortRepository, InvalidRoomNumber, InvalidSwitchID
-from src.use_case.util.exceptions import IntMustBePositiveException, MissingRequiredFieldError
+from src.exceptions import RoomNotFound, SwitchNotFound, InvalidRoomNumber, InvalidSwitchID, ReadOnlyField, \
+    MissingRequiredFieldError, IntMustBePositiveException
+from src.use_case.interface.port_repository import PortRepository
 from src.use_case.util.mutation import Mutation, is_set
 from src.util.context import log_extra
 from src.util.log import LOG
-
-
-class ReadOnlyField(ValueError):
-    pass
 
 
 @dataclass
@@ -86,9 +81,6 @@ class PortManager:
         except InvalidRoomNumber as e:
             raise RoomNotFound() from e
 
-        except NotFoundError as e:
-            raise PortNotFound() from e
-
     def create(self, ctx, mutation_request: MutationRequest) -> str:
         """
         Create a port in the database.
@@ -126,11 +118,8 @@ class PortManager:
 
         :raise PortNotFound
         """
-        try:
-            self.port_repository.delete_port(ctx, port_id)
+        self.port_repository.delete_port(ctx, port_id)
 
-        except NotFoundError as e:
-            raise PortNotFound() from e
 
 
 def _validate_mutation_request(req: MutationRequest):

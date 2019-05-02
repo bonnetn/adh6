@@ -5,11 +5,9 @@ from typing import List
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
-from src.exceptions import VlanNotFound, RoomNotFound
-from src.use_case.interface.member_repository import NotFoundError
+from src.exceptions import VLANNotFound, RoomNotFound, RoomNumberMismatchError, MissingRequiredFieldError, \
+    InvalidVLANNumber, IntMustBePositiveException
 from src.use_case.interface.room_repository import RoomRepository
-from src.use_case.util.exceptions import IntMustBePositiveException, MissingRequiredFieldError, RoomNumberMismatchError, \
-    InvalidVLANNumberError
 from src.use_case.util.mutation import Mutation, is_set
 from src.util.context import log_extra
 from src.util.log import LOG
@@ -39,7 +37,7 @@ class RoomManager:
             self.room_repository.delete_room(ctx, room_number=room_number)
             LOG.info('room_delete', extra=log_extra(ctx, room_number=room_number))
 
-        except NotFoundError as e:
+        except RoomNotFound as e:
             raise RoomNotFound() from e
 
     def get_by_number(self, ctx, room_number) -> Room:
@@ -105,12 +103,12 @@ class RoomManager:
             fields_to_update = asdict(mutation_request)
             fields_to_update = {k: v if is_set(v) else None for k, v in fields_to_update.items()}
 
-            # This call will never throw a NotFoundError because we checked for the object existence before.
+            # This call will never throw a RoomNotFound because we checked for the object existence before.
             try:
                 self.room_repository.update_room(ctx, room_number, **fields_to_update)
 
-            except InvalidVLANNumberError as e:
-                raise VlanNotFound() from e
+            except InvalidVLANNumber as e:
+                raise VLANNotFound() from e
 
             # Log action.
             LOG.info('room_update', extra=log_extra(
@@ -134,8 +132,8 @@ class RoomManager:
             try:
                 self.room_repository.create_room(ctx, **fields)
 
-            except InvalidVLANNumberError as e:
-                raise VlanNotFound() from e
+            except InvalidVLANNumber as e:
+                raise VLANNotFound() from e
 
             # Log action
             LOG.info('room_create', extra=log_extra(

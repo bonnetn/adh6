@@ -13,6 +13,6 @@ class VLANRepository(metaclass=abc.ABCMeta):
         """
         Get a VLAN.
 
-        :raise NotFoundError
+        :raise VlanNotFound
         """
         pass  # pragma: no cover

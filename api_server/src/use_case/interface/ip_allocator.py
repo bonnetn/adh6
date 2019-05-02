@@ -26,5 +26,3 @@ class IPAllocator(metaclass=abc.ABCMeta):
         pass  # pragma: no cover
 
 
-class NoMoreIPAvailableException(RuntimeError):
-    pass

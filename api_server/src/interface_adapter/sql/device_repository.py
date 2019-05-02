@@ -11,9 +11,8 @@ from src.interface_adapter.sql.util.device_helper import get_all_devices, update
     update_wireless_device, delete_wired_device, create_wireless_device, delete_wireless_device, create_wired_device
 from src.interface_adapter.sql.util.ip_controller import get_available_ip, get_all_used_ipv4, get_all_used_ipv6
 from src.use_case.interface.device_repository import DeviceRepository
-from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
-from src.use_case.interface.member_repository import NotFoundError
-from src.use_case.util.exceptions import DeviceNotFound, DeviceAlreadyExist
+from src.use_case.interface.ip_allocator import IPAllocator
+from src.exceptions import NoMoreIPAvailableException, DeviceAlreadyExist, DeviceNotFound
 from src.util.context import log_extra
 from src.util.log import LOG
 
@@ -156,7 +155,7 @@ class DeviceSQLRepository(DeviceRepository, IPAllocator):
         all_devices = get_all_devices(s)
         device = s.query(all_devices).filter(all_devices.columns.mac == mac_address).one_or_none()
         if not device:
-            raise NotFoundError()
+            raise DeviceNotFound()
 
         if device.type == DeviceType.Wired:
             delete_wired_device(ctx, s, mac_address)

@@ -3,12 +3,10 @@ from pytest import fixture, raises
 from unittest.mock import MagicMock
 
 from src.entity.room import Room
-from src.exceptions import RoomNotFound, VlanNotFound
-from src.use_case.interface.member_repository import NotFoundError
+from src.exceptions import RoomNotFound, VLANNotFound, RoomNumberMismatchError, MissingRequiredFieldError, \
+    InvalidVLANNumber, IntMustBePositiveException
 from src.use_case.interface.room_repository import RoomRepository
 from src.use_case.room_manager import RoomManager, MutationRequest
-from src.use_case.util.exceptions import IntMustBePositiveException, MissingRequiredFieldError, InvalidVLANNumberError, \
-    RoomNumberMismatchError
 from src.use_case.util.mutation import Mutation
 
 
@@ -107,8 +105,8 @@ class TestUpdateOrCreate:
                                    sample_room: Room,
                                    room_manager: RoomManager):
         mock_room_repository.search_room_by = MagicMock(return_value=([], 0))
-        mock_room_repository.create_room = MagicMock(side_effect=InvalidVLANNumberError)
-        with raises(VlanNotFound):
+        mock_room_repository.create_room = MagicMock(side_effect=InvalidVLANNumber)
+        with raises(VLANNotFound):
             room_manager.update_or_create(ctx, sample_room.room_number, mutation_request)
 
     def test_update_happy_path(self,
@@ -130,8 +128,8 @@ class TestUpdateOrCreate:
                                    mutation_request: MutationRequest,
                                    room_manager: RoomManager):
         mock_room_repository.search_room_by = MagicMock(return_value=([sample_room], 1))
-        mock_room_repository.update_room = MagicMock(side_effect=InvalidVLANNumberError)
-        with raises(VlanNotFound):
+        mock_room_repository.update_room = MagicMock(side_effect=InvalidVLANNumber)
+        with raises(VLANNotFound):
             room_manager.update_or_create(ctx, sample_room.room_number, mutation_request)
 
     def test_update_missing_room_number(self,
@@ -160,7 +158,7 @@ class TestDelete:
                        ctx,
                        mock_room_repository: RoomRepository,
                        room_manager: RoomManager):
-        mock_room_repository.delete_room = MagicMock(side_effect=NotFoundError)
+        mock_room_repository.delete_room = MagicMock(side_effect=RoomNotFound)
         with raises(RoomNotFound):
             room_manager.delete(ctx, '1234')
 

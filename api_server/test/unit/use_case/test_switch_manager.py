@@ -3,12 +3,9 @@ from pytest import fixture, raises
 from unittest.mock import MagicMock
 
 from src.entity.switch import Switch
-from src.exceptions import SwitchNotFound
-from src.use_case.interface.member_repository import NotFoundError
+from src.exceptions import SwitchNotFound, ReadOnlyField, MissingRequiredFieldError, IntMustBePositiveException
 from src.use_case.interface.switch_repository import SwitchRepository
-from src.use_case.port_manager import ReadOnlyField
 from src.use_case.switch_manager import SwitchManager, MutationRequest
-from src.use_case.util.exceptions import IntMustBePositiveException, MissingRequiredFieldError
 
 TEST_SWITCH_ID = '1'
 
@@ -88,7 +85,7 @@ class TestUpdate:
             ip_v4='ip',
             community='ip',
         )
-        mock_switch_repository.update_switch = MagicMock(side_effect=NotFoundError)
+        mock_switch_repository.update_switch = MagicMock(side_effect=SwitchNotFound)
 
         with raises(SwitchNotFound):
             switch_manager.update(ctx, req)
@@ -158,7 +155,7 @@ class TestDelete:
                        ctx,
                        mock_switch_repository: SwitchRepository,
                        switch_manager: SwitchManager):
-        mock_switch_repository.delete_switch = MagicMock(side_effect=NotFoundError)
+        mock_switch_repository.delete_switch = MagicMock(side_effect=SwitchNotFound)
 
         with raises(SwitchNotFound):
             switch_manager.delete(ctx, TEST_SWITCH_ID)

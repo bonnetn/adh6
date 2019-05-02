@@ -8,11 +8,11 @@ from typing import List
 
 from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.member import Member
+from src.exceptions import RoomNotFound, MemberAlreadyExist, MemberNotFound
 from src.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion
 from src.interface_adapter.sql.track_modifications import track_modifications
-from src.use_case.interface.member_repository import MemberRepository, NotFoundError
+from src.use_case.interface.member_repository import MemberRepository
 from src.use_case.interface.membership_repository import MembershipRepository
-from src.use_case.util.exceptions import MemberAlreadyExist
 from src.util.context import log_extra
 from src.util.date import date_to_string
 from src.util.log import LOG
@@ -27,14 +27,14 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
         """
         Add a membership record.
 
-        :raise NotFoundError
+        :raise MemberNotFound
         """
         s = ctx.get(CTX_SQL_SESSION)
         LOG.debug("sql_member_repository_add_membership_called", extra=log_extra(ctx, username=username))
 
         member = _get_member_by_login(s, username)
         if member is None:
-            raise NotFoundError('cannot find any member with that username')
+            raise MemberNotFound()
 
         s.add(Adhesion(
             adherent=member,
@@ -49,7 +49,7 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
         """
         Create a member.
 
-        :raise NotFoundError
+        :raise RoomNotFound
         """
         s = ctx.get(CTX_SQL_SESSION)
         LOG.debug("sql_member_repository_create_member_called", extra=log_extra(ctx, username=username))
@@ -60,7 +60,7 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
         if room_number is not None:
             room = s.query(Chambre).filter(Chambre.numero == room_number).one_or_none()
             if not room:
-                raise NotFoundError('room not found')
+                raise RoomNotFound()
 
         member = s.query(Adherent).filter(Adherent.login == username).one_or_none()
         if member is not None:
@@ -89,14 +89,14 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
         """
         Update a member.
 
-        :raise NotFoundError
+        :raise MemberNotFound
         """
         s = ctx.get(CTX_SQL_SESSION)
         LOG.debug("sql_member_repository_update_member_called", extra=log_extra(ctx, username=member_to_update))
 
         member = _get_member_by_login(s, member_to_update)
         if member is None:
-            raise NotFoundError()
+            raise MemberNotFound()
 
         with track_modifications(ctx, s, member):
             member.nom = last_name or member.nom
@@ -122,7 +122,7 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
         """
         Delete a member.
 
-        :raise NotFoundError
+        :raise MemberNotFound
         """
         s = ctx.get(CTX_SQL_SESSION)
         LOG.debug("sql_member_repository_delete_member_called", extra=log_extra(ctx, username=username))
@@ -130,7 +130,7 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
         # Find the soon-to-be deleted user
         member = _get_member_by_login(s, username)
         if not member:
-            raise NotFoundError(f"could not find user '{username}'")
+            raise MemberNotFound()
 
         with track_modifications(ctx, s, member):
             # Actually delete it

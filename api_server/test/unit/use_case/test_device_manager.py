@@ -7,11 +7,12 @@ from src.entity.member import Member
 from src.entity.room import Room
 from src.use_case.device_manager import DeviceManager, MutationRequest
 from src.use_case.interface.vlan_repository import VLANRepository
-from src.use_case.util.exceptions import IntMustBePositiveException, MemberNotFound, DeviceNotFound, IPAllocationFailedError, \
-    InvalidMACAddress, InvalidIPAddress
+from src.exceptions import InvalidMACAddress
 from src.use_case.interface.device_repository import DeviceRepository
-from src.use_case.interface.ip_allocator import IPAllocator, NoMoreIPAvailableException
-from src.use_case.interface.member_repository import MemberRepository, NotFoundError
+from src.use_case.interface.ip_allocator import IPAllocator
+from src.exceptions import NoMoreIPAvailableException, MemberNotFound, DeviceNotFound, InvalidIPAddress, \
+    IntMustBePositiveException, IPAllocationFailedError
+from src.use_case.interface.member_repository import MemberRepository
 from src.use_case.interface.room_repository import RoomRepository
 from test.unit.use_case.conftest import TEST_USERNAME, TEST_MAC_ADDRESS1
 
@@ -370,7 +371,7 @@ class TestDelete:
                               mock_device_repository: MagicMock,
                               device_manager: DeviceManager):
         # Given
-        mock_device_repository.delete_device = MagicMock(side_effect=NotFoundError)
+        mock_device_repository.delete_device = MagicMock(side_effect=DeviceNotFound)
 
         # When...
         with raises(DeviceNotFound):
