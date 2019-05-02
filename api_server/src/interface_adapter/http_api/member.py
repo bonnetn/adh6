@@ -6,6 +6,7 @@ from connexion import NoContent
 
 from main import member_manager
 from src.entity.member import Member
+from src.exceptions import InvalidAdmin, UnknownPaymentMethod
 from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
 from src.interface_adapter.http_api.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
@@ -113,13 +114,17 @@ def post_membership(ctx, username, body):
     LOG.debug("http_member_post_membership_called", extra=log_extra(ctx, username=username, request=body))
 
     try:
-        member_manager.new_membership(ctx, username, body.get('duration'), start_str=body.get('start'))
+        member_manager.new_membership(ctx, username, body.get('duration'), body.get('paymentMethod'),
+                                      start_str=body.get('start'))
 
     except MemberNotFound:
         return NoContent, 404  # 404 Not Found
 
     except (IntMustBePositiveException, NoPriceAssignedToThatDurationException) as e:
         return bad_request(e), 400  # 400 Bad Request
+
+    except (UnknownPaymentMethod, InvalidAdmin):
+        return NoContent, 400  # 400 Bad Request
 
     return NoContent, 200  # 200 OK
 

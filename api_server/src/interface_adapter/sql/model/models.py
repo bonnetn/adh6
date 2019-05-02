@@ -132,21 +132,6 @@ class Compte(Base):
     updated_at = Column(DateTime)
 
 
-class Ecriture(Base):
-    __tablename__ = 'ecritures'
-
-    id = Column(Integer, primary_key=True)
-    intitule = Column(String(255))
-    montant = Column(Numeric(10, 2))
-    moyen = Column(String(255))
-    date = Column(DateTime)
-    compte_id = Column(Integer, index=True)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
-    utilisateur_id = Column(Integer, index=True)
-    adherent_id = Column(Integer, index=True)
-
-
 class Inscription(Base):
     __tablename__ = 'inscriptions'
 
@@ -421,3 +406,20 @@ class Transaction(Base):
     product1 = relationship('Product')
     account1 = relationship('Account', primaryjoin='Transaction.src == Account.id')
     payment_method = relationship('PaymentMethod')
+
+
+class Ecriture(Base):
+    __tablename__ = 'ecritures'
+
+    id = Column(Integer, primary_key=True)
+    intitule = Column(String(255))
+    montant = Column(Numeric(10, 2))
+    moyen = Column(String(255))
+    date = Column(DateTime)
+    compte_id = Column(Integer, index=True)
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
+    utilisateur_id = Column(Integer, ForeignKey(Utilisateur.id), index=True)
+    utilisateur = relationship(Utilisateur)
+    adherent_id = Column(Integer, ForeignKey(Adherent.id), index=True)
+    adherent = relationship(Adherent)

@@ -4,7 +4,7 @@ from dateutil import parser
 
 from config.TEST_CONFIGURATION import PRICES
 from src.interface_adapter.sql.model.database import Database as db
-from src.interface_adapter.sql.model.models import Adherent
+from src.interface_adapter.sql.model.models import Adherent, Ecriture
 from src.util.hash import ntlm_hash
 from test.integration.resource import (
     base_url, TEST_HEADERS, assert_modification_was_created)
@@ -533,7 +533,8 @@ def test_member_post_add_membership_undefined_price(api_client):
 def test_member_post_add_membership_ok(api_client):
     body = {
         "duration": 360,
-        "start": "2000-01-23T04:56:07.000+00:00"
+        "start": "2000-01-23T04:56:07.000+00:00",
+        "paymentMethod": "card",
     }
     result = api_client.post(
         '{}/member/{}/membership/'.format(base_url, "dubois_j"),
@@ -548,6 +549,14 @@ def test_member_post_add_membership_ok(api_client):
     q = s.query(Adherent)
     q = q.filter(Adherent.login == "dubois_j")
     assert q.one().date_de_depart == datetime.date(2001, 1, 17)
+
+    e: Ecriture = s.query(Ecriture).one()
+    assert 'dubois_j' == e.adherent.login
+    assert 1 == e.compte_id
+    assert 'Internet - 1 an' == e.intitule
+    assert 1 == e.utilisateur_id
+    assert 'card' == e.moyen
+
 
 
 def test_member_change_password_ok(api_client):

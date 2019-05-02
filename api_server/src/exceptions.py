@@ -18,7 +18,6 @@ class InvalidMac(ValueError):
 class SwitchNotFound(ValueError):
     pass
 
-
 class PortNotFound(ValueError):
     pass
 
@@ -28,4 +27,12 @@ class VlanNotFound(ValueError):
 
 
 class RoomNotFound(ValueError):
+    pass
+
+
+class InvalidAdmin(ValueError):
+    pass
+
+
+class UnknownPaymentMethod(ValueError):
     pass

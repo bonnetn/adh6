@@ -10,6 +10,7 @@ from src.entity.member import Member
 from src.use_case.interface.logs_repository import LogsRepository, LogFetchError
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.membership_repository import MembershipRepository
+from src.use_case.interface.money_repository import MoneyRepository
 from src.use_case.member_manager import MemberManager, NoPriceAssignedToThatDurationException, MutationRequest, \
     UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, MemberNotFound, \
     IntMustBePositiveException
@@ -25,7 +26,7 @@ class TestNewMembership:
                         mock_member_repository: MagicMock,
                         member_manager: MemberManager):
         # When...
-        member_manager.new_membership(ctx, TEST_USERNAME, 1, start_str=TEST_DATE1.isoformat())
+        member_manager.new_membership(ctx, TEST_USERNAME, 1, 'cash', start_str=TEST_DATE1.isoformat())
 
         # Expect...
         expected_start_date = TEST_DATE1
@@ -49,7 +50,7 @@ class TestNewMembership:
             patched.now.return_value = TEST_DATE1
 
             # When...
-            member_manager.new_membership(ctx, TEST_USERNAME, 1)
+            member_manager.new_membership(ctx, TEST_USERNAME, 1, 'card')
 
         # Expect...
         expected_start_date = TEST_DATE1
@@ -69,7 +70,7 @@ class TestNewMembership:
                               member_manager: MemberManager):
         # When...
         with raises(IntMustBePositiveException):
-            member_manager.new_membership(ctx, TEST_USERNAME, -1)
+            member_manager.new_membership(ctx, TEST_USERNAME, -1, 'bank_cheque')
 
         # Expect that the database has not been touched.
         mock_member_repository.update_member.assert_not_called()
@@ -81,7 +82,7 @@ class TestNewMembership:
                                    member_manager: MemberManager):
         # When...
         with raises(NoPriceAssignedToThatDurationException):
-            member_manager.new_membership(ctx, TEST_USERNAME, 123456789)
+            member_manager.new_membership(ctx, TEST_USERNAME, 123456789, 'cash')
 
         # Expect that the database has not been touched.
         mock_member_repository.update_member.assert_not_called()
@@ -92,7 +93,7 @@ class TestNewMembership:
         mock_member_repository.update_member = MagicMock(side_effect=NotFoundError)
 
         with raises(MemberNotFound):
-            member_manager.new_membership(ctx, TEST_USERNAME, 1)
+            member_manager.new_membership(ctx, TEST_USERNAME, 1, 'card')
 
     @staticmethod
     def _assert_membership_record_was_created(ctx, user, repo, start_time, end_time):
@@ -269,7 +270,6 @@ class TestUpdatePartially:
         with raises(MemberNotFound):
             member_manager.update_partially(ctx, TEST_USERNAME, MutationRequest(comment='Abc.'))
 
-
     @mark.parametrize('test_name, req', INVALID_MUTATION_REQ)
     def test_invalid_mutation_req(self, ctx,
                                   member_manager: MemberManager,
@@ -399,15 +399,22 @@ def sample_mutation_request():
 @fixture
 def member_manager(
         mock_member_repository,
+        mock_money_repository,
         mock_membership_repository,
         mock_logs_repository,
 ):
     return MemberManager(
         member_repository=mock_member_repository,
+        money_repository=mock_money_repository,
         membership_repository=mock_membership_repository,
         logs_repository=mock_logs_repository,
         configuration=TEST_CONFIGURATION,
     )
+
+
+@fixture
+def mock_money_repository():
+    return MagicMock(spec=MoneyRepository)
 
 
 @fixture
@@ -425,5 +432,3 @@ def mock_logs_repository():
     r = MagicMock(spec=LogsRepository)
     r.get_logs = MagicMock(return_value=TEST_LOGS)
     return r
-
-

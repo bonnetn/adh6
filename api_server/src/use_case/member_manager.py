@@ -8,9 +8,11 @@ from dataclasses import dataclass, asdict
 from typing import List
 
 from src.entity.member import Member
+from src.exceptions import InvalidAdmin, UnknownPaymentMethod
 from src.use_case.interface.logs_repository import LogsRepository, LogFetchError
 from src.use_case.interface.member_repository import MemberRepository, NotFoundError
 from src.use_case.interface.membership_repository import MembershipRepository
+from src.use_case.interface.money_repository import MoneyRepository
 from src.use_case.util.exceptions import StringMustNotBeEmptyException, InvalidEmailError, MemberNotFound, \
     MissingRequiredFieldError, IntMustBePositiveException, InvalidRoomNumberError, PasswordTooShortError, \
     UsernameMismatchError
@@ -51,13 +53,15 @@ class MemberManager:
                  member_repository: MemberRepository,
                  membership_repository: MembershipRepository,
                  logs_repository: LogsRepository,
+                 money_repository: MoneyRepository,
                  configuration):
         self.member_repository = member_repository
         self.membership_repository = membership_repository
         self.logs_repository = logs_repository
+        self.money_repository = money_repository
         self.config = configuration
 
-    def new_membership(self, ctx, username, duration, start_str=None) -> None:
+    def new_membership(self, ctx, username, duration, payment_method, start_str=None) -> None:
         """
         Core use case of ADH. Registers a membership.
 
@@ -70,23 +74,43 @@ class MemberManager:
         :raise IntMustBePositiveException
         :raise NoPriceAssignedToThatDurationException
         :raise MemberNotFound
+        :raise InvalidAdmin
+        :raise UnknownPaymentMethod
         """
         if start_str is None:
-            return self.new_membership(ctx, username, duration, start_str=datetime.datetime.now().isoformat())
+            return self.new_membership(ctx, username, duration, payment_method,
+                                       start_str=datetime.datetime.now().isoformat())
 
         if duration < 0:
             raise IntMustBePositiveException('duration')
 
         if duration not in self.config.PRICES:
+            LOG.warn("create_membership_record_no_price_defined", extra=log_extra(ctx, duration=duration))
             raise NoPriceAssignedToThatDurationException()
 
         start = string_to_date(start_str)
-
         end = start + datetime.timedelta(days=duration)
 
+        # TODO check price.
         try:
+            price = self.config.PRICES[duration]  # Expresed in EUR.
+            price_in_cents = price * 100  # Expressed in cents of EUR.
+            duration_str = self.config.DURATION_STRING.get(duration, '')
+            title = f'Internet - {duration_str}'
+
+            self.money_repository.add_member_payment_record(ctx, price_in_cents, title, username, payment_method)
             self.membership_repository.create_membership(ctx, username, start, end)
             self.member_repository.update_member(ctx, username, departure_date=end)
+
+        except InvalidAdmin:
+            LOG.warn("create_membership_record_admin_not_found", extra=log_extra(ctx))
+            raise
+
+        except UnknownPaymentMethod:
+            LOG.warn("create_membership_record_unknown_payment_method",
+                     extra=log_extra(ctx, payment_method=payment_method))
+            raise
+
         except NotFoundError as e:
             raise MemberNotFound() from e
 

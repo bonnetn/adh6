@@ -9,9 +9,11 @@ from src.interface_adapter.elasticsearch.repository import ElasticSearchReposito
 from src.interface_adapter.sql.device_repository import DeviceSQLRepository
 from src.interface_adapter.sql.member_repository import MemberSQLRepository
 from src.interface_adapter.sql.model.database import Database
+from src.interface_adapter.sql.money_repository import MoneySQLRepository
 from src.interface_adapter.sql.network_object_repository import NetworkObjectSQLRepository
 from src.interface_adapter.sql.room_repository import RoomSQLRepository
 from src.use_case.device_manager import DeviceManager
+from src.use_case.interface.money_repository import MoneyRepository
 from src.use_case.member_manager import MemberManager
 from src.use_case.port_manager import PortManager
 from src.use_case.room_manager import RoomManager
@@ -26,6 +28,7 @@ port_sql_repository: NetworkObjectSQLRepository = None
 device_sql_repository: DeviceSQLRepository = None
 room_sql_repository: RoomSQLRepository = None
 elk_repository: ElasticSearchRepository = None
+money_repository: MoneyRepository = None
 
 # Use cases.
 port_manager: PortManager = None
@@ -54,6 +57,7 @@ def init(m, testing=True):
     m.device_sql_repository = DeviceSQLRepository()
     m.room_sql_repository = RoomSQLRepository()
     m.elk_repository = ElasticSearchRepository(m.configuration)
+    m.money_repository = MoneySQLRepository()
 
     m.switch_manager = SwitchManager(
         switch_repository=m.network_object_sql_repository,
@@ -70,6 +74,7 @@ def init(m, testing=True):
     )
     m.member_manager = MemberManager(
         member_repository=m.member_sql_repository,
+        money_repository=money_repository,
         membership_repository=m.member_sql_repository,
         logs_repository=m.elk_repository,
         configuration=m.configuration,

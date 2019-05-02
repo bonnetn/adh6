@@ -1723,6 +1723,12 @@ definitions:
     required:
     - "duration"
     properties:
+      paymentMethod:
+        type: "string"
+        enum:
+        - "cash"
+        - "card"
+        - "bank_cheque"
       duration:
         type: "integer"
         example: 365

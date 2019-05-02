@@ -24,6 +24,11 @@ PRICES = {
     360: 100,  # 360 days = 100 euros
 }
 
+DURATION_STRING = {
+    1: '1 jour',
+    360: '1 an',
+}
+
 # IPs and ports for Elasticsearch nodes
 ELK_HOSTS = [
     {'host': '127.0.0.1', 'port': 9200},
