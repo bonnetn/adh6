@@ -1,11 +1,9 @@
 # coding: utf-8
-import datetime
 from sqlalchemy import Column, DECIMAL, ForeignKey, String, TIMESTAMP, TEXT
 from sqlalchemy import Date, DateTime, Integer, \
     Numeric, Text, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, validates
-from sqlalchemy.orm.exc import NoResultFound
 
 from src.exceptions import InvalidIPv4, InvalidIPv6, InvalidMACAddress, InvalidEmail
 from src.interface_adapter.sql.model.trackable import RubyHashTrackable
@@ -304,28 +302,6 @@ class Utilisateur(Base):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
     access_token = Column(String(255))
-
-    @staticmethod
-    def find_or_create(session, username):
-        """ Get the specified admin, if it does not exist, create it. """
-        try:
-            q = session.query(Utilisateur)
-            q = q.filter(Utilisateur.login == username)
-            return q.one()
-        except NoResultFound:
-            now = datetime.datetime.now()
-            new_admin = Utilisateur(
-                nom="-",
-                access=42,
-                email="-",
-                login=username,
-                password_hash="-",
-                created_at=now,
-                updated_at=now,
-                access_token="-"
-            )
-            session.add(new_admin)
-            return new_admin
 
 
 class Adhesion(Base):

@@ -10,8 +10,8 @@ from src.entity.member import Member
 from src.exceptions import InvalidAdmin, UnknownPaymentMethod, RoomNotFound, NoPriceAssignedToThatDurationException, \
     MemberNotFound, UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, InvalidEmail, \
     IntMustBePositiveException, StringMustNotBeEmptyException
-from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
-from src.interface_adapter.http_api.decorator.sql_session import require_sql
+from src.interface_adapter.sql.decorator.auth import auth_regular_admin
+from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
 from src.use_case.member_manager import MutationRequest

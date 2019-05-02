@@ -1,7 +1,7 @@
 # coding=utf-8
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
-from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
-from src.interface_adapter.http_api.decorator.sql_session import require_sql
+from src.interface_adapter.sql.decorator.auth import auth_regular_admin
+from src.interface_adapter.sql.decorator.sql_session import require_sql
 
 
 @require_sql

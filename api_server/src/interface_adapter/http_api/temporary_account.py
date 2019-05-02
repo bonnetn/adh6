@@ -4,8 +4,8 @@ import secrets
 from connexion import NoContent
 from flask import g
 
-from src.interface_adapter.http_api.decorator.auth import auth_super_admin
-from src.interface_adapter.http_api.decorator.sql_session import require_sql
+from src.interface_adapter.sql.decorator.auth import auth_super_admin
+from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.interface_adapter.sql.model.models import NainA
 from src.util.log import LOG
 

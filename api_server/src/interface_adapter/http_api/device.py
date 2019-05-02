@@ -5,8 +5,8 @@ from connexion import NoContent
 from main import device_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.device import DeviceType, Device
-from src.interface_adapter.http_api.decorator.auth import auth_regular_admin
-from src.interface_adapter.http_api.decorator.sql_session import require_sql
+from src.interface_adapter.sql.decorator.auth import auth_regular_admin
+from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
 from src.use_case.device_manager import MutationRequest
