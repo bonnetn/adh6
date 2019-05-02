@@ -136,7 +136,8 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
             # Actually delete it
             s.delete(member)
 
-    def search_member_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, room_number=None, terms=None, username=None) -> (
+    def search_member_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, room_number=None, terms=None,
+                         username=None) -> (
             List[Member], int):
         """
         Search a member.

@@ -4,8 +4,6 @@ Money repository, stores money movement.
 """
 import abc
 
-from src.entity.member import Member
-
 
 class MoneyRepository(metaclass=abc.ABCMeta):
     """
@@ -13,7 +11,8 @@ class MoneyRepository(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def add_member_payment_record(self, ctx, amount_in_cents: int, title: str, member_username: str, payment_method: str) -> None:
+    def add_member_payment_record(self, ctx, amount_in_cents: int, title: str, member_username: str,
+                                  payment_method: str) -> None:
         """
         Search switches.
         """

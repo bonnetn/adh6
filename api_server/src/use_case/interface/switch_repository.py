@@ -15,7 +15,8 @@ class SwitchRepository(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def search_switches_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, switch_id: str = None, terms: str = None) -> (
+    def search_switches_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, switch_id: str = None,
+                           terms: str = None) -> (
             List[Switch], int):
         """
         Search switches.

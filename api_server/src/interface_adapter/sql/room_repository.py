@@ -17,7 +17,8 @@ from src.util.log import LOG
 
 
 class RoomSQLRepository(RoomRepository):
-    def search_room_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, room_number=None, owner_username=None, terms=None) -> (
+    def search_room_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, room_number=None, owner_username=None,
+                       terms=None) -> (
             List[Room], int):
         LOG.debug("sql_room_repository_search_room_by_called",
                   extra=log_extra(ctx, username=owner_username, terms=terms))

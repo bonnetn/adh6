@@ -15,7 +15,8 @@ class RoomRepository(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def search_room_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, room_number=None, owner_username=None, terms=None) -> (
+    def search_room_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, room_number=None, owner_username=None,
+                       terms=None) -> (
             List[Room], int):
         """
         Search rooms.

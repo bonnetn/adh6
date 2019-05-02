@@ -18,6 +18,7 @@ class InvalidMac(ValueError):
 class SwitchNotFound(ValueError):
     pass
 
+
 class PortNotFound(ValueError):
     pass
 

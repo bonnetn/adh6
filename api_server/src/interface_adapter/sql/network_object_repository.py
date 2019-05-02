@@ -25,7 +25,8 @@ from src.util.log import LOG
 
 class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepository):
 
-    def search_switches_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, switch_id: str = None, terms: str = None) -> (
+    def search_switches_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, switch_id: str = None,
+                           terms: str = None) -> (
             List[Switch], int):
         """
         Search for a switch.
@@ -96,7 +97,8 @@ class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepositor
 
         s.delete(result)
 
-    def search_port_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, port_id: str = None, switch_id: str = None,
+    def search_port_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, port_id: str = None,
+                       switch_id: str = None,
                        room_number: str = None, terms: str = None) -> (List[Port], int):
         """
         Search for a port.

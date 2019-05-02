@@ -35,7 +35,8 @@ class PortManager:
     def __init__(self, port_repository: PortRepository):
         self.port_repository = port_repository
 
-    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, port_id=None, switch_id=None, room_number=None, terms=None) -> (
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, port_id=None, switch_id=None, room_number=None,
+               terms=None) -> (
             List[Port], int):
         """
         Search ports in the database.

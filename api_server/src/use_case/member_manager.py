@@ -139,7 +139,8 @@ class MemberManager:
         ))
         return result[0]
 
-    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, room_number=None, terms=None) -> (List[Member], int):
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, room_number=None, terms=None) -> (
+    List[Member], int):
         """
         search member in the database.
 

@@ -20,7 +20,8 @@ from src.util.log import LOG
 
 class DeviceSQLRepository(DeviceRepository, IPAllocator):
 
-    def search_device_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, mac_address=None, username=None, terms=None) \
+    def search_device_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, mac_address=None, username=None,
+                         terms=None) \
             -> (List[Device], int):
         LOG.debug("sql_device_repository_search_called", extra=log_extra(ctx))
         s = ctx.get(CTX_SQL_SESSION)
