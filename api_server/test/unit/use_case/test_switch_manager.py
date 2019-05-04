@@ -3,7 +3,7 @@ from pytest import fixture, raises
 from unittest.mock import MagicMock
 
 from src.entity.switch import Switch
-from src.exceptions import SwitchNotFound, MissingRequiredField, IntMustBePositiveException
+from src.exceptions import SwitchNotFound, MissingRequiredField, IntMustBePositive
 from src.use_case.interface.switch_repository import SwitchRepository
 from src.use_case.switch_manager import SwitchManager, MutationRequest
 
@@ -48,13 +48,13 @@ class TestSearch:
     def test_offset_negative(self,
                              ctx,
                              switch_manager: SwitchManager):
-        with raises(IntMustBePositiveException):
+        with raises(IntMustBePositive):
             switch_manager.search(ctx, offset=-1)
 
     def test_limit_negative(self,
                             ctx,
                             switch_manager: SwitchManager):
-        with raises(IntMustBePositiveException):
+        with raises(IntMustBePositive):
             switch_manager.search(ctx, limit=-1)
 
 

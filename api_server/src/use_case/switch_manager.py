@@ -5,12 +5,12 @@ from typing import List
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.switch import Switch
-from src.exceptions import SwitchNotFound, IntMustBePositiveException, MissingRequiredField, \
-    InvalidIPv4
+from src.exceptions import SwitchNotFound, IntMustBePositive, MissingRequiredField, \
+    InvalidIPv4, StringMustNotBeEmpty
 from src.use_case.interface.switch_repository import SwitchRepository
 from src.util.context import log_extra
 from src.util.log import LOG
-from src.util.validator import is_ip_v4
+from src.util.validator import is_ip_v4, is_empty
 
 
 @dataclass
@@ -37,6 +37,9 @@ class MutationRequest:
 
         if self.community is None:
             raise MissingRequiredField('community')
+
+        if is_empty(self.community):
+            raise StringMustNotBeEmpty('community')
 
 
 class SwitchManager:
@@ -66,10 +69,10 @@ class SwitchManager:
         :raise IntMustBePositiveException
         """
         if limit < 0:
-            raise IntMustBePositiveException('limit')
+            raise IntMustBePositive('limit')
 
         if offset < 0:
-            raise IntMustBePositiveException('offset')
+            raise IntMustBePositive('offset')
 
         result, count = self.switch_repository.search_switches_by(ctx, limit=limit, offset=offset, terms=terms)
         LOG.info("switch_search", extra=log_extra(ctx, terms=terms))

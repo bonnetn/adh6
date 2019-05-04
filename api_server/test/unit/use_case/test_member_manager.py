@@ -8,7 +8,7 @@ from unittest.mock import MagicMock
 from config import TEST_CONFIGURATION
 from src.entity.member import Member
 from src.exceptions import LogFetchError, NoPriceAssignedToThatDurationException, MemberNotFound, UsernameMismatchError, \
-    PasswordTooShortError, IntMustBePositiveException
+    PasswordTooShortError, IntMustBePositive
 from src.use_case.interface.logs_repository import LogsRepository
 from src.use_case.interface.member_repository import MemberRepository
 from src.use_case.interface.membership_repository import MembershipRepository
@@ -76,7 +76,7 @@ class TestNewMembership:
                               mock_membership_repository: MagicMock,
                               member_manager: MemberManager):
         # When...
-        with raises(IntMustBePositiveException):
+        with raises(IntMustBePositive):
             member_manager.new_membership(ctx, TEST_USERNAME, -1, 'bank_cheque')
 
         # Expect that the database has not been touched.
@@ -169,13 +169,13 @@ class TestSearch:
     def test_invalid_limit(self, ctx,
                            member_manager: MemberManager):
         # When...
-        with raises(IntMustBePositiveException):
+        with raises(IntMustBePositive):
             member_manager.search(ctx, limit=-1)
 
     def test_invalid_offset(self, ctx,
                             member_manager: MemberManager):
         # When...
-        with raises(IntMustBePositiveException):
+        with raises(IntMustBePositive):
             member_manager.search(ctx, limit=10, offset=-1)
 
 

@@ -132,12 +132,12 @@ class PasswordTooShortError(ValueError):
         super().__init__('password is too short')
 
 
-class IntMustBePositiveException(ValueError):
+class IntMustBePositive(ValueError):
     def __init__(self, msg):
         super().__init__(f'{msg} must be positive')
 
 
-class StringMustNotBeEmptyException(ValueError):
+class StringMustNotBeEmpty(ValueError):
     def __init__(self, msg):
         super().__init__(f'{msg} must not be empty')
 

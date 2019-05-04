@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
 from src.exceptions import SwitchNotFound, RoomNotFound, PortNotFound, InvalidRoomNumber, InvalidSwitchID, \
-    IntMustBePositiveException
+    IntMustBePositive
 from src.use_case.interface.port_repository import PortRepository
 from src.use_case.port_manager import PortManager, MutationRequest
 
@@ -34,13 +34,13 @@ class TestSearch:
     def test_invalid_offset(self,
                             ctx,
                             port_manager: PortManager):
-        with raises(IntMustBePositiveException):
+        with raises(IntMustBePositive):
             port_manager.search(ctx, offset=-1)
 
     def test_invalid_limit(self,
                            ctx,
                            port_manager: PortManager):
-        with raises(IntMustBePositiveException):
+        with raises(IntMustBePositive):
             port_manager.search(ctx, limit=-1)
 
 

@@ -6,7 +6,7 @@ from main import device_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.device import DeviceType, Device
 from src.exceptions import InvalidMACAddress, InvalidIPv4, InvalidIPv6
-from src.exceptions import MemberNotFound, DeviceNotFound, IntMustBePositiveException, \
+from src.exceptions import MemberNotFound, DeviceNotFound, IntMustBePositive, \
     IPAllocationFailedError
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
@@ -31,7 +31,7 @@ def search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, username=None, terms
     try:
         result, count = device_manager.search(ctx, limit, offset, username, terms)
 
-    except IntMustBePositiveException as e:
+    except IntMustBePositive as e:
         return bad_request(e), 400
 
     headers = {

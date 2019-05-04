@@ -6,7 +6,7 @@ from typing import List, Optional
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.device import Device, DeviceType, ALL_DEVICE_TYPES
 from src.exceptions import InvalidMACAddress, MissingRequiredField, InvalidIPv4, InvalidIPv6
-from src.exceptions import NoMoreIPAvailableException, MemberNotFound, DeviceNotFound, IntMustBePositiveException, \
+from src.exceptions import NoMoreIPAvailableException, MemberNotFound, DeviceNotFound, IntMustBePositive, \
     IPAllocationFailedError
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator
@@ -76,10 +76,10 @@ class DeviceManager:
         :raise IntMustBePositiveException
         """
         if limit < 0:
-            raise IntMustBePositiveException('limit')
+            raise IntMustBePositive('limit')
 
         if offset < 0:
-            raise IntMustBePositiveException('offset')
+            raise IntMustBePositive('offset')
 
         result, count = self.device_repository.search_device_by(ctx, limit=limit, offset=offset, username=username,
                                                                 terms=terms)

@@ -10,7 +10,7 @@ from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.member import Member
 from src.exceptions import InvalidAdmin, UnknownPaymentMethod, RoomNotFound, NoPriceAssignedToThatDurationException, \
     MemberNotFound, UsernameMismatchError, MissingRequiredField, PasswordTooShortError, InvalidEmail, \
-    IntMustBePositiveException, StringMustNotBeEmptyException
+    IntMustBePositive, StringMustNotBeEmpty
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin
@@ -41,7 +41,7 @@ def search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None, room_num
         result = list(map(_map_member_to_http_response, result))
         return result, 200, headers  # 200 OK
 
-    except IntMustBePositiveException as e:
+    except IntMustBePositive as e:
         return bad_request(e), 400  # 400 Bad Request
 
 
@@ -102,7 +102,7 @@ def put(ctx, username, body):
         else:
             return NoContent, 204  # 204 No Content
 
-    except (MissingRequiredField, UsernameMismatchError, InvalidEmail, StringMustNotBeEmptyException,
+    except (MissingRequiredField, UsernameMismatchError, InvalidEmail, StringMustNotBeEmpty,
             RoomNotFound) as e:
         return bad_request(e), 400  # 400 Bad Request
 
@@ -121,7 +121,7 @@ def post_membership(ctx, username, body):
     except MemberNotFound:
         return NoContent, 404  # 404 Not Found
 
-    except (IntMustBePositiveException, NoPriceAssignedToThatDurationException) as e:
+    except (IntMustBePositive, NoPriceAssignedToThatDurationException) as e:
         return bad_request(e), 400  # 400 Bad Request
 
     except (UnknownPaymentMethod, InvalidAdmin):

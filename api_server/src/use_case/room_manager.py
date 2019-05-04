@@ -6,10 +6,11 @@ from typing import List, Optional
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
 from src.exceptions import VLANNotFound, RoomNotFound, RoomNumberMismatchError, MissingRequiredField, \
-    InvalidVLANNumber, IntMustBePositiveException
+    InvalidVLANNumber, IntMustBePositive, StringMustNotBeEmpty
 from src.use_case.interface.room_repository import RoomRepository
 from src.util.context import log_extra
 from src.util.log import LOG
+from src.util.validator import is_empty
 
 
 @dataclass
@@ -23,11 +24,17 @@ class MutationRequest:
         if self.room_number is None:
             raise MissingRequiredField('room_number')
 
+        if is_empty(self.room_number):
+            raise StringMustNotBeEmpty('room_number')
+
         if self.description is None:
             raise MissingRequiredField('description')
 
         if self.vlan_number is None:
             raise MissingRequiredField('vlan_number')
+
+        if is_empty(self.vlan_number):
+            raise StringMustNotBeEmpty('vlan_number')
 
 
 class RoomManager:
@@ -73,10 +80,10 @@ class RoomManager:
         :raise IntMustBePositiveException
         """
         if limit < 0:
-            raise IntMustBePositiveException('limit')
+            raise IntMustBePositive('limit')
 
         if offset < 0:
-            raise IntMustBePositiveException('offset')
+            raise IntMustBePositive('offset')
 
         result, count = self.room_repository.search_room_by(ctx, limit=limit, offset=offset, terms=terms)
         LOG.info('room_search', extra=log_extra(

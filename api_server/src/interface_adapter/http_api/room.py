@@ -5,7 +5,7 @@ from main import room_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
 from src.exceptions import RoomNotFound, VLANNotFound, RoomNumberMismatchError, MissingRequiredField, \
-    IntMustBePositiveException
+    IntMustBePositive
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin, auth_super_admin
 from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
@@ -31,7 +31,7 @@ def search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None):
         }
         return result, 200, headers
 
-    except IntMustBePositiveException as e:
+    except IntMustBePositive as e:
         return bad_request(e), 400
 
 

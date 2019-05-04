@@ -4,10 +4,9 @@ from unittest.mock import MagicMock
 
 from src.entity.room import Room
 from src.exceptions import RoomNotFound, VLANNotFound, RoomNumberMismatchError, MissingRequiredField, \
-    InvalidVLANNumber, IntMustBePositiveException
+    InvalidVLANNumber, IntMustBePositive
 from src.use_case.interface.room_repository import RoomRepository
 from src.use_case.room_manager import RoomManager, MutationRequest
-from src.use_case.util.mutation import Mutation
 
 
 class TestSearch:
@@ -29,7 +28,7 @@ class TestSearch:
                             sample_room: Room,
                             room_manager: RoomManager):
         mock_room_repository.search_room_by = MagicMock(return_value=([sample_room], 1))
-        with raises(IntMustBePositiveException):
+        with raises(IntMustBePositive):
             room_manager.search(ctx, offset=-1)
 
     def test_invalid_limit(self,
@@ -38,7 +37,7 @@ class TestSearch:
                            sample_room: Room,
                            room_manager: RoomManager):
         mock_room_repository.search_room_by = MagicMock(return_value=([sample_room], 1))
-        with raises(IntMustBePositiveException):
+        with raises(IntMustBePositive):
             room_manager.search(ctx, limit=-1)
 
 

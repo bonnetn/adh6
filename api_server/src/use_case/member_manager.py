@@ -9,16 +9,16 @@ from src.constants import DEFAULT_OFFSET, DEFAULT_LIMIT
 from src.entity.member import Member
 from src.exceptions import InvalidAdmin, UnknownPaymentMethod, LogFetchError, NoPriceAssignedToThatDurationException, \
     MemberNotFound, UsernameMismatchError, PasswordTooShortError, InvalidEmail, \
-    IntMustBePositiveException, StringMustNotBeEmptyException, InvalidDate, MissingRequiredField
+    IntMustBePositive, StringMustNotBeEmpty, InvalidDate, MissingRequiredField
 from src.use_case.interface.logs_repository import LogsRepository
 from src.use_case.interface.member_repository import MemberRepository
 from src.use_case.interface.membership_repository import MembershipRepository
 from src.use_case.interface.money_repository import MoneyRepository
-from src.util.validator import is_email, is_empty, is_date
 from src.util.context import log_extra
 from src.util.date import string_to_date
 from src.util.hash import ntlm_hash
 from src.util.log import LOG
+from src.util.validator import is_email, is_empty, is_date
 
 
 @dataclass
@@ -44,16 +44,16 @@ class PartialMutationRequest:
 
         # FIRST_NAME:
         if self.first_name is not None and is_empty(self.first_name):
-            raise StringMustNotBeEmptyException('first_name')
+            raise StringMustNotBeEmpty('first_name')
 
         # LAST_NAME:
         if self.last_name is not None and is_empty(self.last_name):
-            raise StringMustNotBeEmptyException('last_name')
+            raise StringMustNotBeEmpty('last_name')
 
         # USERNAME:
         if self.username is not None:
             if is_empty(self.username):
-                raise StringMustNotBeEmptyException('username')
+                raise StringMustNotBeEmpty('username')
 
             if len(self.username) > 9 or len(self.username) < 7:
                 raise ValueError('username must be between 7 and 9 characters long')
@@ -71,7 +71,7 @@ class PartialMutationRequest:
 
         # ROOM_NUMBER:
         if self.room_number is not None and is_empty(self.room_number):
-            raise StringMustNotBeEmptyException('room_number')
+            raise StringMustNotBeEmpty('room_number')
 
 
 @dataclass
@@ -153,7 +153,7 @@ class MemberManager:
                                        start_str=datetime.datetime.now().isoformat())
 
         if duration < 0:
-            raise IntMustBePositiveException('duration')
+            raise IntMustBePositive('duration')
 
         if duration not in self.config.PRICES:
             LOG.warn("create_membership_record_no_price_defined", extra=log_extra(ctx, duration=duration))
@@ -217,10 +217,10 @@ class MemberManager:
         :raise intmustbepositiveexception
         """
         if limit < 0:
-            raise IntMustBePositiveException('limit')
+            raise IntMustBePositive('limit')
 
         if offset < 0:
-            raise IntMustBePositiveException('offset')
+            raise IntMustBePositive('offset')
 
         result, count = self.member_repository.search_member_by(ctx,
                                                                 limit=limit,

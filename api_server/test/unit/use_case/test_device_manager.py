@@ -6,7 +6,7 @@ from src.entity.device import Device, DeviceType
 from src.entity.member import Member
 from src.entity.room import Room
 from src.exceptions import InvalidMACAddress, MissingRequiredField, MemberNotFound, InvalidIPv6, InvalidIPv4
-from src.exceptions import NoMoreIPAvailableException, DeviceNotFound, IntMustBePositiveException, \
+from src.exceptions import NoMoreIPAvailableException, DeviceNotFound, IntMustBePositive, \
     IPAllocationFailedError
 from src.use_case.device_manager import DeviceManager, MutationRequest
 from src.use_case.interface.device_repository import DeviceRepository
@@ -40,14 +40,14 @@ class TestSearch:
                             ctx,
                             device_manager: DeviceManager):
         # When...
-        with raises(IntMustBePositiveException):
+        with raises(IntMustBePositive):
             device_manager.search(ctx, limit=1, offset=-1, username=TEST_USERNAME, terms='blabla')
 
     def test_invalid_limit(self,
                            ctx,
                            device_manager: DeviceManager):
         # When...
-        with raises(IntMustBePositiveException):
+        with raises(IntMustBePositive):
             device_manager.search(ctx, limit=-1, offset=1, username=TEST_USERNAME, terms='blabla')
 
 

@@ -6,10 +6,11 @@ from typing import List, Optional
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
 from src.exceptions import RoomNotFound, SwitchNotFound, InvalidRoomNumber, InvalidSwitchID, \
-    IntMustBePositiveException, MissingRequiredField
+    IntMustBePositive, MissingRequiredField, StringMustNotBeEmpty
 from src.use_case.interface.port_repository import PortRepository
 from src.util.context import log_extra
 from src.util.log import LOG
+from src.util.validator import is_empty
 
 
 @dataclass
@@ -30,11 +31,20 @@ class MutationRequest:
         if self.port_number is None:
             raise MissingRequiredField('port_number')
 
+        if is_empty(self.port_number):
+            raise StringMustNotBeEmpty('port_number')
+
         if self.switch_id is None:
             raise MissingRequiredField('switch_id')
 
+        if is_empty(self.switch_id):
+            raise StringMustNotBeEmpty('switch_id')
+
         if self.rcom is None:
             raise MissingRequiredField('rcom')
+
+        if self.rcom < 0:
+            raise IntMustBePositive('rcom')
 
 
 class PortManager:
@@ -53,10 +63,10 @@ class PortManager:
         :raise IntMustBePositiveException
         """
         if limit < 0:
-            raise IntMustBePositiveException('limit')
+            raise IntMustBePositive('limit')
 
         if offset < 0:
-            raise IntMustBePositiveException('offset')
+            raise IntMustBePositive('offset')
 
         result, count = self.port_repository.search_port_by(ctx, limit=limit, offset=offset, port_id=port_id,
                                                             switch_id=switch_id, room_number=room_number, terms=terms)

@@ -4,7 +4,7 @@ from connexion import NoContent
 from main import port_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
-from src.exceptions import SwitchNotFound, PortNotFound, RoomNotFound, IntMustBePositiveException
+from src.exceptions import SwitchNotFound, PortNotFound, RoomNotFound, IntMustBePositive
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin, auth_super_admin
@@ -27,7 +27,7 @@ def search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, switch_id=None, room
         result, count = port_manager.search(ctx, limit=limit, offset=offset, switch_id=switch_id,
                                             room_number=room_number,
                                             terms=terms)
-    except IntMustBePositiveException as e:
+    except IntMustBePositive as e:
         return bad_request(e), 400
 
     headers = {

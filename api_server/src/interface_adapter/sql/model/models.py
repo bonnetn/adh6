@@ -3,12 +3,10 @@ from sqlalchemy import Column, DECIMAL, ForeignKey, String, TIMESTAMP, TEXT
 from sqlalchemy import Date, DateTime, Integer, \
     Numeric, Text, text
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, validates
+from sqlalchemy.orm import relationship
 
-from src.exceptions import InvalidIPv4, InvalidIPv6, InvalidMACAddress, InvalidEmail
 from src.interface_adapter.sql.model.trackable import RubyHashTrackable
 from src.interface_adapter.sql.util.rubydiff import rubydiff
-from src.util import validator
 
 Base = declarative_base()
 
@@ -22,18 +20,6 @@ class Vlan(Base):
     adressesv6 = Column(String(255))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
-
-    @validates('adresses')
-    def valid_ipv4(self, key, addr):
-        if not validator.is_ip_v4_network(addr):
-            raise InvalidIPv4(addr)
-        return addr
-
-    @validates('adressesv6')
-    def valid_ipv6(self, key, addr):
-        if not validator.is_ip_v6_network(addr):
-            raise InvalidIPv4(addr)
-        return addr
 
 
 class Chambre(Base):
@@ -49,12 +35,6 @@ class Chambre(Base):
     dernier_adherent = Column(Integer)
     vlan_id = Column(Integer, ForeignKey(Vlan.id))
     vlan = relationship(Vlan)
-
-    @validates('numero')
-    def not_empty(self, key, s):
-        if not s:
-            raise ValueError("String must not be empty")
-        return s
 
 
 class Adherent(Base, RubyHashTrackable):
@@ -95,18 +75,6 @@ class Adherent(Base, RubyHashTrackable):
 
     def get_related_member(self):
         return self
-
-    @validates('nom', 'prenom', 'login', 'password')
-    def not_empty(self, key, s):
-        if not s:
-            raise ValueError("String must not be empty")
-        return s
-
-    @validates('mail')
-    def valid_email(self, key, mail):
-        if not mail or not validator.is_email(mail):
-            raise InvalidEmail(mail)
-        return mail
 
 
 class Caisse(Base):
@@ -198,24 +166,6 @@ class Ordinateur(Base, RubyHashTrackable):
     def get_related_member(self):
         return self.adherent
 
-    @validates('mac')
-    def mac_valid(self, key, mac):
-        if not mac or not validator.is_mac_address(mac):
-            raise InvalidMACAddress(mac)
-        return mac
-
-    @validates('ip')
-    def valid_ip(self, key, addr):
-        if not addr or (not validator.is_ip_v4(addr) and addr != "En Attente"):
-            raise InvalidIPv4(addr)
-        return addr
-
-    @validates('ipv6')
-    def valid_ipv6(self, key, addr):
-        if not addr or (not validator.is_ip_v6(addr) and addr != "En Attente"):
-            raise InvalidIPv6(addr)
-        return addr
-
 
 class Portable(Base, RubyHashTrackable):
     __tablename__ = 'portables'
@@ -245,12 +195,6 @@ class Portable(Base, RubyHashTrackable):
     def get_related_member(self):
         return self.adherent
 
-    @validates('mac')
-    def mac_valid(self, key, mac):
-        if not mac or not validator.is_mac_address(mac):
-            raise InvalidMACAddress()
-        return mac
-
 
 class Switch(Base):
     __tablename__ = 'switches'
@@ -261,12 +205,6 @@ class Switch(Base):
     communaute = Column(String(255))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
-
-    @validates('ip')
-    def valid_ip(self, key, addr):
-        if not addr or not validator.is_ip_v4(addr):
-            raise InvalidIPv4(addr)
-        return addr
 
 
 class Port(Base):
@@ -282,12 +220,6 @@ class Port(Base):
     chambre = relationship(Chambre)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
-
-    @validates('numero')
-    def not_empty(self, key, s):
-        if not s:
-            raise ValueError("String must not be empty")
-        return s
 
 
 class Utilisateur(Base):

@@ -4,7 +4,7 @@ from connexion import NoContent
 from main import switch_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.switch import Switch
-from src.exceptions import SwitchNotFound, InvalidIPv4, IntMustBePositiveException
+from src.exceptions import SwitchNotFound, InvalidIPv4, IntMustBePositive
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin, auth_super_admin
@@ -30,7 +30,7 @@ def search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None):
         result = list(map(_map_switch_to_http_response, result))
         return result, 200, headers
 
-    except IntMustBePositiveException:
+    except IntMustBePositive:
         return NoContent, 400
 
 
