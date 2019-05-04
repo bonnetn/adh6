@@ -5,12 +5,11 @@ from main import switch_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.switch import Switch
 from src.exceptions import SwitchNotFound, InvalidIPv4, IntMustBePositiveException
-from src.interface_adapter.sql.decorator.auth import auth_regular_admin, auth_super_admin
-from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
+from src.interface_adapter.sql.decorator.auth import auth_regular_admin, auth_super_admin
+from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.use_case.switch_manager import MutationRequest
-from src.use_case.util.mutation import Mutation
 from src.util.context import log_extra
 from src.util.log import LOG
 

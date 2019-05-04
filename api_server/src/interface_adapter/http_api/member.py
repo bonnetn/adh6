@@ -16,7 +16,6 @@ from src.interface_adapter.http_api.util.error import bad_request
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin
 from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.use_case.member_manager import FullMutationRequest, PartialMutationRequest
-from src.use_case.util.mutation import Mutation
 from src.util.context import log_extra
 from src.util.date import string_to_date
 from src.util.int_or_none import int_or_none

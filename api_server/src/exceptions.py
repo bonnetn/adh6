@@ -1,4 +1,6 @@
 # coding=utf-8
+
+
 # INVALID ERRORS.
 class InvalidIPv6(ValueError):
     def __init__(self, value):

@@ -1,3 +1,4 @@
+# coding=utf-8
 from datetime import datetime
 
 from src.constants import CTX_SQL_SESSION, CTX_ADMIN

@@ -136,6 +136,7 @@ class MemberManager:
         Core use case of ADH. Registers a membership.
 
         User story: As an admin, I can create a new membership record, so that a member can have internet access.
+        :param payment_method:
         :param ctx: context
         :param username: username
         :param duration: duration of the membership in days

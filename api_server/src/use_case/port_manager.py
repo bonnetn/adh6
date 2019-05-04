@@ -5,8 +5,8 @@ from typing import List, Optional
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
-from src.exceptions import RoomNotFound, SwitchNotFound, InvalidRoomNumber, InvalidSwitchID, IntMustBePositiveException, \
-    MissingRequiredField
+from src.exceptions import RoomNotFound, SwitchNotFound, InvalidRoomNumber, InvalidSwitchID, \
+    IntMustBePositiveException, MissingRequiredField
 from src.use_case.interface.port_repository import PortRepository
 from src.util.context import log_extra
 from src.util.log import LOG
