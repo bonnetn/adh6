@@ -2,6 +2,7 @@
 """
 SQL session decorator.
 """
+import traceback
 from connexion import NoContent
 from functools import wraps
 
@@ -50,7 +51,8 @@ def require_sql(f):
             return result
 
         except Exception as e:
-            LOG.error("rollback_sql_transaction_exception_caught", extra=log_extra(ctx, exception=str(e)))
+            LOG.error("rollback_sql_transaction_exception_caught",
+                      extra=log_extra(ctx, exception=str(e), traceback=traceback.format_exc()))
             s.rollback()
             raise
 
