@@ -5,15 +5,15 @@ from unittest.mock import MagicMock
 from src.entity.device import Device, DeviceType
 from src.entity.member import Member
 from src.entity.room import Room
+from src.exceptions import InvalidMACAddress, MissingRequiredField, MemberNotFound, InvalidIPv6, InvalidIPv4
+from src.exceptions import NoMoreIPAvailableException, DeviceNotFound, IntMustBePositiveException, \
+    IPAllocationFailedError
 from src.use_case.device_manager import DeviceManager, MutationRequest
-from src.use_case.interface.vlan_repository import VLANRepository
-from src.exceptions import InvalidMACAddress
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator
-from src.exceptions import NoMoreIPAvailableException, MemberNotFound, DeviceNotFound, InvalidIPAddress, \
-    IntMustBePositiveException, IPAllocationFailedError
 from src.use_case.interface.member_repository import MemberRepository
 from src.use_case.interface.room_repository import RoomRepository
+from src.use_case.interface.vlan_repository import VLANRepository
 from test.unit.use_case.conftest import TEST_USERNAME, TEST_MAC_ADDRESS1
 
 
@@ -81,6 +81,9 @@ class TestUpdateOrCreate:
                                                   req=MutationRequest(
                                                       owner_username=TEST_USERNAME,
                                                       connection_type=DeviceType.Wired,
+                                                      mac_address=TEST_MAC_ADDRESS1,
+                                                      ip_v4_address=None,
+                                                      ip_v6_address=None,
                                                   ),
                                                   )
 
@@ -117,12 +120,13 @@ class TestUpdateOrCreate:
         mock_ip_allocator.allocate_ip_v6 = MagicMock(return_value=ipv6)
 
         # When...
-        with raises(InvalidIPAddress):
+        with raises(InvalidIPv6):
             device_manager.update_or_create(ctx, mac_address=TEST_MAC_ADDRESS1,
                                             req=MutationRequest(
                                                 mac_address=TEST_MAC_ADDRESS1,
                                                 owner_username=TEST_USERNAME,
                                                 connection_type=DeviceType.Wired,
+                                                ip_v4_address=None,
                                                 ip_v6_address='invalid ip',
                                             ),
                                             )
@@ -155,13 +159,14 @@ class TestUpdateOrCreate:
         mock_ip_allocator.allocate_ip_v6 = MagicMock(return_value=ipv6)
 
         # When...
-        with raises(InvalidIPAddress):
+        with raises(InvalidIPv4):
             device_manager.update_or_create(ctx, mac_address=TEST_MAC_ADDRESS1,
                                             req=MutationRequest(
                                                 mac_address=TEST_MAC_ADDRESS1,
                                                 owner_username=TEST_USERNAME,
                                                 connection_type=DeviceType.Wired,
                                                 ip_v4_address='invalid ip',
+                                                ip_v6_address='dd24:ccd0:e024:7b8e:efe6:dffa:210d:d100',
                                             ),
                                             )
 
@@ -199,6 +204,8 @@ class TestUpdateOrCreate:
                                                 mac_address='invalid mac',
                                                 owner_username=TEST_USERNAME,
                                                 connection_type=DeviceType.Wired,
+                                                ip_v4_address=None,
+                                                ip_v6_address=None,
                                             ),
                                             )
 
@@ -226,6 +233,9 @@ class TestUpdateOrCreate:
                                                   req=MutationRequest(
                                                       owner_username=TEST_USERNAME,
                                                       connection_type=DeviceType.Wireless,
+                                                      mac_address=sample_device.mac_address,
+                                                      ip_v4_address=None,
+                                                      ip_v6_address=None,
                                                   ),
                                                   )
 
@@ -261,6 +271,9 @@ class TestUpdateOrCreate:
                                                   req=MutationRequest(
                                                       owner_username=TEST_USERNAME,
                                                       connection_type=DeviceType.Wired,
+                                                      mac_address=TEST_MAC_ADDRESS1,
+                                                      ip_v4_address=None,
+                                                      ip_v6_address=None,
                                                   ),
                                                   )
 
@@ -271,6 +284,30 @@ class TestUpdateOrCreate:
                                                                      connection_type=DeviceType.Wired,
                                                                      ip_v4_address=None,
                                                                      ip_v6_address=None)
+
+    def test_empty_owner_username(self,
+                                  ctx,
+                                  mock_member_repository: MagicMock,
+                                  mock_device_repository: MagicMock,
+                                  device_manager: DeviceManager):
+        # Given...
+        mock_member_repository.search_member_by = MagicMock(return_value=([], 0))
+
+        # When...Unnamed
+        with raises(MissingRequiredField):
+            device_manager.update_or_create(ctx, mac_address=TEST_MAC_ADDRESS1,
+                                            req=MutationRequest(
+                                                owner_username='',
+                                                connection_type=DeviceType.Wired,
+                                                mac_address=TEST_MAC_ADDRESS1,
+                                                ip_v4_address=None,
+                                                ip_v6_address=None,
+                                            ),
+                                            )
+
+        # Expect...
+        mock_device_repository.create_device.assert_not_called()
+        mock_device_repository.update_device.assert_not_called()
 
     def test_invalid_owner_username(self,
                                     ctx,
@@ -284,8 +321,11 @@ class TestUpdateOrCreate:
         with raises(MemberNotFound):
             device_manager.update_or_create(ctx, mac_address=TEST_MAC_ADDRESS1,
                                             req=MutationRequest(
-                                                owner_username='',
-                                                connection_type=DeviceType.Wired
+                                                owner_username='abcdefgh',
+                                                connection_type=DeviceType.Wired,
+                                                mac_address=TEST_MAC_ADDRESS1,
+                                                ip_v4_address=None,
+                                                ip_v6_address=None,
                                             ),
                                             )
 
@@ -323,6 +363,9 @@ class TestUpdateOrCreate:
                                             req=MutationRequest(
                                                 owner_username=TEST_USERNAME,
                                                 connection_type=DeviceType.Wired,
+                                                mac_address=TEST_MAC_ADDRESS1,
+                                                ip_v4_address=None,
+                                                ip_v6_address=None,
                                             ),
                                             )
 
@@ -401,6 +444,7 @@ def device_manager(
 @fixture
 def mock_vlan_repository():
     return MagicMock(spec=VLANRepository)
+
 
 @fixture
 def mock_ip_allocator():

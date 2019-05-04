@@ -5,15 +5,14 @@ from connexion import NoContent
 from main import device_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.device import DeviceType, Device
-from src.interface_adapter.sql.decorator.auth import auth_regular_admin
-from src.interface_adapter.sql.decorator.sql_session import require_sql
+from src.exceptions import InvalidMACAddress, InvalidIPv4, InvalidIPv6
+from src.exceptions import MemberNotFound, DeviceNotFound, IntMustBePositiveException, \
+    IPAllocationFailedError
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
+from src.interface_adapter.sql.decorator.auth import auth_regular_admin
+from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.use_case.device_manager import MutationRequest
-from src.exceptions import InvalidMACAddress
-from src.exceptions import MemberNotFound, DeviceNotFound, InvalidIPAddress, IntMustBePositiveException, \
-    IPAllocationFailedError
-from src.use_case.util.mutation import Mutation
 from src.util.context import log_extra
 from src.util.log import LOG
 
@@ -53,11 +52,11 @@ def put(ctx, mac_address, body):
         created = device_manager.update_or_create(ctx,
                                                   mac_address=mac_address,
                                                   req=MutationRequest(
-                                                      owner_username=body.get('username', Mutation.NOT_SET),
-                                                      mac_address=body.get('mac', Mutation.NOT_SET),
-                                                      connection_type=body.get('connectionType', Mutation.NOT_SET),
-                                                      ip_v4_address=body.get('ipAddress', Mutation.NOT_SET),
-                                                      ip_v6_address=body.get('ipv6Address', Mutation.NOT_SET),
+                                                      owner_username=body.get('username'),
+                                                      mac_address=body.get('mac'),
+                                                      connection_type=body.get('connectionType'),
+                                                      ip_v4_address=body.get('ipAddress'),
+                                                      ip_v6_address=body.get('ipv6Address'),
                                                   ),
                                                   )
 
@@ -74,7 +73,7 @@ def put(ctx, mac_address, body):
     except InvalidMACAddress:
         return "Invalid MAC address.", 400
 
-    except InvalidIPAddress:
+    except (InvalidIPv4, InvalidIPv6):
         return "Invalid IP address.", 400
 
 

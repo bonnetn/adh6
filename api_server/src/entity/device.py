@@ -8,6 +8,9 @@ class DeviceType:
     Wireless = 'wireless'
 
 
+ALL_DEVICE_TYPES = {DeviceType.Wireless, DeviceType.Wired}
+
+
 @dataclass()
 class Device:
     mac_address: str

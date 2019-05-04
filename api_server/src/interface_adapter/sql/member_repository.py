@@ -3,6 +3,7 @@
 Implements everything related to actions on the SQL database.
 """
 from datetime import datetime
+from dateutil.parser import parse
 from sqlalchemy.orm.exc import NoResultFound
 from typing import List
 
@@ -23,7 +24,7 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
     Represent the interface to the SQL database.
     """
 
-    def create_membership(self, ctx, username, start, end) -> None:
+    def create_membership(self, ctx, username, start: datetime, end: datetime) -> None:
         """
         Add a membership record.
 
@@ -75,8 +76,8 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
             created_at=now,
             updated_at=now,
             commentaires=comment,
-            date_de_depart=departure_date,
-            mode_association=association_mode,
+            date_de_depart=_parse_date_or_none(departure_date),
+            mode_association=_parse_date_or_none(association_mode),
         )
 
         with track_modifications(ctx, s, member):
@@ -84,7 +85,7 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
 
     def update_member(self, ctx, member_to_update,
                       last_name=None, first_name=None, email=None, username=None, comment=None,
-                      room_number=None, departure_date=None, association_mode=None, password=None
+                      room_number=None, departure_date: str=None, association_mode: str=None, password=None
                       ) -> None:
         """
         Update a member.
@@ -106,10 +107,10 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
             member.login = username or member.login
 
             if departure_date is not None:
-                member.date_de_depart = departure_date
+                member.date_de_depart = _parse_date_or_none(departure_date)
 
             if association_mode is not None:
-                member.mode_association = association_mode
+                member.mode_association = _parse_date_or_none(association_mode)
 
             if room_number is not None:
                 member.chambre = s.query(Chambre).filter(Chambre.numero == room_number).one()
@@ -202,3 +203,10 @@ def _map_member_sql_to_entity(adh: Adherent) -> Member:
 
 def _get_member_by_login(s, login) -> Adherent:
     return s.query(Adherent).filter(Adherent.login == login).one_or_none()
+
+
+def _parse_date_or_none(d: str):
+    if d is None:
+        return None
+
+    return parse(d)

@@ -7,7 +7,7 @@ from src.entity.member import Member
 from src.entity.port import Port, SwitchInfo
 from src.entity.room import Room
 from src.entity.switch import Switch
-from src.use_case.member_manager import MutationRequest
+from src.use_case.member_manager import FullMutationRequest
 from src.util.context import build_context
 
 
@@ -19,7 +19,7 @@ def ctx():
     )
 
 
-TEST_USERNAME = 'my_test_user'
+TEST_USERNAME = 'test_usr'
 TEST_EMAIL = 'hello@hello.fr'
 TEST_FIRST_NAME = 'Jean'
 TEST_LAST_NAME = 'Dupond'
@@ -33,13 +33,6 @@ TEST_LOGS = [
 ]
 TEST_MAC_ADDRESS1 = 'A0-B1-5A-C1-5F-E3'
 TEST_MAC_ADDRESS2 = '10-0E-9C-19-FF-64'
-INVALID_MUTATION_REQ = [
-    ('invalid_email', MutationRequest(email='not a valid email')),
-    ('invalid_first_name', MutationRequest(first_name='')),
-    ('invalid_last_name', MutationRequest(last_name='')),
-    ('invalid_username', MutationRequest(username='')),
-    ('invalid_room_number', MutationRequest(room_number='')),
-]
 
 
 @fixture

@@ -5,9 +5,8 @@ from unittest.mock import MagicMock
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
 from src.exceptions import SwitchNotFound, RoomNotFound, PortNotFound, InvalidRoomNumber, InvalidSwitchID, \
-    ReadOnlyField, MissingRequiredFieldError, IntMustBePositiveException
+    IntMustBePositiveException
 from src.use_case.interface.port_repository import PortRepository
-from src.use_case.util.mutation import Mutation
 from src.use_case.port_manager import PortManager, MutationRequest
 
 
@@ -19,13 +18,15 @@ class TestSearch:
                         port_manager: PortManager):
         mock_port_repository.search_port_by = MagicMock(return_value=([sample_port], 1))
 
-        result, count = port_manager.search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, port_id='port', switch_id='switch',
+        result, count = port_manager.search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, port_id='port',
+                                            switch_id='switch',
                                             room_number='room',
                                             terms='terms')
 
         assert [sample_port] == result
         assert 1 == count
-        mock_port_repository.search_port_by.assert_called_once_with(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, port_id='port',
+        mock_port_repository.search_port_by.assert_called_once_with(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET,
+                                                                    port_id='port',
                                                                     switch_id='switch',
                                                                     room_number='room',
                                                                     terms='terms')
@@ -66,24 +67,7 @@ class TestCreate:
 
         # Expect...
         args = asdict(sample_mutation_req)
-        del args['port_id']
         mock_port_repository.create_port.assert_called_once_with(ctx, **args)
-
-    def test_set_readonly_id(self,
-                             ctx,
-                             mock_port_repository: PortRepository,
-                             sample_mutation_req: MutationRequest,
-                             port_manager: PortManager):
-        # Given...
-        mock_port_repository.create_port = MagicMock()
-        sample_mutation_req.port_id = 'test'
-
-        # When...
-        with raises(ReadOnlyField):
-            port_manager.create(ctx, sample_mutation_req)
-
-        # Expect..
-        mock_port_repository.create_port.assert_not_called()
 
     def test_unknown_room(self,
                           ctx,
@@ -121,7 +105,6 @@ class TestUpdate:
     @fixture
     def sample_mutation_req(self):
         return MutationRequest(
-            port_id='id',
             port_number='port',
             room_number='room',
             switch_id='switch',
@@ -138,27 +121,11 @@ class TestUpdate:
         mock_port_repository.update_port = MagicMock()
 
         # When...
-        port_manager.update(ctx, sample_mutation_req)
+        port_manager.update(ctx, '1', sample_mutation_req)
 
         # Expect...
         args = asdict(sample_mutation_req)
-        mock_port_repository.update_port.assert_called_once_with(ctx, **args)
-
-    def test_missing_id_field(self,
-                              ctx,
-                              mock_port_repository: PortRepository,
-                              sample_mutation_req: MutationRequest,
-                              port_manager: PortManager):
-        # Given...
-        mock_port_repository.update_port = MagicMock()
-        sample_mutation_req.port_id = Mutation.NOT_SET
-
-        # When...
-        with raises(MissingRequiredFieldError):
-            port_manager.update(ctx, sample_mutation_req)
-
-        # Expect..
-        mock_port_repository.update_port.assert_not_called()
+        mock_port_repository.update_port.assert_called_once_with(ctx, port_id='1', **args)
 
     def test_unknown_room(self,
                           ctx,
@@ -170,7 +137,7 @@ class TestUpdate:
 
         # When...
         with raises(RoomNotFound):
-            port_manager.update(ctx, sample_mutation_req)
+            port_manager.update(ctx, '1', sample_mutation_req)
 
         # Expect..
         mock_port_repository.update_port.assert_called_once()
@@ -185,7 +152,7 @@ class TestUpdate:
 
         # When...
         with raises(PortNotFound):
-            port_manager.update(ctx, sample_mutation_req)
+            port_manager.update(ctx, '1', sample_mutation_req)
 
         # Expect..
         mock_port_repository.update_port.assert_called_once()
@@ -200,7 +167,7 @@ class TestUpdate:
 
         # When...
         with raises(SwitchNotFound):
-            port_manager.update(ctx, sample_mutation_req)
+            port_manager.update(ctx, '1', sample_mutation_req)
 
         # Expect..
         mock_port_repository.update_port.assert_called_once()

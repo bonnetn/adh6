@@ -1,24 +1,33 @@
 # coding=utf-8
 import json
 from dataclasses import dataclass, asdict
-from typing import List
+from typing import List, Optional
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
-from src.exceptions import VLANNotFound, RoomNotFound, RoomNumberMismatchError, MissingRequiredFieldError, \
+from src.exceptions import VLANNotFound, RoomNotFound, RoomNumberMismatchError, MissingRequiredField, \
     InvalidVLANNumber, IntMustBePositiveException
 from src.use_case.interface.room_repository import RoomRepository
-from src.use_case.util.mutation import Mutation, is_set
 from src.util.context import log_extra
 from src.util.log import LOG
 
 
 @dataclass
 class MutationRequest:
-    room_number: str = Mutation.NOT_SET
-    description: str = Mutation.NOT_SET
-    phone_number: str = Mutation.NOT_SET
-    vlan_number: str = Mutation.NOT_SET
+    room_number: str
+    description: str
+    phone_number: Optional[str]
+    vlan_number: str
+
+    def validate(self):
+        if self.room_number is None:
+            raise MissingRequiredField('room_number')
+
+        if self.description is None:
+            raise MissingRequiredField('description')
+
+        if self.vlan_number is None:
+            raise MissingRequiredField('vlan_number')
 
 
 class RoomManager:
@@ -88,11 +97,7 @@ class RoomManager:
         :raise RoomNumberMismatchError
         """
         # Make sure all the fields set are valid.
-        _validate_mutation_request(mutation_request)
-
-        # Make sure all the necessary fields are set.
-        if not is_set(mutation_request.room_number):
-            raise MissingRequiredFieldError('room_number')
+        mutation_request.validate()
 
         room, _ = self.room_repository.search_room_by(ctx, room_number=room_number)
         if room:
@@ -101,7 +106,7 @@ class RoomManager:
             # Create a dict with fields to update. If field is not provided in the mutation request, consider that it
             # should be None as it is a full update of the member.
             fields_to_update = asdict(mutation_request)
-            fields_to_update = {k: v if is_set(v) else None for k, v in fields_to_update.items()}
+            fields_to_update = {k: v for k, v in fields_to_update.items()}
 
             # This call will never throw a RoomNotFound because we checked for the object existence before.
             try:
@@ -127,7 +132,7 @@ class RoomManager:
                 raise RoomNumberMismatchError()
 
             fields = asdict(mutation_request)
-            fields = {k: v if is_set(v) else None for k, v in fields.items()}
+            fields = {k: v for k, v in fields.items()}
 
             try:
                 self.room_repository.create_room(ctx, **fields)
@@ -143,7 +148,3 @@ class RoomManager:
             ))
 
             return True
-
-
-def _validate_mutation_request(req: MutationRequest):
-    pass

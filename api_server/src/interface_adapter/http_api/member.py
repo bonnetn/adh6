@@ -3,18 +3,19 @@
 Contain all the http http_api functions.
 """
 from connexion import NoContent
+from dataclasses import asdict
 
 from main import member_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.member import Member
 from src.exceptions import InvalidAdmin, UnknownPaymentMethod, RoomNotFound, NoPriceAssignedToThatDurationException, \
-    MemberNotFound, UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, InvalidEmail, \
+    MemberNotFound, UsernameMismatchError, MissingRequiredField, PasswordTooShortError, InvalidEmail, \
     IntMustBePositiveException, StringMustNotBeEmptyException
-from src.interface_adapter.sql.decorator.auth import auth_regular_admin
-from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
-from src.use_case.member_manager import MutationRequest
+from src.interface_adapter.sql.decorator.auth import auth_regular_admin
+from src.interface_adapter.sql.decorator.sql_session import require_sql
+from src.use_case.member_manager import FullMutationRequest, PartialMutationRequest
 from src.use_case.util.mutation import Mutation
 from src.util.context import log_extra
 from src.util.date import string_to_date
@@ -79,7 +80,7 @@ def patch(ctx, username, body):
     """ Partially update a member from the database """
     LOG.debug("http_member_patch_called", extra=log_extra(ctx, username=username, request=body))
     try:
-        mutation_request = _map_http_request_to_mutation_request(body)
+        mutation_request = _map_http_request_to_partial_mutation_request(body)
         member_manager.update_partially(ctx, username, mutation_request)
         return NoContent, 204  # 204 No Content
 
@@ -94,7 +95,7 @@ def put(ctx, username, body):
     """ Create/Update member from the database """
     LOG.debug("http_member_put_called", extra=log_extra(ctx, username=username, request=body))
 
-    mutation_request = _map_http_request_to_mutation_request(body)
+    mutation_request = _map_http_request_to_full_mutation_request(body)
     try:
         created = member_manager.update_or_create(ctx, username, mutation_request)
         if created:
@@ -102,7 +103,7 @@ def put(ctx, username, body):
         else:
             return NoContent, 204  # 204 No Content
 
-    except (MissingRequiredFieldError, UsernameMismatchError, InvalidEmail, StringMustNotBeEmptyException,
+    except (MissingRequiredField, UsernameMismatchError, InvalidEmail, StringMustNotBeEmptyException,
             RoomNotFound) as e:
         return bad_request(e), 400  # 400 Bad Request
 
@@ -178,23 +179,25 @@ def _map_member_to_http_response(member: Member) -> dict:
     return {k: v for k, v in fields.items() if v is not None}
 
 
-def _map_http_request_to_mutation_request(body) -> MutationRequest:
-    return MutationRequest(
-        email=body.get('email', Mutation.NOT_SET),
-        first_name=body.get('firstName', Mutation.NOT_SET),
-        last_name=body.get('lastName', Mutation.NOT_SET),
-        username=body.get('username', Mutation.NOT_SET),
-        departure_date=_string_to_date_or_unset(body.get('departureDate')),
-        comment=body.get('comment', Mutation.NOT_SET),
-        association_mode=_string_to_date_or_unset(body.get('associationMode')),
-        room_number=body.get('roomNumber', Mutation.NOT_SET),
+def _map_http_request_to_partial_mutation_request(body) -> PartialMutationRequest:
+    return PartialMutationRequest(
+        email=body.get('email'),
+        first_name=body.get('firstName'),
+        last_name=body.get('lastName'),
+        username=body.get('username'),
+        comment=body.get('comment'),
+        departure_date=body.get('departureDate'),
+        association_mode=body.get('associationMode'),
+        room_number=body.get('roomNumber'),
     )
 
 
-def _string_to_date_or_unset(d):
-    if d is None:
-        return Mutation.NOT_SET
+def _map_http_request_to_full_mutation_request(body) -> FullMutationRequest:
+    partial = _map_http_request_to_partial_mutation_request(body)
+    return FullMutationRequest(**asdict(partial))
 
+
+def _string_to_date_or_none(d):
     if isinstance(d, str):
         return string_to_date(d)
 

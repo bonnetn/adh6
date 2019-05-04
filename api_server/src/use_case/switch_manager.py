@@ -4,11 +4,12 @@ from typing import List
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.switch import Switch
-from src.exceptions import SwitchNotFound, ReadOnlyField, MissingRequiredFieldError, IntMustBePositiveException
+from src.exceptions import SwitchNotFound, IntMustBePositiveException, MissingRequiredField, \
+    InvalidIPv4
 from src.use_case.interface.switch_repository import SwitchRepository
-from src.use_case.util.mutation import is_set, Mutation
 from src.util.context import log_extra
 from src.util.log import LOG
+from src.util.validator import is_ip_v4
 
 
 @dataclass
@@ -16,10 +17,25 @@ class MutationRequest:
     """
     Mutation request for a switch. This represents the 'diff', that is going to be applied on the switch object.
     """
-    switch_id: str = Mutation.NOT_SET
-    ip_v4: str = Mutation.NOT_SET
-    description: str = Mutation.NOT_SET
-    community: str = Mutation.NOT_SET
+    ip_v4: str
+    description: str
+    community: str
+
+    def validate(self):
+        """
+        Validate the fields that are set in a MutationRequest.
+        """
+        if self.ip_v4 is None:
+            raise MissingRequiredField('ip_v4')
+
+        if not is_ip_v4(self.ip_v4):
+            raise InvalidIPv4(self.ip_v4)
+
+        if self.description is None:
+            raise MissingRequiredField('description')
+
+        if self.community is None:
+            raise MissingRequiredField('community')
 
 
 class SwitchManager:
@@ -59,7 +75,7 @@ class SwitchManager:
 
         return result, count
 
-    def update(self, ctx, mutation_request: MutationRequest) -> None:
+    def update(self, ctx, switch_id: str, mutation_request: MutationRequest) -> None:
         """
         Update a switch in the database.
         User story: As an admin, I can update a switch in the database, so I update its community string.
@@ -67,15 +83,12 @@ class SwitchManager:
         :raise SwitchNotFound
         """
         # Make sure the request is valid.
-        _validate_mutation_request(mutation_request)
-
-        if not is_set(mutation_request.switch_id):
-            raise MissingRequiredFieldError('switch_id')
+        mutation_request.validate()
 
         fields_to_update = asdict(mutation_request)
-        fields_to_update = {k: v for k, v in fields_to_update.items() if is_set(v)}
+        fields_to_update = {k: v for k, v in fields_to_update.items() if v is not None}
         try:
-            self.switch_repository.update_switch(ctx, **fields_to_update)
+            self.switch_repository.update_switch(ctx, switch_id=switch_id, **fields_to_update)
             LOG.info("switch_update", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))
 
         except SwitchNotFound as e:
@@ -91,13 +104,10 @@ class SwitchManager:
         :raise ReadOnlyField
         """
         # Make sure the request is valid.
-        _validate_mutation_request(mutation_request)
-
-        if is_set(mutation_request.switch_id):
-            raise ReadOnlyField()
+        mutation_request.validate()
 
         fields_to_update = asdict(mutation_request)
-        fields_to_update = {k: v for k, v in fields_to_update.items() if is_set(v)}
+        fields_to_update = {k: v for k, v in fields_to_update.items() if v is not None}
 
         switch_id = self.switch_repository.create_switch(ctx, **fields_to_update)
         LOG.info("switch_create", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))
@@ -116,10 +126,3 @@ class SwitchManager:
 
         except SwitchNotFound as e:
             raise SwitchNotFound() from e
-
-
-def _validate_mutation_request(req: MutationRequest):
-    """
-    Validate the fields that are set in a MutationRequest.
-    """
-    pass

@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship, validates
 from src.exceptions import InvalidIPv4, InvalidIPv6, InvalidMACAddress, InvalidEmail
 from src.interface_adapter.sql.model.trackable import RubyHashTrackable
 from src.interface_adapter.sql.util.rubydiff import rubydiff
-from src.util import checks
+from src.util import validator
 
 Base = declarative_base()
 
@@ -25,14 +25,14 @@ class Vlan(Base):
 
     @validates('adresses')
     def valid_ipv4(self, key, addr):
-        if not checks.is_ip_v4_network(addr):
-            raise InvalidIPv4()
+        if not validator.is_ip_v4_network(addr):
+            raise InvalidIPv4(addr)
         return addr
 
     @validates('adressesv6')
     def valid_ipv6(self, key, addr):
-        if not checks.is_ip_v6_network(addr):
-            raise InvalidIPv4()
+        if not validator.is_ip_v6_network(addr):
+            raise InvalidIPv4(addr)
         return addr
 
 
@@ -104,8 +104,8 @@ class Adherent(Base, RubyHashTrackable):
 
     @validates('mail')
     def valid_email(self, key, mail):
-        if not mail or not checks.is_email(mail):
-            raise InvalidEmail()
+        if not mail or not validator.is_email(mail):
+            raise InvalidEmail(mail)
         return mail
 
 
@@ -200,20 +200,20 @@ class Ordinateur(Base, RubyHashTrackable):
 
     @validates('mac')
     def mac_valid(self, key, mac):
-        if not mac or not checks.is_mac_address(mac):
+        if not mac or not validator.is_mac_address(mac):
             raise InvalidMACAddress(mac)
         return mac
 
     @validates('ip')
     def valid_ip(self, key, addr):
-        if not addr or (not checks.is_ip_v4(addr) and addr != "En Attente"):
+        if not addr or (not validator.is_ip_v4(addr) and addr != "En Attente"):
             raise InvalidIPv4(addr)
         return addr
 
     @validates('ipv6')
     def valid_ipv6(self, key, addr):
-        if not addr or (not checks.is_ip_v6(addr) and addr != "En Attente"):
-            raise InvalidIPv6()
+        if not addr or (not validator.is_ip_v6(addr) and addr != "En Attente"):
+            raise InvalidIPv6(addr)
         return addr
 
 
@@ -247,7 +247,7 @@ class Portable(Base, RubyHashTrackable):
 
     @validates('mac')
     def mac_valid(self, key, mac):
-        if not mac or not checks.is_mac_address(mac):
+        if not mac or not validator.is_mac_address(mac):
             raise InvalidMACAddress()
         return mac
 
@@ -264,8 +264,8 @@ class Switch(Base):
 
     @validates('ip')
     def valid_ip(self, key, addr):
-        if not addr or not checks.is_ip_v4(addr):
-            raise InvalidIPv4()
+        if not addr or not validator.is_ip_v4(addr):
+            raise InvalidIPv4(addr)
         return addr
 
 

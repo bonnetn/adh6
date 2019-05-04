@@ -7,17 +7,24 @@ from unittest.mock import MagicMock
 
 from config import TEST_CONFIGURATION
 from src.entity.member import Member
+from src.exceptions import LogFetchError, NoPriceAssignedToThatDurationException, MemberNotFound, UsernameMismatchError, \
+    PasswordTooShortError, IntMustBePositiveException
 from src.use_case.interface.logs_repository import LogsRepository
 from src.use_case.interface.member_repository import MemberRepository
-from src.exceptions import LogFetchError, NoPriceAssignedToThatDurationException, MemberNotFound, UsernameMismatchError, \
-    MissingRequiredFieldError, PasswordTooShortError, IntMustBePositiveException
 from src.use_case.interface.membership_repository import MembershipRepository
 from src.use_case.interface.money_repository import MoneyRepository
-from src.use_case.member_manager import MemberManager, MutationRequest
-from src.use_case.util.mutation import Mutation
+from src.use_case.member_manager import MemberManager, FullMutationRequest, PartialMutationRequest
 from src.util.hash import ntlm_hash
 from test.unit.use_case.conftest import TEST_USERNAME, TEST_EMAIL, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_COMMENT, \
-    TEST_ROOM_NUMBER, TEST_DATE1, TEST_DATE2, TEST_LOGS, INVALID_MUTATION_REQ
+    TEST_ROOM_NUMBER, TEST_DATE1, TEST_DATE2, TEST_LOGS
+
+INVALID_MUTATION_REQ_ARGS = [
+    ('invalid_email', {'email': 'not a valid email'}),
+    ('invalid_first_name', {'first_name': ''}),
+    ('invalid_last_name', {'last_name': ''}),
+    ('invalid_username', {'username': ''}),
+    ('invalid_room_number', {'room_number': ''}),
+]
 
 
 class TestNewMembership:
@@ -38,7 +45,7 @@ class TestNewMembership:
 
         # And update the member object.
         mock_member_repository.update_member.assert_called_once_with(ctx, TEST_USERNAME,
-                                                                     departure_date=expected_end_date)
+                                                                     departure_date=expected_end_date.isoformat())
 
     def test_happy_path_without_start_time(self, ctx,
                                            mock_membership_repository: MagicMock,
@@ -62,7 +69,7 @@ class TestNewMembership:
 
         # And update the member object.
         mock_member_repository.update_member.assert_called_once_with(ctx, TEST_USERNAME,
-                                                                     departure_date=expected_end_date)
+                                                                     departure_date=expected_end_date.isoformat())
 
     def test_invalid_duration(self, ctx,
                               mock_member_repository: MagicMock,
@@ -176,7 +183,7 @@ class TestCreateOrUpdate:
 
     def test_create_happy_path(self, ctx,
                                mock_member_repository: MagicMock,
-                               sample_mutation_request: MutationRequest,
+                               sample_mutation_request: FullMutationRequest,
                                member_manager: MemberManager):
         # Given that there is not user in the DB (user will be created).
         mock_member_repository.search_member_by = MagicMock(return_value=([], 0))
@@ -189,7 +196,7 @@ class TestCreateOrUpdate:
 
     def test_update_happy_path(self, ctx,
                                mock_member_repository: MagicMock,
-                               sample_mutation_request: MutationRequest,
+                               sample_mutation_request: FullMutationRequest,
                                sample_member: Member,
                                member_manager: MemberManager):
         # Given that there is a user in the DB (user will be updated).
@@ -210,11 +217,11 @@ class TestCreateOrUpdate:
 
     def test_create_username_mismatch(self, ctx,
                                       mock_member_repository: MagicMock,
-                                      sample_mutation_request: MutationRequest,
+                                      sample_mutation_request: FullMutationRequest,
                                       member_manager: MemberManager):
         # Given a request that contains a different username than the one in the first argument.
         req = sample_mutation_request
-        req.username = "something different than the username provided in the 'username' argument"
+        req.username = "abcdefgh"  # something different than the username provided in the 'username' argument
 
         # Given that there is not user in the DB (user will be created).
         mock_member_repository.search_member_by = MagicMock(return_value=([], 0))
@@ -227,33 +234,13 @@ class TestCreateOrUpdate:
         mock_member_repository.create_member.assert_not_called()
         mock_member_repository.update_member.assert_not_called()
 
-    def test_without_required_field(self, ctx,
-                                    mock_member_repository: MagicMock,
-                                    sample_mutation_request: MutationRequest,
-                                    sample_member: Member,
-                                    member_manager: MemberManager):
-        # Given a request that does not contain all the required fields .
-        req = sample_mutation_request
-        req.username = Mutation.NOT_SET  # Not set for some reason...
-
-        # Given that there is a user in the DB (user will be updated).
-        mock_member_repository.search_member_by = MagicMock(return_value=([sample_member], 1))
-
-        # When...
-        with raises(MissingRequiredFieldError):
-            member_manager.update_or_create(ctx, TEST_USERNAME, req)
-
-        # Expect...
-        mock_member_repository.create_member.assert_not_called()
-        mock_member_repository.update_member.assert_not_called()
-
 
 class TestUpdatePartially:
     def test_happy_path(self, ctx,
                         mock_member_repository: MagicMock,
                         member_manager: MemberManager):
         updated_comment = 'Updated comment.'
-        req = MutationRequest(comment=updated_comment)
+        req = PartialMutationRequest(comment=updated_comment)
 
         # When...
         member_manager.update_partially(ctx, TEST_USERNAME, req)
@@ -268,13 +255,14 @@ class TestUpdatePartially:
 
         # When...
         with raises(MemberNotFound):
-            member_manager.update_partially(ctx, TEST_USERNAME, MutationRequest(comment='Abc.'))
+            member_manager.update_partially(ctx, TEST_USERNAME, PartialMutationRequest(comment='Abc.'))
 
-    @mark.parametrize('test_name, req', INVALID_MUTATION_REQ)
+    @mark.parametrize('test_name, req_args', INVALID_MUTATION_REQ_ARGS)
     def test_invalid_mutation_req(self, ctx,
                                   member_manager: MemberManager,
-                                  req: MutationRequest,
+                                  req_args: dict,
                                   test_name: str):
+        req = PartialMutationRequest(**req_args)
         # When...
         with raises(ValueError):
             member_manager.update_partially(ctx, TEST_USERNAME, req)
@@ -384,14 +372,14 @@ class TestGetLogs:
 
 @fixture
 def sample_mutation_request():
-    return MutationRequest(
+    return FullMutationRequest(
         email=TEST_EMAIL,
         first_name=TEST_FIRST_NAME,
         last_name=TEST_LAST_NAME,
         username=TEST_USERNAME,
-        departure_date=TEST_DATE1.isoformat(),
         comment=TEST_COMMENT,
         association_mode=TEST_DATE2.isoformat(),
+        departure_date=TEST_DATE1.isoformat(),
         room_number=TEST_ROOM_NUMBER,
     )
 

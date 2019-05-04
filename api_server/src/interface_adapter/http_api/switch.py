@@ -77,11 +77,10 @@ def put(ctx, switch_id, body):
     LOG.debug("http_switch_put_called", extra=log_extra(ctx, switch_id=switch_id, request=body))
 
     try:
-        switch_manager.update(ctx, MutationRequest(
-            switch_id=switch_id,
-            ip_v4=body.get('ip', Mutation.NOT_SET),
-            description=body.get('description', Mutation.NOT_SET),
-            community=body.get('community', Mutation.NOT_SET),
+        switch_manager.update(ctx, switch_id, MutationRequest(
+            ip_v4=body.get('ip'),
+            description=body.get('description'),
+            community=body.get('community'),
         ))
         return NoContent, 204
 

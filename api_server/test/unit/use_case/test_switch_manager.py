@@ -3,7 +3,7 @@ from pytest import fixture, raises
 from unittest.mock import MagicMock
 
 from src.entity.switch import Switch
-from src.exceptions import SwitchNotFound, ReadOnlyField, MissingRequiredFieldError, IntMustBePositiveException
+from src.exceptions import SwitchNotFound, MissingRequiredField, IntMustBePositiveException
 from src.use_case.interface.switch_repository import SwitchRepository
 from src.use_case.switch_manager import SwitchManager, MutationRequest
 
@@ -64,31 +64,29 @@ class TestUpdate:
                         mock_switch_repository: SwitchRepository,
                         switch_manager: SwitchManager):
         req = MutationRequest(
-            switch_id='2',
             description='desc',
-            ip_v4='ip',
+            ip_v4='157.159.123.123',
             community='ip',
         )
         mock_switch_repository.update_switch = MagicMock()
 
-        switch_manager.update(ctx, req)
+        switch_manager.update(ctx, '2', req)
 
-        mock_switch_repository.update_switch.assert_called_once_with(ctx, **asdict(req))
+        mock_switch_repository.update_switch.assert_called_once_with(ctx, switch_id='2', **asdict(req))
 
     def test_switch_not_found(self,
                               ctx,
                               mock_switch_repository: SwitchRepository,
                               switch_manager: SwitchManager):
         req = MutationRequest(
-            switch_id='2',
             description='desc',
-            ip_v4='ip',
+            ip_v4='157.159.123.123',
             community='ip',
         )
         mock_switch_repository.update_switch = MagicMock(side_effect=SwitchNotFound)
 
         with raises(SwitchNotFound):
-            switch_manager.update(ctx, req)
+            switch_manager.update(ctx, '2', req)
 
     def test_missing_required_field(self,
                                     ctx,
@@ -96,13 +94,14 @@ class TestUpdate:
                                     switch_manager: SwitchManager):
         req = MutationRequest(
             description='desc',
-            ip_v4='ip',
+            ip_v4='157.159.123.123',
             community='ip',
         )
+        req.community = None
         mock_switch_repository.update_switch = MagicMock()
 
-        with raises(MissingRequiredFieldError):
-            switch_manager.update(ctx, req)
+        with raises(MissingRequiredField):
+            switch_manager.update(ctx, '2', req)
 
         mock_switch_repository.update_switch.assert_not_called()
 
@@ -112,7 +111,7 @@ class TestCreate:
                         ctx, mock_switch_repository: SwitchRepository, switch_manager: SwitchManager):
         req = MutationRequest(
             description='desc',
-            ip_v4='ip',
+            ip_v4='157.159.123.123',
             community='ip',
         )
         mock_switch_repository.create_switch = MagicMock()
@@ -121,23 +120,6 @@ class TestCreate:
 
         mock_switch_repository.create_switch.assert_called_once_with(ctx, description=req.description, ip_v4=req.ip_v4,
                                                                      community=req.community)
-
-    def test_cannot_set_id(self,
-                           ctx,
-                           mock_switch_repository: SwitchRepository,
-                           switch_manager: SwitchManager):
-        req = MutationRequest(
-            switch_id='should not be able to set a ID at creation',
-            description='desc',
-            ip_v4='ip',
-            community='ip',
-        )
-        mock_switch_repository.update_switch = MagicMock()
-
-        with raises(ReadOnlyField):
-            switch_manager.create(ctx, req)
-
-        mock_switch_repository.update_switch.assert_not_called()
 
 
 class TestDelete:

@@ -5,10 +5,10 @@ from main import port_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
 from src.exceptions import SwitchNotFound, PortNotFound, RoomNotFound, IntMustBePositiveException
-from src.interface_adapter.sql.decorator.auth import auth_regular_admin, auth_super_admin
-from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
+from src.interface_adapter.sql.decorator.auth import auth_regular_admin, auth_super_admin
+from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.use_case.port_manager import MutationRequest
 from src.util.context import log_extra
 from src.util.int_or_none import int_or_none
@@ -49,6 +49,8 @@ def post(ctx, body):
             port_number=body.get('portNumber'),
             room_number=body.get('roomNumber'),
             switch_id=body.get('switchID'),
+            rcom=0,  # TODO: Add to spec.
+            oid=None,  # TODO: Add to spec.
         ))
 
     except RoomNotFound:
@@ -83,11 +85,12 @@ def put(ctx, port_id, body):
     LOG.debug("http_port_put_called", extra=log_extra(ctx, port_id=port_id))
 
     try:
-        port_manager.update(ctx, MutationRequest(
-            port_id=port_id,
+        port_manager.update(ctx, port_id, MutationRequest(
             port_number=body.get('portNumber'),
             room_number=body.get('roomNumber'),
             switch_id=body.get('switchID'),
+            rcom=0,  # Add to spec.
+            oid=None,  # Add to spec.
         ))
 
     except PortNotFound:

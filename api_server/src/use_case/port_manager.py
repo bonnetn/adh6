@@ -1,14 +1,13 @@
 # coding=utf-8
 import json
 from dataclasses import dataclass, asdict
-from typing import List
+from typing import List, Optional
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
-from src.exceptions import RoomNotFound, SwitchNotFound, InvalidRoomNumber, InvalidSwitchID, ReadOnlyField, \
-    MissingRequiredFieldError, IntMustBePositiveException
+from src.exceptions import RoomNotFound, SwitchNotFound, InvalidRoomNumber, InvalidSwitchID, IntMustBePositiveException, \
+    MissingRequiredField
 from src.use_case.interface.port_repository import PortRepository
-from src.use_case.util.mutation import Mutation, is_set
 from src.util.context import log_extra
 from src.util.log import LOG
 
@@ -18,12 +17,24 @@ class MutationRequest:
     """
     Mutation request for a port. This represents the 'diff', that is going to be applied on the port object.
     """
-    port_id: str = Mutation.NOT_SET
-    port_number: str = Mutation.NOT_SET
-    room_number: str = Mutation.NOT_SET
-    switch_id: str = Mutation.NOT_SET
-    rcom: int = Mutation.NOT_SET
-    oid: str = Mutation.NOT_SET
+    port_number: str
+    switch_id: str
+    rcom: int
+    oid: Optional[str]
+    room_number: Optional[str]
+
+    def validate(self):
+        """
+        Validate the fields that are set in a MutationRequest.
+        """
+        if self.port_number is None:
+            raise MissingRequiredField('port_number')
+
+        if self.switch_id is None:
+            raise MissingRequiredField('switch_id')
+
+        if self.rcom is None:
+            raise MissingRequiredField('rcom')
 
 
 class PortManager:
@@ -54,7 +65,7 @@ class PortManager:
 
         return result, count
 
-    def update(self, ctx, mutation_request: MutationRequest) -> None:
+    def update(self, ctx, port_id, mutation_request: MutationRequest) -> None:
         """
         Update a port in the database.
         User story: As an admin, I can update a port in the database, so I can modify its description.
@@ -64,15 +75,12 @@ class PortManager:
         :raise RoomNotFound
         """
         # Make sure the request is valid.
-        _validate_mutation_request(mutation_request)
-
-        if not is_set(mutation_request.port_id):
-            raise MissingRequiredFieldError('id')
+        mutation_request.validate()
 
         fields_to_update = asdict(mutation_request)
-        fields_to_update = {k: v for k, v in fields_to_update.items() if is_set(v)}
+        fields_to_update = {k: v for k, v in fields_to_update.items() if v is not None}
         try:
-            self.port_repository.update_port(ctx, **fields_to_update)
+            self.port_repository.update_port(ctx, port_id=port_id, **fields_to_update)
             LOG.info("port_update", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))
 
         except InvalidSwitchID as e:
@@ -93,13 +101,10 @@ class PortManager:
         :raise RoomNotFound
         """
         # Make sure the request is valid.
-        _validate_mutation_request(mutation_request)
-
-        if is_set(mutation_request.port_id):
-            raise ReadOnlyField()
+        mutation_request.validate()
 
         fields_to_update = asdict(mutation_request)
-        fields_to_update = {k: v for k, v in fields_to_update.items() if is_set(v)}
+        fields_to_update = {k: v for k, v in fields_to_update.items() if v is not None}
         try:
             port_id = self.port_repository.create_port(ctx, **fields_to_update)
             LOG.info("port_create", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))
@@ -119,11 +124,3 @@ class PortManager:
         :raise PortNotFound
         """
         self.port_repository.delete_port(ctx, port_id)
-
-
-
-def _validate_mutation_request(req: MutationRequest):
-    """
-    Validate the fields that are set in a MutationRequest.
-    """
-    pass

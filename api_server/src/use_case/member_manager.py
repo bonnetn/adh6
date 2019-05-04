@@ -1,23 +1,20 @@
 # coding=utf-8
-"""
-Use cases (business rule layer) of everything related to members.
-"""
+""" Use cases (business rule layer) of everything related to members. """
 import datetime
 import json
 from dataclasses import dataclass, asdict
-from typing import List
+from typing import List, Optional
 
 from src.constants import DEFAULT_OFFSET, DEFAULT_LIMIT
 from src.entity.member import Member
 from src.exceptions import InvalidAdmin, UnknownPaymentMethod, LogFetchError, NoPriceAssignedToThatDurationException, \
-    MemberNotFound, UsernameMismatchError, MissingRequiredFieldError, PasswordTooShortError, InvalidEmail, \
-    IntMustBePositiveException, StringMustNotBeEmptyException
+    MemberNotFound, UsernameMismatchError, PasswordTooShortError, InvalidEmail, \
+    IntMustBePositiveException, StringMustNotBeEmptyException, InvalidDate, MissingRequiredField
 from src.use_case.interface.logs_repository import LogsRepository
 from src.use_case.interface.member_repository import MemberRepository
 from src.use_case.interface.membership_repository import MembershipRepository
 from src.use_case.interface.money_repository import MoneyRepository
-from src.use_case.util.mutation import Mutation, is_set
-from src.util.checks import is_email
+from src.util.validator import is_email, is_empty, is_date
 from src.util.context import log_extra
 from src.util.date import string_to_date
 from src.util.hash import ntlm_hash
@@ -25,18 +22,96 @@ from src.util.log import LOG
 
 
 @dataclass
-class MutationRequest(Member):
+class PartialMutationRequest:
     """
     Mutation request for a member. This represents the 'diff', that is going to be applied on the member object.
+
+    If a field is set to None, field be left untouched.
     """
-    email: str = Mutation.NOT_SET
-    first_name: str = Mutation.NOT_SET
-    last_name: str = Mutation.NOT_SET
-    username: str = Mutation.NOT_SET
-    departure_date: str = Mutation.NOT_SET
-    comment: str = Mutation.NOT_SET
-    association_mode: str = Mutation.NOT_SET
-    room_number: str = Mutation.NOT_SET
+    email: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    username: Optional[str] = None
+    comment: Optional[str] = None
+    departure_date: Optional[str] = None
+    association_mode: Optional[str] = None
+    room_number: Optional[str] = None
+
+    def validate(self):
+        # EMAIL:
+        if self.email and not is_email(self.email):
+            raise InvalidEmail(self.email)
+
+        # FIRST_NAME:
+        if self.first_name is not None and is_empty(self.first_name):
+            raise StringMustNotBeEmptyException('first_name')
+
+        # LAST_NAME:
+        if self.last_name is not None and is_empty(self.last_name):
+            raise StringMustNotBeEmptyException('last_name')
+
+        # USERNAME:
+        if self.username is not None:
+            if is_empty(self.username):
+                raise StringMustNotBeEmptyException('username')
+
+            if len(self.username) > 9 or len(self.username) < 7:
+                raise ValueError('username must be between 7 and 9 characters long')
+
+        # COMMENT:
+        # Nothing to validate...
+
+        # DEPARTURE_DATE:
+        if self.departure_date is not None and not is_date(self.departure_date):
+            raise InvalidDate(self.departure_date)
+
+        # ASSOCIATION_MODE:
+        if self.association_mode is not None and not is_date(self.association_mode):
+            raise InvalidDate(self.departure_date)
+
+        # ROOM_NUMBER:
+        if self.room_number is not None and is_empty(self.room_number):
+            raise StringMustNotBeEmptyException('room_number')
+
+
+@dataclass
+class FullMutationRequest(PartialMutationRequest):
+    """
+    Mutation request for a member. This represents the 'diff', that is going to be applied on the member object.
+
+    If a field is set to None, field will be cleared in the database.
+    """
+    email: str
+    first_name: str
+    last_name: str
+    username: str
+    departure_date: str
+    comment: Optional[str]
+    association_mode: Optional[str]
+    room_number: Optional[str]
+
+    def validate(self):
+        # EMAIL:
+        if self.email is None:
+            raise MissingRequiredField('email')
+
+        # FIRST_NAME:
+        if self.first_name is None:
+            raise MissingRequiredField('first_name')
+
+        # LAST_NAME:
+        if self.last_name is None:
+            raise MissingRequiredField('last_name')
+
+        # USERNAME:
+        if self.username is None:
+            raise MissingRequiredField('username')
+
+        # DEPARTURE_DATE:
+        if self.departure_date is None:
+            raise MissingRequiredField('departure_date')
+
+        super().validate()
 
 
 class MemberManager:
@@ -95,7 +170,7 @@ class MemberManager:
 
             self.money_repository.add_member_payment_record(ctx, price_in_cents, title, username, payment_method)
             self.membership_repository.create_membership(ctx, username, start, end)
-            self.member_repository.update_member(ctx, username, departure_date=end)
+            self.member_repository.update_member(ctx, username, departure_date=end.isoformat())
 
         except InvalidAdmin:
             LOG.warn("create_membership_record_admin_not_found", extra=log_extra(ctx))
@@ -160,7 +235,7 @@ class MemberManager:
         ))
         return result, count
 
-    def update_or_create(self, ctx, username, mutation_request: MutationRequest) -> bool:
+    def update_or_create(self, ctx, username, mutation_request: FullMutationRequest) -> bool:
         """
         Create/Update member from the database.
 
@@ -174,12 +249,9 @@ class MemberManager:
         :raise UsernameMismatchError
         """
         # Make sure all the fields set are valid.
-        _validate_mutation_request(mutation_request)
+        mutation_request.validate()
 
         # Make sure all the necessary fields are set.
-        if not is_set(mutation_request.username):
-            raise MissingRequiredFieldError('username')
-
         member, _ = self.member_repository.search_member_by(ctx, username=username)
         if member:
             # [UPDATE] Member already exists, perform a whole update.
@@ -187,7 +259,7 @@ class MemberManager:
             # Create a dict with fields to update. If field is not provided in the mutation request, consider that it
             # should be None as it is a full update of the member.
             fields_to_update = asdict(mutation_request)
-            fields_to_update = {k: v if is_set(v) else None for k, v in fields_to_update.items()}
+            fields_to_update = {k: v for k, v in fields_to_update.items()}
 
             # This call will never throw a MemberNotFound because we checked for the object existence before.
             self.member_repository.update_member(ctx, username, **fields_to_update)
@@ -210,7 +282,7 @@ class MemberManager:
 
             mutation_request.username = username  # Just in case it has not been specified in the body.
             fields = asdict(mutation_request)
-            fields = {k: v if is_set(v) else None for k, v in fields.items()}
+            fields = {k: v for k, v in fields.items()}
 
             self.member_repository.create_member(ctx, **fields)
 
@@ -223,7 +295,7 @@ class MemberManager:
 
             return True
 
-    def update_partially(self, ctx, username, mutation_request: MutationRequest) -> None:
+    def update_partially(self, ctx, username, mutation_request: PartialMutationRequest) -> None:
         """
         User story: As an admin, I can modify some of the fields of a profile, so that I can update the information of
         a member.
@@ -231,12 +303,12 @@ class MemberManager:
         :raise MemberNotFound
         """
         # Perform all the checks on the validity of the data in the mutation request.
-        _validate_mutation_request(mutation_request)
+        mutation_request.validate()
 
-        # Create a dict with all the changed field. If a field in 'NOT_SET' it will not be put in the dict, and the
+        # Create a dict with all the changed field. If a field is None it will not be put in the dict, and the
         # field will not be updated.
         fields_to_update = asdict(mutation_request)
-        fields_to_update = {k: v for k, v in fields_to_update.items() if is_set(v)}
+        fields_to_update = {k: v for k, v in fields_to_update.items() if v is not None}
 
         self.member_repository.update_member(ctx, username, **fields_to_update)
 
@@ -321,23 +393,3 @@ class MemberManager:
         except LogFetchError:
             LOG.warning("log_fetch_failed", extra=log_extra(ctx, username=username))
             return []  # We fail open here.
-
-
-def _validate_mutation_request(req: MutationRequest):
-    """
-    Validate the fields that are set in a MutationRequest.
-    """
-    if is_set(req.email) and not is_email(req.email):
-        raise InvalidEmail()
-
-    if req.first_name == '':
-        raise StringMustNotBeEmptyException('first_name')
-
-    if req.last_name == '':
-        raise StringMustNotBeEmptyException('last_name')
-
-    if req.username == '':
-        raise StringMustNotBeEmptyException('username')
-
-    if req.room_number == '':
-        raise StringMustNotBeEmptyException('room number')

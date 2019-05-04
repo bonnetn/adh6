@@ -179,7 +179,6 @@ def test_port_get_non_existant_port(api_client, sample_switch1, sample_port1):
 
 
 def test_port_put_update_port_invalid_switch(api_client,
-                                             sample_switch1,
                                              sample_port1):
     portNumber = "1/2/3"
     body = {

@@ -271,7 +271,7 @@ def test_member_put_member_create(api_client):
 
 def test_member_patch_username(api_client):
     body = {
-        "username": "TEST",
+        "username": "TESTTEST",
     }
     res = api_client.patch(
         '{}/member/{}'.format(base_url, "dubois_j"),
@@ -289,7 +289,7 @@ def test_member_patch_username(api_client):
         "departureDate": str(datetime.datetime(2005, 7, 14, 12, 30)),
         "associationMode": "2011-04-30T17:50:17",
         "email": "j.dubois@free.fr",
-        "username": "TEST"
+        "username": "TESTTEST"
     })
 
 

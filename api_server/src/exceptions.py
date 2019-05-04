@@ -1,11 +1,13 @@
 # coding=utf-8
 # INVALID ERRORS.
 class InvalidIPv6(ValueError):
-    pass  # pragma: no cover
+    def __init__(self, value):
+        super().__init__(f'"{value}" is not a valid IPv6')
 
 
 class InvalidIPv4(ValueError):
-    pass  # pragma: no cover
+    def __init__(self, value):
+        super().__init__(f'"{value}" is not a valid IPv4')
 
 
 class InvalidMACAddress(ValueError):
@@ -24,13 +26,9 @@ class InvalidSwitchID(ValueError):
     pass
 
 
-class InvalidIPAddress(ValueError):
-    pass
-
-
 class InvalidEmail(ValueError):
-    def __init__(self):
-        super().__init__('email is invalid')
+    def __init__(self, mail):
+        super().__init__(f'"{mail}" is not a valid email')
 
 
 class InvalidVLANNumber(ValueError):
@@ -122,7 +120,7 @@ class RoomNumberMismatchError(ValueError):
         super().__init__('cannot create room with 2 different room_numbers')
 
 
-class MissingRequiredFieldError(ValueError):
+class MissingRequiredField(ValueError):
     def __init__(self, msg):
         super().__init__(f'{msg} is missing')
 
@@ -140,6 +138,11 @@ class IntMustBePositiveException(ValueError):
 class StringMustNotBeEmptyException(ValueError):
     def __init__(self, msg):
         super().__init__(f'{msg} must not be empty')
+
+
+class InvalidDate(ValueError):
+    def __init__(self, value):
+        super().__init__(f'"{value}" is not a valid date')
 
 
 class IPAllocationFailedError(RuntimeError):

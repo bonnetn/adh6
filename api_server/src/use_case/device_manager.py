@@ -4,19 +4,18 @@ from dataclasses import asdict, dataclass
 from typing import List, Optional
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
-from src.entity.device import Device, DeviceType
+from src.entity.device import Device, DeviceType, ALL_DEVICE_TYPES
+from src.exceptions import InvalidMACAddress, MissingRequiredField, InvalidIPv4, InvalidIPv6
+from src.exceptions import NoMoreIPAvailableException, MemberNotFound, DeviceNotFound, IntMustBePositiveException, \
+    IPAllocationFailedError
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator
-from src.exceptions import NoMoreIPAvailableException, MemberNotFound, DeviceNotFound, InvalidIPAddress, \
-    IntMustBePositiveException, IPAllocationFailedError
 from src.use_case.interface.member_repository import MemberRepository
 from src.use_case.interface.room_repository import RoomRepository
 from src.use_case.interface.vlan_repository import VLANRepository
-from src.exceptions import InvalidMACAddress
-from src.use_case.util.mutation import Mutation, is_set
-from src.util.checks import is_mac_address, is_ip_v4, is_ip_v6
 from src.util.context import log_extra
 from src.util.log import LOG
+from src.util.validator import is_mac_address, is_ip_v4, is_ip_v6, is_empty
 
 
 @dataclass
@@ -24,11 +23,35 @@ class MutationRequest(Device):
     """
     Mutation request for a device. This represents the 'diff', that is going to be applied on the device object.
     """
-    mac_address: str = Mutation.NOT_SET
-    owner_username: str = Mutation.NOT_SET
-    connection_type: str = Mutation.NOT_SET
-    ip_v4_address: Optional[str] = Mutation.NOT_SET
-    ip_v6_address: Optional[str] = Mutation.NOT_SET
+    mac_address: str
+    owner_username: str
+    connection_type: str
+    ip_v4_address: Optional[str]
+    ip_v6_address: Optional[str]
+
+    def validate(self):
+        # MAC ADDRESS:
+        if not is_mac_address(self.mac_address):
+            raise InvalidMACAddress()
+
+        # OWNER USERNAME:
+        if is_empty(self.owner_username):
+            raise MissingRequiredField('owner_username')
+
+        # CONNECTION TYPE:
+        if is_empty(self.connection_type):
+            raise MissingRequiredField('connection_type')
+
+        if self.connection_type not in ALL_DEVICE_TYPES:
+            raise ValueError('invalid connection type')
+
+        # IP_V4_ADDRESS:
+        if self.ip_v4_address is not None and not is_ip_v4(self.ip_v4_address):
+            raise InvalidIPv4(self.ip_v4_address)
+
+        # IP_V6_ADDRESS:
+        if self.ip_v6_address is not None and not is_ip_v6(self.ip_v6_address):
+            raise InvalidIPv6(self.ip_v6_address)
 
 
 class DeviceManager:
@@ -117,10 +140,7 @@ class DeviceManager:
         :raise InvalidIPAddress
         """
 
-        if not is_set(req.mac_address):
-            req.mac_address = mac_address
-
-        _validate_mutation_request(req)
+        req.validate()
 
         # Make sure the provided owner username is valid.
         owner, _ = self.member_repository.search_member_by(ctx, username=req.owner_username)
@@ -133,19 +153,17 @@ class DeviceManager:
 
             # TODO: Free addresses if cannot allocate.
             try:
-                if not is_set(req.ip_v4_address) and ip_v4_range:
+                if req.ip_v4_address is None and ip_v4_range:
                     req.ip_v4_address = self.ip_allocator.allocate_ip_v4(ctx, ip_v4_range)
-                if not is_set(req.ip_v6_address) and ip_v6_range:
+
+                if req.ip_v6_address is None and ip_v6_range:
                     req.ip_v6_address = self.ip_allocator.allocate_ip_v6(ctx, ip_v6_range)
 
             except NoMoreIPAvailableException as e:
                 raise IPAllocationFailedError() from e
 
-        fields = {k: v if is_set(v) else None for k, v in asdict(req).items()}
+        fields = {k: v for k, v in asdict(req).items()}
         result, _ = self.device_repository.search_device_by(ctx, mac_address=mac_address)
-
-        req.ip_v4_address = req.ip_v4_address or 'En Attente'
-        req.ip_v6_address = req.ip_v6_address or 'En Attente'
         if not result:
             # No device with that MAC address, creating one...
             self.device_repository.create_device(ctx, **fields)
@@ -183,14 +201,3 @@ class DeviceManager:
 
         vlan = self.vlan_repository.get_vlan(ctx, result[0].vlan_number)
         return vlan.ip_v4_range, vlan.ip_v6_range
-
-
-def _validate_mutation_request(req: MutationRequest):
-    if not is_mac_address(req.mac_address):
-        raise InvalidMACAddress()
-
-    if is_set(req.ip_v4_address) and not is_ip_v4(req.ip_v4_address):
-        raise InvalidIPAddress()
-
-    if is_set(req.ip_v6_address) and not is_ip_v6(req.ip_v6_address):
-        raise InvalidIPAddress()

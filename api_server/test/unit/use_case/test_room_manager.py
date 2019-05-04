@@ -3,7 +3,7 @@ from pytest import fixture, raises
 from unittest.mock import MagicMock
 
 from src.entity.room import Room
-from src.exceptions import RoomNotFound, VLANNotFound, RoomNumberMismatchError, MissingRequiredFieldError, \
+from src.exceptions import RoomNotFound, VLANNotFound, RoomNumberMismatchError, MissingRequiredField, \
     InvalidVLANNumber, IntMustBePositiveException
 from src.use_case.interface.room_repository import RoomRepository
 from src.use_case.room_manager import RoomManager, MutationRequest
@@ -138,9 +138,9 @@ class TestUpdateOrCreate:
                                         sample_room: Room,
                                         room_manager: RoomManager):
         mock_room_repository.search_room_by = MagicMock(return_value=([sample_room], 1))
-        mutation_request.room_number = Mutation.NOT_SET
+        mutation_request.room_number = None
 
-        with raises(MissingRequiredFieldError):
+        with raises(MissingRequiredField):
             room_manager.update_or_create(ctx, sample_room.room_number, mutation_request)
 
 

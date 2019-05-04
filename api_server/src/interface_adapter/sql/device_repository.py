@@ -73,8 +73,8 @@ class DeviceSQLRepository(DeviceRepository, IPAllocator):
                 ctx,
                 s=s,
                 mac_address=mac_address,
-                ip_v4_address=ip_v4_address,
-                ip_v6_address=ip_v6_address,
+                ip_v4_address=ip_v4_address or 'En Attente',
+                ip_v6_address=ip_v6_address or 'En Attente',
                 username=owner_username,
             )
         else:
@@ -104,8 +104,8 @@ class DeviceSQLRepository(DeviceRepository, IPAllocator):
                     s=s,
                     device_to_update=device_to_update,
                     mac_address=mac_address,
-                    ip_v4_address=ip_v4_address,
-                    ip_v6_address=ip_v6_address,
+                    ip_v4_address=ip_v4_address or 'En Attente',
+                    ip_v6_address=ip_v6_address or 'En Attente',
                     username=owner_username,
                 )
             else:

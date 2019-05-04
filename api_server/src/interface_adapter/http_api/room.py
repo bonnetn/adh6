@@ -4,7 +4,7 @@ from connexion import NoContent
 from main import room_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
-from src.exceptions import RoomNotFound, VLANNotFound, RoomNumberMismatchError, MissingRequiredFieldError, \
+from src.exceptions import RoomNotFound, VLANNotFound, RoomNumberMismatchError, MissingRequiredField, \
     IntMustBePositiveException
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin, auth_super_admin
 from src.interface_adapter.sql.decorator.sql_session import require_sql
@@ -48,7 +48,7 @@ def put(ctx, room_number, body):
             phone_number=body.get('phone'),
             vlan_number=body.get('vlan'),
         ))
-    except (MissingRequiredFieldError, VLANNotFound, RoomNumberMismatchError) as e:
+    except (MissingRequiredField, VLANNotFound, RoomNumberMismatchError) as e:
         return bad_request(e), 400
 
     if created:
