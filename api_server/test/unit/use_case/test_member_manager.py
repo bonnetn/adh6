@@ -7,8 +7,8 @@ from unittest.mock import MagicMock
 
 from config import TEST_CONFIGURATION
 from src.entity.member import Member
-from src.exceptions import LogFetchError, NoPriceAssignedToThatDurationException, MemberNotFound, UsernameMismatchError, \
-    PasswordTooShortError, IntMustBePositive
+from src.exceptions import LogFetchError, NoPriceAssignedToThatDuration, MemberNotFoundError, UsernameMismatchError, \
+    PasswordTooShortError, IntMustBePositive, MissingRequiredField, UnknownPaymentMethod, InvalidAdmin
 from src.use_case.interface.logs_repository import LogsRepository
 from src.use_case.interface.member_repository import MemberRepository
 from src.use_case.interface.membership_repository import MembershipRepository
@@ -19,11 +19,17 @@ from test.unit.use_case.conftest import TEST_USERNAME, TEST_EMAIL, TEST_FIRST_NA
     TEST_ROOM_NUMBER, TEST_DATE1, TEST_DATE2, TEST_LOGS
 
 INVALID_MUTATION_REQ_ARGS = [
+    ('empty_email', {'email': ''}),
+    ('empty_first_name', {'first_name': ''}),
+    ('empty_last_name', {'last_name': ''}),
+    ('empty_username', {'username': ''}),
+    ('empty_room_number', {'room_number': ''}),
+
     ('invalid_email', {'email': 'not a valid email'}),
-    ('invalid_first_name', {'first_name': ''}),
-    ('invalid_last_name', {'last_name': ''}),
-    ('invalid_username', {'username': ''}),
-    ('invalid_room_number', {'room_number': ''}),
+    ('invalid_username', {'username': 'this username is way too long'}),
+
+    ('invalid_association_mode', {'association_mode': 'this is not a date'}),
+    ('invalid_departure_date', {'departure_date': 'this is not a date'}),
 ]
 
 
@@ -88,7 +94,7 @@ class TestNewMembership:
                                    mock_membership_repository: MagicMock,
                                    member_manager: MemberManager):
         # When...
-        with raises(NoPriceAssignedToThatDurationException):
+        with raises(NoPriceAssignedToThatDuration):
             member_manager.new_membership(ctx, TEST_USERNAME, 123456789, 'cash')
 
         # Expect that the database has not been touched.
@@ -97,10 +103,27 @@ class TestNewMembership:
 
     def test_member_not_found(self, ctx, mock_member_repository: MemberRepository, member_manager: MemberManager):
         # Given that the database cannot find the specified member.
-        mock_member_repository.update_member = MagicMock(side_effect=MemberNotFound)
+        mock_member_repository.update_member = MagicMock(side_effect=MemberNotFoundError)
 
-        with raises(MemberNotFound):
+        with raises(MemberNotFoundError):
             member_manager.new_membership(ctx, TEST_USERNAME, 1, 'card')
+
+    @mark.parametrize('exception', [UnknownPaymentMethod, InvalidAdmin])
+    def test_fail_to_create_transaction(self, ctx,
+                                        mock_membership_repository: MembershipRepository,
+                                        mock_member_repository: MemberRepository,
+                                        mock_money_repository: MoneyRepository,
+                                        exception: Exception,
+                                        member_manager: MemberManager):
+        mock_member_repository.update_member = MagicMock()
+        mock_money_repository.add_member_payment_record = MagicMock(side_effect=exception)
+
+        # When...
+        with raises(exception):
+            member_manager.new_membership(ctx, TEST_USERNAME, 1, 'cash', start_str=TEST_DATE1.isoformat())
+
+        # Expect...
+        mock_member_repository.update_member.assert_not_called()
 
     @staticmethod
     def _assert_membership_record_was_created(ctx, user, repo, start_time, end_time):
@@ -134,7 +157,7 @@ class TestGetByUsername:
         mock_member_repository.search_member_by = MagicMock(return_value=([], 0))
 
         # When...
-        with raises(MemberNotFound):
+        with raises(MemberNotFoundError):
             member_manager.get_by_username(ctx, TEST_USERNAME)
 
         # Expect...
@@ -215,6 +238,28 @@ class TestCreateOrUpdate:
         mock_member_repository.update_member.assert_called_once_with(ctx, TEST_USERNAME, **asdict(req))
         mock_member_repository.create_member.assert_not_called()  # Do not create any member!
 
+    @mark.parametrize('field', ['email', 'first_name', 'last_name', 'username', 'departure_date'])
+    def test_update_without_required_field(self, ctx,
+                                           mock_member_repository: MagicMock,
+                                           sample_mutation_request: FullMutationRequest,
+                                           sample_member: Member,
+                                           field: str,
+                                           member_manager: MemberManager):
+        # Given that there is a user in the DB (user will be updated).
+        mock_member_repository.search_member_by = MagicMock(return_value=([sample_member], 1))
+
+        # Given a request that updates some fields.
+        req = sample_mutation_request
+        req = FullMutationRequest(**{**asdict(req), **{field: None}})
+
+        # When...
+        with raises(MissingRequiredField):
+            member_manager.update_or_create(ctx, TEST_USERNAME, req)
+
+        # Expect...
+        mock_member_repository.update_member.assert_not_called()
+        mock_member_repository.create_member.assert_not_called()  # Do not create any member!
+
     def test_create_username_mismatch(self, ctx,
                                       mock_member_repository: MagicMock,
                                       sample_mutation_request: FullMutationRequest,
@@ -251,10 +296,10 @@ class TestUpdatePartially:
     def test_not_found(self, ctx,
                        mock_member_repository: MagicMock,
                        member_manager: MemberManager):
-        mock_member_repository.update_member = MagicMock(side_effect=MemberNotFound)
+        mock_member_repository.update_member = MagicMock(side_effect=MemberNotFoundError)
 
         # When...
-        with raises(MemberNotFound):
+        with raises(MemberNotFoundError):
             member_manager.update_partially(ctx, TEST_USERNAME, PartialMutationRequest(comment='Abc.'))
 
     @mark.parametrize('test_name, req_args', INVALID_MUTATION_REQ_ARGS)
@@ -300,10 +345,10 @@ class TestChangePassword:
                               member_manager: MemberManager):
         # Given...
         new_password = 'updated password'
-        mock_member_repository.update_member = MagicMock(side_effect=MemberNotFound)
+        mock_member_repository.update_member = MagicMock(side_effect=MemberNotFoundError)
 
         # When...
-        with raises(MemberNotFound):
+        with raises(MemberNotFoundError):
             member_manager.change_password(ctx, TEST_USERNAME, new_password)
 
 
@@ -321,10 +366,10 @@ class TestDelete:
                        mock_member_repository: MagicMock,
                        member_manager: MemberManager):
         # Given...
-        mock_member_repository.delete_member = MagicMock(side_effect=MemberNotFound)
+        mock_member_repository.delete_member = MagicMock(side_effect=MemberNotFoundError)
 
         # When...
-        with raises(MemberNotFound):
+        with raises(MemberNotFoundError):
             member_manager.delete(ctx, TEST_USERNAME)
 
 
@@ -366,7 +411,7 @@ class TestGetLogs:
         mock_member_repository.search_member_by = MagicMock(return_value=([], 0))
 
         # When...
-        with raises(MemberNotFound):
+        with raises(MemberNotFoundError):
             member_manager.get_logs(ctx, TEST_USERNAME)
 
 

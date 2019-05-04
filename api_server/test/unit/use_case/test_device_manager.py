@@ -5,9 +5,8 @@ from unittest.mock import MagicMock
 from src.entity.device import Device, DeviceType
 from src.entity.member import Member
 from src.entity.room import Room
-from src.exceptions import InvalidMACAddress, MissingRequiredField, MemberNotFound, InvalidIPv6, InvalidIPv4
-from src.exceptions import NoMoreIPAvailableException, DeviceNotFound, IntMustBePositive, \
-    IPAllocationFailedError
+from src.exceptions import InvalidMACAddress, MissingRequiredField, InvalidIPv6, InvalidIPv4, MemberNotFoundError
+from src.exceptions import NoMoreIPAvailableException, DeviceNotFoundError, IntMustBePositive
 from src.use_case.device_manager import DeviceManager, MutationRequest
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator
@@ -309,20 +308,44 @@ class TestUpdateOrCreate:
         mock_device_repository.create_device.assert_not_called()
         mock_device_repository.update_device.assert_not_called()
 
-    def test_invalid_owner_username(self,
-                                    ctx,
-                                    mock_member_repository: MagicMock,
-                                    mock_device_repository: MagicMock,
-                                    device_manager: DeviceManager):
+    def test_bad_username(self,
+                          ctx,
+                          mock_member_repository: MagicMock,
+                          mock_device_repository: MagicMock,
+                          device_manager: DeviceManager):
+        # Given...
+        mock_member_repository.search_member_by = MagicMock(return_value=([], 0))
+
+        # When...
+        with raises(MemberNotFoundError):
+            device_manager.update_or_create(ctx, mac_address=TEST_MAC_ADDRESS1,
+                                            req=MutationRequest(
+                                                owner_username='hello__',
+                                                connection_type=DeviceType.Wired,
+                                                mac_address=TEST_MAC_ADDRESS1,
+                                                ip_v4_address=None,
+                                                ip_v6_address=None,
+                                            ),
+                                            )
+
+        # Expect...
+        mock_device_repository.create_device.assert_not_called()
+        mock_device_repository.update_device.assert_not_called()
+
+    def test_invalid_device_type(self,
+                                 ctx,
+                                 mock_member_repository: MagicMock,
+                                 mock_device_repository: MagicMock,
+                                 device_manager: DeviceManager):
         # Given...
         mock_member_repository.search_member_by = MagicMock(return_value=([], 0))
 
         # When...Unnamed
-        with raises(MemberNotFound):
+        with raises(ValueError):
             device_manager.update_or_create(ctx, mac_address=TEST_MAC_ADDRESS1,
                                             req=MutationRequest(
                                                 owner_username='abcdefgh',
-                                                connection_type=DeviceType.Wired,
+                                                connection_type='invalid',
                                                 mac_address=TEST_MAC_ADDRESS1,
                                                 ip_v4_address=None,
                                                 ip_v6_address=None,
@@ -357,7 +380,7 @@ class TestUpdateOrCreate:
         mock_device_repository.search_device_by = MagicMock(return_value=([sample_device], 1))
 
         # When...
-        with raises(IPAllocationFailedError):
+        with raises(NoMoreIPAvailableException):
             device_manager.update_or_create(ctx,
                                             mac_address=sample_device.mac_address,
                                             req=MutationRequest(
@@ -391,7 +414,7 @@ class TestGetByMacAddress:
         mock_device_repository.search_device_by = MagicMock(return_value=([], 0))
 
         # When...
-        with raises(DeviceNotFound):
+        with raises(DeviceNotFoundError):
             device_manager.get_by_mac_address(ctx, TEST_MAC_ADDRESS1)
 
         # Expect...
@@ -414,10 +437,10 @@ class TestDelete:
                               mock_device_repository: MagicMock,
                               device_manager: DeviceManager):
         # Given
-        mock_device_repository.delete_device = MagicMock(side_effect=DeviceNotFound)
+        mock_device_repository.delete_device = MagicMock(side_effect=DeviceNotFoundError)
 
         # When...
-        with raises(DeviceNotFound):
+        with raises(DeviceNotFoundError):
             device_manager.delete(ctx, TEST_MAC_ADDRESS1)
 
         # Expect...

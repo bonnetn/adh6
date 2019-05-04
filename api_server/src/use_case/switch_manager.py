@@ -5,7 +5,7 @@ from typing import List
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.switch import Switch
-from src.exceptions import SwitchNotFound, IntMustBePositive, MissingRequiredField, \
+from src.exceptions import SwitchNotFoundError, IntMustBePositive, MissingRequiredField, \
     InvalidIPv4, StringMustNotBeEmpty
 from src.use_case.interface.switch_repository import SwitchRepository
 from src.util.context import log_extra
@@ -57,7 +57,7 @@ class SwitchManager:
         LOG.info("switch_get_by_id", extra=log_extra(ctx, switch_id=switch_id))
 
         if not result:
-            raise SwitchNotFound()
+            raise SwitchNotFoundError(switch_id)
 
         return result[0]
 
@@ -95,8 +95,8 @@ class SwitchManager:
             self.switch_repository.update_switch(ctx, switch_id=switch_id, **fields_to_update)
             LOG.info("switch_update", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))
 
-        except SwitchNotFound as e:
-            raise SwitchNotFound() from e
+        except SwitchNotFoundError as e:
+            raise SwitchNotFoundError(switch_id) from e
 
     def create(self, ctx, mutation_request: MutationRequest) -> str:
         """
@@ -128,5 +128,5 @@ class SwitchManager:
         try:
             self.switch_repository.delete_switch(ctx, switch_id)
 
-        except SwitchNotFound as e:
-            raise SwitchNotFound() from e
+        except SwitchNotFoundError as e:
+            raise SwitchNotFoundError(switch_id) from e

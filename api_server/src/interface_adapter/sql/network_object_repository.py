@@ -11,11 +11,11 @@ from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port, SwitchInfo
 from src.entity.switch import Switch
 from src.entity.vlan import Vlan
+from src.exceptions import SwitchNotFoundError, PortNotFoundError, VLANNotFoundError, RoomNotFoundError
 from src.interface_adapter.sql.model.models import Chambre
 from src.interface_adapter.sql.model.models import Port as PortSQL
 from src.interface_adapter.sql.model.models import Switch as SwitchSQL
 from src.interface_adapter.sql.model.models import Vlan as VlanSQL
-from src.exceptions import SwitchNotFound, PortNotFound, VLANNotFound, InvalidRoomNumber, InvalidSwitchID
 from src.use_case.interface.port_repository import PortRepository
 from src.use_case.interface.switch_repository import SwitchRepository
 from src.use_case.interface.vlan_repository import VLANRepository
@@ -81,7 +81,7 @@ class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepositor
         s = ctx.get(CTX_SQL_SESSION)
         result: SwitchSQL = s.query(SwitchSQL).filter(SwitchSQL.id == int(switch_id)).one_or_none()
         if not result:
-            raise SwitchNotFound()
+            raise SwitchNotFoundError(switch_id)
 
         result.communaute = community
         result.ip = ip_v4
@@ -93,7 +93,7 @@ class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepositor
         s = ctx.get(CTX_SQL_SESSION)
         result: SwitchSQL = s.query(SwitchSQL).filter(SwitchSQL.id == int(switch_id)).one_or_none()
         if not result:
-            raise SwitchNotFound()
+            raise SwitchNotFoundError(switch_id)
 
         s.delete(result)
 
@@ -155,11 +155,11 @@ class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepositor
 
         room = s.query(Chambre).filter(Chambre.numero == room_number).one_or_none()
         if room is None:
-            raise InvalidRoomNumber()
+            raise RoomNotFoundError(room_number)
 
         switch = s.query(SwitchSQL).filter(SwitchSQL.id == switch_id).one_or_none()
         if switch is None:
-            raise InvalidSwitchID()
+            raise SwitchNotFoundError(switch_id)
 
         port = PortSQL(
             rcom=rcom,
@@ -194,15 +194,15 @@ class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepositor
 
         port = s.query(PortSQL).filter(PortSQL.id == int(port_id)).one_or_none()
         if port is None:
-            raise PortNotFound()
+            raise PortNotFoundError(port_id)
 
         room = s.query(Chambre).filter(Chambre.numero == room_number).one_or_none()
         if room is None:
-            raise InvalidRoomNumber()
+            raise RoomNotFoundError(room_number)
 
         switch = s.query(SwitchSQL).filter(SwitchSQL.id == switch_id).one_or_none()
         if switch is None:
-            raise InvalidSwitchID()
+            raise SwitchNotFoundError(switch_id)
 
         port.rcom = rcom
         port.numero = port_number
@@ -220,7 +220,7 @@ class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepositor
         s = ctx.get(CTX_SQL_SESSION)
         port = s.query(PortSQL).filter(PortSQL.id == port_id).one_or_none()
         if port is None:
-            raise PortNotFound()
+            raise PortNotFoundError(port_id)
 
         s.delete(port)
 
@@ -235,7 +235,7 @@ class NetworkObjectSQLRepository(PortRepository, VLANRepository, SwitchRepositor
         s = ctx.get(CTX_SQL_SESSION)
         result = s.query(VlanSQL).filter(VlanSQL.numero == vlan_number).one_or_none()
         if not result:
-            raise VLANNotFound()
+            raise VLANNotFoundError(vlan_number)
 
         return _map_vlan_sql_to_entity(result)
 

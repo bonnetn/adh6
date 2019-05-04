@@ -4,7 +4,7 @@ from connexion import NoContent
 from main import switch_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.switch import Switch
-from src.exceptions import SwitchNotFound, InvalidIPv4, IntMustBePositive
+from src.exceptions import SwitchNotFoundError, InvalidIPv4, IntMustBePositive, UserInputError
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin, auth_super_admin
@@ -30,8 +30,8 @@ def search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None):
         result = list(map(_map_switch_to_http_response, result))
         return result, 200, headers
 
-    except IntMustBePositive:
-        return NoContent, 400
+    except UserInputError as e:
+        return bad_request(e), 400
 
 
 @with_context
@@ -49,7 +49,7 @@ def post(ctx, body):
         ))
         return NoContent, 201, {'Location': f'/switch/{switch_id}'}
 
-    except InvalidIPv4 as e:
+    except UserInputError as e:
         return bad_request(e), 400
 
 
@@ -64,7 +64,7 @@ def get(ctx, switch_id):
         switch = switch_manager.get_by_id(ctx, switch_id)
         return _map_switch_to_http_response(switch), 200
 
-    except SwitchNotFound:
+    except SwitchNotFoundError:
         return NoContent, 404
 
 
@@ -83,10 +83,10 @@ def put(ctx, switch_id, body):
         ))
         return NoContent, 204
 
-    except SwitchNotFound:
+    except SwitchNotFoundError:
         return NoContent, 404
 
-    except InvalidIPv4 as e:
+    except UserInputError as e:
         return bad_request(e), 400
 
 
@@ -100,7 +100,7 @@ def delete(ctx, switch_id):
         switch_manager.delete(ctx, switch_id)
         return NoContent, 204
 
-    except SwitchNotFound:
+    except SwitchNotFoundError:
         return NoContent, 404
 
 

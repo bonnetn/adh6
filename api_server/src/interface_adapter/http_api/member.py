@@ -8,9 +8,7 @@ from dataclasses import asdict
 from main import member_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.member import Member
-from src.exceptions import InvalidAdmin, UnknownPaymentMethod, RoomNotFound, NoPriceAssignedToThatDurationException, \
-    MemberNotFound, UsernameMismatchError, MissingRequiredField, PasswordTooShortError, InvalidEmail, \
-    IntMustBePositive, StringMustNotBeEmpty
+from src.exceptions import MemberNotFoundError, UserInputError
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin
@@ -41,7 +39,7 @@ def search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None, room_num
         result = list(map(_map_member_to_http_response, result))
         return result, 200, headers  # 200 OK
 
-    except IntMustBePositive as e:
+    except UserInputError as e:
         return bad_request(e), 400  # 400 Bad Request
 
 
@@ -54,7 +52,7 @@ def get(ctx, username):
     try:
         return _map_member_to_http_response(member_manager.get_by_username(ctx, username)), 200  # 200 OK
 
-    except MemberNotFound:
+    except MemberNotFoundError:
         return NoContent, 404  # 404 Not Found
 
 
@@ -68,7 +66,7 @@ def delete(ctx, username):
         member_manager.delete(ctx, username)
         return NoContent, 204  # 204 No Content
 
-    except MemberNotFound:
+    except MemberNotFoundError:
         return NoContent, 404  # 404 Not Found
 
 
@@ -83,7 +81,7 @@ def patch(ctx, username, body):
         member_manager.update_partially(ctx, username, mutation_request)
         return NoContent, 204  # 204 No Content
 
-    except MemberNotFound:
+    except MemberNotFoundError:
         return NoContent, 404  # 404 Not Found
 
 
@@ -102,8 +100,7 @@ def put(ctx, username, body):
         else:
             return NoContent, 204  # 204 No Content
 
-    except (MissingRequiredField, UsernameMismatchError, InvalidEmail, StringMustNotBeEmpty,
-            RoomNotFound) as e:
+    except UserInputError as e:
         return bad_request(e), 400  # 400 Bad Request
 
 
@@ -117,17 +114,13 @@ def post_membership(ctx, username, body):
     try:
         member_manager.new_membership(ctx, username, body.get('duration'), body.get('paymentMethod'),
                                       start_str=body.get('start'))
+        return NoContent, 200  # 200 OK
 
-    except MemberNotFound:
+    except MemberNotFoundError:
         return NoContent, 404  # 404 Not Found
 
-    except (IntMustBePositive, NoPriceAssignedToThatDurationException) as e:
+    except UserInputError as e:
         return bad_request(e), 400  # 400 Bad Request
-
-    except (UnknownPaymentMethod, InvalidAdmin):
-        return NoContent, 400  # 400 Bad Request
-
-    return NoContent, 200  # 200 OK
 
 
 @with_context
@@ -140,14 +133,13 @@ def put_password(ctx, username, body):
 
     try:
         member_manager.change_password(ctx, username, body.get('password'))
+        return NoContent, 204  # 204 No Content
 
-    except MemberNotFound:
+    except MemberNotFoundError:
         return NoContent, 404  # 404 Not Found
 
-    except PasswordTooShortError as e:
+    except UserInputError as e:
         return bad_request(e), 400  # 400 Bad Request
-
-    return NoContent, 204  # 204 No Content
 
 
 @with_context
@@ -159,7 +151,7 @@ def get_logs(ctx, username):
     try:
         return member_manager.get_logs(ctx, username), 200
 
-    except MemberNotFound:
+    except MemberNotFoundError:
         return NoContent, 404
 
 

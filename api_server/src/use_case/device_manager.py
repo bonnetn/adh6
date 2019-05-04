@@ -6,8 +6,7 @@ from typing import List, Optional
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.device import Device, DeviceType, ALL_DEVICE_TYPES
 from src.exceptions import InvalidMACAddress, MissingRequiredField, InvalidIPv4, InvalidIPv6
-from src.exceptions import NoMoreIPAvailableException, MemberNotFound, DeviceNotFound, IntMustBePositive, \
-    IPAllocationFailedError
+from src.exceptions import MemberNotFoundError, DeviceNotFoundError, IntMustBePositive
 from src.use_case.interface.device_repository import DeviceRepository
 from src.use_case.interface.ip_allocator import IPAllocator
 from src.use_case.interface.member_repository import MemberRepository
@@ -32,16 +31,13 @@ class MutationRequest(Device):
     def validate(self):
         # MAC ADDRESS:
         if not is_mac_address(self.mac_address):
-            raise InvalidMACAddress()
+            raise InvalidMACAddress(self.mac_address)
 
         # OWNER USERNAME:
         if is_empty(self.owner_username):
             raise MissingRequiredField('owner_username')
 
         # CONNECTION TYPE:
-        if is_empty(self.connection_type):
-            raise MissingRequiredField('connection_type')
-
         if self.connection_type not in ALL_DEVICE_TYPES:
             raise ValueError('invalid connection type')
 
@@ -102,7 +98,7 @@ class DeviceManager:
         """
         result, count = self.device_repository.search_device_by(ctx, mac_address=mac_address)
         if not result:
-            raise DeviceNotFound()
+            raise DeviceNotFoundError(mac_address)
 
         LOG.info("device_get_by_username", extra=log_extra(
             ctx,
@@ -145,22 +141,18 @@ class DeviceManager:
         # Make sure the provided owner username is valid.
         owner, _ = self.member_repository.search_member_by(ctx, username=req.owner_username)
         if not owner:
-            raise MemberNotFound()
+            raise MemberNotFoundError(req.owner_username)
 
         # Allocate IP address.
         if req.connection_type == DeviceType.Wired:
             ip_v4_range, ip_v6_range = self._get_ip_range_for_user(ctx, req.owner_username)
 
             # TODO: Free addresses if cannot allocate.
-            try:
-                if req.ip_v4_address is None and ip_v4_range:
-                    req.ip_v4_address = self.ip_allocator.allocate_ip_v4(ctx, ip_v4_range)
+            if req.ip_v4_address is None and ip_v4_range:
+                req.ip_v4_address = self.ip_allocator.allocate_ip_v4(ctx, ip_v4_range)
 
-                if req.ip_v6_address is None and ip_v6_range:
-                    req.ip_v6_address = self.ip_allocator.allocate_ip_v6(ctx, ip_v6_range)
-
-            except NoMoreIPAvailableException as e:
-                raise IPAllocationFailedError() from e
+            if req.ip_v6_address is None and ip_v6_range:
+                req.ip_v6_address = self.ip_allocator.allocate_ip_v6(ctx, ip_v6_range)
 
         fields = {k: v for k, v in asdict(req).items()}
         result, _ = self.device_repository.search_device_by(ctx, mac_address=mac_address)

@@ -1,9 +1,9 @@
 from dataclasses import asdict
-from pytest import fixture, raises
+from pytest import fixture, raises, mark
 from unittest.mock import MagicMock
 
 from src.entity.switch import Switch
-from src.exceptions import SwitchNotFound, MissingRequiredField, IntMustBePositive
+from src.exceptions import SwitchNotFoundError, MissingRequiredField, IntMustBePositive
 from src.use_case.interface.switch_repository import SwitchRepository
 from src.use_case.switch_manager import SwitchManager, MutationRequest
 
@@ -28,7 +28,7 @@ class TestGetByID:
                               switch_manager: SwitchManager):
         mock_switch_repository.search_switches_by = MagicMock(return_value=([], 0))
 
-        with raises(SwitchNotFound):
+        with raises(SwitchNotFoundError):
             switch_manager.get_by_id(ctx, TEST_SWITCH_ID)
 
 
@@ -83,9 +83,9 @@ class TestUpdate:
             ip_v4='157.159.123.123',
             community='ip',
         )
-        mock_switch_repository.update_switch = MagicMock(side_effect=SwitchNotFound)
+        mock_switch_repository.update_switch = MagicMock(side_effect=SwitchNotFoundError)
 
-        with raises(SwitchNotFound):
+        with raises(SwitchNotFoundError):
             switch_manager.update(ctx, '2', req)
 
     def test_missing_required_field(self,
@@ -104,6 +104,29 @@ class TestUpdate:
             switch_manager.update(ctx, '2', req)
 
         mock_switch_repository.update_switch.assert_not_called()
+
+    @mark.parametrize('field,value', [
+        ('ip_v4', None),
+        ('ip_v4', 'not an ipv4 address'),
+        ('description', None),
+        ('community', None),
+    ])
+    def test_invalid_mutation_request(self,
+                                      ctx,
+                                      mock_switch_repository: SwitchRepository,
+                                      field: str,
+                                      value,
+                                      switch_manager: SwitchManager):
+        req = MutationRequest(
+            description='desc',
+            ip_v4='157.159.123.123',
+            community='ip',
+        )
+        req = MutationRequest(**{**asdict(req), **{field: value}})
+        mock_switch_repository.update_switch = MagicMock()
+
+        with raises(ValueError):
+            switch_manager.update(ctx, '2', req)
 
 
 class TestCreate:
@@ -137,9 +160,9 @@ class TestDelete:
                        ctx,
                        mock_switch_repository: SwitchRepository,
                        switch_manager: SwitchManager):
-        mock_switch_repository.delete_switch = MagicMock(side_effect=SwitchNotFound)
+        mock_switch_repository.delete_switch = MagicMock(side_effect=SwitchNotFoundError)
 
-        with raises(SwitchNotFound):
+        with raises(SwitchNotFoundError):
             switch_manager.delete(ctx, TEST_SWITCH_ID)
 
 

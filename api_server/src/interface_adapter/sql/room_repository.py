@@ -8,8 +8,8 @@ from typing import List
 
 from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
+from src.exceptions import RoomNotFoundError, RoomAlreadyExists, VLANNotFoundError
 from src.interface_adapter.sql.model.models import Adherent, Chambre, Vlan
-from src.exceptions import RoomNotFound, InvalidVLANNumber, RoomAlreadyExists
 from src.use_case.interface.room_repository import RoomRepository
 from src.util.context import log_extra
 from src.util.log import LOG
@@ -55,11 +55,11 @@ class RoomSQLRepository(RoomRepository):
 
         room = s.query(Chambre).filter(Chambre.numero == room_to_update).one_or_none()
         if room is None:
-            raise RoomNotFound()
+            raise RoomNotFoundError(room_to_update)
 
         vlan = s.query(Vlan).filter(Vlan.numero == vlan_number).one_or_none()
         if vlan is None:
-            raise InvalidVLANNumber()
+            raise VLANNotFoundError(vlan_number)
 
         room.numero = int(room_number)
         room.description = description
@@ -80,7 +80,7 @@ class RoomSQLRepository(RoomRepository):
 
         vlan = s.query(Vlan).filter(Vlan.numero == vlan_number).one_or_none()
         if vlan is None:
-            raise InvalidVLANNumber()
+            raise VLANNotFoundError(vlan_number)
 
         room = Chambre(
             numero=int(room_number),
@@ -99,7 +99,7 @@ class RoomSQLRepository(RoomRepository):
 
         room = s.query(Chambre).filter(Chambre.numero == room_number).one_or_none()
         if room is None:
-            raise RoomNotFound()
+            raise RoomNotFoundError(room_number)
 
         s.delete(room)
 

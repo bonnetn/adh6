@@ -7,8 +7,8 @@ from typing import List, Optional
 
 from src.constants import DEFAULT_OFFSET, DEFAULT_LIMIT
 from src.entity.member import Member
-from src.exceptions import InvalidAdmin, UnknownPaymentMethod, LogFetchError, NoPriceAssignedToThatDurationException, \
-    MemberNotFound, UsernameMismatchError, PasswordTooShortError, InvalidEmail, \
+from src.exceptions import InvalidAdmin, UnknownPaymentMethod, LogFetchError, NoPriceAssignedToThatDuration, \
+    MemberNotFoundError, UsernameMismatchError, PasswordTooShortError, InvalidEmail, \
     IntMustBePositive, StringMustNotBeEmpty, InvalidDate, MissingRequiredField
 from src.use_case.interface.logs_repository import LogsRepository
 from src.use_case.interface.member_repository import MemberRepository
@@ -39,7 +39,7 @@ class PartialMutationRequest:
 
     def validate(self):
         # EMAIL:
-        if self.email and not is_email(self.email):
+        if self.email is not None and not is_email(self.email):
             raise InvalidEmail(self.email)
 
         # FIRST_NAME:
@@ -52,9 +52,6 @@ class PartialMutationRequest:
 
         # USERNAME:
         if self.username is not None:
-            if is_empty(self.username):
-                raise StringMustNotBeEmpty('username')
-
             if len(self.username) > 9 or len(self.username) < 7:
                 raise ValueError('username must be between 7 and 9 characters long')
 
@@ -157,7 +154,7 @@ class MemberManager:
 
         if duration not in self.config.PRICES:
             LOG.warn("create_membership_record_no_price_defined", extra=log_extra(ctx, duration=duration))
-            raise NoPriceAssignedToThatDurationException()
+            raise NoPriceAssignedToThatDuration(duration)
 
         start = string_to_date(start_str)
         end = start + datetime.timedelta(days=duration)
@@ -197,7 +194,7 @@ class MemberManager:
         """
         result, _ = self.member_repository.search_member_by(ctx, username=username)
         if not result:
-            raise MemberNotFound()
+            raise MemberNotFoundError(username)
 
         # Log action.
         LOG.info('member_get_by_username', extra=log_extra(
@@ -249,7 +246,7 @@ class MemberManager:
         :raise StringMustNotBeEmptyException
         :raise UsernameMismatchError
         """
-        # Make sure all the fields set are valid.
+        # Make sure all the fielobjectds set are valid.
         mutation_request.validate()
 
         # Make sure all the necessary fields are set.
@@ -377,7 +374,7 @@ class MemberManager:
         # Check that the user exists in the system.
         result, _ = self.member_repository.search_member_by(ctx, username=username)
         if not result:
-            raise MemberNotFound()
+            raise MemberNotFoundError(username)
 
         # Do the actual log fetching.
         try:

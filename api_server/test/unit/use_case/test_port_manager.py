@@ -1,11 +1,10 @@
 from dataclasses import asdict
-from pytest import fixture, raises
+from pytest import fixture, raises, mark
 from unittest.mock import MagicMock
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
-from src.exceptions import SwitchNotFound, RoomNotFound, PortNotFound, InvalidRoomNumber, InvalidSwitchID, \
-    IntMustBePositive
+from src.exceptions import SwitchNotFoundError, RoomNotFoundError, PortNotFoundError, IntMustBePositive
 from src.use_case.interface.port_repository import PortRepository
 from src.use_case.port_manager import PortManager, MutationRequest
 
@@ -69,16 +68,45 @@ class TestCreate:
         args = asdict(sample_mutation_req)
         mock_port_repository.create_port.assert_called_once_with(ctx, **args)
 
+    @mark.parametrize('field,value', [
+        ('port_number', ''),
+        ('port_number', None),
+
+        ('switch_id', ''),
+        ('switch_id', None),
+
+        ('rcom', None),
+        ('rcom', -1),
+    ])
+    def test_invalid_mutation_request(self,
+                                      ctx,
+                                      mock_port_repository: PortRepository,
+                                      field: str,
+                                      value,
+                                      sample_mutation_req: MutationRequest,
+                                      port_manager: PortManager):
+        # Given...
+        mock_port_repository.create_port = MagicMock()
+
+        req = MutationRequest(**{**asdict(sample_mutation_req), **{field: value}})
+
+        # When...
+        with raises(ValueError):
+            port_manager.create(ctx, req)
+
+        # Expect...
+        mock_port_repository.create_port.assert_not_called()
+
     def test_unknown_room(self,
                           ctx,
                           mock_port_repository: PortRepository,
                           sample_mutation_req: MutationRequest,
                           port_manager: PortManager):
         # Given...
-        mock_port_repository.create_port = MagicMock(side_effect=InvalidRoomNumber)
+        mock_port_repository.create_port = MagicMock(side_effect=RoomNotFoundError)
 
         # When...
-        with raises(RoomNotFound):
+        with raises(RoomNotFoundError):
             port_manager.create(ctx, sample_mutation_req)
 
         # Expect..
@@ -90,10 +118,10 @@ class TestCreate:
                             sample_mutation_req: MutationRequest,
                             port_manager: PortManager):
         # Given...
-        mock_port_repository.create_port = MagicMock(side_effect=InvalidSwitchID)
+        mock_port_repository.create_port = MagicMock(side_effect=SwitchNotFoundError)
 
         # When...
-        with raises(SwitchNotFound):
+        with raises(SwitchNotFoundError):
             port_manager.create(ctx, sample_mutation_req)
 
         # Expect..
@@ -133,10 +161,10 @@ class TestUpdate:
                           sample_mutation_req: MutationRequest,
                           port_manager: PortManager):
         # Given...
-        mock_port_repository.update_port = MagicMock(side_effect=InvalidRoomNumber)
+        mock_port_repository.update_port = MagicMock(side_effect=RoomNotFoundError)
 
         # When...
-        with raises(RoomNotFound):
+        with raises(RoomNotFoundError):
             port_manager.update(ctx, '1', sample_mutation_req)
 
         # Expect..
@@ -148,10 +176,10 @@ class TestUpdate:
                           sample_mutation_req: MutationRequest,
                           port_manager: PortManager):
         # Given...
-        mock_port_repository.update_port = MagicMock(side_effect=PortNotFound)
+        mock_port_repository.update_port = MagicMock(side_effect=PortNotFoundError)
 
         # When...
-        with raises(PortNotFound):
+        with raises(PortNotFoundError):
             port_manager.update(ctx, '1', sample_mutation_req)
 
         # Expect..
@@ -163,10 +191,10 @@ class TestUpdate:
                             sample_mutation_req: MutationRequest,
                             port_manager: PortManager):
         # Given...
-        mock_port_repository.update_port = MagicMock(side_effect=InvalidSwitchID)
+        mock_port_repository.update_port = MagicMock(side_effect=SwitchNotFoundError)
 
         # When...
-        with raises(SwitchNotFound):
+        with raises(SwitchNotFoundError):
             port_manager.update(ctx, '1', sample_mutation_req)
 
         # Expect..
@@ -192,10 +220,10 @@ class TestDelete:
                             mock_port_repository: PortRepository,
                             port_manager: PortManager):
         # Given...
-        mock_port_repository.delete_port = MagicMock(side_effect=PortNotFound)
+        mock_port_repository.delete_port = MagicMock(side_effect=PortNotFoundError)
 
         # When...
-        with raises(PortNotFound):
+        with raises(PortNotFoundError):
             port_manager.delete(ctx, 'portID')
 
 

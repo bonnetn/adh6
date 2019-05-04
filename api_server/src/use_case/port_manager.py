@@ -5,8 +5,7 @@ from typing import List, Optional
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
-from src.exceptions import RoomNotFound, SwitchNotFound, InvalidRoomNumber, InvalidSwitchID, \
-    IntMustBePositive, MissingRequiredField, StringMustNotBeEmpty
+from src.exceptions import IntMustBePositive, MissingRequiredField, StringMustNotBeEmpty
 from src.use_case.interface.port_repository import PortRepository
 from src.util.context import log_extra
 from src.util.log import LOG
@@ -89,15 +88,9 @@ class PortManager:
 
         fields_to_update = asdict(mutation_request)
         fields_to_update = {k: v for k, v in fields_to_update.items() if v is not None}
-        try:
-            self.port_repository.update_port(ctx, port_id=port_id, **fields_to_update)
-            LOG.info("port_update", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))
 
-        except InvalidSwitchID as e:
-            raise SwitchNotFound() from e
-
-        except InvalidRoomNumber as e:
-            raise RoomNotFound() from e
+        self.port_repository.update_port(ctx, port_id=port_id, **fields_to_update)
+        LOG.info("port_update", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))
 
     def create(self, ctx, mutation_request: MutationRequest) -> str:
         """
@@ -115,16 +108,9 @@ class PortManager:
 
         fields_to_update = asdict(mutation_request)
         fields_to_update = {k: v for k, v in fields_to_update.items() if v is not None}
-        try:
-            port_id = self.port_repository.create_port(ctx, **fields_to_update)
-            LOG.info("port_create", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))
-            return port_id
-
-        except InvalidSwitchID as e:
-            raise SwitchNotFound() from e
-
-        except InvalidRoomNumber as e:
-            raise RoomNotFound() from e
+        port_id = self.port_repository.create_port(ctx, **fields_to_update)
+        LOG.info("port_create", extra=log_extra(ctx, mutation=json.dumps(fields_to_update, sort_keys=True)))
+        return port_id
 
     def delete(self, ctx, port_id: str):
         """

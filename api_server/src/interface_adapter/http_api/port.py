@@ -4,7 +4,7 @@ from connexion import NoContent
 from main import port_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
-from src.exceptions import SwitchNotFound, PortNotFound, RoomNotFound, IntMustBePositive
+from src.exceptions import PortNotFoundError, UserInputError
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin, auth_super_admin
@@ -27,14 +27,14 @@ def search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, switch_id=None, room
         result, count = port_manager.search(ctx, limit=limit, offset=offset, switch_id=switch_id,
                                             room_number=room_number,
                                             terms=terms)
-    except IntMustBePositive as e:
-        return bad_request(e), 400
+        headers = {
+            'access-control-expose-headers': 'X-Total-Count',
+            'X-Total-Count': str(count)
+        }
+        return list(map(_map_port_to_http_response, result)), 200, headers
 
-    headers = {
-        'access-control-expose-headers': 'X-Total-Count',
-        'X-Total-Count': str(count)
-    }
-    return list(map(_map_port_to_http_response, result)), 200, headers
+    except UserInputError as e:
+        return bad_request(e), 400
 
 
 @with_context
@@ -53,14 +53,11 @@ def post(ctx, body):
             oid=None,  # TODO: Add to spec.
         ))
 
-    except RoomNotFound:
-        return 'Invalid room number.', 400
+        headers = {'Location': '/port/{}'.format(port_id)}
+        return NoContent, 200, headers
 
-    except SwitchNotFound:
-        return 'Invalid switch ID.', 400
-
-    headers = {'Location': '/port/{}'.format(port_id)}
-    return NoContent, 200, headers
+    except UserInputError as e:
+        return bad_request(e), 400
 
 
 @with_context
@@ -70,7 +67,7 @@ def get(ctx, port_id):
     """ Get a port from the database """
     LOG.debug("http_port_get_called", extra=log_extra(ctx, port_id=port_id))
 
-    result, count = port_manager.search(ctx, port_id=port_id)
+    result, count = port_manager.search(ctx, port_id=port_id)  # TODO: Make a use case for that.
     if not result:
         return NoContent, 404
 
@@ -92,17 +89,13 @@ def put(ctx, port_id, body):
             rcom=0,  # Add to spec.
             oid=None,  # Add to spec.
         ))
+        return NoContent, 204
 
-    except PortNotFound:
+    except PortNotFoundError:
         return NoContent, 404
 
-    except RoomNotFound:
-        return 'Invalid room number', 400
-
-    except SwitchNotFound:
-        return 'Invalid switch ID', 400
-
-    return NoContent, 204
+    except UserInputError as e:
+        return bad_request(e), 400
 
 
 @with_context
@@ -113,10 +106,10 @@ def delete(ctx, port_id):
     LOG.debug("http_port_delete_called", extra=log_extra(ctx, port_id=port_id))
     try:
         port_manager.delete(ctx, port_id)
-    except PortNotFound:
-        return NoContent, 404
+        return NoContent, 204
 
-    return NoContent, 204
+    except PortNotFoundError:
+        return NoContent, 404
 
 
 @auth_regular_admin

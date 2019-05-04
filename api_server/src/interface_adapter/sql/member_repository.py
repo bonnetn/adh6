@@ -9,7 +9,7 @@ from typing import List
 
 from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.member import Member
-from src.exceptions import RoomNotFound, MemberAlreadyExist, MemberNotFound
+from src.exceptions import RoomNotFoundError, MemberAlreadyExist, MemberNotFoundError
 from src.interface_adapter.sql.model.models import Adherent, Chambre, Adhesion
 from src.interface_adapter.sql.track_modifications import track_modifications
 from src.use_case.interface.member_repository import MemberRepository
@@ -35,7 +35,7 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
 
         member = _get_member_by_login(s, username)
         if member is None:
-            raise MemberNotFound()
+            raise MemberNotFoundError(username)
 
         s.add(Adhesion(
             adherent=member,
@@ -61,7 +61,7 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
         if room_number is not None:
             room = s.query(Chambre).filter(Chambre.numero == room_number).one_or_none()
             if not room:
-                raise RoomNotFound()
+                raise RoomNotFoundError(room_number)
 
         member = s.query(Adherent).filter(Adherent.login == username).one_or_none()
         if member is not None:
@@ -97,7 +97,7 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
 
         member = _get_member_by_login(s, member_to_update)
         if member is None:
-            raise MemberNotFound()
+            raise MemberNotFoundError(member_to_update)
 
         with track_modifications(ctx, s, member):
             member.nom = last_name or member.nom
@@ -131,7 +131,7 @@ class MemberSQLRepository(MemberRepository, MembershipRepository):
         # Find the soon-to-be deleted user
         member = _get_member_by_login(s, username)
         if not member:
-            raise MemberNotFound()
+            raise MemberNotFoundError(username)
 
         with track_modifications(ctx, s, member):
             # Actually delete it

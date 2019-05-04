@@ -5,8 +5,8 @@ from typing import List, Optional
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
-from src.exceptions import VLANNotFound, RoomNotFound, RoomNumberMismatchError, MissingRequiredField, \
-    InvalidVLANNumber, IntMustBePositive, StringMustNotBeEmpty
+from src.exceptions import RoomNotFoundError, RoomNumberMismatchError, MissingRequiredField, \
+    IntMustBePositive, StringMustNotBeEmpty
 from src.use_case.interface.room_repository import RoomRepository
 from src.util.context import log_extra
 from src.util.log import LOG
@@ -53,8 +53,8 @@ class RoomManager:
             self.room_repository.delete_room(ctx, room_number=room_number)
             LOG.info('room_delete', extra=log_extra(ctx, room_number=room_number))
 
-        except RoomNotFound as e:
-            raise RoomNotFound() from e
+        except RoomNotFoundError as e:
+            raise RoomNotFoundError(room_number) from e
 
     def get_by_number(self, ctx, room_number) -> Room:
         """
@@ -67,7 +67,7 @@ class RoomManager:
         result, _ = self.room_repository.search_room_by(ctx, room_number=room_number)
         LOG.info('room_get_by_number', extra=log_extra(ctx, room_number=room_number))
         if not result:
-            raise RoomNotFound()
+            raise RoomNotFoundError(room_number)
 
         return result[0]
 
@@ -116,11 +116,7 @@ class RoomManager:
             fields_to_update = {k: v for k, v in fields_to_update.items()}
 
             # This call will never throw a RoomNotFound because we checked for the object existence before.
-            try:
-                self.room_repository.update_room(ctx, room_number, **fields_to_update)
-
-            except InvalidVLANNumber as e:
-                raise VLANNotFound() from e
+            self.room_repository.update_room(ctx, room_number, **fields_to_update)
 
             # Log action.
             LOG.info('room_update', extra=log_extra(
@@ -141,11 +137,7 @@ class RoomManager:
             fields = asdict(mutation_request)
             fields = {k: v for k, v in fields.items()}
 
-            try:
-                self.room_repository.create_room(ctx, **fields)
-
-            except InvalidVLANNumber as e:
-                raise VLANNotFound() from e
+            self.room_repository.create_room(ctx, **fields)
 
             # Log action
             LOG.info('room_create', extra=log_extra(

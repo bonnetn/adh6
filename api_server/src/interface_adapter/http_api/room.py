@@ -4,8 +4,8 @@ from connexion import NoContent
 from main import room_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
-from src.exceptions import RoomNotFound, VLANNotFound, RoomNumberMismatchError, MissingRequiredField, \
-    IntMustBePositive
+from src.exceptions import RoomNotFoundError, VLANNotFoundError, RoomNumberMismatchError, MissingRequiredField, \
+    IntMustBePositive, UserInputError
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin, auth_super_admin
 from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.interface_adapter.http_api.decorator.with_context import with_context
@@ -31,7 +31,7 @@ def search(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None):
         }
         return result, 200, headers
 
-    except IntMustBePositive as e:
+    except UserInputError as e:
         return bad_request(e), 400
 
 
@@ -48,13 +48,14 @@ def put(ctx, room_number, body):
             phone_number=body.get('phone'),
             vlan_number=body.get('vlan'),
         ))
-    except (MissingRequiredField, VLANNotFound, RoomNumberMismatchError) as e:
+        if created:
+            return NoContent, 201
+        else:
+            return NoContent, 204
+
+    except UserInputError as e:
         return bad_request(e), 400
 
-    if created:
-        return NoContent, 201
-    else:
-        return NoContent, 204
 
 
 @with_context
@@ -67,7 +68,7 @@ def get(ctx, room_number):
         result = room_manager.get_by_number(ctx, room_number)
         return _map_room_to_http_response(result), 200
 
-    except RoomNotFound:
+    except RoomNotFoundError:
         return NoContent, 404
 
 
@@ -81,7 +82,7 @@ def delete(ctx, room_number):
         room_manager.delete(ctx, room_number)
         return NoContent, 204
 
-    except RoomNotFound:
+    except RoomNotFoundError:
         return NoContent, 404
 
 
