@@ -4,13 +4,16 @@ cache:
   paths:
     - .cache/pip - venv/
 
-before_script:
-  - uname -a
-  - python -V
-  - pip install virtualenv
-  - virtualenv -p python3 venv
-  - source venv/bin/activate
-  - pip install -r api_server/requirements.txt
+# We declare a job that gitlab ignores and put a YAML anchor
+# See https://gitlab.com/gitlab-org/gitlab-ce/issues/15403#note_27079119
+.setup_test_jobs: &before_test_job
+  before_script:
+    - uname -a
+    - python -V
+    - pip install virtualenv
+    - virtualenv -p python3 venv
+    - source venv/bin/activate
+    - pip install -r api_server/requirements.txt
 
 stages:
   - test
@@ -18,6 +21,7 @@ stages:
 
 python_check_for_vuln_deps:
   stage: test
+  <<: *before_test_job # We reference our previous anchor
   script:
   - cd api_server/
   - pip install safety
@@ -26,12 +30,14 @@ python_check_for_vuln_deps:
 
 python_unit_test:
   stage: test
+  <<: *before_test_job # We reference our previous anchor
   script:
   - cd api_server/
   - pytest test/unit -vv
 
 python_integration_test:
   stage: test
+  <<: *before_test_job # We reference our previous anchor
   script:
   - cd api_server/
   - apt update -q
@@ -40,6 +46,7 @@ python_integration_test:
 
 python_coverage:
   stage: test
+  <<: *before_test_job # We reference our previous anchor
   script:
   - cd api_server/
   - pip install pytest-cov
