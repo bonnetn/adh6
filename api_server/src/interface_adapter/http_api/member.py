@@ -15,7 +15,6 @@ from src.interface_adapter.sql.decorator.auth import auth_regular_admin
 from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.use_case.member_manager import FullMutationRequest, PartialMutationRequest
 from src.util.context import log_extra
-from src.util.date import string_to_date
 from src.util.int_or_none import int_or_none
 from src.util.log import LOG
 
@@ -186,10 +185,3 @@ def _map_http_request_to_partial_mutation_request(body) -> PartialMutationReques
 def _map_http_request_to_full_mutation_request(body) -> FullMutationRequest:
     partial = _map_http_request_to_partial_mutation_request(body)
     return FullMutationRequest(**asdict(partial))
-
-
-def _string_to_date_or_none(d):
-    if isinstance(d, str):
-        return string_to_date(d)
-
-    return d

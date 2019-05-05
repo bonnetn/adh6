@@ -38,7 +38,7 @@ room_manager: RoomManager = None
 switch_manager: SwitchManager = None
 
 # Application.
-app = None
+application = None
 
 
 def init(m, testing=True):
@@ -83,7 +83,7 @@ def init(m, testing=True):
         room_repository=m.room_sql_repository,
     )
 
-    app = connexion.FlaskApp(__name__)
+    app = connexion.FlaskApp(__name__, specification_dir='openapi', host='localhost', port=1234)
     app.app.config.update(m.configuration.API_CONF)
     app.add_api('swagger.yaml',
                 resolver=RestyResolver('src.interface_adapter.http_api'),
@@ -92,11 +92,11 @@ def init(m, testing=True):
                 pythonic_params=True,
                 )
 
-    m.app = app
+    m.application = app
 
 
-if __name__ == 'main' and not hasattr(sys, '_called_from_test'):
+if __name__ == '__main__' and not hasattr(sys, '_called_from_test'):
     init(sys.modules[__name__], testing=False)
     # set the WSGI application callable to allow using uWSGI:
     # uwsgi --http :8080 -w app
-    application = app.app
+    application.run()

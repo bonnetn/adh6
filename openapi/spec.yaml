@@ -7,7 +7,6 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "adh6.minet.net"
 basePath: "/api"
 tags:
 - name: "member"
@@ -25,6 +24,7 @@ tags:
 - name: "temporary_account"
   description: "Temporary accounts"
 schemes:
+- "http"
 - "https"
 paths:
   /transaction/:

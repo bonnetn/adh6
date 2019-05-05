@@ -49,8 +49,8 @@ services:
     volumes:
       # Make a bind mount so you can modify files in the container
       - type: bind
-        source: "./api_server/adh"
-        target: "/adh6/api_server/adh/"
+        source: "./api_server/src"
+        target: "/adh6/api_server/src/"
         read_only: true
       
   # The reverse proxy is used to gather the api and the frontend behind the same
