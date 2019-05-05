@@ -95,6 +95,11 @@ def init(m, testing=True):
     m.application = app
 
 
+# When run with uWSGI (production).
+if __name__ == 'uwsgi_file_main':
+    init(sys.modules[__name__], testing=False)
+
+# When run with `python main.py`, when people want to run it locally.
 if __name__ == '__main__' and not hasattr(sys, '_called_from_test'):
     init(sys.modules[__name__], testing=False)
     # set the WSGI application callable to allow using uWSGI:
