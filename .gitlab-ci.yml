@@ -14,6 +14,7 @@ before_script:
 
 stages:
   - test
+  - deploy_dev
 
 python_check_for_vuln_deps:
   stage: test
@@ -47,3 +48,14 @@ python_coverage:
   artifacts:
     paths:
       - api_server/htmlcov/
+
+deploy_dev:
+  stage: deploy_dev
+  script:
+    - docker-compose build
+    - docker-compose down
+    - docker-compose up -d --force-recreate
+  only:
+    - master
+  tags:
+    - dev
