@@ -93,6 +93,8 @@ En résumé, on a pris le parti prix d'ajouter deux dépendances au projet, mais
 
 ## Dossier: api_server - le backend
 
+Si vous voulez directement interagir avec l'API sans vous embêter avec des cURL, allez sur votre navigateur à l'adresse https://ADRESSE-DE-ADH/api/ui
+
 ###  Je suis perdu, qu'est-ce que c'est que tous ces dossiers ?
 Ce projet consiste juste en l'implémentation des différents méthodes définies dans la spécification de l'API.
 
