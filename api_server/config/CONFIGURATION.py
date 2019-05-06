@@ -1,6 +1,6 @@
 # API server options general
 API_CONF = {
-    'AUTH_SERVER_ADDRESS': 'https://adh6.minet.net/oauth',
+    'AUTH_SERVER_ADDRESS': 'https://adh6-dev.minet.net/cas/',
     'APPLICATION_ROOT': '/api',
 }
 
