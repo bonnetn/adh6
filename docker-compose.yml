@@ -6,6 +6,7 @@ services:
       context: "./cas"
       args:
         ADH6_BASE_URL: "adh6-dev.minet.net/" # Do not forget the trailing slash!
+        CAS_HOST: "adh6-dev.minet.net"
     ports:
       - "8443:8443"
 

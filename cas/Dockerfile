@@ -1,6 +1,7 @@
 FROM apereo/cas:v5.3.2
 
 ARG ADH6_BASE_URL="adh6.minet.net/"
+ARG CAS_HOST="cas.minet.net/"
 
 EXPOSE 8443
 
@@ -20,6 +21,7 @@ COPY ./cas.properties /etc/cas/config/
 
 # Generate necessary config file
 ENV ADH6_BASE_URL=$ADH6_BASE_URL
+RUN sed -i "s#{{ CAS_HOST }}#$CAS_HOST#g" "/etc/cas/config/cas.properties"
 
 COPY ./gen_config ./gen_config
 RUN /bin/bash ./gen_config/generate_config.sh && \
