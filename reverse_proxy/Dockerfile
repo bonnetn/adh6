@@ -1,4 +1,5 @@
 FROM alpine
+
 RUN apk add --update openssl
 
 # Make TLS self-signed certificate
@@ -11,6 +12,10 @@ FROM nginx
 COPY --from=0 /etc/ssl/certs/adh6.crt /etc/ssl/certs/
 COPY --from=0 /etc/ssl/private/adh6.key /etc/ssl/private/
 
-COPY adh6.conf /etc/nginx/conf.d/
+ARG BASE_ADH6_URL="adh6.minet.net"
+
+COPY adh6.conf.template /etc/nginx/conf.d/adh6.conf
+RUN sed -i "s#adh6.minet.net#$BASE_ADH6_URL#g" "/etc/nginx/conf.d/adh6.conf"
+RUN cat "/etc/nginx/conf.d/adh6.conf"
 RUN rm /etc/nginx/conf.d/default.conf
 

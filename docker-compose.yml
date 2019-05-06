@@ -5,7 +5,7 @@ services:
     build: 
       context: "./cas"
       args:
-        ADH6_BASE_URL: "localhost/" # Do not forget the trailing slash!
+        ADH6_BASE_URL: "adh6-dev.minet.net/" # Do not forget the trailing slash!
     ports:
       - "8443:8443"
 
@@ -15,9 +15,9 @@ services:
       context: ./
       dockerfile: ./frontend_angular/Dockerfile
       args:
-        BASE_ADH6_URL: "localhost/" # Do not forget the trailing slash!
-        SSO_LOGOUT: "localhost:8443/cas/logout"
-        SSO_AUTHORIZE: "localhost:8443/cas/oauth2.0/authorize"
+        BASE_ADH6_URL: "adh6-dev.minet.net/" # Do not forget the trailing slash!
+        SSO_LOGOUT: "adh6-dev.minet.net:8443/cas/logout"
+        SSO_AUTHORIZE: "adh6-dev.minet.net:8443/cas/oauth2.0/authorize"
     expose:
       - "8443" # app does not start as root here
     volumes:
@@ -56,7 +56,10 @@ services:
   # The reverse proxy is used to gather the api and the frontend behind the same
   # host. We can also use it to cache requests.
   reverse_proxy:
-    build: "./reverse_proxy/"
+    build: 
+      context: "./reverse_proxy"
+      args:
+        BASE_ADH6_URL: "adh6-dev.minet.net"
     links:
       - frontend_angular
       - api_server
