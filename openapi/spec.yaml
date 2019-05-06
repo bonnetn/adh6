@@ -9,7 +9,9 @@ info:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 host: "adh6-dev.minet.net"
 basePath: "/api"
-schemes: [https]
+schemes:
+  - https
+  - http
 tags:
 - name: "member"
   description: "Operations on members"
@@ -25,9 +27,6 @@ tags:
   description: "Operations on ports"
 - name: "temporary_account"
   description: "Temporary accounts"
-schemes:
-- "http"
-- "https"
 paths:
   /transaction/:
     get:
