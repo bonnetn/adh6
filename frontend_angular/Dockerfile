@@ -70,4 +70,4 @@ COPY frontend_angular/src ./src
 
 USER angular
 # We use /bin/sh to be able to use ENV vars...
-CMD ["/bin/sh", "-c", "ng serve --public-host ${BASE_ADH6_URL}"]
+CMD ["/bin/sh", "-c", "ng serve --host 0.0.0.0 --disable-host-check"]
