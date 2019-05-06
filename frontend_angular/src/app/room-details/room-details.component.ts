@@ -69,18 +69,18 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   }
 
   refreshInfo() {
-    this.room$ = this.roomService.getRoom(this.roomNumber);
-    this.ports$ = this.portService.filterPort(undefined, undefined, undefined, this.roomNumber);
-    this.members$ = this.memberService.filterMember(undefined, undefined, undefined, this.roomNumber);
+    this.room$ = this.roomService.roomRoomNumberGet(this.roomNumber);
+    this.ports$ = this.portService.portGet(undefined, undefined, undefined, this.roomNumber);
+    this.members$ = this.memberService.memberGet(undefined, undefined, undefined, this.roomNumber);
   }
 
   onSubmitComeInRoom() {
     const v = this.EmmenagerForm.value;
-    this.memberService.getMember(v.username)
+    this.memberService.memberUsernameGet(v.username)
       .takeWhile(() => this.alive)
       .subscribe((user) => {
         user['roomNumber'] = this.roomNumber;
-        this.memberService.putMember(v.username, user, 'response')
+        this.memberService.memberUsernamePut(v.username, user, 'response')
           .takeWhile(() => this.alive)
           .subscribe((response) => {
             this.refreshInfo();
@@ -97,11 +97,11 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
     const room: Room = {
       roomNumber: v.roomNumberNew
     };
-    this.memberService.getMember(username)
+    this.memberService.memberUsernameGet(username)
       .takeWhile(() => this.alive)
       .subscribe((user) => {
         user['roomNumber'] = v.roomNumberNew;
-        this.memberService.putMember(username, user, 'response')
+        this.memberService.memberUsernamePut(username, user, 'response')
           .takeWhile(() => this.alive)
           .subscribe((response) => {
             this.refreshInfo();
@@ -113,11 +113,11 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   }
 
   onRemoveFromRoom(username) {
-    this.memberService.getMember(username)
+    this.memberService.memberUsernameGet(username)
       .takeWhile(() => this.alive)
       .subscribe((user) => {
         delete user['roomNumber'];
-        this.memberService.putMember(username, user, 'response')
+        this.memberService.memberUsernamePut(username, user, 'response')
 
           .takeWhile(() => this.alive)
           .subscribe((response) => {
@@ -129,7 +129,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
 
   onDelete() {
     const v = this.roomNumber;
-    this.roomService.deleteRoom(v, 'response')
+    this.roomService.roomRoomNumberDelete(v, 'response')
       .takeWhile(() => this.alive)
       .subscribe((response) => {
         this.router.navigate(['room']);

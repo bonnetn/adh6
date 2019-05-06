@@ -50,7 +50,7 @@ export class RoomEditComponent implements OnInit, OnDestroy {
       vlan: v.vlan,
       description: v.description
     };
-    this.roomService.putRoom(v.roomNumber, room, 'response')
+    this.roomService.roomRoomNumberPut(v.roomNumber, room, 'response')
       .takeWhile(() => this.alive)
       .subscribe((response) => {
         this.router.navigate(['/room/view', v.roomNumber]);
@@ -62,7 +62,7 @@ export class RoomEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.paramMap
       .switchMap((params: ParamMap) =>
-        this.roomService.getRoom(+params.get('roomNumber')))
+        this.roomService.roomRoomNumberGet(+params.get('roomNumber')))
       .takeWhile(() => this.alive)
       .subscribe((room: Room) => {
         this.room = room;

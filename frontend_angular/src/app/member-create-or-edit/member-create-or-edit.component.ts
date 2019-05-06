@@ -78,7 +78,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
         flatMap((create) => {
           if (create) {
             // We don't want to override with PUT so we check if the member exist.
-            return Utils.hasReturned404(this.memberService.getMember(v.username));
+            return Utils.hasReturned404(this.memberService.memberUsernameGet(v.username));
           }
           // If we try to modify, OK.
           return Observable.of(true);
@@ -100,7 +100,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
             if (v.roomNumber) {
               req.roomNumber = v.roomNumber;
             }
-            return this.memberService.patchMember(requestUsername, req, 'response');
+            return this.memberService.memberUsernamePatch(requestUsername, req, 'response');
           } else {
             const req: Member = {
               email: v.email,
@@ -109,7 +109,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
               username: v.username,
               roomNumber: (v.roomNumber == null ? 0 : v.roomNumber),
             };
-            return this.memberService.putMember(requestUsername, req, 'response');
+            return this.memberService.memberUsernamePut(requestUsername, req, 'response');
           }
         }),
         first(),
@@ -126,9 +126,9 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
 
   }
 
-  deleteMember() {
+  memberUsernameDelete() {
     this.disabled = true;
-    this.memberService.deleteMember(this.originalUsername, 'response')
+    this.memberService.memberUsernameDelete(this.originalUsername, 'response')
       .pipe(
         first(),
         finalize(() => this.disabled = false),
@@ -152,7 +152,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
             return EMPTY;
           }
         }),
-        flatMap((username) => this.memberService.getMember(username)),
+        flatMap((username) => this.memberService.memberUsernameGet(username)),
         first(),
       )
       .subscribe((member: Member) => {

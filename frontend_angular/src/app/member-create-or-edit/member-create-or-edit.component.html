@@ -30,7 +30,7 @@
   ><span *ngIf="!create">Éditer</span><span *ngIf="create">Créer</span>
   </button>
 </form>
-<a (click)="deleteMember()" *ngIf="!create">
+<a (click)="memberUsernameDelete()" *ngIf="!create">
   <button
     [disabled]="disabled"
     class="u-full-width button-danger">

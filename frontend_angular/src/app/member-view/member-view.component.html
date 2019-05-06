@@ -120,7 +120,7 @@
                 <td><app-mac-vendor mac="{{ device.mac }}"></app-mac-vendor></td>
               </tr>
             </table>
-            <a (click)="deleteDevice(device.mac)">
+            <a (click)="deviceDelete(device.mac)">
               <button [disabled]="submitDisabled" class="button-danger">Supprimer</button>
               |
             </a>

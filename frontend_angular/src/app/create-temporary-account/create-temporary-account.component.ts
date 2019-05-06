@@ -40,7 +40,7 @@ export class CreateTemporaryAccountComponent implements OnInit {
   createNainA(): void {
     const v = this.formGroup.value;
     this.disabled = true;
-    this.tempAccService.createTempAccount(
+    this.tempAccService.temporaryAccountPost(
       {
         firstname: v.first_name,
         lastname: v.last_name
@@ -67,7 +67,7 @@ export class CreateTemporaryAccountComponent implements OnInit {
       return;
     }
     this.disabled = true;
-    this.tempAccService.revokeTempAccount('response')
+    this.tempAccService.temporaryAccountDelete('response')
       .pipe(
         finalize(() => this.disabled = false),
         first(),

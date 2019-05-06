@@ -47,7 +47,7 @@ export class SwitchDetailsComponent implements OnInit {
       distinctUntilChanged(),
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.portService.filterPort(this.items_per_page, (page - 1) * this.items_per_page,
+      switchMap((term: string) => this.portService.portGet(this.items_per_page, (page - 1) * this.items_per_page,
         this.switchID, undefined, term, 'response')),
       switchMap((response) => {
         this.item_count = +response.headers.get('x-total-count');
@@ -60,8 +60,8 @@ export class SwitchDetailsComponent implements OnInit {
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.switchID = +params['switchID'];
-      this.switch$ = this.switchService.getSwitch(this.switchID);
-      // this.ports$ = this.portService.filterPort( { 'switchID': this.switchID } );
+      this.switch$ = this.switchService.switchSwitchIDGet(this.switchID);
+      // this.ports$ = this.portService.portGet( { 'switchID': this.switchID } );
     });
     this.refreshPorts(1);
   }

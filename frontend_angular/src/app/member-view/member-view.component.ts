@@ -61,20 +61,20 @@ export class MemberViewComponent implements OnInit, OnDestroy {
       );
 
     this.member$ = refresh$.pipe(
-      switchMap(username => this.memberService.getMember(username)),
+      switchMap(username => this.memberService.memberUsernameGet(username)),
       tap((user) => this.commentForm.setValue({comment: (user.comment === undefined) ? '' : user.comment})),
       share(),
     );
 
     this.all_devices$ = refresh$.pipe(
-      switchMap(username => this.deviceService.filterDevice(undefined, undefined, username)),
+      switchMap(username => this.deviceService.deviceGet(undefined, undefined, username)),
       share(),
     );
 
     this.log$ = this.username$.pipe(
       switchMap((str) => {
         return interval(10 * 1000).pipe(
-          switchMap(() => this.memberService.getLogs(str))
+          switchMap(() => this.memberService.srcInterfaceAdapterHttpApiMemberGetLogs(str))
         );
       }) // refresh every 10 secs
     )
@@ -111,7 +111,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
         user.comment = newComment;
         return user;
       }),
-      flatMap(user => this.memberService.putMember(user.username, user)),
+      flatMap(user => this.memberService.memberUsernamePut(user.username, user)),
       map(() => {
         this.refreshInfo();
         return null;
@@ -158,7 +158,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     const v = this.deviceForm.value;
     const mac = Utils.sanitizeMac(v.mac);
     if (alreadyExists === undefined) {
-      return this.deviceService.getDevice(mac).pipe(
+      return this.deviceService.deviceMacAddressGet(mac).pipe(
         map(() => true),
         catchError(() => Observable.of(false)),
         flatMap((exists) => this.addDevice(username, exists)),
@@ -174,7 +174,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     // Make an observable that will return True if the device already exists
     if (!alreadyExists) {
       // If the device does not then create it, and refresh the info
-      return this.deviceService.putDevice(mac, device)
+      return this.deviceService.deviceMacAddressPut(mac, device)
         .pipe(
           flatMap(() => {
             this.refreshInfo();
@@ -188,9 +188,9 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  deleteDevice(mac: string): void {
+  deviceDelete(mac: string): void {
     this.submitDisabled = true;
-    this.deviceService.deleteDevice(mac)
+    this.deviceService.deviceMacAddressDelete(mac)
       .pipe(
         first(),
         flatMap(() => {

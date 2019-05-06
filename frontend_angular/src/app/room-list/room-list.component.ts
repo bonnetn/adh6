@@ -38,7 +38,7 @@ export class RoomListComponent extends SearchPage implements OnInit {
 
   private fetchRoom(terms: string, page: number) {
     const n = +PagingConf.item_count;
-    return this.roomService.filterRoom(n, (page - 1) * n, terms, 'response')
+    return this.roomService.roomGet(n, (page - 1) * n, terms, 'response')
       .pipe(
         map((response) => <RoomListResult>{
           room: response.body,

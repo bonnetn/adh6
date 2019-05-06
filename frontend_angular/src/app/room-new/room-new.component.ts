@@ -48,12 +48,12 @@ export class RoomNewComponent implements OnInit, OnDestroy {
       description: v.description
     };
 
-    this.roomService.getRoom(v.roomNumber, 'response')
+    this.roomService.roomRoomNumberGet(v.roomNumber, 'response')
       .takeWhile(() => this.alive)
       .subscribe(() => {
         this.notif.error('Room already exists');
       }, () => {
-        this.roomService.putRoom(v.roomNumber, room)
+        this.roomService.roomRoomNumberPut(v.roomNumber, room)
           .takeWhile(() => this.alive)
           .subscribe((res) => {
             this.router.navigate(['/room/view', v.roomNumber]);

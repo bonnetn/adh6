@@ -21,7 +21,7 @@ export class MacVendorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.deviceService.getDeviceVendor(Utils.sanitizeMac(this.mac).substr(0, 8))
+    this.deviceService.srcInterfaceAdapterHttpApiDeviceGetVendor(Utils.sanitizeMac(this.mac).substr(0, 8))
       .pipe(
         map((data) => data.vendorname),
         first(),

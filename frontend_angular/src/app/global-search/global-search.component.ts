@@ -93,7 +93,7 @@ export class GlobalSearchComponent implements OnInit {
 
         const LIMIT = 20;
 
-        const user$ = this.memberService.filterMember(LIMIT, undefined, terms).pipe(
+        const user$ = this.memberService.memberGet(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
           map((obj) => new SearchResult(
             'user',
@@ -102,7 +102,7 @@ export class GlobalSearchComponent implements OnInit {
           )),
         );
 
-        const device$ = this.deviceService.filterDevice(LIMIT, undefined, undefined, terms).pipe(
+        const device$ = this.deviceService.deviceGet(LIMIT, undefined, undefined, terms).pipe(
           mergeMap((array) => from(array)),
           map((obj) => new SearchResult(
             'device',
@@ -112,16 +112,16 @@ export class GlobalSearchComponent implements OnInit {
           )),
         );
 
-        const room$ = this.roomService.filterRoom(LIMIT, undefined, terms).pipe(
+        const room$ = this.roomService.roomGet(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
           map((obj) => new SearchResult('room', obj.description, ['/room/view', obj.roomNumber.toString()])),
         );
-        const switch$ = this.switchService.filterSwitch(LIMIT, undefined, terms).pipe(
+        const switch$ = this.switchService.switchGet(LIMIT, undefined, terms).pipe(
           mergeMap((array) => from(array)),
           map((obj) => new SearchResult('switch', obj.description, ['/switch/view', obj.id.toString()])),
         );
 
-        const port$ = this.portService.filterPort(LIMIT, undefined, undefined, undefined, terms).pipe(
+        const port$ = this.portService.portGet(LIMIT, undefined, undefined, undefined, terms).pipe(
           mergeMap((array: Array<Port>) => from(array)),
           map((obj: Port) =>
             new SearchResult(

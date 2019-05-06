@@ -36,7 +36,7 @@ export class MemberListComponent extends SearchPage implements OnInit {
 
   private fetchMembers(terms: string, page: number) {
     const n = +PagingConf.item_count;
-    return this.memberService.filterMember(n, (page - 1) * n, terms, undefined, 'response')
+    return this.memberService.memberGet(n, (page - 1) * n, terms, undefined, 'response')
       .pipe(
         // switch to new search observable each time the term changes
         map((response) => <MemberListResponse>{

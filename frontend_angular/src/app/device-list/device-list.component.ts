@@ -38,7 +38,7 @@ export class DeviceListComponent extends SearchPage implements OnInit {
 
   private fetchDevices(term: string, page: number) {
     const n: number = +PagingConf.item_count;
-    return this.deviceService.filterDevice(n, (page - 1) * n, undefined, term, 'response')
+    return this.deviceService.deviceGet(n, (page - 1) * n, undefined, term, 'response')
       .pipe(
         map(response => <DeviceListResult>{
           devices: response.body,

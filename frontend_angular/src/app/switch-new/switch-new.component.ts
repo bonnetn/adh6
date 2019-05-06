@@ -28,7 +28,7 @@ export class SwitchNewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.switches$ = this.switchService.filterSwitch();
+    this.switches$ = this.switchService.switchGet();
   }
 
 }

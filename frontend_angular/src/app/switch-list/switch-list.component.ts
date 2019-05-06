@@ -35,7 +35,7 @@ export class SwitchListComponent extends SearchPage implements OnInit {
 
   private fetchSwitches(terms: string, page: number): Observable<SwitchListResult> {
     const n = +PagingConf.item_count;
-    return this.switchService.filterSwitch(n, (page - 1) * n, terms, 'response')
+    return this.switchService.switchGet(n, (page - 1) * n, terms, 'response')
       .pipe(
         map((response) => {
           return <SwitchListResult> {
