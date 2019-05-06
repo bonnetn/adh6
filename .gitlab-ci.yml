@@ -59,6 +59,7 @@ python_coverage:
 deploy_dev:
   stage: deploy_dev
   script:
+    - cd frontend_angular && bash generate_api_services.sh
     - docker-compose build
     - docker-compose down
     - docker-compose up -d --force-recreate
