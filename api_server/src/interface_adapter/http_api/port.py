@@ -1,7 +1,7 @@
 # coding=utf-8
 from connexion import NoContent
 
-from main import port_manager
+from uwsgi_file_main import port_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
 from src.exceptions import PortNotFoundError, UserInputError

@@ -1,7 +1,7 @@
 # coding=utf-8
 from connexion import NoContent
 
-from main import switch_manager
+from uwsgi_file_main import switch_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.switch import Switch
 from src.exceptions import SwitchNotFoundError, InvalidIPv4, IntMustBePositive, UserInputError

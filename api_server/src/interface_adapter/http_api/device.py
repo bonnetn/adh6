@@ -2,7 +2,7 @@
 import requests
 from connexion import NoContent
 
-from main import device_manager
+from uwsgi_file_main import device_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.device import DeviceType, Device
 from src.exceptions import DeviceNotFoundError, NoMoreIPAvailableException

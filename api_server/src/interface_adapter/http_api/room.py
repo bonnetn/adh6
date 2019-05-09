@@ -1,7 +1,7 @@
 # coding=utf-8
 from connexion import NoContent
 
-from main import room_manager
+from uwsgi_file_main import room_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
 from src.exceptions import RoomNotFoundError, VLANNotFoundError, RoomNumberMismatchError, MissingRequiredField, \
@@ -13,7 +13,6 @@ from src.interface_adapter.http_api.util.error import bad_request
 from src.use_case.room_manager import MutationRequest
 from src.util.context import log_extra
 from src.util.log import LOG
-
 
 @with_context
 @require_sql
@@ -90,7 +89,7 @@ def _map_room_to_http_response(room: Room) -> dict:
     fields = {
         'description': room.description,
         'roomNumber': int(room.room_number),
-        'phone': int(room.phone_number),
+        'phone': 0 if not room.phone_number else int(room.phone_number),
         'vlan': int(room.vlan_number),
     }
     return {k: v for k, v in fields.items() if v is not None}
