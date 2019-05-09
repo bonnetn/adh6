@@ -962,7 +962,7 @@ CREATE TABLE `product` (
 );
 LOCK TABLES `product`;
 INSERT INTO `product` VALUES (0, 0, 50, 'Abonnemnt 1an'), (1, 5, 5, 'Cable 5m');
-UNLCOCK TABLES;
+UNLOCK TABLES;
 
 
 DROP TABLE IF EXISTS `account`;
