@@ -1,0 +1,70 @@
+version: '3.2'
+services:
+  # frontend_angular is a web server that provides the JS to the clients.
+  frontend_angular:
+    build:
+      context: ./
+      dockerfile: ./frontend_angular/Dockerfile
+      args:
+        BASE_ADH6_URL: "adh6-dev.minet.net/" # Do not forget the trailing slash!
+        SSO_LOGOUT: "cas.minet.net/logout"
+        SSO_AUTHORIZE: "cas.minet.net/oauth2.0/authorize"
+    expose:
+      - "8443" # app does not start as root here
+    volumes:
+      # Make a bind mount so you can modify files in the container
+      - type: bind
+        source: "./frontend_angular/src"
+        target: "/adh6/frontend_angular/src/"
+        read_only: true
+      # These are files that are generated in the dockerfile that should not be
+      # read from the host disk.
+      - "/adh6/frontend_angular/src/app/api"
+      - "/adh6/frontend_angular/src/app/config"
+
+  # api_server is the API that actually does action on the database.
+  api_server:
+    build:
+      context: ./
+      dockerfile: ./api_server/Dockerfile
+      args:
+        APPLICATION_ROOT: "/api"
+        CAS_PROFILE_URL: "https://cas.minet.net/oauth2.0/profile"
+    links:
+      - database
+    expose:
+      - "443"
+    environment:
+      ENVIRONMENT: "dev"
+    volumes:
+      # Make a bind mount so you can modify files in the container
+      - type: bind
+        source: "./api_server/src"
+        target: "/adh6/api_server/src/"
+        read_only: true
+      
+  # The reverse proxy is used to gather the api and the frontend behind the same
+  # host. We can also use it to cache requests.
+  reverse_proxy:
+    build: 
+      context: "./reverse_proxy"
+      args:
+        BASE_ADH6_URL: "adh6-dev.minet.net"
+    links:
+      - frontend_angular
+      - api_server
+    ports:
+      - "443:443"
+      - "80:80" # Redirect to 443.
+    command: ['nginx-debug', '-g', 'daemon off;'] # More logging!
+
+  # The RDBMS of the project.
+  database:
+    build: "database"
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "adh6"
+      MYSQL_USER: "adh6"
+      MYSQL_PASSWORD: "adh6_pass" # Please change this password on prod'.
+    expose:
+      - "3306"
