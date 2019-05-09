@@ -60,9 +60,9 @@ deploy_dev:
   stage: deploy_dev
   script:
     - cd frontend_angular && bash generate_api_services.sh
-    - docker-compose -f docker-compose-dev.yml build
-    - docker-compose -f docker-compose-dev.yml down
-    - docker-compose -d --force-recreate  -f docker-compose-dev.yml up
+    - docker-compose -f docker-compose-deploy.yml build
+    - docker-compose -f docker-compose-deploy.yml down
+    - docker-compose -d --force-recreate  -f docker-compose-deploy.yml up
   only:
     - master
   tags:
