@@ -41,7 +41,14 @@ Les gars, vous avez installé gentoo, vous avez vraiment besoin des
 instructions pour installer docker?! Bon OK:
 > emerge --ask --verbose app-emulation/docker app-emulation/docker-compose
 
-2. Lancez l'application (le premier démarrage va prendre du temps, docker va
+2. Déclarez le domaine `adh6-dev.minet.net` dans votre ``/etc/hosts` :
+
+> 127.0.0.1 adh6-dev.minet.net
+
+(Ou bien changez toutes les références à ce domaine dans le `docker-compose.yml`
+et dans les fichiers de configuration des différents conteneurs.)
+
+3. Lancez l'application (le premier démarrage va prendre du temps, docker va
 construire toutes les images, installer plein de dépendances dans les
 environnements virtuels).
 
