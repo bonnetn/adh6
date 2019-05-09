@@ -2,7 +2,8 @@ image: python:3.7-stretch
 
 cache:
   paths:
-    - .cache/pip - venv/
+    - .cache/pip 
+    - venv/
 
 # We declare a job that gitlab ignores and put a YAML anchor
 # See https://gitlab.com/gitlab-org/gitlab-ce/issues/15403#note_27079119
