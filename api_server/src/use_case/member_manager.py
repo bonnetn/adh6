@@ -153,7 +153,7 @@ class MemberManager:
             raise IntMustBePositive('duration')
 
         if duration not in self.config.PRICES:
-            LOG.warn("create_membership_record_no_price_defined", extra=log_extra(ctx, duration=duration))
+            LOG.warning("create_membership_record_no_price_defined", extra=log_extra(ctx, duration=duration))
             raise NoPriceAssignedToThatDuration(duration)
 
         start = string_to_date(start_str)
@@ -171,11 +171,11 @@ class MemberManager:
             self.member_repository.update_member(ctx, username, departure_date=end.isoformat())
 
         except InvalidAdmin:
-            LOG.warn("create_membership_record_admin_not_found", extra=log_extra(ctx))
+            LOG.warning("create_membership_record_admin_not_found", extra=log_extra(ctx))
             raise
 
         except UnknownPaymentMethod:
-            LOG.warn("create_membership_record_unknown_payment_method",
+            LOG.warning("create_membership_record_unknown_payment_method",
                      extra=log_extra(ctx, payment_method=payment_method))
             raise
 

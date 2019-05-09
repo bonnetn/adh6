@@ -51,7 +51,7 @@ class Database:
                     LOG.info("connection_established")
                     LOG.info("table_created")
                 except OperationalError as e:
-                    LOG.warn("could_not_connect_to_database", extra={'exception': e})
+                    LOG.warning("could_not_connect_to_database", extra={'exception': e})
                     if retries + 1 == Database.RETRY_COUNT:
                         raise
                     time.sleep(Database.RETRY_INTERVAL)
