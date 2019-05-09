@@ -21,10 +21,10 @@
     <tr
       *ngFor="let switchResult of result.switches | paginate: { itemsPerPage: result.items_per_page, currentPage: result.current_page, totalItems: result.item_count}">
       <td>
-        <a [routerLink]="['/switch/edit', switchResult.switch.id]">{{ switchResult.switch.description }}</a></td>
-      <td class="center">{{ switchResult.switch.ip }}</td>
+        <a [routerLink]="['/switch/edit', switchResult.id]">{{ switchResult.description }}</a></td>
+      <td class="center">{{ switchResult.ip }}</td>
       <td
-        class="center"><a [routerLink]="['/switch/view', switchResult.switchID]">
+        class="center"><a [routerLink]="['/switch/view', switchResult.id]">
         <button>Liste des Ports</button>
       </a></td>
     </tr>
