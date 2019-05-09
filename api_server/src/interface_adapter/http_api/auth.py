@@ -65,8 +65,6 @@ def get_sso_groups(token):
         )
     except requests.exceptions.ReadTimeout:
         return None
-    print(r)
-    print(r.content)
     if r.status_code != 200 or "id" not in r.json():
         return None
 

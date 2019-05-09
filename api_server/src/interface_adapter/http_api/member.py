@@ -5,7 +5,11 @@ Contain all the http http_api functions.
 from connexion import NoContent
 from dataclasses import asdict
 
-from uwsgi_file_main import member_manager
+try:
+    from main import member_manager
+except ImportError:
+    from uwsgi_file_main import member_manager
+
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.member import Member
 from src.exceptions import MemberNotFoundError, UserInputError

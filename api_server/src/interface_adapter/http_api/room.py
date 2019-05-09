@@ -1,7 +1,11 @@
 # coding=utf-8
 from connexion import NoContent
 
-from uwsgi_file_main import room_manager
+try:
+    from main import room_manager
+except ImportError:
+    from uwsgi_file_main import room_manager
+
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
 from src.exceptions import RoomNotFoundError, VLANNotFoundError, RoomNumberMismatchError, MissingRequiredField, \

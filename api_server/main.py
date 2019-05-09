@@ -31,11 +31,11 @@ elk_repository: ElasticSearchRepository = None
 money_repository: MoneyRepository = None
 
 # Use cases.
-port_manager: PortManager = None
-device_manager: DeviceManager = None
-member_manager: MemberManager = None
-room_manager: RoomManager = None
-switch_manager: SwitchManager = None
+#port_manager: PortManager = None
+#device_manager: DeviceManager = None
+#member_manager: MemberManager = None
+#room_manager: RoomManager = None
+#switch_manager: SwitchManager = None
 
 # Application.
 application = None
