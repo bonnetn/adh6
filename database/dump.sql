@@ -944,7 +944,7 @@ CREATE TABLE `transaction` (
 DROP TABLE IF EXISTS `payment_method`;
 CREATE TABLE `payment_method` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NUL,
+	`name` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 LOCK TABLES `payment_method` WRITE;
