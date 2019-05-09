@@ -9,6 +9,8 @@ services:
         CAS_HOST: "adh6-dev.minet.net"
     ports:
       - "8443:8443"
+    extra_hosts:
+      - "adh6-dev.minet.net:127.0.0.1"
 
   # frontend_angular is a web server that provides the JS to the clients.
   frontend_angular:
