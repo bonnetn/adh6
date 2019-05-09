@@ -63,7 +63,7 @@ deploy_dev:
     - cd ..
     - docker-compose -f docker-compose-deploy.yml build
     - docker-compose -f docker-compose-deploy.yml down
-    - docker-compose -d --force-recreate  -f docker-compose-deploy.yml up
+    - docker-compose -f docker-compose-deploy.yml up --force-recreate -d 
   only:
     - master
   tags:
