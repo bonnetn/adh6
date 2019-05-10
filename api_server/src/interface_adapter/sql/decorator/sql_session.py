@@ -20,19 +20,19 @@ def require_sql(f):
     """
 
     @wraps(f)
-    def wrapper(ctx, *args, **kwds):
+    def wrapper(cls, ctx, *args, **kwds):
         """
         Wrap http_api function.
         """
         # TODO: Remove dep from SQLAlchemy?
         if ctx.get(CTX_SQL_SESSION):
-            return f(ctx, *args, **kwds)
+            return f(cls, ctx, *args, **kwds)
 
         s = Db.get_db().get_session()
         ctx = build_context(session=s, ctx=ctx)
 
         try:
-            result = f(ctx, *args, **kwds)
+            result = f(cls, ctx, *args, **kwds)
 
             # It makes things clearer and less error-prone.
             assert isinstance(result, tuple), "Please always pass the result AND the HTTP code."

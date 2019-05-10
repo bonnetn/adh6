@@ -15,7 +15,7 @@ def with_context(f):
     """
 
     @wraps(f)
-    def wrapper(*args, **kwds):
+    def wrapper(cls, *args, **kwds):
         """
         Wrap http_api function.
         """
@@ -23,6 +23,6 @@ def with_context(f):
             testing=current_app.config["TESTING"],
             request_id=str(uuid.uuid4()),  # Generates an unique ID on this request so we can track it.
         )
-        return f(ctx, *args, **kwds)
+        return f(cls, ctx, *args, **kwds)
 
     return wrapper

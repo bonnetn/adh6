@@ -52,7 +52,7 @@ def auth_regular_admin(f):
     """
 
     # @wraps(f) # Cannot wrap this function, because connexion needs to know we have the user and token_info...
-    def wrapper(ctx, *args, user, token_info, **kwargs):
+    def wrapper(cls, ctx, *args, user, token_info, **kwargs):
         """
         Wrap http_api function.
         """
@@ -67,7 +67,7 @@ def auth_regular_admin(f):
         assert ctx.get(CTX_SQL_SESSION) is not None, 'You need SQL for authentication.'
         admin = _find_admin(ctx.get(CTX_SQL_SESSION), user)
         ctx = build_context(ctx=ctx, admin=Admin(login=admin.login))
-        return f(ctx, *args, **kwargs)  # Discard the user and token_info.
+        return f(cls, ctx, *args, **kwargs)  # Discard the user and token_info.
 
     return wrapper
 
@@ -77,7 +77,7 @@ def auth_super_admin(f):
     Authenticate a super admin.
     """
 
-    def wrapper(ctx, *args, user, token_info, **kwargs):
+    def wrapper(cls, ctx, *args, user, token_info, **kwargs):
         """
         Wrap http_api function.
         """
@@ -87,6 +87,6 @@ def auth_super_admin(f):
 
         admin = _find_admin(ctx.get(CTX_SQL_SESSION), user)
         ctx = build_context(ctx=ctx, admin=Admin(login=admin.login))
-        return f(ctx, *args, **kwargs)  # Discard the user and token_info.
+        return f(cls, ctx, *args, **kwargs)  # Discard the user and token_info.
 
     return wrapper

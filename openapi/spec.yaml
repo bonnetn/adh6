@@ -257,7 +257,6 @@ paths:
       - oauth2: ["profile"]
   /member/{username}/password/:
     put:
-      operationId: src.interface_adapter.http_api.member.put_password
       tags:
       - "member"
       summary: "Update password"
@@ -290,7 +289,6 @@ paths:
       - oauth2: ["profile"]
   /member/{username}/logs/:
     get:
-      operationId: src.interface_adapter.http_api.member.get_logs
       tags:
       - "member"
       summary: "Get the most recent logs"
@@ -316,7 +314,6 @@ paths:
       - oauth2: ["profile"]
   /member/{username}/membership/:
     post:
-      operationId: src.interface_adapter.http_api.member.post_membership
       tags:
       - "membership"
       summary: "Add a membership record for an member"
@@ -466,7 +463,7 @@ paths:
       - oauth2: ["profile"]
   /device/{mac_address}/vendor:
     get:
-      operationId: src.interface_adapter.http_api.device.get_vendor
+      operationId: "vendor_get"
       tags:
       - "device"
       summary: "Retrieve the vendor of a device based on its MAC"
@@ -869,7 +866,7 @@ paths:
       - oauth2: ["profile"]
   /port/{port_id}/state/:
     get:
-      operationId: src.interface_adapter.http_api.port.get_state
+      operationId: "state_get"
       tags:
       - "port"
       summary: "Retrieve the status of a port."
@@ -890,7 +887,6 @@ paths:
       security:
       - oauth2: ["profile"]
     put:
-      operationId: src.interface_adapter.http_api.port.put_state
       tags:
       - "port"
       summary: "Shutdown/enable a port"
@@ -918,7 +914,7 @@ paths:
       - oauth2: ["profile"]
   /port/{port_id}/mab/:
     get:
-      operationId: src.interface_adapter.http_api.port.get_mab
+      operationId: "mab_get"
       tags:
       - "port"
       summary: "Check whether MAB is enable on this port or not."
@@ -939,7 +935,6 @@ paths:
       security:
       - oauth2: ["profile"]
     put:
-      operationId: src.interface_adapter.http_api.port.put_mab
       tags:
       - "port"
       summary: "Enable/disable MAB on a port"
@@ -966,7 +961,7 @@ paths:
 
   /port/{port_id}/vlan/:
     get:
-      operationId: src.interface_adapter.http_api.port.get_vlan
+      operationId: "vlan_get"
       tags:
       - "port"
       summary: "Retrieve the VLAN assigned to the port."
@@ -988,7 +983,6 @@ paths:
       security:
       - oauth2: ["profile"]
     put:
-      operationId: src.interface_adapter.http_api.port.put_vlan
       tags:
       - "port"
       summary: "Change the VLAN assigned a to port"

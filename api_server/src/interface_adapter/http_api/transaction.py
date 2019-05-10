@@ -4,25 +4,24 @@ from src.interface_adapter.sql.decorator.auth import auth_regular_admin
 from src.interface_adapter.sql.decorator.sql_session import require_sql
 
 
-@require_sql
-@auth_regular_admin
-def search(limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None, account=None):
-    pass
+class TransactionHandler:
 
+    @require_sql
+    @auth_regular_admin
+    def search(self, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None, account=None):
+        pass
 
-@require_sql
-@auth_regular_admin
-def create_transaction(body):
-    pass
+    @require_sql
+    @auth_regular_admin
+    def create_transaction(self, body):
+        pass
 
+    @require_sql
+    @auth_regular_admin
+    def get(self, body):
+        pass
 
-@require_sql
-@auth_regular_admin
-def get(body):
-    pass
-
-
-@require_sql
-@auth_regular_admin
-def delete(transaction_id):
-    pass
+    @require_sql
+    @auth_regular_admin
+    def delete(self, transaction_id):
+        pass
