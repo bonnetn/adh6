@@ -1,14 +1,10 @@
 # coding=utf-8
 from connexion import NoContent
 
-try:
-    from main import switch_manager
-except ImportError:
-    from uwsgi_file_main import switch_manager
-
+from main import switch_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.switch import Switch
-from src.exceptions import SwitchNotFoundError, InvalidIPv4, IntMustBePositive, UserInputError
+from src.exceptions import SwitchNotFoundError, UserInputError
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin, auth_super_admin

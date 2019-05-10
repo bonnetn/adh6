@@ -1,22 +1,18 @@
 # coding=utf-8
 from connexion import NoContent
 
-try:
-    from main import room_manager
-except ImportError:
-    from uwsgi_file_main import room_manager
-
+from main import room_manager
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.room import Room
-from src.exceptions import RoomNotFoundError, VLANNotFoundError, RoomNumberMismatchError, MissingRequiredField, \
-    IntMustBePositive, UserInputError
-from src.interface_adapter.sql.decorator.auth import auth_regular_admin, auth_super_admin
-from src.interface_adapter.sql.decorator.sql_session import require_sql
+from src.exceptions import RoomNotFoundError, UserInputError
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
+from src.interface_adapter.sql.decorator.auth import auth_regular_admin, auth_super_admin
+from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.use_case.room_manager import MutationRequest
 from src.util.context import log_extra
 from src.util.log import LOG
+
 
 @with_context
 @require_sql
@@ -58,7 +54,6 @@ def put(ctx, room_number, body):
 
     except UserInputError as e:
         return bad_request(e), 400
-
 
 
 @with_context
