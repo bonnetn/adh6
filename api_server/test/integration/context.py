@@ -1,11 +1,10 @@
 # coding=utf-8
 import sys
 
-sys._called_from_test = True
+sys._called_from_test = True  # This will make sure we don't call 'init' anywhere else.
 
 import main
 
-main.init(main, testing=True)
-app = main.application
+app = main.init(testing=True)
 
 app.app.config["TESTING"] = True

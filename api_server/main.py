@@ -30,7 +30,7 @@ from src.use_case.room_manager import RoomManager
 from src.use_case.switch_manager import SwitchManager
 
 
-def init(m, testing=True):
+def init(testing=True):
     """
     Initialize and wire together the dependency of the application.
     """
@@ -110,16 +110,18 @@ def init(m, testing=True):
                 pythonic_params=True,
                 )
 
-    m.application = app
+    return app
 
 
-# When run with uWSGI (production).
-if __name__ == 'uwsgi_file_main':
-    init(sys.modules[__name__], testing=False)
+if not hasattr(sys, '_called_from_test'):  # Make sure we never run this when unit testing.
 
-# When run with `python main.py`, when people want to run it locally.
-if __name__ == '__main__' and not hasattr(sys, '_called_from_test'):
-    init(sys.modules[__name__], testing=False)
-    # set the WSGI application callable to allow using uWSGI:
-    # uwsgi --http :8080 -w app
-    application.run()
+    # When run with uWSGI (production).
+    if __name__ == 'uwsgi_file_main':
+        application = init(testing=False)
+
+    # When run with `python main.py`, when people want to run it locally.
+    if __name__ == '__main__':
+        application = init(testing=False)
+        # set the WSGI application callable to allow using uWSGI:
+        # uwsgi --http :8080 -w app
+        application.run()
