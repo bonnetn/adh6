@@ -22,7 +22,7 @@ from src.interface_adapter.sql.model.database import Database
 from src.interface_adapter.sql.money_repository import MoneySQLRepository
 from src.interface_adapter.sql.network_object_repository import NetworkObjectSQLRepository
 from src.interface_adapter.sql.room_repository import RoomSQLRepository
-from src.resolver import MyResolver
+from src.resolver import ADHResolver
 from src.use_case.device_manager import DeviceManager
 from src.use_case.member_manager import MemberManager
 from src.use_case.port_manager import PortManager
@@ -92,7 +92,7 @@ def init(m, testing=True):
 
     app.add_api('swagger.yaml',
                 # resolver=RestyResolver('src.interface_adapter.http_api'),
-                resolver=MyResolver({
+                resolver=ADHResolver({
                     'transaction': transaction_handler,
                     'member': member_handler,
                     'device': device_handler,

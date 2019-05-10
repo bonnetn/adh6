@@ -6,7 +6,7 @@ import re
 from connexion import Resolver
 
 
-class MyResolver(Resolver):
+class ADHResolver(Resolver):
     def __init__(self, bindings):
         super().__init__()
         self.bindings = bindings
