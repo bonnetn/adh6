@@ -969,8 +969,8 @@ DROP TABLE IF EXISTS `account`;
 CREATE TABLE `account` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`type` int(11) DEFAULT NULL,
-        `creation_date` NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        `actif` boolean() DEFAULT NULL
+        `creation_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `actif` BOOLEAN DEFAULT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -989,7 +989,6 @@ ALTER TABLE `transaction` ADD CONSTRAINT `transaction_fk0` FOREIGN KEY (`product
 ALTER TABLE `transaction` ADD CONSTRAINT `transaction_fk1` FOREIGN KEY (`src`) REFERENCES `account`(`id`);
 ALTER TABLE `transaction` ADD CONSTRAINT `transaction_fk2` FOREIGN KEY (`dst`) REFERENCES `account`(`id`);
 ALTER TABLE `transaction` ADD CONSTRAINT `transaction_fk3` FOREIGN KEY (`type`) REFERENCES `payment_method`(`id`);
-ALTER TABLE `payment_method` ADD CONSTRAINT `payment_method_fk0` FOREIGN KEY (`account`) REFERENCES `account`(`id`);
 
 --
 -- Final view structure for view `last_use_mac_U6`
