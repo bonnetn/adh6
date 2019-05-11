@@ -1,6 +1,11 @@
 <div *ngIf="(switch$ | async) as cur_switch">
   <h2>{{ cur_switch.description }}</h2>
   <p><strong>Adresse IP:</strong> {{ cur_switch.ip }}</p>
+  <a [routerLink]="['/switch/add', switchID, 'port']">
+    <button class="u-full-width
+      button-primary">Nouveau port
+    </button>
+  </a>
   <table class="u-full-width">
     <tr>
       <th class="center">Numéro de port</th>

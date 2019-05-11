@@ -261,7 +261,7 @@ def _map_port_sql_to_entity(r: PortSQL) -> Port:
     return Port(
         id=str(r.id),
         port_number=r.numero,
-        room_number="aucun" if not r.chambre.numero else str(r.chambre.numero),
+        room_number=str(r.chambre.numero),
         switch_info=SwitchInfo(
             switch_id=str(r.switch.id),
             rcom=r.rcom,
