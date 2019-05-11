@@ -28,34 +28,42 @@ python_check_for_vuln_deps:
   - pip install safety
   - safety check -r requirements.txt
   - safety check
+  tags:
+    - test
 
 python_unit_test:
   stage: test
   <<: *before_test_job # We reference our previous anchor
   script:
-  - cd api_server/
-  - pytest test/unit -vv
+    - cd api_server/
+    - pytest test/unit -vv
+  tags:
+    - test
 
 python_integration_test:
   stage: test
   <<: *before_test_job # We reference our previous anchor
   script:
-  - cd api_server/
-  - apt update -q
-  - apt install -qy sqlite3 libmariadbclient-dev
-  - pytest test/integration -vv
+    - cd api_server/
+    - apt update -q
+    - apt install -qy sqlite3 libmariadbclient-dev
+    - pytest test/integration -vv
+  tags:
+    - test
 
 python_coverage:
   stage: test
   <<: *before_test_job # We reference our previous anchor
   script:
-  - cd api_server/
-  - pip install pytest-cov
-  - pytest -vv --cov=src --cov-report=html --cov-report=term --cov-fail-under=80
+    - cd api_server/
+    - pip install pytest-cov
+    - pytest -vv --cov=src --cov-report=html --cov-report=term --cov-fail-under=80
   coverage: '/^TOTAL\s+.*\s+(\d+\.?\d*)%/'
   artifacts:
     paths:
       - api_server/htmlcov/
+  tags:
+    - test
 
 deploy_dev:
   stage: deploy_dev
