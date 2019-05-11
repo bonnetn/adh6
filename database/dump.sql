@@ -960,7 +960,7 @@ CREATE TABLE `product` (
 	`name` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
 );
-LOCK TABLES `product`;
+LOCK TABLES `product` WRITE;
 INSERT INTO `product` VALUES (0, 0, 50, 'Abonnemnt 1an'), (1, 5, 5, 'Cable 5m');
 UNLOCK TABLES;
 
@@ -980,7 +980,7 @@ CREATE TABLE `account_type` (
 	`name` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
 );
-LOCK TABLES `account_type`;
+LOCK TABLES `account_type` WRITE;
 INSERT INTO `account_type` VALUES (0, "adherents"), (1, "Club");
 UNLOCK TABLES;
 
