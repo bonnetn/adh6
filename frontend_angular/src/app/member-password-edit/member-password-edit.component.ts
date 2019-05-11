@@ -61,7 +61,7 @@ export class MemberPasswordEditComponent implements OnInit {
   }
 
   private updatePasswordOfUser(username: string) {
-    return this.memberService.srcInterfaceAdapterHttpApiMemberPutPassword(
+    return this.memberService.memberUsernamePasswordPut(
       username,
       {password: this.memberPassword.value.password},
       'response')

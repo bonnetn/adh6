@@ -65,3 +65,6 @@ frontend_angular/src/app/api/*
 # certificats
 frontend_angular/certs/
 
+# other
+frontend_angular/src/app/api/.keep
+
