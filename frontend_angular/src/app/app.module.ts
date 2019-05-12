@@ -81,7 +81,7 @@ import { CreateTemporaryAccountComponent } from './create-temporary-account/crea
     BrowserAnimationsModule,
     OAuthModule.forRoot(),
     NgxPaginationModule,
-    ttpClientModule,
+    HttpClientModule,
   ],
   providers: [
     AppComponent,
