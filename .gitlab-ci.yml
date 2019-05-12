@@ -11,16 +11,8 @@ cache:
     - pip install -r api_server/requirements.txt
 
 stages:
-  - install_deps
   - test
   - deploy_dev
-
-install_python_deps:
-  # This stage install all deps and cache them.
-  stage: install_deps
-  <<: *before_test_job # We reference our previous anchor
-  script:
-    - pip freeze
 
 python_check_for_vuln_deps:
   stage: test
