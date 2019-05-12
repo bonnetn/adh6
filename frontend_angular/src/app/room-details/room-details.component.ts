@@ -80,7 +80,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
       .takeWhile(() => this.alive)
       .subscribe((user) => {
         user['roomNumber'] = this.roomNumber;
-        this.memberService.memberUsernamePut(user, v.username, 'response')
+        this.memberService.memberUsernamePut(v.username, user, 'response')
           .takeWhile(() => this.alive)
           .subscribe((response) => {
             this.refreshInfo();
@@ -101,7 +101,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
       .takeWhile(() => this.alive)
       .subscribe((user) => {
         user['roomNumber'] = v.roomNumberNew;
-        this.memberService.memberUsernamePut(user, username, 'response')
+        this.memberService.memberUsernamePut(username, user, 'response')
           .takeWhile(() => this.alive)
           .subscribe((response) => {
             this.refreshInfo();
@@ -117,7 +117,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
       .takeWhile(() => this.alive)
       .subscribe((user) => {
         delete user['roomNumber'];
-        this.memberService.memberUsernamePut(user, username, 'response')
+        this.memberService.memberUsernamePut(username, user, 'response')
 
           .takeWhile(() => this.alive)
           .subscribe((response) => {
