@@ -48,9 +48,9 @@ class PortHandler:
 
         try:
             port_id = self.port_manager.create(ctx, MutationRequest(
-                port_number=body.get('portNumber'),
-                room_number=body.get('roomNumber'),
-                switch_id=body.get('switchID'),
+                port_number=body.get('port_number'),
+                room_number=body.get('room_number'),
+                switch_id=body.get('switch_id'),
                 rcom=0,  # TODO: Add to spec.
                 oid=None,  # TODO: Add to spec.
             ))
@@ -83,9 +83,9 @@ class PortHandler:
 
         try:
             self.port_manager.update(ctx, port_id, MutationRequest(
-                port_number=body.get('portNumber'),
-                room_number=body.get('roomNumber'),
-                switch_id=body.get('switchID'),
+                port_number=body.get('port_number'),
+                room_number=body.get('room_number'),
+                switch_id=body.get('switch_id'),
                 rcom=0,  # Add to spec.
                 oid=None,  # Add to spec.
             ))

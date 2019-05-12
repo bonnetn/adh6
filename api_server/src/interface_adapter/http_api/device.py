@@ -55,9 +55,9 @@ class DeviceHandler:
                                                            req=MutationRequest(
                                                                owner_username=body.get('username'),
                                                                mac_address=body.get('mac'),
-                                                               connection_type=body.get('connectionType'),
-                                                               ip_v4_address=body.get('ipAddress'),
-                                                               ip_v6_address=body.get('ipv6Address'),
+                                                               connection_type=body.get('connection_type'),
+                                                               ip_v4_address=body.get('ip_address'),
+                                                               ip_v6_address=body.get('ipv6_address'),
                                                            ),
                                                            )
 

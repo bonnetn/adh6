@@ -109,7 +109,7 @@ class MemberHandler:
         LOG.debug("http_member_post_membership_called", extra=log_extra(ctx, username=username, request=body))
 
         try:
-            self.member_manager.new_membership(ctx, username, body.get('duration'), body.get('paymentMethod'),
+            self.member_manager.new_membership(ctx, username, body.get('duration'), body.get('payment_method'),
                                                start_str=body.get('start'))
             return NoContent, 200  # 200 OK
 
@@ -168,13 +168,13 @@ def _map_member_to_http_response(member: Member) -> dict:
 def _map_http_request_to_partial_mutation_request(body) -> PartialMutationRequest:
     return PartialMutationRequest(
         email=body.get('email'),
-        first_name=body.get('firstName'),
-        last_name=body.get('lastName'),
+        first_name=body.get('first_name'),
+        last_name=body.get('last_name'),
         username=body.get('username'),
         comment=body.get('comment'),
-        departure_date=body.get('departureDate'),
-        association_mode=body.get('associationMode'),
-        room_number=body.get('roomNumber'),
+        departure_date=body.get('departure_date'),
+        association_mode=body.get('association_mode'),
+        room_number=body.get('room_number'),
     )
 
 

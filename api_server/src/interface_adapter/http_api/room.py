@@ -44,7 +44,7 @@ class RoomHandler:
         LOG.debug("http_room_put_called", extra=log_extra(ctx, room_number=room_number, request=body))
         try:
             created = self.room_manager.update_or_create(ctx, room_number, MutationRequest(
-                room_number=body.get('roomNumber'),
+                room_number=body.get('room_number'),
                 description=body.get('description'),
                 phone_number=body.get('phone'),
                 vlan_number=body.get('vlan'),
