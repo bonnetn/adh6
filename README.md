@@ -27,8 +27,7 @@ Allez sur gitlab.minet.net sur [la page du projet](https://gitlab.minet.net/adh6
 
 ## OK, maintenant comment je lance en local?
 
-1. Installez *docker* et *docker-compose*. C'est le système qui va permettre de
-créer des environnements de dev' sur votre machine en local.
+1. Installez *docker* et *docker-compose*. C'est le système qui va permettre de créer des environnements de dev' sur votre machine en local.
 
 Pour **Ubuntu/Debian**:
 > apt install docker docker-compose
@@ -37,22 +36,12 @@ Pour **Arch Linux**:
 > pacman -S docker docker-compose
 
 Pour **Gentoo**:
-Les gars, vous avez installé gentoo, vous avez vraiment besoin des
-instructions pour installer docker?! Bon OK:
+Les gars, vous avez installé gentoo, vous avez vraiment besoin des instructions pour installer docker?! Bon OK:
 > emerge --ask --verbose app-emulation/docker app-emulation/docker-compose
 
-2. Déclarez le domaine `adh6-dev.minet.net` dans votre ``/etc/hosts` :
+2. Lancez l'application (le premier démarrage va prendre du temps, docker va construire toutes les images, installer plein de dépendances dans les environnements virtuels).
 
-> 127.0.0.1 adh6-dev.minet.net
-
-(Ou bien changez toutes les références à ce domaine dans le `docker-compose.yml`
-et dans les fichiers de configuration des différents conteneurs.)
-
-3. Lancez l'application (le premier démarrage va prendre du temps, docker va
-construire toutes les images, installer plein de dépendances dans les
-environnements virtuels).
-
-> docker-compose up --build
+> make clean run
 
 *Vous aurez sûrement besoin de lancer le service docker. Avec systemd:*
 
@@ -61,7 +50,7 @@ environnements virtuels).
 Vous aurez sûrement à vous ajouter au groupe *docker* pour éviter de lancer docker-compose en root. (Vous aurez sûrement à vous re-logger après)
 > usermod -aG docker votre_nom_d'utilisateur
 
-Le premier lancement peut prendre beaucoup de temps (genre au moins 15 mins). Il va installer et set-up tous les environnements dockers, et rebuild CAS (ça prend beaucoup de temps et télécharge ~700MB *Selon InsolentBacon, voyez l'espace libre chuter tout le long... 4Gb...*, c'est pas de la faute d'ADH...).  
+Le premier lancement peut prendre beaucoup de temps (genre au moins 15 mins). Il va installer et set-up tous les environnements dockers.  
 Ne vous inquiétez pas, lancer les dockers sera bien plus rapide les prochaines fois que vous re-lancerez.
 
 Vous pouvez tester l'application dans votre navigateur à l'adresse https://localhost
@@ -70,13 +59,17 @@ Vous pouvez vous identifier avec comme username *minet* et comme mot de passe *m
 
 **NOTE**: Le certificat est auto-signé. Les navigateurs web récents permettent d'activer une option pour toujours faire confiance aux certificats pour localhost.
 
+Chromium: https://stackoverflow.com/questions/7580508/getting-chrome-to-accept-self-signed-localhost-certificate
+
 
 
 Normalement, une fois que le projet est lancé, vous aurez les logs de tous les dockers dans la console.
-Si vous éditez le code du Frontend (angular) dans votre dossier, les modifications seront automatiquement réfléchies (vous allez voir des logs comme quoi il recompile automatiquement). Pour le code de l'API, modifiez votre code et faites *docker-compose restart api_server*.
-Si vous modifiez autre chose, vous pouvez aussi tout relancer (mais ça prend du temps à cause de CAS).
+Si vous éditez le code du Frontend (angular) dans votre dossier, les modifications seront automatiquement réfléchies (vous allez voir des logs comme quoi il recompile automatiquement). 
+Pour le code de l'API, modifiez votre code et faites *`docker-compose restart api_server`*.
 
-PS: Parfois, lorsque que vous ajoutez un fichier, il faudra éteindre adh6, faire *docker-compose rm -v* puis relancer.
+Si vous modifiez autre chose, vous pouvez aussi tout relancer.
+
+PS: Parfois, lorsque que vous ajoutez un fichier, il faudra éteindre adh6 puis faire `make clean run`.
 
 
 
@@ -109,58 +102,35 @@ Si vous êtes un PGM et que vous voulez juste lire le code, sachez juste que tou
 
 Pour que python se comporte en serveur Web on utilise *Flask*, et pour pas avoir à faire de trucs compliqués on utilise *connexion* qui fait le binding entre *Flask* et les fonctions en python qui sont appelées presque magiquement.
 
-La spécification de l'API est stockée dans swagger.yaml à la racine du projet,
-ce fichier est automatiquement exporté de swaggerhub.
-https://app.swaggerhub.com/apis/insolentbacon/adherents/
-** Si vous voulez modifier l'API, ne modifiez pas sur ce site (de toute façon vous n'aurez sûrement pas les droits), modifiez le fichier openapi/spec.yaml.**
+La spécification de l'API est stockée dans swagger.yaml à la racine du projet, ce fichier est automatiquement exporté de swaggerhub.
+https://app.swaggerhub.com/apis/insolentbacon/adh/
+
+Si vous voulez modifier l'API, ne modifiez pas sur ce site (de toute façon vous n'aurez sûrement pas les droits), modifiez le fichier openapi/spec.yaml.**
 Le site permet just d'avoir une jolie représentation de l'API.
 
-*En gros*, les fonctions importantes sont juste celles dans *adh/controller/*,
-qui sont appelées quand on fait des requêtes vers le serveur web.
+*En gros*, les fonctions importantes sont juste celles dans *adh/controller/*, qui sont appelées quand on fait des requêtes vers le serveur web.
 
-Maintenant, parce qu'on veut pas faire de requêtes directement dans la BDD SQL (pour des raisons de sécurité et de flemme), on utilise *SQLAlchemy*. C'est en fait une bibliothèque qui permet de manipuler des objets dans la BDD comme des objets python (allez chercher ce qu'est un *ORM*).
+Maintenant, parce qu'on veut pas faire de requêtes directement dans la BDD SQL (pour des raisons de sécurité et de flemme), on utilise *SQLAlchemy*. 
+C'est en fait une bibliothèque qui permet de manipuler des objets dans la BDD comme des objets python (allez chercher ce qu'est un *ORM*).
 
 En résumé on a:
 
-- **controller/**: Le plus important, c'est là où sont les fonctions qui sont
-appelées lorsque une requête HTTP est effectuée sur l'API.
-- **model/**: C'est là où on définit ce qu'il y a dans la base de données (c'est
-à dire les noms des tables, des colonnes, les contraintes qu'il y a sur les
-champs [genre une IP doit être valide]). On importe ensuite les modèles dans les controllers pour manipuler la BDD
-- **exceptions/**: c'est là où on met les erreurs custom qu'on a défini, c'est
-peu important
-- **test/**: c'est là où il y a des les tests. C'est super important. On teste
-chacune des lignes de code des fichiers .py (on vise un *code coverage* de 95%)
-Les cas normaux et extrêmes doivent être testés. C'est ce qui est executé
-lorsque on lance pytest.
+- **controller/**: Le plus important, c'est là où sont les fonctions qui sont appelées lorsque une requête HTTP est effectuée sur l'API.
+- **model/**: C'est là où on définit ce qu'il y a dans la base de données (c'est à dire les noms des tables, des colonnes, les contraintes qu'il y a sur les champs [genre une IP doit être valide]). On importe ensuite les modèles dans les controllers pour manipuler la BDD
+- **exceptions/**: c'est là où on met les erreurs custom qu'on a défini, c'est peu important
+- **test/**: c'est là où il y a des les tests. C'est super important. On teste chacune des lignes de code des fichiers .py (on vise un *code coverage* de 95%)
+Les cas normaux et extrêmes doivent être testés. C'est ce qui est executé lorsque on lance pytest.
 
 ### Notes au futurs devs:
 #### Comment lancer les tests ?
 Lancez ```pytest``` dans la console, ou utilisez votre IDE...
 
 #### Comment obtenir une analyse du "code coverage" ?
-```pytest --cov=adh --cov-report html``` dans la console.
-
-#### A propos des sessions d'SQLAlchemy...
-Quand vous implémentez une fonction de l'API dans controller, ne faites qu'UNE session SQLAlchemy, créée DANS votre fonction de controller. Ca évite les nested transactions qui sont pas toujours supportées. (et c'est plus propre, moins error-prone)
-
-*Extrait de la doc d'SQLALchemy:*
-> As a general rule, keep the lifecycle of the session separate and external
-> from functions and objects that access and/or manipulate database data.
-> This will greatly help with achieving a predictable and consistent
-> transactional scope.
-
-#### Petites fonctions utiles
-
-J'ai défini quelques fonctions utiles dans les modèles des objets de la BDD.
-
-- dict(obj) permet de retourner un dict du format de l'api
-- Obj.from_dict(dict) permet de retourner un obj en utilisant un dict de l'API
-- Obj.find(session, value) permet de retourner l'objet qui est associé par l'API
+```pytest --cov=adh --cov-report html``` dans la console. (ou vous pouvez allez voir dans l'onglet CI de gitlab, dans la partie jobs)
 
 ## Dossier frontend_angular: le frontend
 
-*NOTE: nous utilisons la version 6 d'Angular*
+*NOTE: nous utilisons la version 7 d'Angular*
 
 ![diagramme des vues](flux_adh6.png)
 
@@ -170,10 +140,6 @@ principal (c'est à dire, gérer les profils d'adhérents).
 ## CAS
 ### Description
 CAS est le service qui gère l'authentification des actions des utilisateurs.
-Au lieu de réimplémenter une solution de Single sign-on, j'ai ajouté une image docker CAS au projet.
-Il est configuré pour accepter un utilisateur avec comme identifiant minet et comme mot de passe minet.
-Cela peut sembler évident mais NE PAS UTILISER CETTE IMAGE EN PRODUCTION.
-Il faudra configurer CAS pour utiliser le serveur LDAP et éventuellement configurer les autres options de sécurité.
 
 Le protocole utilisé est OAuth2.
 
