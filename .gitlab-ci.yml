@@ -22,6 +22,7 @@ stages:
   - deploy_dev
 
 install_python_deps:
+  # This stage install all deps and cache them.
   stage: install_deps
   <<: *before_test_job # We reference our previous anchor
   script:
@@ -38,14 +39,14 @@ python_check_for_vuln_deps:
 
 python_unit_test:
   stage: test
-  # <<: *before_test_job # We reference our previous anchor
+  <<: *before_test_job # We reference our previous anchor
   script:
   - cd api_server/
   - pytest test/unit -vv
 
 python_integration_test:
   stage: test
-  # <<: *before_test_job # We reference our previous anchor
+  <<: *before_test_job # We reference our previous anchor
   script:
   - cd api_server/
   - apt update -q
@@ -54,7 +55,7 @@ python_integration_test:
 
 python_coverage:
   stage: test
-  # <<: *before_test_job # We reference our previous anchor
+  <<: *before_test_job # We reference our previous anchor
   script:
   - cd api_server/
   - pip install pytest-cov
