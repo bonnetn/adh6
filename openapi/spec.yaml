@@ -1,11 +1,4 @@
 openapi: 3.0.0
-servers:
-- description: Production server
-  url: https://adh6.minet.net/api/v1
-- description: Development (staging) server
-  url: https://adh6-dev.minet.net/api/
-- description: Local dev server
-  url: http://localhost:8080/api/
 externalDocs:
   description: Find out more about MiNET
   url: http://minet.net
@@ -16,6 +9,8 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   title: Adherent
   version: 1.0.0
+servers:
+  - url: /api
 paths:
   /account/:
     get:
@@ -1657,10 +1652,10 @@ components:
         name: "C\xE2ble 5m"
         selling_price: 0.99
       properties:
-        buying_price:
-          description: Buying price of the product
-          example: 0.99
-          type: number
+        buying_price_in_cents:
+          description: Buying price of the product (in cents)
+          example: 99
+          type: integer
         id:
           description: ID of the product
           example: 1
@@ -1669,13 +1664,13 @@ components:
           description: Name of the product
           example: "C\xE2ble 5m"
           type: string
-        selling_price:
-          description: Buying price of the product
-          example: 0.99
-          type: number
+        selling_price_in_cents:
+          description: Buying price of the product (in cents)
+          example: 99
+          type: integer
       required:
-      - buying_price
-      - selling_price
+      - buying_price_in_cents
+      - selling_price_in_cents
       - name
       type: object
     Room:
@@ -1767,6 +1762,19 @@ components:
       - name
       - type
       type: object
+
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://cas.minet.net/oauth2.0/authorize
+          scopes:
+            profile: Read the profile of the user to get their LDAP groups
+
+# security:
+# - OAuth2: [profile]
+
 tags:
 - description: Operations on members
   name: member
@@ -1782,3 +1790,4 @@ tags:
   name: port
 - description: Temporary accounts
   name: temporary_account
+
