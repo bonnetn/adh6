@@ -1,6 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {LOCALE_ID, NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './/app-routing.module';
 import {DashboardComponent} from './dashboard/dashboard.component';
@@ -71,6 +72,7 @@ import { CreateTemporaryAccountComponent } from './create-temporary-account/crea
     AppRoutingModule,
     ApiModule,
     ReactiveFormsModule,
+    FormsModule,
     SimpleNotificationsModule.forRoot({
       timeOut: 3000,
       clickToClose: false,

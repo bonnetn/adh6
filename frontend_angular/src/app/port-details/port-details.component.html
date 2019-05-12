@@ -20,24 +20,30 @@
     <div class="six columns">
       <button class="u-full-width"
               [ngClass]="{true:'button-success',
-    false:'button-danger'}[portouvert]"
-              (click)="ouverture()"
-      >Port {{ port_ouverture }}
+    false:'button-danger'}[portStatus]"
+              (click)="toggleStatus()"
+      >Actif : {{ portStatusString }}
       </button>
     </div>
     <div class="six columns">
       <button class="u-full-width"
               [ngClass]="{true:'button-success',
-      false:'button-danger'}[isportauthenth]"
-              (click)="authenth()"
-      >{{ port_authenth }}
+      false:'button-danger'}[portAuth]"
+              (click)="toggleAuth()"
+      >Authentification : {{ portAuthString }}
       </button>
     </div>
   </div>
   <div class=row>
     <div class="six columns">
-      <strong>VLAN 41</strong><br/>
-      <button class="u-full-width">Changer de VLAN</button>
+      <strong>VLAN {{ vlan }}</strong><br/>
+      <button class="u-full-width" (click)="changeVlanVisible = !changeVlanVisible">Changer de VLAN</button>
+      <div [ngStyle]="{'visibility': changeVlanVisible?'visible':'hidden'}">
+        <select [(ngModel)]="selectedVlan">
+          <option *ngFor="let v of vlans" [ngValue]="v.value">{{v.name}}</option>
+        </select>
+        <button class="u-full-width" (click)="changeVlan(selectedVlan)">Assigner au VLAN {{selectedVlan}}</button>
+      </div>
     </div>
     <div class="six columns">
       <strong>Vitesse 10Mb/s</strong><br/>

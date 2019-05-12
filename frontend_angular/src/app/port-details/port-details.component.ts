@@ -4,6 +4,8 @@ import {PortService} from '../api/api/port.service';
 import {Port} from '../api/model/port';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
+import {filter, finalize, first, map} from 'rxjs/operators';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-port-details',
@@ -15,10 +17,24 @@ export class PortDetailsComponent implements OnInit, OnDestroy {
   port$: Observable<Port>;
   portID: number;
   switchID: number;
-  port_ouverture = 'ouvert';
-  portouvert = true;
-  port_authenth = 'authentifié';
-  isportauthenth = false;
+
+  vlans = [
+    {"name": "1", "value": "1"},
+    {"name":"dev: 103","value":"103"},
+    {"name":"prod: 102","value":"102"},
+    {"name":"999","value":"999"}
+  ];
+
+  vlan: number;
+  changeVlanVisible = false;
+  selectedVlan = "1";  
+
+  portStatusString = 'N/A';
+  portStatus: boolean;
+
+  portAuthString = 'N/A';
+  portAuth: boolean;
+
   private sub: any;
 
   constructor(
@@ -29,12 +45,36 @@ export class PortDetailsComponent implements OnInit, OnDestroy {
   ) {
   }
 
-  ouverture() {
-    this.portouvert = !this.portouvert;
+  setStatus(state) {
+    if (state) {
+      this.portStatusString = "OUI"
+    } else {
+      this.portStatusString = "NON"
+    }
+    this.portStatus = state
   }
 
-  authenth() {
-    this.isportauthenth = !this.isportauthenth;
+  toggleStatus() {
+    this.portService.portPortIdStatePut(this.portID, !this.portStatus)
+      .subscribe((status) => {
+        this.setStatus(status);
+      });
+  }
+
+  setAuth(state) {
+    if (state) {
+      this.portAuthString = "ACTIVE"
+    } else {
+      this.portAuthString = "NON ACTIVE"
+    }
+    this.portAuth = state
+  }
+
+  changeVlan(newVlan) {
+    this.portService.portPortIdVlanPut(this.portID, newVlan)
+      .subscribe((vlan) => {
+        this.vlan = vlan;
+      });
   }
 
   IfRoomExists(roomNumber) {
@@ -51,6 +91,15 @@ export class PortDetailsComponent implements OnInit, OnDestroy {
       this.portID = +params['portID'];
       this.port$ = this.portService.portPortIdGet(this.portID);
     });
+
+    this.portService.stateGet(this.portID)
+      .subscribe((status) => {
+        this.setStatus(status);
+      });
+    this.portService.vlanGet(this.portID)
+      .subscribe((vlan) => {
+        this.vlan = vlan;
+      });
   }
 
   ngOnDestroy() {
