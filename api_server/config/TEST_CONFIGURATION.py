@@ -6,7 +6,6 @@ It is safe to be committed.
 # API server options general
 API_CONF = {
     'AUTH_SERVER_ADDRESS': 'https://adh6.minet.net/oauth',
-    'APPLICATION_ROOT': '/api',
 }
 
 # Temporary database, that will be cleared at every test, used when you launch
