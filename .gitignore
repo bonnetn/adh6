@@ -12,7 +12,7 @@ api_server/lib/
 api_server/htmlcov/*
 api_server/pip-selfcheck.json
 api_server/certs/
-api_server/CONFIGURATION.py
+api_server/config/CONFIGURATION.py
 api_server/venv
 **/.pytest_cache
 
