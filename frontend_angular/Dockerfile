@@ -19,7 +19,10 @@ FROM swaggerapi/swagger-codegen-cli-v3:3.0.8 AS generated_code
 
 COPY openapi/spec.yaml ./spec.yaml
 
-RUN java -jar /opt/swagger-codegen-cli/swagger-codegen-cli.jar generate \ -i "./spec.yaml" \ -l typescript-angular \ -o "/tmp/api" \
+RUN java -jar /opt/swagger-codegen-cli/swagger-codegen-cli.jar generate \
+    -i "./spec.yaml" \
+    -l typescript-angular \
+    -o "/tmp/api" \
     --additional-properties ngVersion=7
 
 
