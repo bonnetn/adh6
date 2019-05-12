@@ -1,26 +1,17 @@
 version: '3.2'
 services:
-  # CAS is used as a OAuth2 server to authenticate the admins.
-  cas:
-    build: 
-      context: "./cas"
-      args:
-        ADH6_BASE_URL: "adh6-dev.minet.net/" # Do not forget the trailing slash!
-        CAS_HOST: "adh6-dev.minet.net"
-    ports:
-      - "8443:8443"
-    extra_hosts:
-      - "adh6-dev.minet.net:127.0.0.1"
-
   # frontend_angular is a web server that provides the JS to the clients.
   frontend_angular:
     build:
       context: ./
       dockerfile: ./frontend_angular/Dockerfile
       args:
-        BASE_ADH6_URL: "adh6-dev.minet.net/" # Do not forget the trailing slash!
-        SSO_LOGOUT: "adh6-dev.minet.net:8443/cas/logout"
-        SSO_AUTHORIZE: "adh6-dev.minet.net:8443/cas/oauth2.0/authorize"
+        # SSO (ours is CAS) URL for logging out.
+        SSO_LOGOUT: "https://cas.minet.net/logout"
+        # SSO URL for getting a token.
+        SSO_AUTHORIZE: "https://cas.minet.net/oauth2.0/authorize"
+        # URL of ADH6, the SSO will redirect to that URL after login.
+        ADH6_URL: "https://localhost/" # Do not forget the trailing slash!
     expose:
       - "8443" # app does not start as root here
     volumes:
@@ -40,11 +31,17 @@ services:
       context: ./
       dockerfile: ./api_server/Dockerfile
       args:
-        APPLICATION_ROOT: "/api"
-        CAS_PROFILE_URL: "https://cas:8443/cas/oauth2.0/profile"
+        # The API will make a request to this URL to verify the authetication token.
+        CAS_PROFILE_URL: "https://cas.minet.net/oauth2.0/profile"
+
+        # This is the configuration of the Database that the API will use.
+        DATABASE_HOST: "database"
+        DATABASE_PORT: "3306"
+        DATABASE_USERNAME: "adh6"
+        DATABASE_PASSWORD: "adh6_pass"
+        DATABASE_DB_NAME: "adh6" # Database name.
     links:
       - database
-      - cas
     expose:
       - "443"
     environment:
@@ -62,7 +59,15 @@ services:
     build: 
       context: "./reverse_proxy"
       args:
-        BASE_ADH6_URL: "adh6-dev.minet.net"
+        ADH6_URL: "localhost" # Host of the reverse proxy.
+
+        # adh6.minet.net/api/... requests will be redirected to this IP/host + port.
+        API_HOST: "api_server" 
+        API_PORT: "443"        
+
+        # adh6.minet.net/... requests will be proxied to this IP/host + port.
+        FRONTEND_HOST: "frontend_angular"
+        FRONTEND_PORT: "8443"
     links:
       - frontend_angular
       - api_server

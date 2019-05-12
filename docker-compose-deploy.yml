@@ -6,9 +6,9 @@ services:
       context: ./
       dockerfile: ./frontend_angular/Dockerfile
       args:
-        BASE_ADH6_URL: "adh6-dev.minet.net/" # Do not forget the trailing slash!
-        SSO_LOGOUT: "cas.minet.net/logout"
-        SSO_AUTHORIZE: "cas.minet.net/oauth2.0/authorize"
+        ADH6_URL: "https://adh6-dev.minet.net/" # Do not forget the trailing slash!
+        SSO_LOGOUT: "https://cas.minet.net/logout"
+        SSO_AUTHORIZE: "https://cas.minet.net/oauth2.0/authorize"
     expose:
       - "8443" # app does not start as root here
     volumes:
@@ -28,8 +28,12 @@ services:
       context: ./
       dockerfile: ./api_server/Dockerfile
       args:
-        APPLICATION_ROOT: "/api"
         CAS_PROFILE_URL: "https://cas.minet.net/oauth2.0/profile"
+        DATABASE_HOST: "database"
+        DATABASE_PORT: "3306"
+        DATABASE_USERNAME: "adh6"
+        DATABASE_PASSWORD: "adh6_pass"
+        DATABASE_DB_NAME: "adh6" # Database name.
     links:
       - database
     expose:
@@ -49,7 +53,12 @@ services:
     build: 
       context: "./reverse_proxy"
       args:
-        BASE_ADH6_URL: "adh6-dev.minet.net"
+        ADH6_URL: "adh6-dev.minet.net"
+        API_HOST: "api_server"
+        API_PORT: "443"
+        # adh6.minet.net/... requests will be proxied to this IP/host + port.
+        FRONTEND_HOST: "frontend_angular"
+        FRONTEND_PORT: "8443"
     links:
       - frontend_angular
       - api_server
