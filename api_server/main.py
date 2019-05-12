@@ -2,6 +2,7 @@
 import sys
 
 import connexion
+import os
 
 from config import CONFIGURATION, TEST_CONFIGURATION
 from src.interface_adapter.elasticsearch.repository import ElasticSearchRepository
@@ -39,7 +40,7 @@ def init(testing=True):
     else:
         configuration = CONFIGURATION
 
-    Database.init_db(configuration.DATABASE)
+    Database.init_db(configuration.DATABASE, testing=testing)
 
     # Repositories:
     member_sql_repository = MemberSQLRepository()
@@ -87,9 +88,11 @@ def init(testing=True):
     account_handler = AccountHandler()
     product_handler = ProductHandler()
 
-    app = connexion.FlaskApp(__name__, specification_dir='openapi', host='localhost', port=1234)
-    app.app.config.update(configuration.API_CONF)
+    # Connexion will use this function to authenticate and fetch the information of the user.
+    if os.environ.get('TOKENINFO_FUNC') is None:
+        os.environ['TOKENINFO_FUNC'] = 'src.interface_adapter.http_api.auth.token_info'
 
+    app = connexion.FlaskApp(__name__, specification_dir='openapi')
     app.add_api('swagger.yaml',
                 # resolver=RestyResolver('src.interface_adapter.http_api'),
                 resolver=ADHResolver({
@@ -108,7 +111,9 @@ def init(testing=True):
                 validate_responses=True,
                 strict_validation=True,
                 pythonic_params=True,
+                auth_all_paths=True,
                 )
+    app.app.config.update(configuration.API_CONF)
 
     return app
 
@@ -121,7 +126,7 @@ if not hasattr(sys, '_called_from_test'):  # Make sure we never run this when un
 
     # When run with `python main.py`, when people want to run it locally.
     if __name__ == '__main__':
-        application = init(testing=False)
+        application = init(testing=True)
         # set the WSGI application callable to allow using uWSGI:
         # uwsgi --http :8080 -w app
-        application.run()
+        application.run(port=8080)
