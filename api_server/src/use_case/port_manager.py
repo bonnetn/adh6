@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.port import Port
-from src.exceptions import IntMustBePositive, MissingRequiredField, StringMustNotBeEmpty
+from src.exceptions import IntMustBePositive, MissingRequiredField, StringMustNotBeEmpty, PortNotFoundError
 from src.use_case.interface.port_repository import PortRepository
 from src.util.context import log_extra
 from src.util.log import LOG
@@ -120,3 +120,21 @@ class PortManager:
         :raise PortNotFound
         """
         self.port_repository.delete_port(ctx, port_id)
+
+    def get_by_id(self, ctx, port_id: str) -> Port:
+        """
+        Retrieves a port given its id.
+        User story: As an admin, I can get a port by its id, so I can see all its information.
+
+        :raise PortNotFound
+        :param ctx:
+        :param port_id:
+        :return:
+        """
+        result, _ = self.port_repository.search_port_by(ctx, port_id=port_id)
+        LOG.info("port_get_by_id", extra=log_extra(ctx, port_id=port_id))
+
+        if not result:
+            raise PortNotFoundError(port_id)
+
+        return result[0]

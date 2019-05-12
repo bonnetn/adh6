@@ -17,6 +17,7 @@ from src.interface_adapter.http_api.room import RoomHandler
 from src.interface_adapter.http_api.switch import SwitchHandler
 from src.interface_adapter.http_api.temporary_account import TemporaryAccountHandler
 from src.interface_adapter.http_api.transaction import TransactionHandler
+from src.interface_adapter.snmp.switch_network_manager import SwitchSNMPNetworkManager
 from src.interface_adapter.sql.device_repository import DeviceSQLRepository
 from src.interface_adapter.sql.member_repository import MemberSQLRepository
 from src.interface_adapter.sql.model.database import Database
@@ -49,6 +50,7 @@ def init(testing=True):
     room_sql_repository = RoomSQLRepository()
     elk_repository = ElasticSearchRepository(configuration)
     money_repository = MoneySQLRepository()
+    switch_network_manager = SwitchSNMPNetworkManager()
 
     # Managers
     switch_manager = SwitchManager(
@@ -81,7 +83,7 @@ def init(testing=True):
     device_handler = DeviceHandler(device_manager)
     room_handler = RoomHandler(room_manager)
     switch_handler = SwitchHandler(switch_manager)
-    port_handler = PortHandler(port_manager)
+    port_handler = PortHandler(port_manager, switch_manager, switch_network_manager)
     temporary_account_handler = TemporaryAccountHandler()
     account_type_handler = AccountTypeHandler()
     payment_method_handler = PaymentMethodHandler()

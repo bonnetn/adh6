@@ -49,7 +49,7 @@ class SwitchManager:
     def get_by_id(self, ctx, switch_id) -> Switch:
         """
         Get a switch in the database.
-        User story: As an admin, I can get a switch by its id, so I can see all its informations.
+        User story: As an admin, I can get a switch by its id, so I can see all its information.
 
         :raise SwitchNotFound
         """

@@ -173,3 +173,10 @@ class LogFetchError(RuntimeError):
 
 class NoMoreIPAvailableException(RuntimeError):
     pass  # pragma: no cover
+
+
+class NetworkManagerReadError(RuntimeError):
+    """
+    Thrown whenever a network manager fails to read values from a remote device
+    """
+    pass
