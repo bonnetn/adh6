@@ -2,18 +2,12 @@ image: python:3.7-stretch
 
 cache:
   paths:
-    - .cache/pip 
-    - venv/
+    - ~/.cache/pip 
 
 # We declare a job that gitlab ignores and put a YAML anchor
 # See https://gitlab.com/gitlab-org/gitlab-ce/issues/15403#note_27079119
 .setup_test_jobs: &before_test_job
   before_script:
-    - uname -a
-    - python -V
-    - pip install virtualenv
-    - virtualenv -p python3 venv
-    - source venv/bin/activate
     - pip install -r api_server/requirements.txt
 
 stages:
