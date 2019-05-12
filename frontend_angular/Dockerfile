@@ -19,10 +19,7 @@ FROM swaggerapi/swagger-codegen-cli-v3:3.0.8 AS generated_code
 
 COPY openapi/spec.yaml ./spec.yaml
 
-RUN java -jar /opt/swagger-codegen-cli/swagger-codegen-cli.jar generate \
-    -i "./spec.yaml" \
-    -l typescript-angular \
-    -o "/tmp/api" \
+RUN java -jar /opt/swagger-codegen-cli/swagger-codegen-cli.jar generate \ -i "./spec.yaml" \ -l typescript-angular \ -o "/tmp/api" \
     --additional-properties ngVersion=7
 
 
@@ -63,10 +60,12 @@ COPY --from=generated_code /tmp/api src/app/api
 
 # Copy source code
 COPY frontend_angular/*.json ./
-COPY frontend_angular/src ./src
 
 # Copy the generated config files.
 COPY --from=generate_config /tmp/auth.config.ts ./src/app/config/auth.config.ts
+
+COPY frontend_angular/src ./src
+
 
 USER angular
 # We use /bin/sh to be able to use ENV vars...
