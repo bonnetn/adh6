@@ -3,7 +3,7 @@
   <ul>
     <h3>Adhérent·e·s</h3>
     <button
-      class="u-full-width button-warning"
+      class="w-100 button-warning"
       (click)="onEmmenager()"
     >Emménagement
     </button>
@@ -13,16 +13,16 @@
       <strong>Login DISI du nouvel adhérent</strong><br/><br/>
       <form [formGroup]="EmmenagerForm" (ngSubmit)="onSubmitComeInRoom()" novalidate>
         <div class="row">
-          <div class="six columns">
+          <div class="col-2">
             <input
-              class="u-full-width"
+              class="w-100"
               type="text"
               formControlName="username"
             >
           </div>
-          <div class="six columns">
+          <div class="col-2">
             <button
-              class="u-full-width"
+              class="w-100"
               [disabled]="disabled || EmmenagerForm.status == 'INVALID'">
               Valider
             </button>
@@ -33,27 +33,27 @@
     <li *ngFor="let member of members$ | async">
       <strong>{{ member.firstName }} {{ member.lastName }}</strong><br/><br/>
       <div class="row">
-        <div class="four columns">
+        <div class="col-3">
           <a [routerLink]="['/member/view', member.username]">
             <button
-              class="u-full-width button-primary"
+              class="w-100 btn btn-primary"
               [disabled]="enabled">
               Consulter le profile
             </button>
           </a>
         </div>
-        <div class="four columns">
+        <div class="col-3">
           <button
-            class="u-full-width button-primary"
+            class="w-100 btn btn-primary"
             (click)="onDemenager(member.username)"
             [disabled]="enabled">
             Déménager
           </button>
         </div>
-        <div class="four columns">
+        <div class="col-3">
           <a (click)="onRemoveFromRoom(member.username)">
             <button
-              class="u-full-width button-danger"
+              class="w-100 btn-danger"
               [disabled]="enabled">
               Supprimer de la chambre
             </button>
@@ -66,16 +66,16 @@
           <strong>Nouveau numéro de chambre</strong><br/><br/>
           <form [formGroup]="roomForm" (ngSubmit)="onSubmitMoveRoom(member.username)" novalidate>
             <div class="row">
-              <div class="six columns">
+              <div class="col-2">
                 <input
-                  class="u-full-width"
+                  class="w-100"
                   type="number"
                   formControlName="roomNumberNew"
                 >
               </div>
-              <div class="six columns">
+              <div class="col-2">
                 <button
-                  class="u-full-width"
+                  class="w-100"
                   [disabled]="disabled || roomForm.status == 'INVALID'">
                   Valider
                 </button>
@@ -92,21 +92,21 @@
         <strong>Switch {{ portRes.switchID }} port {{ portRes.portNumber }}</strong>
         <br/><br/>
         <div class="row">
-          <div class="four columns">
-            <button class="u-full-width button-success"
+          <div class="col-3">
+            <button class="w-100 btn-success"
                     (click)="etat()"
             >Etat
             </button>
           </div>
-          <div class="four columns">
-            <button class="u-full-width"
+          <div class="col-3">
+            <button class="w-100"
                     (click)="auth()"
             >Authentification
             </button>
           </div>
-          <div class="four columns">
+          <div class="col-3">
             <a [routerLink]="['/switch/view', portRes.switchID, 'port', portRes.id]">
-              <button class="u-full-width button-primary"
+              <button class="w-100 btn btn-primary"
               >Configurer
               </button>
             </a>
@@ -120,13 +120,13 @@
     <li><strong>VLAN assigné: </strong>{{ room.vlan }}</li>
   </ul>
   <div class="row">
-    <div class="six columns">
+    <div class="col-2">
       <a [routerLink]='["/room/edit", room.roomNumber]'>
-        <button class="u-full-width button-primary">Éditer</button>
+        <button class="w-100 btn btn-primary">Éditer</button>
       </a>
     </div>
-    <div class="six columns">
-      <button class="u-full-width button-danger" (click)="onDelete()">Supprimer</button>
+    <div class="col-2">
+      <button class="w-100 btn-danger" (click)="onDelete()">Supprimer</button>
     </div>
   </div>
 </div>

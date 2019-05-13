@@ -1,23 +1,23 @@
 <ng-container *ngIf="access_token == ''">
   <form [formGroup]="formGroup" (ngSubmit)="createNainA()" novalidate>
     <label>Prénom</label>
-    <input class="u-full-width" type="text" formControlName="first_name"/>
+    <input class="w-100" type="text" formControlName="first_name"/>
 
     <label>Nom de famille</label>
-    <input class="u-full-width" type="text" formControlName="last_name">
+    <input class="w-100" type="text" formControlName="last_name">
 
     <p style="font-weight: bold">
       En créant ce compte temporaire j'assume la responsabilité de la bonne utilisation des droits fournis à la personne
       désignée.
       Je certifie également que le prénom et nom fournis sont corrects.
     </p>
-    <button type="submit" class="u-full-width button-primary"
+    <button type="submit" class="w-100 btn btn-primary"
             [disabled]="disabled || formGroup.status == 'INVALID'">
       Créer
     </button>
   </form>
   <a (click)="revokeTokens()">
-    <button type="submit" class="u-full-width button-danger" [disabled]="disabled">
+    <button type="submit" class="w-100 btn-danger" [disabled]="disabled">
       Révoquer tous les comptes NainA
     </button>
   </a>
@@ -29,9 +29,9 @@
   </label>
   <div class="row">
     <input type="text" id="textbox_link" value="{{ url }}dashboard#naina_token={{ access_token }}" readonly #userinput
-           class="u-full-width">
+           class="w-100">
   </div>
   <div class="row">
-    <button (click)="copyLink(userinput)" value="click to copy" class="u-full-width">Copier</button>
+    <button (click)="copyLink(userinput)" value="click to copy" class="w-100">Copier</button>
   </div>
 </ng-container>

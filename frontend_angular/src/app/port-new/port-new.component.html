@@ -1,16 +1,16 @@
 <h2>Création d'un port</h2>
 <form [formGroup]="portForm" (ngSubmit)="onSubmit()" novalidate>
   <label>ID du port</label>
-  <input class="u-full-width" formControlName="id" type="number">
+  <input class="w-100" formControlName="id" type="number">
   <br/><br/>
   <label>Numero du port</label>
-  <input class="u-full-width" formControlName="portNumber" type="text">
+  <input class="w-100" formControlName="portNumber" type="text">
   <br/><br/>
   <label>Numero de chambre</label>
-  <input class="u-full-width" formControlName="roomNumber" type="number">
+  <input class="w-100" formControlName="roomNumber" type="number">
   <br/><br/><br/>
   <button type="submit"
           [disabled]="disabled || portForm.status == 'INVALID'"
-          class="u-full-width button-primary">Créer
+          class="w-100 btn btn-primary">Créer
   </button>
 </form>

@@ -1,9 +1,9 @@
 <h2>Liste des ports</h2>
 <div class="row">
-    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="u-full-width" type="text"/>
+    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="w-100" type="text"/>
 </div>
 <div style="overflow-x:auto;" class="u-max-full-width">
-  <table class="u-full-width" *ngIf="result$ | async as result">
+  <table class="w-100" *ngIf="result$ | async as result">
     <tr>
       <th class="center">Switch</th>
       <th class="center">Numéro de port</th>

@@ -27,7 +27,8 @@
     "ngx-pagination": "^3.2.1",
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.3.3",
-    "skeleton-css": "^2.0.0",
+    "ngx-bootstrap": "^4.1.1",
+    "bootstrap": "4.2.1",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

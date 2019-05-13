@@ -2,14 +2,14 @@
 
 <!-- Search box -->
 <div class="row">
-  <div class="u-full-width">
-    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="u-full-width" type="text"/>
+  <div class="w-100">
+    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="w-100" type="text"/>
   </div>
 </div>
 
 <!-- Device list -->
 <div class="row">
-  <table class="u-full-width clickable-table" *ngIf="result$ | async as result">
+  <table class="w-100 clickable-table" *ngIf="result$ | async as result">
     <thead>
     <tr>
       <th>Utilisateur</th>

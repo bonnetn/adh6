@@ -1,7 +1,7 @@
 <div class="suggestion">
-  <input type="text" placeholder="Rechercher..." class="u-full-width" #searchBox (keyup)="search(searchBox.value)"/>
+  <input type="text" placeholder="Rechercher..." class="w-100" #searchBox (keyup)="search(searchBox.value)"/>
   <ul>
-    <li class="u-full-width" *ngFor="let searchResult of searchResult$ | async">
+    <li class="w-100" *ngFor="let searchResult of searchResult$ | async">
       <a [routerLink]="searchResult.link" [queryParams]="searchResult.queryParams">
         <span [ngStyle]="{ 'background-color': searchResult.color }" class="search_tag">{{ searchResult.objType | uppercase }}</span>
         {{ searchResult.name }}

@@ -1,15 +1,15 @@
 <h2>Modification du Switch {{ switch.description }}</h2>
 <form [formGroup]="roomEdit" (ngSubmit)="onSubmit()" novalidate>
   <label>Adresse IP</label>
-  <input class="u-full-width" formControlName="roomNumber" disabled type="number">
+  <input class="w-100" formControlName="roomNumber" disabled type="number">
   <br/><br/>
   <button type="submit"
           [disabled]="disabled || roomEdit.status == 'INVALID'"
-          class="u-full-width button-primary">Modifier
+          class="w-100 btn btn-primary">Modifier
   </button>
 </form>
 <button type="submit"
         [disabled]="disabled || roomEdit.status == 'INVALID'"
-        class="u-full-width button-danger">Supprimer
+        class="w-100 btn-danger">Supprimer
 </button>
 

@@ -2,38 +2,38 @@
 <h2 *ngIf="create">Création d'un membre</h2>
 <form [formGroup]="memberEdit" (ngSubmit)="editMember()" novalidate>
   <div class="row">
-    <div class="six columns">
+    <div class="col-2">
       <label>Last name / Nom:</label>
-      <input class="u-full-width" type="text" formControlName="lastName">
+      <input class="w-100" type="text" formControlName="lastName">
     </div>
-    <div class="six columns">
+    <div class="col-2">
 
       <label>First name / Prénom:</label>
-      <input class="u-full-width" type="text" formControlName="firstName">
+      <input class="w-100" type="text" formControlName="firstName">
     </div>
   </div>
 
   <label>Login DISI:</label>
-  <input class="u-full-width" type="text" formControlName="username">
+  <input class="w-100" type="text" formControlName="username">
 
   <label>Mail:</label>
-  <input class="u-full-width" type="text" formControlName="email">
+  <input class="w-100" type="text" formControlName="email">
 
 
   <label>Room number / Numéro de chambre:</label>
-  <input class="u-full-width" formControlName="roomNumber" type="number">
+  <input class="w-100" formControlName="roomNumber" type="number">
 
   <br/><br/>
   <button type="submit"
           [disabled]="disabled || memberEdit.status == 'INVALID'"
-          class="u-full-width button-primary"
+          class="w-100 btn btn-primary"
   ><span *ngIf="!create">Éditer</span><span *ngIf="create">Créer</span>
   </button>
 </form>
 <a (click)="memberUsernameDelete()" *ngIf="!create">
   <button
     [disabled]="disabled"
-    class="u-full-width button-danger">
+    class="w-100 btn-danger">
     Supprimer
   </button>
 </a>

@@ -1,18 +1,18 @@
 <h2>Liste des chambres</h2>
 <div class="row">
   <div class="seven columns">
-    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="u-full-width" type="text"/>
+    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="w-100" type="text"/>
   </div>
   <div class="five columns">
     <a [routerLink]="['/room/add']">
-      <button class="u-full-width
-        button-primary">Nouvelle chambre
+      <button class="w-100
+        btn btn-primary">Nouvelle chambre
       </button>
     </a>
   </div>
 </div>
 <div style="overflow-x:auto;" class="u-max-full-width">
-  <table class="u-full-width" *ngIf="result$ | async as result">
+  <table class="w-100" *ngIf="result$ | async as result">
     <tr>
       <th class="center">Numéro</th>
       <th class="center">Description</th>

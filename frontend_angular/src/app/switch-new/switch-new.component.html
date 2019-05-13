@@ -1,15 +1,15 @@
 <h2>Création d'un switch</h2>
 <form [formGroup]="switchForm" (ngSubmit)="onSubmit()" novalidate>
  <label>Description</label>
-  <input class="u-full-width" formControlName="description" type="text">
+  <input class="w-100" formControlName="description" type="text">
   <br/><br/>
   <label>Addresse IP</label>
-  <input class="u-full-width" formControlName="ip" type="text">
+  <input class="w-100" formControlName="ip" type="text">
   <br/><br/>
   <label>Community string</label>
-  <input class="u-full-width" formControlName="community" type="text">
+  <input class="w-100" formControlName="community" type="text">
   <br/><br/><br/>
   <button type="submit"
           [disabled]="disabled || switchForm.status == 'INVALID'"
-          class="u-full-width button-primary">Créer</button>
+          class="w-100 btn btn-primary">Créer</button>
 </form>

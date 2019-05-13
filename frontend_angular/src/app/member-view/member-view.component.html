@@ -4,7 +4,7 @@
     <h2><span class="capitalize">{{ member.firstName | lowercase }}</span> {{ member.lastName | uppercase }}</h2>
 
     <div class="row">
-      <table class="u-full-width shift-content-right">
+      <table class="w-100 shift-content-right">
         <thead>
         <tr>
           <th colspan="2"><h3 class="table-title">Profil</h3></th>
@@ -37,27 +37,27 @@
       </table>
 
       <div class="row">
-        <div class="six columns">
+        <div class="col-2">
           <a [routerLink]="['/member/edit/', member.username ]">
-            <button class="u-full-width">Éditer le profile</button>
+            <button class="w-100">Éditer le profile</button>
           </a>
         </div>
-        <div class="six columns">
+        <div class="col-2">
           <a [routerLink]="['/member/password/', member.username ]">
-            <button class="u-full-width">Changer mot de passe</button>
+            <button class="w-100">Changer mot de passe</button>
           </a>
         </div>
       </div>
     </div>
 
-    <div class="four columns">
-      <button class="u-full-width" (click)="toggleCotisationMenu()">Cotiser</button>
+    <div class="col-3">
+      <button class="w-100" (click)="toggleCotisationMenu()">Cotiser</button>
     </div>
     <div *ngIf="cotisation">
       <h3>Cotisation</h3>
       <div class="row">
-        <div class="six columns">
-          <select class="u-full-width" type="text" formControlName=""
+        <div class="col-2">
+          <select class="w-100" type="text" formControlName=""
                   placeholder="Renouvellement">
             <option value="1">1 mois (9€) - date</option>
             <option value="2">2 mois (18€) - date</option>
@@ -66,26 +66,26 @@
             <option value="5">5 mois (45€) - date</option>
             <option value="6">1 an (50€) - date</option>
           </select>
-          <select class="u-full-width" type="text" formControlName=""
+          <select class="w-100" type="text" formControlName=""
                   placeholder="Matériel">
             <option value="3m">Câble 3m</option>
             <option value="5m">Câble 5m</option>
           </select>
         </div>
-        <div class="six columns">
-          <select class="u-full-width" type="text" formControlName=""
+        <div class="col-2">
+          <select class="w-100" type="text" formControlName=""
                   placeholder="Payé par">
             <option value="liq">Liquide</option>
             <option value="cb">Carte Bancaire</option>
             <option value="chq">Chèque</option>
             <option value="smsch">Summer School</option>
           </select>
-          <button class="u-full-width button-primary">Valider</button>
+          <button class="w-100 btn btn-primary">Valider</button>
         </div>
       </div>
     </div>
     <!-- Device list -->
-    <table class="u-full-width shift-content-right">
+    <table class="w-100 shift-content-right">
       <thead>
       <tr>
         <th><h3 class="table-title">Appareils</h3></th>
@@ -121,7 +121,7 @@
               </tr>
             </table>
             <a (click)="deviceDelete(device.mac)">
-              <button [disabled]="submitDisabled" class="button-danger">Supprimer</button>
+              <button [disabled]="submitDisabled" class="btn-danger">Supprimer</button>
               |
             </a>
             <button
@@ -130,7 +130,7 @@
               [disabled]='MABdisabled'
               [ngClass]="{
                       'off':'button-warning',
-                      'on':'button-success',
+                      'on':'btn-success',
                       'wifi':'button-primary'
                       }[MAB]"
             >{{ MAB }}
@@ -142,11 +142,11 @@
     </table>
     <div class="row">
       <form [formGroup]="deviceForm" (ngSubmit)="submitDevice()" novalidate>
-        <div class="four columns">
-          <input class="u-full-width" type="text" formControlName="mac">
+        <div class="col-3">
+          <input class="w-100" type="text" formControlName="mac">
         </div>
-        <div class="three columns">
-          <select class="u-full-width" type="text"
+        <div class="col-4">
+          <select class="w-100" type="text"
                   formControlName="connectionType">
             <option value="wired">Filaire</option>
             <option value="wireless">Wi-Fi</option>
@@ -155,16 +155,16 @@
         <div class="five columns">
           <button type="submit"
                   [disabled]="submitDisabled || deviceForm.status == 'INVALID'"
-                  class="u-full-width button-primary">Ajouter l'appareil
+                  class="w-100 btn btn-primary">Ajouter l'appareil
           </button>
         </div>
       </form>
     </div>
     <h3>Commentaire</h3>
     <form [formGroup]="commentForm" (ngSubmit)="submitComment()" novalidate>
-      <textarea class="u-full-width" formControlName="comment"></textarea>
+      <textarea class="w-100" formControlName="comment"></textarea>
       <div class="row">
-        <button type="submit" class="u-full-width button-primary"
+        <button type="submit" class="w-100 btn btn-primary"
                 [disabled]="submitDisabled">Envoyer
         </button>
       </div>
@@ -181,14 +181,14 @@
   </div>
 
   <!-- Right column -->
-  <div class="three columns">
+  <div class="col-4">
     <!-- Comment -->
-    <div class="u-full-width" [ngClass]="{'commentaire': member.comment!=null}">{{ member.comment }}</div>
+    <div class="w-100" [ngClass]="{'commentaire': member.comment!=null}">{{ member.comment }}</div>
     <!-- DISI picture -->
-    <img class="u-full-width image-disi"
+    <img class="w-100 image-disi"
          src="https://trombi.imtbs-tsp.eu/photo.php?uid={{ member.username }}&h=320&w=240"/>
     <!-- Association button -->
-    <button class="button-primary u-full-width association-button">Association des périphériques</button>
+    <button class="btn btn-primary w-100 association-button">Association des périphériques</button>
     <!-- History -->
   </div>
 </div>
