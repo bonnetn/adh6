@@ -111,7 +111,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
         user.comment = newComment;
         return user;
       }),
-      flatMap(user => this.memberService.memberUsernamePut(user.username, user)),
+      flatMap(user => this.memberService.memberUsernamePut(user, user.username)),
       map(() => {
         this.refreshInfo();
         return null;
@@ -174,7 +174,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     // Make an observable that will return True if the device already exists
     if (!alreadyExists) {
       // If the device does not then create it, and refresh the info
-      return this.deviceService.deviceMacAddressPut(mac, device)
+      return this.deviceService.deviceMacAddressPut(device, mac)
         .pipe(
           flatMap(() => {
             this.refreshInfo();
