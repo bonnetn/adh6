@@ -1,16 +1,33 @@
 <h2>Création d'une chambre</h2>
 <form [formGroup]="roomForm" (ngSubmit)="onSubmit()" novalidate>
-  <label>Numéro de la chambre</label>
-  <input class="w-100" formControlName="roomNumber" type="number">
-  <br/><br/>
-  <label>Vlan</label>
-  <input class="w-100" formControlName="vlan" type="number">
-  <br/><br/>
-  <label>Description</label>
-  <input class="w-100" formControlName="description" type="text">
-  <br/><br/><br/>
-  <button type="submit"
-          [disabled]="disabled || roomForm.status == 'INVALID'"
-          class="w-100 btn btn-primary">Créer
+  <div class="form-group">
+    <label>Numéro de la chambre</label>
+    <input
+      class="w-100 form-control"
+      formControlName="roomNumber"
+      type="number"
+    />
+  </div>
+
+  <div class="form-group">
+    <label>Vlan</label>
+    <input class="w-100 form-control" formControlName="vlan" type="number" />
+  </div>
+
+  <div class="from-group">
+    <label>Description</label>
+    <input
+      class="w-100 form-control"
+      formControlName="description"
+      type="text"
+    />
+  </div>
+
+  <button
+    type="submit"
+    [disabled]="disabled || roomForm.status == 'INVALID'"
+    class="w-100 btn btn-primary mt-4"
+  >
+    Créer
   </button>
 </form>
