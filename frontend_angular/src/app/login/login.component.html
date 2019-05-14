@@ -1,21 +1,14 @@
-<a [routerLink]="['dashboard']">
-  <h1>{{ titre }}</h1>
-</a>
-<nav [class.responsive]="navBarStatus">
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <ul>
-          <li>&nbsp;</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0056b3;">
+    <a class="navbar-brand" [routerLink]="['dashboard']">
+        <img src="../assets/logoMiNET.png" height="30" class="d-inline-block align-top" alt="">
+        {{ titre }}
+      </a>
 </nav>
+
 <br/>
 <div class="container">
   <div class="dashboard">
-    <img class="w-100" src="../assets/logoMiNET.png">
+    <img class="w-50" src="../assets/logoMiNET.png">
   </div>
 </div>
 <div class="container">
