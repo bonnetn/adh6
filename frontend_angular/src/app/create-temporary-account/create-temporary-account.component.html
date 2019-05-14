@@ -1,23 +1,35 @@
 <ng-container *ngIf="access_token == ''">
   <form [formGroup]="formGroup" (ngSubmit)="createNainA()" novalidate>
-    <label>Prénom</label>
-    <input class="w-100" type="text" formControlName="first_name"/>
-
-    <label>Nom de famille</label>
-    <input class="w-100" type="text" formControlName="last_name">
+    <div class="form-group">
+      <label>Prénom</label>
+      <input class="form-control" type="text" formControlName="first_name"/>
+    </div>
+    <div class="form-group">
+      <label>Nom de famille</label>
+      <input class="form-control" type="text" formControlName="last_name">
+    </div>
 
     <p style="font-weight: bold">
       En créant ce compte temporaire j'assume la responsabilité de la bonne utilisation des droits fournis à la personne
       désignée.
       Je certifie également que le prénom et nom fournis sont corrects.
     </p>
-    <button type="submit" class="w-100 btn btn-primary"
-            [disabled]="disabled || formGroup.status == 'INVALID'">
-      Créer
-    </button>
+
+    <div class="row">
+      <div class="col-12">
+          <button type="submit" class="btn btn-primary w-100"
+          [disabled]="disabled || formGroup.status == 'INVALID'">
+            Créer
+          </button>
+      </div>
+    </div>
+
   </form>
+
+  <br/>
+
   <a (click)="revokeTokens()">
-    <button type="submit" class="w-100 btn-danger" [disabled]="disabled">
+    <button type="submit" class="btn btn-danger w-100" [disabled]="disabled">
       Révoquer tous les comptes NainA
     </button>
   </a>
