@@ -126,7 +126,7 @@ class PortHandler:
             port = self.port_manager.get_by_id(ctx, port_id)
             switch = self.switch_manager.get_by_id(ctx, port.switch_info.switch_id)
 
-            return self.switch_network_manager.get_port_status(ctx, switch, port), 200
+            return True if self.switch_network_manager.get_port_status(ctx, switch, port) == "up" else False, 200
         except SwitchNotFoundError:
             return NoContent, 404
         except PortNotFoundError:
@@ -148,7 +148,7 @@ class PortHandler:
             port = self.port_manager.get_by_id(ctx, port_id)
             switch = self.switch_manager.get_by_id(ctx, port.switch_info.switch_id)
 
-            return self.switch_network_manager.get_port_vlan(ctx, switch, port), 200
+            return int(self.switch_network_manager.get_port_vlan(ctx, switch, port)), 200
         except SwitchNotFoundError:
             return NoContent, 404
         except PortNotFoundError:
