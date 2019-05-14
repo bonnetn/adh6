@@ -1,5 +1,5 @@
 <div class="suggestion">
-  <input type="text" placeholder="Rechercher..." class="w-100" #searchBox (keyup)="search(searchBox.value)"/>
+  <input type="text" placeholder="Rechercher..." class="w-100 form-control" #searchBox (keyup)="search(searchBox.value)"/>
   <ul>
     <li class="w-100" *ngFor="let searchResult of searchResult$ | async">
       <a [routerLink]="searchResult.link" [queryParams]="searchResult.queryParams">

@@ -1,17 +1,19 @@
 <div class="dashboard">
-  <img class="w-100" src="../assets/logoMiNET.png">
-  <br/>
+  <img class="w-50" src="../assets/logoMiNET.png">
+  <br/><br/>
+
   <div class="row">
-    <div class="col-2">
+    <div class="col-md-3">
       <a [routerLink]="['/member/add']">
-        <button class="btn btn-primary w-100">Nouvelle inscription</button>
+        <button class="btn btn-primary w-100" style="margin-bottom: 5px;">Nouvelle inscription</button>
       </a>
     </div>
-    <div class="col-2">
+    <div class="col-md-3">
       <a [routerLink]="['/naina']">
         <button class="btn btn-primary w-100">Créer un compte NainA</button>
       </a>
     </div>
   </div>
+  <br/>
   <app-global-search></app-global-search>
 </div>
