@@ -1,40 +1,41 @@
-<h2 class="text-left">Liste des adhérents</h2>
-<br/>
-<div class="row">
-  <div class="col-md-6">
-    <div class="row">
-      <div class="col-md-7">
-        <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="form-control" type="text" style="margin-bottom: 5px;"/>
-      </div>
-      <div class="col-md-5">
-        <a [routerLink]="['../add']">
-          <button class="w-100 btn btn-primary">Nouvelle inscription</button>
-        </a>
+<div class="container">
+  <h2 class="text-left">Liste des adhérents</h2>
+  <br/>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-7">
+          <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="form-control" type="text" style="margin-bottom: 5px;"/>
+        </div>
+        <div class="col-md-5">
+          <a [routerLink]="['../add']">
+            <button class="w-100 btn btn-primary">Nouvelle inscription</button>
+          </a>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<br/>
-<div style="overflow-x:auto;" class="u-max-full-width">
-  <table class="table table-striped clickable-table" *ngIf="result$ | async as result">
-    <thead>
-      <tr>
-        <th>Nom</th>
-        <th>Login</th>
-        <th class="roomNumberRow">Chambre</th>
+  <br/>
+  <div style="overflow-x:auto;" class="u-max-full-width">
+    <table class="table table-striped clickable-table" *ngIf="result$ | async as result">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Login</th>
+          <th class="roomNumberRow">Chambre</th>
+        </tr>
+      </thead>
+      <tr
+        *ngFor="let member of result.members | paginate: { itemsPerPage: result.item_per_page, currentPage: result.current_page, totalItems: result.item_count}"
+        [routerLink]="['../view', member.username]">
+        <td>{{ member.lastName | uppercase }} <span class="capitalize">{{ member.firstName | lowercase }}</span></td>
+        <td>{{ member.username }}</td>
+        <td class="roomNumberRow"><a [routerLink]="['/room/view', member.roomNumber]">{{ member.roomNumber }}</a></td>
       </tr>
-    </thead>
-    <tr
-      *ngFor="let member of result.members | paginate: { itemsPerPage: result.item_per_page, currentPage: result.current_page, totalItems: result.item_count}"
-      [routerLink]="['../view', member.username]">
-      <td>{{ member.lastName | uppercase }} <span class="capitalize">{{ member.firstName | lowercase }}</span></td>
-      <td>{{ member.username }}</td>
-      <td class="roomNumberRow"><a [routerLink]="['/room/view', member.roomNumber]">{{ member.roomNumber }}</a></td>
-    </tr>
-    <br/>
-  </table>
+      <br/>
+    </table>
 
-  <pagination-controls class="pagination" (pageChange)="changePage($event)" previousLabel="" nextLabel="">
-  </pagination-controls>
-
+    <pagination-controls class="pagination" (pageChange)="changePage($event)" previousLabel="" nextLabel="">
+    </pagination-controls>
+  </div>
 </div>
