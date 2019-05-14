@@ -1,12 +1,12 @@
-.association-button {
+/* .association-button {
   white-space: normal;
   line-height: 2em;
   font-size: 1em;
   height: auto;
   padding: 0;
-}
+}*/
 
-/* Remove the border between the mac and the details */
+/* Remove the border between the mac and the details *//*
 .device_row td {
   cursor: pointer;
 }
@@ -14,8 +14,8 @@
 .device_details_area {
   background-color: azure;
 }
-
-/* Shift the details to the right */
+*/
+/* Shift the details to the right *//*
 .device_details_area td {
   padding-left: 2em;
 }
@@ -63,4 +63,4 @@
 
 .mac_highlighted {
   background-color: bisque;
-}
+} */
