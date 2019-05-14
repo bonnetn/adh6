@@ -1,21 +1,19 @@
 <div class="container">
   <h2 class="text-left">Liste des adhérents</h2>
   <br/>
+
   <div class="row">
-    <div class="col-md-6">
-      <div class="row">
-        <div class="col-md-7">
-          <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="form-control" type="text" style="margin-bottom: 5px;"/>
-        </div>
-        <div class="col-md-5">
-          <a [routerLink]="['../add']">
-            <button class="w-100 btn btn-primary">Nouvelle inscription</button>
-          </a>
-        </div>
-      </div>
+    <div class="col-md-4">
+      <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="form-control mb-3" type="text"/>
+    </div>
+    <div class="col-md-4">
+      <a [routerLink]="['../add']">
+        <button class="w-100 btn btn-primary">Nouvelle inscription</button>
+      </a>
     </div>
   </div>
   <br/>
+
   <div style="overflow-x:auto;" class="u-max-full-width">
     <table class="table table-striped clickable-table" *ngIf="result$ | async as result">
       <thead>
