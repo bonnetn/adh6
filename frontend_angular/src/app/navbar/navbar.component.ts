@@ -26,4 +26,8 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
   }
 
+  toggleNavbar() {
+    this.navBarStatus = !this.navBarStatus;
+  }
+
 }

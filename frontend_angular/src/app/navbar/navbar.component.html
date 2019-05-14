@@ -1,22 +1,36 @@
-<a [routerLink]="['dashboard']">
-  <h1>{{ titre }}</h1>
-</a>
-<nav [class.responsive]="navBarStatus">
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <ul>
-          <li [routerLinkActive]="['active']"><a [routerLink]="['member/search']">Adhérent·e·s</a></li>
-          <li [routerLinkActive]="['active']"><a [routerLink]="['device/search']">Appareils</a></li>
-          <li [routerLinkActive]="['active']"><a [routerLink]="['switch_local']">Switch Local</a></li>
-          <li [routerLinkActive]="['active']"><a [routerLink]="['room/search']">Chambres</a></li>
-          <li [routerLinkActive]="['active']"><a [routerLink]="['switch/search']">Switchs</a></li>
-          <li [routerLinkActive]="['active']"><a [routerLink]="['port/search']">Ports</a></li>
-          <li><a (click)="logout()">Déconnexion</a></li>
-          <li class="icon"><a (click)="navBarStatus=!navBarStatus">&#9776;</a></li>
-        </ul>
-      </div>
-    </div>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0056b3;">
+  <a class="navbar-brand" [routerLink]="['dashboard']">
+      <img src="../assets/logoMiNET.png" height="30" class="d-inline-block align-top" alt="">
+      {{ titre }}
+    </a>
+
+  <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" [ngClass]="{ 'show': navBarStatus }">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['member/search']">Adhérents</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-item nav-link" [routerLink]="['device/search']">Appareils</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-item nav-link" [routerLink]="['switch_local']">Switch Local</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-item nav-link" [routerLink]="['room/search']">Chambres</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-item nav-link" [routerLink]="['switch/search']">Switchs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-item nav-link" [routerLink]="['port/search']">Ports</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-item nav-link" (click)="logout()" style="cursor: pointer;">Déconnexion</a>
+      </li>
+    </ul>
   </div>
 </nav>
-<br/>
