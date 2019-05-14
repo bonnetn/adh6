@@ -1,39 +1,45 @@
-<h2 *ngIf="!create">Édition d'un membre</h2>
-<h2 *ngIf="create">Création d'un membre</h2>
+<h2 *ngIf="!create"  class="text-left">Édition d'un membre</h2>
+<h2 *ngIf="create" class="text-left">Création d'un membre</h2>
+<hr>
 <form [formGroup]="memberEdit" (ngSubmit)="editMember()" novalidate>
-  <div class="row">
-    <div class="col-2">
+  <div class="form-row">
+    <div class="form-group col-md">
       <label>Last name / Nom:</label>
-      <input class="w-100" type="text" formControlName="lastName">
+      <input class="w-100 form-control" type="text" formControlName="lastName">
     </div>
-    <div class="col-2">
-
+    <div class="from-group col-md">
       <label>First name / Prénom:</label>
-      <input class="w-100" type="text" formControlName="firstName">
+      <input class="w-100 form-control" type="text" formControlName="firstName">
     </div>
   </div>
 
-  <label>Login DISI:</label>
-  <input class="w-100" type="text" formControlName="username">
+  <div class="form-group">
+    <label>Login DISI:</label>
+    <input class="w-100 form-control" type="text" formControlName="username">
+  </div>
 
-  <label>Mail:</label>
-  <input class="w-100" type="text" formControlName="email">
+  <div class="form-group">
+    <label>Mail:</label>
+    <input class="w-100 form-control" type="text" formControlName="email">
+  </div>
 
+  <div class="form-group">
+    <label>Room number / Numéro de chambre:</label>
+    <input class="w-100 form-control" formControlName="roomNumber" type="number">
+  </div>
 
-  <label>Room number / Numéro de chambre:</label>
-  <input class="w-100" formControlName="roomNumber" type="number">
-
-  <br/><br/>
+  <br/>
   <button type="submit"
           [disabled]="disabled || memberEdit.status == 'INVALID'"
           class="w-100 btn btn-primary"
   ><span *ngIf="!create">Éditer</span><span *ngIf="create">Créer</span>
   </button>
 </form>
+
 <a (click)="memberUsernameDelete()" *ngIf="!create">
   <button
     [disabled]="disabled"
-    class="w-100 btn-danger">
+    class="w-100 btn btn-danger mt-3">
     Supprimer
   </button>
 </a>
