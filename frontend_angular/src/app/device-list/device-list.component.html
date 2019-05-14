@@ -1,33 +1,40 @@
-<h2>Liste des appareils</h2>
+<div class="container">
+  <h2 class="text-left">Liste des appareils</h2>
+  <br/>
 
-<!-- Search box -->
-<div class="row">
-  <div class="w-100">
-    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="w-100" type="text"/>
+  <!-- Search box -->
+  <div class="row">
+    <div class="col-md-12">
+      <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="form-control" type="text"/>
+    </div>
   </div>
-</div>
 
-<!-- Device list -->
-<div class="row">
-  <table class="w-100 clickable-table" *ngIf="result$ | async as result">
-    <thead>
-    <tr>
-      <th>Utilisateur</th>
-      <th>MAC de l'appareil</th>
-      <th>Type d'appareil</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr
-      *ngFor="let device of result.devices | paginate: { itemsPerPage: result.items_per_page, currentPage: result.current_page, totalItems: result.item_count}"
-      [routerLink]="['../../member/view' , device.username]"
-      [queryParams]="{highlight: device.mac}">
-      <td>{{ device.username }}</td>
-      <td>{{ device.mac }}</td>
-      <td>{{ device.connectionType }}</td>
-    </tr>
-    </tbody>
-  </table>
-  <pagination-controls class="pagination" (pageChange)="changePage($event)" previousLabel="" nextLabel="">
-  </pagination-controls>
+  <br/>
+
+  <!-- Device list -->
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-striped clickable-table" *ngIf="result$ | async as result">
+        <thead>
+        <tr>
+          <th>Utilisateur</th>
+          <th>MAC de l'appareil</th>
+          <th>Type d'appareil</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr
+          *ngFor="let device of result.devices | paginate: { itemsPerPage: result.items_per_page, currentPage: result.current_page, totalItems: result.item_count}"
+          [routerLink]="['../../member/view' , device.username]"
+          [queryParams]="{highlight: device.mac}">
+          <td>{{ device.username }}</td>
+          <td>{{ device.mac }}</td>
+          <td>{{ device.connectionType }}</td>
+        </tr>
+        </tbody>
+      </table>
+      <pagination-controls class="pagination" (pageChange)="changePage($event)" previousLabel="" nextLabel="">
+      </pagination-controls>
+    </div>
+  </div>
 </div>
