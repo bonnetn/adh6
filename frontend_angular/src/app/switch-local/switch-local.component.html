@@ -1,44 +1,46 @@
-<h2>Switch Local</h2>
-<div class="row">
-  <div *ngIf="(ports$ | async) as ports">
-    <p><strong>Adresse IP:</strong> {{ (switch$ | async).ip }}</p>
-    <div class="five columns">
-      <img src="assets/plan-local.png"/>
-    </div>
-    <br/><br/><br/>
-    <div class="two columns">
-      <div *ngFor="let portResult of ports">
-        <div *ngIf="portResult.id>=3 && portResult.id<=9">
-          <a [routerLink]="['/switch/view', switchID, 'port', portResult.id]">
-            <button
-              class="w-100 btn btn-primary"
-            >{{ portResult.id }}
-            </button>
-          </a>
+<div class="container mb-3">
+  <h2 class="text-left">Switch Local</h2>
+  <div class="row">
+    <div *ngIf="(ports$ | async) as ports">
+      <p><strong>Adresse IP:</strong> {{ (switch$ | async).ip }}</p>
+      <div class="five columns">
+        <img src="assets/plan-local.png"/>
+      </div>
+      <br/><br/><br/>
+      <div class="two columns">
+        <div *ngFor="let portResult of ports">
+          <div *ngIf="portResult.id>=3 && portResult.id<=9">
+            <a [routerLink]="['/switch/view', switchID, 'port', portResult.id]">
+              <button
+                class="w-100 btn btn-primary"
+              >{{ portResult.id }}
+              </button>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="two columns">
-      <div *ngFor="let portResult of ports">
-        <div *ngIf="portResult.id>=10 && portResult.id<=16">
-          <a [routerLink]="['/switch/view', switchID, 'port', portResult.id]">
-            <button
-              class="w-100 btn btn-primary"
-            >{{ portResult.id }}
-            </button>
-          </a>
+      <div class="two columns">
+        <div *ngFor="let portResult of ports">
+          <div *ngIf="portResult.id>=10 && portResult.id<=16">
+            <a [routerLink]="['/switch/view', switchID, 'port', portResult.id]">
+              <button
+                class="w-100 btn btn-primary"
+              >{{ portResult.id }}
+              </button>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="two columns">
-      <div *ngFor="let portResult of ports">
-        <div *ngIf="portResult.id>=17 && portResult.id<=24">
-          <a [routerLink]="['/switch/view', switchID, 'port', portResult.id]">
-            <button
-              class="w-100 btn btn-primary"
-            >{{ portResult.id }}
-            </button>
-          </a>
+      <div class="two columns">
+        <div *ngFor="let portResult of ports">
+          <div *ngIf="portResult.id>=17 && portResult.id<=24">
+            <a [routerLink]="['/switch/view', switchID, 'port', portResult.id]">
+              <button
+                class="w-100 btn btn-primary"
+              >{{ portResult.id }}
+              </button>
+            </a>
+          </div>
         </div>
       </div>
     </div>
