@@ -2,29 +2,29 @@
 <h2 *ngIf="create" class="text-left">Création d'un membre</h2>
 <hr>
 <form [formGroup]="memberEdit" (ngSubmit)="editMember()" novalidate>
-  <div class="form-row">
-    <div class="form-group col-md">
-      <label>Last name / Nom:</label>
+  <div class="form-group row">
+    <div class="col-md">
+      <label>Nom / Last name :</label>
       <input class="w-100 form-control" type="text" formControlName="lastName">
     </div>
-    <div class="from-group col-md">
-      <label>First name / Prénom:</label>
+    <div class="col-md">
+      <label>Prénom / First name :</label>
       <input class="w-100 form-control" type="text" formControlName="firstName">
     </div>
   </div>
 
   <div class="form-group">
-    <label>Login DISI:</label>
+    <label>Login DISI :</label>
     <input class="w-100 form-control" type="text" formControlName="username">
   </div>
 
   <div class="form-group">
-    <label>Mail:</label>
+    <label>Mail :</label>
     <input class="w-100 form-control" type="text" formControlName="email">
   </div>
 
   <div class="form-group">
-    <label>Room number / Numéro de chambre:</label>
+    <label>Numéro de chambre / Room number :</label>
     <input class="w-100 form-control" formControlName="roomNumber" type="number">
   </div>
 
