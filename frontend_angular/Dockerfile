@@ -13,21 +13,7 @@ COPY frontend_angular/src/app/config/auth.config.template.ts .
 RUN cat auth.config.template.ts | envsubst | tee auth.config.ts
 
 ###############################################################################
-# 2nd stage: generate API files...
-###############################################################################
-FROM swaggerapi/swagger-codegen-cli-v3:3.0.8 AS generated_code
-
-COPY openapi/spec.yaml ./spec.yaml
-
-RUN java -jar /opt/swagger-codegen-cli/swagger-codegen-cli.jar generate \
-    -i "./spec.yaml" \
-    -l typescript-angular \
-    -o "/tmp/api" \
-    --additional-properties ngVersion=7
-
-
-###############################################################################
-# 3rd stage, launch the app
+# 2nd stage, launch the app
 ###############################################################################
 FROM node:8.16.0-stretch-slim
 
@@ -58,9 +44,6 @@ USER angular
 RUN npm install
 USER root
 
-# Copy automatically generated files from previous stage
-COPY --from=generated_code /tmp/api src/app/api
-
 # Copy source code
 COPY frontend_angular/*.json ./
 
@@ -73,3 +56,4 @@ COPY frontend_angular/src ./src
 USER angular
 # We use /bin/sh to be able to use ENV vars...
 CMD ["/bin/sh", "-c", "ng serve --host 0.0.0.0 --disable-host-check"]
+

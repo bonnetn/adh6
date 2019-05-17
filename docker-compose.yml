@@ -22,7 +22,6 @@ services:
         read_only: true
       # These are files that are generated in the dockerfile that should not be
       # read from the host disk.
-      - "/adh6/frontend_angular/src/app/api"
       - "/adh6/frontend_angular/src/app/config"
   
   # api_server is the API that actually does action on the database.

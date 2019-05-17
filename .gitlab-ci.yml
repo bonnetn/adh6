@@ -23,7 +23,6 @@ angular_try_build:
     - cd frontend_angular/
     - npm install -g @angular/cli
     - npm install
-    - make build
   script:
     - cp src/app/config/auth.config.ts{.example,}
     - ng build --prod
