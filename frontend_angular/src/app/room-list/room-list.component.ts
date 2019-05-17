@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/takeWhile';
+import {Observable} from 'rxjs';
 
 import {RoomService} from '../api/api/room.service';
 import {Room} from '../api/model/room';

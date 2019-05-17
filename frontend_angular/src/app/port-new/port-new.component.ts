@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NotificationsService} from 'angular2-notifications';
 import {PortService} from '../api/api/port.service';
 import {Port} from '../api/model/port';
+import {takeWhile} from 'rxjs/operators';
 
 @Component({
   selector: 'app-port-new',
@@ -45,7 +46,7 @@ export class PortNewComponent implements OnInit {
       switchID: this.switchID
     };
     this.portService.portPost(port)
-      .takeWhile(() => this.alive)
+      .pipe(takeWhile(() => this.alive))
       .subscribe((res) => {
         this.router.navigate(['/switch/', this.switchID, 'details']);
         this.notif.success(res.status + ': Success');

@@ -2,12 +2,11 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 
-import 'rxjs/add/operator/takeWhile';
-import 'rxjs/add/operator/switchMap';
 
 import {RoomService} from '../api/api/room.service';
 import {Room} from '../api/model/room';
 import {NotificationsService} from 'angular2-notifications';
+import {takeWhile} from 'rxjs/operators';
 
 @Component({
   selector: 'app-room-new',
@@ -49,12 +48,12 @@ export class RoomNewComponent implements OnInit, OnDestroy {
     };
 
     this.roomService.roomRoomNumberGet(v.roomNumber, 'response')
-      .takeWhile(() => this.alive)
+      .pipe(takeWhile(() => this.alive))
       .subscribe(() => {
         this.notif.error('Room already exists');
       }, () => {
         this.roomService.roomRoomNumberPut(v.roomNumber, room)
-          .takeWhile(() => this.alive)
+          .pipe(takeWhile(() => this.alive))
           .subscribe((res) => {
             this.router.navigate(['/room/view', v.roomNumber]);
             this.notif.success(res.status + ': Success');

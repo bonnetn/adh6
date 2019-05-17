@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {SwitchService} from '../api/api/switch.service';
 import {ModelSwitch} from '../api/model/modelSwitch';
 import {Port} from '../api/model/port';

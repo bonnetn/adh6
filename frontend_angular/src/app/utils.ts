@@ -1,6 +1,6 @@
-import {EMPTY, Observable} from 'rxjs';
-import {catchError, first, isEmpty} from 'rxjs/operators';
+import {EMPTY, Observable, of} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
+import {catchError, first, isEmpty} from 'rxjs/operators';
 
 export class Utils {
 
@@ -12,7 +12,7 @@ export class Utils {
           if (err.status === 404) {
             return EMPTY;
           }
-          return Observable.of(false);
+          return of(false);
         }),
         isEmpty(),
       );

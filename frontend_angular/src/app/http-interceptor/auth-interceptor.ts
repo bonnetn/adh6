@@ -3,7 +3,7 @@ import {OAuthService} from 'angular-oauth2-oidc';
 
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {authConfig} from '../config/auth.config';
 
 @Injectable()

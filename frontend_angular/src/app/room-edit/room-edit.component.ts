@@ -2,12 +2,11 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 
-import 'rxjs/add/operator/takeWhile';
-import 'rxjs/add/operator/switchMap';
 
 import {RoomService} from '../api/api/room.service';
 import {Room} from '../api/model/room';
 import {NotificationsService} from 'angular2-notifications';
+import {switchMap, takeWhile} from 'rxjs/operators';
 
 @Component({
   selector: 'app-room-edit',
@@ -51,7 +50,7 @@ export class RoomEditComponent implements OnInit, OnDestroy {
       description: v.description
     };
     this.roomService.roomRoomNumberPut(v.roomNumber, room, 'response')
-      .takeWhile(() => this.alive)
+      .pipe(takeWhile(() => this.alive))
       .subscribe((response) => {
         this.router.navigate(['/room/view', v.roomNumber]);
         this.notif.success(response.status + ': Success');
@@ -61,9 +60,10 @@ export class RoomEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.paramMap
-      .switchMap((params: ParamMap) =>
-        this.roomService.roomRoomNumberGet(+params.get('roomNumber')))
-      .takeWhile(() => this.alive)
+      .pipe(
+        switchMap((params: ParamMap) => this.roomService.roomRoomNumberGet(+params.get('roomNumber'))),
+        takeWhile(() => this.alive),
+      )
       .subscribe((room: Room) => {
         this.room = room;
         this.roomEdit.patchValue(room);

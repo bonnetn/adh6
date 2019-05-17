@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 import {SwitchService} from '../api/api/switch.service';
 import {PagingConf} from '../paging.config';

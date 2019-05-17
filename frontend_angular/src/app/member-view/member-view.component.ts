@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject, of} from 'rxjs';
 import {MemberService} from '../api/api/member.service';
 import {DeviceService} from '../api/api/device.service';
 import {Member} from '../api/model/member';
@@ -155,7 +155,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     if (alreadyExists === undefined) {
       return this.deviceService.deviceMacAddressGet(mac).pipe(
         map(() => true),
-        catchError(() => Observable.of(false)),
+        catchError(() => of(false)),
         flatMap((exists) => this.addDevice(username, exists)),
       );
     }
@@ -179,7 +179,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
         );
     } else {
       this.notif.error('Device already exists');
-      return Observable.of(null);
+      return of(null);
     }
   }
 

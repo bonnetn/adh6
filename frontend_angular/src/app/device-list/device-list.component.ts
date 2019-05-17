@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {map} from 'rxjs/operators';
 
-import 'rxjs/add/operator/takeWhile';
-
 import {DeviceService} from '../api/api/device.service';
 import {Device} from '../api/model/device';
 

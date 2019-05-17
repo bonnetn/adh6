@@ -1,10 +1,11 @@
 import {Router} from '@angular/router';
 import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NotificationsService} from 'angular2-notifications';
 import {SwitchService} from '../api/api/switch.service';
 import {ModelSwitch} from '../api/model/modelSwitch';
+import {takeWhile} from 'rxjs/operators';
 
 @Component({
   selector: 'app-switch-new',
@@ -44,7 +45,7 @@ export class SwitchNewComponent implements OnInit {
     };
 
     this.switchService.switchPost(varSwitch)
-      .takeWhile(() => this.alive)
+      .pipe(takeWhile(() => this.alive))
       .subscribe((res) => {
         this.router.navigate(['/switch/search']);
         this.notif.success(res.status + ': Success');

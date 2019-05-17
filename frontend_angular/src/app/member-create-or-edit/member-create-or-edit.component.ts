@@ -6,7 +6,7 @@ import {MemberService} from '../api/api/member.service';
 import {Member} from '../api/model/member';
 import {NotificationsService} from 'angular2-notifications';
 import {finalize, first, flatMap} from 'rxjs/operators';
-import {EMPTY, Observable} from 'rxjs';
+import {EMPTY, Observable, of} from 'rxjs';
 import {Utils} from '../utils';
 import {MemberPatchRequest} from '../api';
 
@@ -73,7 +73,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
       requestUsername = this.originalUsername;
     }
 
-    Observable.of(this.create)
+    of(this.create)
       .pipe(
         flatMap((create) => {
           if (create) {
@@ -81,13 +81,13 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
             return Utils.hasReturned404(this.memberService.memberUsernameGet(v.username));
           }
           // If we try to modify, OK.
-          return Observable.of(true);
+          return of(true);
         }),
         flatMap((canCreate) => {
           if (!canCreate) {
             return EMPTY;
           }
-          return Observable.of(null);
+          return of(null);
         }),
         flatMap(() => {
           if (!this.create) {
@@ -144,7 +144,7 @@ export class MemberCreateOrEditComponent implements OnInit, OnDestroy {
       .pipe(
         flatMap((params: ParamMap) => {
           if (params.has('username')) {
-            return Observable.of(params.get('username'));
+            return of(params.get('username'));
           } else {
             // If username is not provided, we assume this is a create request
             this.disabled = false;

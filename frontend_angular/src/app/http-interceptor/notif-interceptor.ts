@@ -2,9 +2,8 @@ import {Injectable} from '@angular/core';
 import {NotificationsService} from 'angular2-notifications';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 
-import {Observable} from 'rxjs/Observable';
+import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {_throw} from 'rxjs-compat/observable/throw';
 import {authConfig} from '../config/auth.config';
 
 @Injectable()
@@ -21,7 +20,7 @@ export class NotifInterceptor implements HttpInterceptor {
       return next.handle(req).pipe(
         catchError(response => {
           this.notif.error(response.status + ': ' + response.error);
-          return _throw(response);
+          return throwError(response);
         }),
       );
     } else {

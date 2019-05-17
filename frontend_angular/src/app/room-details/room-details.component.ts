@@ -1,7 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/takeWhile';
+import {Observable} from 'rxjs';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RoomService} from '../api/api/room.service';
@@ -78,7 +76,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   onSubmitComeInRoom() {
     const v = this.EmmenagerForm.value;
     this.memberService.memberUsernameGet(v.username)
-      .takeWhile(() => this.alive)
+      .pipe(takeWhile(() => this.alive))
       .subscribe((user) => {
         user['roomNumber'] = this.roomNumber;
         this.memberService.memberUsernamePut(v.username, user, 'response')
@@ -99,11 +97,11 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
       roomNumber: v.roomNumberNew
     };
     this.memberService.memberUsernameGet(username)
-      .takeWhile(() => this.alive)
+      .pipe(takeWhile(() => this.alive))
       .subscribe((user) => {
         user['roomNumber'] = v.roomNumberNew;
         this.memberService.memberUsernamePut(username, user, 'response')
-          .takeWhile(() => this.alive)
+          .pipe(takeWhile(() => this.alive))
           .subscribe((response) => {
             this.refreshInfo();
             this.onDemenager(username);
@@ -115,12 +113,12 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
 
   onRemoveFromRoom(username) {
     this.memberService.memberUsernameGet(username)
-      .takeWhile(() => this.alive)
+      .pipe(takeWhile(() => this.alive))
       .subscribe((user) => {
         delete user['roomNumber'];
         this.memberService.memberUsernamePut(username, user, 'response')
 
-          .takeWhile(() => this.alive)
+          .pipe(takeWhile(() => this.alive))
           .subscribe((response) => {
             this.refreshInfo();
             this.notif.success(response.status + ': Success');
@@ -131,7 +129,7 @@ export class RoomDetailsComponent implements OnInit, OnDestroy {
   onDelete() {
     const v = this.roomNumber;
     this.roomService.roomRoomNumberDelete(v, 'response')
-      .takeWhile(() => this.alive)
+      .pipe(takeWhile(() => this.alive))
       .subscribe((response) => {
         this.router.navigate(['room']);
         this.notif.success(response.status + ': Success');

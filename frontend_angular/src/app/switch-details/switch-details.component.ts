@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 
 import {ModelSwitch} from '../api/model/modelSwitch';
@@ -10,7 +10,7 @@ import {PortService} from '../api/api/port.service';
 import {Port} from '../api/model/port';
 
 import {SearchPage} from '../search-page';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 import {PagingConf} from '../paging.config';
 
 import {map} from 'rxjs/operators';

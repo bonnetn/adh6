@@ -1,13 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/operator/map';
-import {debounceTime, distinctUntilChanged, map, mergeMap, scan, switchMap} from 'rxjs/operators';
-import 'rxjs/add/operator/concat';
-import 'rxjs/add/operator/merge';
-import 'rxjs/add/observable/of';
-import {from} from 'rxjs/observable/from';
+import {concat, EMPTY, from, Observable, Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged, map, merge, mergeMap, scan, switchMap} from 'rxjs/operators';
 
 import {MemberService} from '../api/api/member.service';
 
@@ -19,7 +13,6 @@ import {SwitchService} from '../api/api/switch.service';
 
 import {PortService} from '../api/api/port.service';
 import {Port} from '../api';
-import {EMPTY} from 'rxjs';
 
 class QueryParams {
   highlight: string;
@@ -131,28 +124,23 @@ export class GlobalSearchComponent implements OnInit {
             )),
         );
 
-        return user$
-          .concat(device$)
-          .concat(room$)
-          .concat(switch$)
-          .concat(port$);
-
+        return concat(user$, device$, room$, switch$, port$);
       }),
     );
 
     // This stream emits Arrays of results growing as the searchResults are
     // found. The Arrays are cleared every time the user changes the text in the
     // text box.
-    this.searchResult$ = result$.map(x => [x]).merge(
-      debouncedSearchTerm$.map(ignored => null)
-    ).pipe(
+    this.searchResult$ = result$.pipe(
+      map(x => [x]),
+      merge(debouncedSearchTerm$.pipe(map(ignored => null))),
       scan((acc, value) => {
         if (!value) {// if it is null then we clear the array
           return [];
         }
         return acc.concat(value[0]); // we keep adding elements
-      }, [])
-    );
+      }, []),
+  );
 
   }
 

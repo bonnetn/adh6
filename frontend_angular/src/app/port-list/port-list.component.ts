@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 import {PortService} from '../api/api/port.service';
 import {Port} from '../api/model/port';
