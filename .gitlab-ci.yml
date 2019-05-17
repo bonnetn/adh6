@@ -22,7 +22,7 @@ angular_try_build:
     - npm install -g @angular/cli
     - npm install
   script:
-    - src/app/config/auth.config.ts{.example,}
+    - cp src/app/config/auth.config.ts{.example,}
     - ng build --prod
 
 python_check_for_vuln_deps:
