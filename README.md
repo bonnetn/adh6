@@ -93,7 +93,7 @@ Pour définir la specification de notre API nous utilisons OpenAPI (aussi appel�
 
 Pour générer le code serveur, on utilise d'un côté connexion, qui est une libary python développée par Zalando. https://github.com/zalando/connexion Allez voir le repo, il est assez actif. C'est aussi la bibliothèque de génération de code prise comme référence par Swagger (l'organisme qui fait OpenAPI).
 
-Pour le côté client, on utilise directement swagger-codegen, édité directement par Swagger. https://github.com/swagger-api/swagger-codegen Pareil, allez voir leur repo, il est "assez" actif... (10 228 commits à l'heure où j'écris ces lignes, et plus de 900 contributeurs...)
+Pour le côté client, on utilise directement openapi-generator, (fork de swagger-codegen, édité directement par Swagger). https://github.com/OpenAPITools/openapi-generator Pareil, allez voir leur repo, il est "assez" actif... (12 233 commits à l'heure où j'écris ces lignes, et plus de 1100 contributeurs...)
 Ca semble donc aussi être un assez bon choix pour produire un code stable.
 
 En résumé, on a pris le parti prix d'ajouter deux dépendances au projet, mais on a gagné en flexibilité et en maintenabilité.
