@@ -53,7 +53,7 @@ export class PortDetailsComponent implements OnInit, OnDestroy {
   }
 
   toggleStatus() {
-    this.portService.portPortIdStatePut(!this.portStatus, this.portID)
+    this.portService.portPortIdStatePut(this.portID, !this.portStatus)
       .subscribe((status) => {
         this.setStatus(status);
       });

@@ -63,8 +63,8 @@ export class MemberPasswordEditComponent implements OnInit {
 
   private updatePasswordOfUser(username: string) {
     return this.memberService.memberUsernamePasswordPut(
-      {password: this.memberPassword.value.password},
       username,
+      {password: this.memberPassword.value.password},
       'response')
       .pipe(
         first(),

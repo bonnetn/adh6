@@ -11,15 +11,10 @@
  */
 
 
-export interface Transaction { 
-    attachements?: string;
-    dst: number;
-    readonly id?: number;
-    name: string;
-    product?: number;
-    src: number;
-    readonly timestamp?: number;
-    type: number;
-    value: number;
+export interface Switch { 
+    community: string;
+    description?: string;
+    id?: number;
+    ip: string;
 }
 

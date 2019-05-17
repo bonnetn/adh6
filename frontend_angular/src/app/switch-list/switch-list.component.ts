@@ -6,10 +6,10 @@ import {SwitchService} from '../api/api/switch.service';
 import {PagingConf} from '../paging.config';
 import {SearchPage} from '../search-page';
 import {map} from 'rxjs/operators';
-import {ModelSwitch} from '../api';
+import {Switch} from '../api';
 
 export interface SwitchListResult {
-  switches: Array<ModelSwitch>;
+  switches: Array<Switch>;
   item_count?: number;
   current_page?: number;
   items_per_page?: number;

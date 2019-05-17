@@ -53,7 +53,7 @@ export class RoomNewComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.notif.error('Room already exists');
       }, () => {
-        this.roomService.roomRoomNumberPut(room, v.roomNumber)
+        this.roomService.roomRoomNumberPut(v.roomNumber, room)
           .takeWhile(() => this.alive)
           .subscribe((res) => {
             this.router.navigate(['/room/view', v.roomNumber]);
