@@ -14,6 +14,17 @@ stages:
   - test
   - deploy_dev
 
+
+angular_try_build:
+  image: node:8.16.0-stretch-slim
+  before_script:
+    - cd frontend_angular/
+    - npm install -g @angular/cli
+    - npm install
+  script:
+    - src/app/config/auth.config.ts{.example,}
+    - ng build --prod
+
 python_check_for_vuln_deps:
   stage: test
   # <<: *before_test_job # We reference our previous anchor
