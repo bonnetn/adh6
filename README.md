@@ -122,11 +122,42 @@ En résumé on a:
 Les cas normaux et extrêmes doivent être testés. C'est ce qui est executé lorsque on lance pytest.
 
 ### Notes au futurs devs:
+#### Comment installer toutes les dépendances python
+```
+cd api_server/
+
+# Installez pip et python3.
+# Pip est le package manager de python.
+apt install python3 python3-pip 
+
+# Installation du paquet virtualenv, pour faire des environnements de développement.
+# Cela va vous éviter à avoir à installer les dépendances de ADH6 pour tout votre ordi, et 
+# cantonner toutes les installations de dépendances à ce dossier. (On pollue pas l'ordi et en plus
+# on a peu de chance d'avoir des conflits avec d'autres trucs déjà installés)
+pip3 install virtualenv
+
+# Initialisation d'un nouvel environnement virtuel vierge. (à ne faire qu'une fois)
+virtualenv -p python3 venv
+
+# Ci-dessous est la commande que vous ferez à chaque fois que vous voudrez 'entrer' dans cet environnement.
+# (en gros quand vous faites cette commande vous avez accès aux dépendances ajoutées dans ce dossier plutôt
+# qu'à celles de votre PC.)
+source venv/bin/activate
+
+# Et on installe toutes les dépendances de ADH dans l'environnement virtuel.
+pip install -r requirements.txt
+
+...
+```
+
+Pour ensuite quitter cet environnement vous avez juste à taper `deactivate`
+
 #### Comment lancer les tests ?
 Lancez ```pytest``` dans la console, ou utilisez votre IDE...
 
 #### Comment obtenir une analyse du "code coverage" ?
 ```pytest --cov=adh --cov-report html``` dans la console. (ou vous pouvez allez voir dans l'onglet CI de gitlab, dans la partie jobs)
+
 
 ## Dossier frontend_angular: le frontend
 
