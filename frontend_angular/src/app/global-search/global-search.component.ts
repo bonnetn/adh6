@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
-import {concat, EMPTY, from, Observable, Subject} from 'rxjs';
-import {debounceTime, distinctUntilChanged, map, merge, mergeMap, scan, switchMap} from 'rxjs/operators';
+import {concat, EMPTY, from, merge, Observable, Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged, map, mergeMap, scan, switchMap} from 'rxjs/operators';
 
 import {MemberService} from '../api/api/member.service';
 
@@ -131,16 +131,17 @@ export class GlobalSearchComponent implements OnInit {
     // This stream emits Arrays of results growing as the searchResults are
     // found. The Arrays are cleared every time the user changes the text in the
     // text box.
-    this.searchResult$ = result$.pipe(
-      map(x => [x]),
-      merge(debouncedSearchTerm$.pipe(map(ignored => null))),
+    this.searchResult$ = merge(
+      result$.pipe(map(x => [x])),
+      debouncedSearchTerm$.pipe(map(ignored => null)),
+    ).pipe(
       scan((acc, value) => {
         if (!value) {// if it is null then we clear the array
           return [];
         }
         return acc.concat(value[0]); // we keep adding elements
       }, []),
-  );
+    );
 
   }
 
