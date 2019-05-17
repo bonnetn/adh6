@@ -14,13 +14,13 @@ export class SwitchLocalComponent implements OnInit, OnDestroy {
 
   switch$: Observable<ModelSwitch>;
   ports$: Observable<Array<Port>>;
-  switchID = 8;
+  switchID = 1;
 
   constructor(public switchService: SwitchService, public portService: PortService) {
   }
 
   ngOnInit() {
-    this.switchID = 8;
+    this.switchID = 1;
     this.switch$ = this.switchService.switchSwitchIDGet(this.switchID);
     this.ports$ = this.portService.portGet(undefined, undefined, this.switchID);
   }
