@@ -24,13 +24,14 @@ from src.interface_adapter.sql.model.database import Database
 from src.interface_adapter.sql.money_repository import MoneySQLRepository
 from src.interface_adapter.sql.network_object_repository import NetworkObjectSQLRepository
 from src.interface_adapter.sql.room_repository import RoomSQLRepository
+from src.interface_adapter.sql.account_repository import AccountSQLRepository
 from src.resolver import ADHResolver
 from src.use_case.device_manager import DeviceManager
 from src.use_case.member_manager import MemberManager
 from src.use_case.port_manager import PortManager
 from src.use_case.room_manager import RoomManager
 from src.use_case.switch_manager import SwitchManager
-
+from src.use_case.account_manager import AccountManager
 
 def init(testing=True):
     """
@@ -51,6 +52,7 @@ def init(testing=True):
     elk_repository = ElasticSearchRepository(configuration)
     money_repository = MoneySQLRepository()
     switch_network_manager = SwitchSNMPNetworkManager()
+    account_sql_repository = AccountSQLRepository()
 
     # Managers
     switch_manager = SwitchManager(
@@ -76,6 +78,10 @@ def init(testing=True):
     room_manager = RoomManager(
         room_repository=room_sql_repository,
     )
+    account_manager = AccountManager(
+        account_repository=account_sql_repository,
+        member_repository=member_sql_repository,
+    )
 
     # HTTP Handlers:
     transaction_handler = TransactionHandler()
@@ -87,7 +93,7 @@ def init(testing=True):
     temporary_account_handler = TemporaryAccountHandler()
     account_type_handler = AccountTypeHandler()
     payment_method_handler = PaymentMethodHandler()
-    account_handler = AccountHandler()
+    account_handler = AccountHandler(account_manager)
     product_handler = ProductHandler()
 
     # Connexion will use this function to authenticate and fetch the information of the user.

@@ -6,7 +6,9 @@ from typing import List
 
 from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.account import Account
+from src.entity.account import AccountType
 from src.use_case.interface.account_repository import AccountRepository
+
 
 class AccountSQLRepository(AccountRepository):
     """
@@ -17,19 +19,21 @@ class AccountSQLRepository(AccountRepository):
         """
         Create an account.
         Possibly raise nothing ?
-        """
+
         s = ctx.get(CTX_SQL_SESSION)
 
-        #TODO: LOG.debug
+        # TODO: LOG.debug
 
         account = Account(
                 name=name,
                 actif=actif,
                 type=type,
                 creation_date=creation_date)
+        """
+        pass
 
-        #TODO: voir si track_modifications prendre en compte account et si s.add(account) fonctionne
+        # TODO: voir si track_modifications prendre en compte account et si s.add(account) fonctionne
     
-   #TODO: update_account mais même problème qu'au dessus
+   # TODO: update_account mais même problème qu'au dessus
 
 

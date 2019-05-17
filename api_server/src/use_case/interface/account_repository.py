@@ -2,9 +2,10 @@
 """
 Account repository.
 """
-import abc  #pour définir des classes abstraites en python
-
+import abc  # pour définir des classes abstraites en python
+from typing import List
 from src.entity.account import Account
+
 
 class AccountRepository():
     """
@@ -12,7 +13,7 @@ class AccountRepository():
     """
 
     @abc.abstractmethod
-    def search_account_by(self, ctx, limit=None, offset=None, name=None, terms=None) -> (List(Account), int):
+    def search_account_by(self, ctx, limit=None, offset=None, name=None, terms=None) -> (List[Account], int):
         """
         Search for an account.
         """
