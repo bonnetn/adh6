@@ -110,7 +110,7 @@ td.center {
 }
 
 .pagination {
-  text-align: center;
+  justify-content: center !important;
 }
 
 .clickable-table tr:hover td {

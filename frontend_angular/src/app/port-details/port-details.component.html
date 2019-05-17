@@ -3,13 +3,13 @@
   <h3>Informations</h3>
   <div class="row">
     <div class="col-2">
-      <button class="w-100" [disabled]="port.roomNumber == null"
+      <button class="w-100 btn btn-primary" [disabled]="port.roomNumber == null"
               (click)="IfRoomExists(port.roomNumber)">Chambre {{ port.roomNumber }}
       </button>
     </div>
     <div class="col-2">
       <a [routerLink]="['/switch/view', port.switchID]">
-        <button class="w-100">Switch {{ port.switchID }}</button>
+        <button class="w-100 btn btn-primary">Switch {{ port.switchID }}</button>
       </a>
     </div>
   </div>
@@ -18,7 +18,7 @@
   <br/>
   <div class=row>
     <div class="col-2">
-      <button class="w-100"
+      <button class="w-100 btn"
               [ngClass]="{true:'btn-success',
     false:'btn-danger'}[portStatus]"
               (click)="toggleStatus()"
@@ -26,7 +26,7 @@
       </button>
     </div>
     <div class="col-2">
-      <button class="w-100"
+      <button class="w-100 btn btn-primary"
               [ngClass]="{true:'btn-success',
       false:'btn-danger'}[portAuth]"
               (click)="toggleAuth()"
@@ -37,17 +37,17 @@
   <div class=row>
     <div class="col-2">
       <strong>VLAN {{ vlan }}</strong><br/>
-      <button class="w-100" (click)="changeVlanVisible = !changeVlanVisible">Changer de VLAN</button>
+      <button class="w-100 btn btn-primary" (click)="changeVlanVisible = !changeVlanVisible">Changer de VLAN</button>
       <div [ngStyle]="{'visibility': changeVlanVisible?'visible':'hidden'}">
         <select [(ngModel)]="selectedVlan">
           <option *ngFor="let v of vlans" [ngValue]="v.value">{{v.name}}</option>
         </select>
-        <button class="w-100" (click)="changeVlan(selectedVlan)">Assigner au VLAN {{selectedVlan}}</button>
+        <button class="w-100 btn btn-primary" (click)="changeVlan(selectedVlan)">Assigner au VLAN {{selectedVlan}}</button>
       </div>
     </div>
     <div class="col-2">
       <strong>Vitesse 10Mb/s</strong><br/>
-      <button class="w-100">Changer le débit</button>
+      <button class="w-100 btn btn-primary">Changer le débit</button>
     </div>
   </div>
 </div>

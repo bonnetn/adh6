@@ -6,13 +6,13 @@
       btn btn-primary">Nouveau port
     </button>
   </a>
-  <table class="w-100">
+  <table class="w-100" *ngIf="result$ | async as result">
     <tr>
       <th class="center">Numéro de port</th>
       <th class="center">Numéro de chambre</th>
       <th></th>
     </tr>
-    <tr *ngFor="let portResult of ports$ | async | paginate: { itemsPerPage:
+    <tr *ngFor="let portResult of result.ports | paginate: { itemsPerPage:
       items_per_page, currentPage: page_number, totalItems: item_count,
       switchID: switchID}">
       <td class="center">{{ portResult.portNumber }}</td>
@@ -21,11 +21,10 @@
           {{ portResult.roomNumber }}</a></td>
       <td class="center">
         <a [routerLink]="['/switch/view', portResult.switchID, 'port', portResult.id]">
-          <button>Consulter</button>
+          <button class="btn btn-primaryo">Consulter</button>
         </a>
       </td>
     </tr>
   </table>
-  <pagination-controls class="pagination" (pageChange)="refreshPorts($event)" previousLabel="" nextLabel="">
-  </pagination-controls>
+  <pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChange)="changePage($event)"></pagination>
 </div>
