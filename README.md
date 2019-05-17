@@ -72,6 +72,14 @@ Si vous modifiez autre chose, vous pouvez aussi tout relancer.
 PS: Parfois, lorsque que vous ajoutez un fichier, il faudra éteindre adh6 puis faire `make clean run`.
 
 
+### Faire des modifs en live sur la BDD
+
+Pour des raisons de test, vous voulez accéder à la BDD pour ajouter/supprimer des entrées, c'est très simple :
+
+- `docker exec -it core_database bash`
+- `mysql -u adh6 -p` le mdp est par défaut "adh6_pass"
+- `USE adh6`;
+- enjoy
 
 ## Choix des technos
 ### Communication client/serveur
