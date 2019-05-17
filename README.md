@@ -175,6 +175,19 @@ Lancez ```pytest``` dans la console, ou utilisez votre IDE...
 
 Voici le diagramme de toutes les vues d'ADH6 pour son cas d'utilisation
 principal (c'est à dire, gérer les profils d'adhérents).
+### Mettre à jour l'API dans Angular
+
+Contrairement au backend, lorsque vous faites une modification dans spec.yaml, cette modification n'est pas reportée dans le code du frontend.
+Il faut manuellement re-générer le code pour communiquer avec l'API pour le mettre à jour.
+
+Pour cela, `make generate` et c'est fini !
+
+#### Pourquoi commit les fichiers générés?
+> Cela nous permet d'avoir un build reproductible.
+> Si jamais on clone le repo, on doit pouvoir build.
+> Un changement dans swagger-codegen pourrait entraîner un code légèrement différent et donc casser ADH.
+>
+> En committant les fichiers générés on "fixe" l'état d'ADH.
 
 ## CAS
 ### Description
