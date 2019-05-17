@@ -1,4 +1,7 @@
 # coding=utf-8
+import requests
+from connexion import NoContent
+
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin
 from src.interface_adapter.sql.decorator.sql_session import require_sql
@@ -15,7 +18,7 @@ class AccountHandler:
         try:
             result, count = self.account_manager.get_by_name(ctx, limit, offset, name, terms)
 
-        #TODO: except NameInputError or idk
+        #TODO: except NameInputError
 
         headers = {
             "X-Total-Count": count,
