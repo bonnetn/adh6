@@ -1,8 +1,8 @@
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NotificationsService} from 'angular2-notifications'
+import {NotificationsService} from 'angular2-notifications';
 import {SwitchService} from '../api/api/switch.service';
 import {ModelSwitch} from '../api/model/modelSwitch';
 
@@ -34,7 +34,7 @@ export class SwitchNewComponent implements OnInit {
       community: ['', Validators.required],
     });
   }
-  
+
   onSubmit() {
     const v = this.switchForm.value;
     const varSwitch: ModelSwitch = {
@@ -43,12 +43,12 @@ export class SwitchNewComponent implements OnInit {
       community: v.community,
     };
 
-   this.switchService.switchPost(varSwitch)
+    this.switchService.switchPost(varSwitch)
       .takeWhile(() => this.alive)
       .subscribe((res) => {
         this.router.navigate(['/switch/search']);
         this.notif.success(res.status + ': Success');
-    });
+      });
   }
 
   ngOnInit() {

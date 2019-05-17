@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {DeviceService} from '../api/api/device.service';
-import {filter, finalize, first, map} from 'rxjs/operators';
+import {first, map} from 'rxjs/operators';
 import {Utils} from '../utils';
 
 @Component({
@@ -13,7 +13,7 @@ export class MacVendorComponent implements OnInit, OnDestroy {
   @Input() mac: string;
 
   private alive = true;
-  private vendor = "";
+  private vendor = '';
 
   constructor(
     public deviceService: DeviceService

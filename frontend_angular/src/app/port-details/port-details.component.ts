@@ -4,8 +4,6 @@ import {PortService} from '../api/api/port.service';
 import {Port} from '../api/model/port';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
-import {filter, finalize, first, map} from 'rxjs/operators';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-port-details',
@@ -19,15 +17,15 @@ export class PortDetailsComponent implements OnInit, OnDestroy {
   switchID: number;
 
   vlans = [
-    {"name": "1", "value": "1"},
-    {"name":"dev: 103","value":"103"},
-    {"name":"prod: 102","value":"102"},
-    {"name":"999","value":"999"}
+    {'name': '1', 'value': '1'},
+    {'name': 'dev: 103', 'value': '103'},
+    {'name': 'prod: 102', 'value': '102'},
+    {'name': '999', 'value': '999'}
   ];
 
   vlan: number;
   changeVlanVisible = false;
-  selectedVlan = "1";  
+  selectedVlan = '1';
 
   portStatusString = 'N/A';
   portStatus: boolean;
@@ -47,11 +45,11 @@ export class PortDetailsComponent implements OnInit, OnDestroy {
 
   setStatus(state) {
     if (state) {
-      this.portStatusString = "OUI"
+      this.portStatusString = 'OUI';
     } else {
-      this.portStatusString = "NON"
+      this.portStatusString = 'NON';
     }
-    this.portStatus = state
+    this.portStatus = state;
   }
 
   toggleStatus() {
@@ -63,11 +61,11 @@ export class PortDetailsComponent implements OnInit, OnDestroy {
 
   setAuth(state) {
     if (state) {
-      this.portAuthString = "ACTIVE"
+      this.portAuthString = 'ACTIVE';
     } else {
-      this.portAuthString = "NON ACTIVE"
+      this.portAuthString = 'NON ACTIVE';
     }
-    this.portAuth = state
+    this.portAuth = state;
   }
 
   changeVlan(newVlan) {

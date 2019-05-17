@@ -1,7 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {LOCALE_ID, NgModule} from '@angular/core';
-import {ReactiveFormsModule} from '@angular/forms';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './/app-routing.module';
 import {DashboardComponent} from './dashboard/dashboard.component';
@@ -31,12 +30,12 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {OAuthModule} from 'angular-oauth2-oidc';
 import {LoginComponent} from './login/login.component';
 import {NgxPaginationModule} from 'ngx-pagination';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
+import {PaginationModule} from 'ngx-bootstrap/pagination';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AuthInterceptor} from './http-interceptor/auth-interceptor';
 import {NotifInterceptor} from './http-interceptor/notif-interceptor';
-import { MemberPasswordEditComponent } from './member-password-edit/member-password-edit.component';
-import { CreateTemporaryAccountComponent } from './create-temporary-account/create-temporary-account.component';
+import {MemberPasswordEditComponent} from './member-password-edit/member-password-edit.component';
+import {CreateTemporaryAccountComponent} from './create-temporary-account/create-temporary-account.component';
 
 
 @NgModule({

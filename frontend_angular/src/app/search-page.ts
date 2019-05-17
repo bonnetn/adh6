@@ -20,7 +20,7 @@ export class SearchPage implements OnInit {
       );
 
     // Combine terms + page and fetch the result from backend
-    const result$ = combineLatest(termsDebounced$, this.pageNumber$)
+    const result$ = combineLatest([termsDebounced$, this.pageNumber$])
       .pipe(
         switchMap(data => f(data[0], data[1])),
       );

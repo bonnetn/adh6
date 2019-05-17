@@ -4,7 +4,6 @@ import {SwitchService} from '../api/api/switch.service';
 import {ModelSwitch} from '../api/model/modelSwitch';
 import {Port} from '../api/model/port';
 import {PortService} from '../api/api/port.service';
-import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-switch-local',

@@ -14,15 +14,15 @@
         <tbody>
         <tr>
           <td class="profile-field">Identifiant DISI</td>
-          <td>{{member.username}}</td>
+          <td>{{ member.username }}</td>
         </tr>
         <tr>
           <td class="profile-field">Mail</td>
-          <td><a href="mailto:{{member.email}}">{{member.email}}</a></td>
+          <td><a href="mailto:{{member.email}}">{{ member.email }}</a></td>
         </tr>
         <tr>
           <td class="profile-field">Date de départ</td>
-          <td>{{member.departureDate}}</td>
+          <td>{{ member.departureDate }}</td>
         </tr>
         <tr>
           <td class="profile-field">Chambre</td>
@@ -38,16 +38,16 @@
       </table>
       <br/>
       <div class="row">
-          <div class="col-md-6">
-              <a [routerLink]="['/member/edit/', member.username ]">
-                <button class="w-100 btn btn-primary mb-3">Éditer le profil</button>
-              </a>
-            </div>
-            <div class="col-md-6">
-              <a [routerLink]="['/member/password/', member.username ]">
-                <button class="w-100 btn btn-primary">Changer mot de passe</button>
-              </a>
-          </div>
+        <div class="col-md-6">
+          <a [routerLink]="['/member/edit/', member.username ]">
+            <button class="w-100 btn btn-primary mb-3">Éditer le profil</button>
+          </a>
+        </div>
+        <div class="col-md-6">
+          <a [routerLink]="['/member/password/', member.username ]">
+            <button class="w-100 btn btn-primary">Changer mot de passe</button>
+          </a>
+        </div>
       </div>
 
 
@@ -119,7 +119,9 @@
                 </tr>
                 <tr>
                   <td class="device_property">Fabriquant</td>
-                  <td><app-mac-vendor mac="{{ device.mac }}"></app-mac-vendor></td>
+                  <td>
+                    <app-mac-vendor mac="{{ device.mac }}"></app-mac-vendor>
+                  </td>
                 </tr>
               </table>
 
@@ -145,7 +147,6 @@
       </table>
 
 
-
       <form [formGroup]="deviceForm" (ngSubmit)="submitDevice()" novalidate class="w-100">
         <div class="form-row">
           <div class="from-group col-md-8">
@@ -153,7 +154,7 @@
           </div>
           <div class="from-group col-md-4">
             <select class="w-100 form-control" type="text"
-            formControlName="connectionType">
+                    formControlName="connectionType">
               <option value="wired">Filaire</option>
               <option value="wireless">Wi-Fi</option>
             </select>
@@ -169,28 +170,26 @@
       </form>
 
 
-
-        <h3>Commentaire</h3>
-        <form [formGroup]="commentForm" (ngSubmit)="submitComment()" novalidate>
-          <div class="form-group">
-            <textarea class="w-100 form-control" formControlName="comment"></textarea>
-          </div>
-          <div class="form-group">
-            <button type="submit" class="w-100 btn btn-primary"
-              [disabled]="submitDisabled">Envoyer
-            </button>
-          </div>
-        </form>
-
-        <h3>Journal</h3>
-        <div style="overflow:auto; max-height: 30em; font-family: 'Lucida Console', Monaco, monospace; font-size: small;">
-          <ul class="nobullet u-max-full-width">
-            <li *ngFor="let log of log$ | async">
-              <span style="color:blue">{{ extractDateFromLog(log) | date:"dd/MM/yyy HH:mm:ss" }}</span> {{
-              extractMsgFromLog(log) }}
-            </li>
-          </ul>
+      <h3>Commentaire</h3>
+      <form [formGroup]="commentForm" (ngSubmit)="submitComment()" novalidate>
+        <div class="form-group">
+          <textarea class="w-100 form-control" formControlName="comment"></textarea>
         </div>
+        <div class="form-group">
+          <button type="submit" class="w-100 btn btn-primary"
+                  [disabled]="submitDisabled">Envoyer
+          </button>
+        </div>
+      </form>
+
+      <h3>Journal</h3>
+      <div style="overflow:auto; max-height: 30em; font-family: 'Lucida Console', Monaco, monospace; font-size: small;">
+        <ul class="nobullet u-max-full-width">
+          <li *ngFor="let log of log$ | async">
+            <span style="color:blue">{{ extractDateFromLog(log) | date:"dd/MM/yyy HH:mm:ss" }}</span> {{ extractMsgFromLog(log) }}
+          </li>
+        </ul>
+      </div>
 
     </div>
 
@@ -200,7 +199,7 @@
       <div class="w-100 mb-3" [ngClass]="{'commentaire': member.comment!=null}">{{ member.comment }}</div>
       <!-- DISI picture -->
       <img class="w-100 image-disi"
-          src="https://trombi.imtbs-tsp.eu/photo.php?uid={{ member.username }}&h=320&w=240"/>
+           src="https://trombi.imtbs-tsp.eu/photo.php?uid={{ member.username }}&h=320&w=240"/>
       <!-- Association button -->
       <button class="btn btn-primary w-100 association-button mt-3">Association des périphériques</button>
       <!-- History -->

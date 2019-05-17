@@ -7,11 +7,11 @@ import {Observable} from 'rxjs';
 import {MemberService} from '../api';
 
 function passwordConfirming(c: AbstractControl): any {
-  if (!c || !c.value) return;
+  if (!c || !c.value) { return; }
   const pwd = c.value['password'];
   const cpwd = c.value['password_confirm'];
 
-  if (!pwd || !cpwd) return;
+  if (!pwd || !cpwd) { return; }
   if (pwd !== cpwd) {
     return {invalid: true};
   }
@@ -57,7 +57,8 @@ export class MemberPasswordEditComponent implements OnInit {
         switchMap(username => this.updatePasswordOfUser(username)),
         finalize(() => this.disabled = false)
       )
-      .subscribe((_) => {});
+      .subscribe((_) => {
+      });
   }
 
   private updatePasswordOfUser(username: string) {

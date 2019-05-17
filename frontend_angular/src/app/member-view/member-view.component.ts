@@ -55,7 +55,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
     );
 
     // stream, which will emit the username every time the profile needs to be refreshed
-    const refresh$ = combineLatest(this.username$, this.refreshInfoOrder$)
+    const refresh$ = combineLatest([this.username$, this.refreshInfoOrder$])
       .pipe(
         map(([x]) => x),
       );
@@ -140,11 +140,6 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
   }
 
-  addDevice();
-
-  addDevice(username: string);
-
-  addDevice(username: string, alreadyExists: boolean);
 
   addDevice(username?: string, alreadyExists?: boolean) {
 

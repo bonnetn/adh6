@@ -14,7 +14,6 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {PagingConf} from '../paging.config';
 
 import {map} from 'rxjs/operators';
-import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 
 export interface PortListResult {
   ports: Array<Port>;
@@ -69,7 +68,7 @@ export class SwitchDetailsComponent extends SearchPage implements OnInit {
       this.switch$ = this.switchService.switchSwitchIDGet(this.switchID);
       this.result$ = this.getSearchResult((terms, page) => this.fetchPorts(terms, page));
     });
-    //this.refreshPorts(1);
+    // this.refreshPorts(1);
   }
 
 }

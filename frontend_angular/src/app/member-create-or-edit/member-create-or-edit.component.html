@@ -1,4 +1,4 @@
-<h2 *ngIf="!create"  class="text-left">Édition d'un membre</h2>
+<h2 *ngIf="!create" class="text-left">Édition d'un membre</h2>
 <h2 *ngIf="create" class="text-left">Création d'un membre</h2>
 <hr>
 <form [formGroup]="memberEdit" (ngSubmit)="editMember()" novalidate>

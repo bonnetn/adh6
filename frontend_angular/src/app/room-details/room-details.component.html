@@ -39,7 +39,7 @@
     <ul class="list-group">
       <li *ngFor="let member of members$ | async" class="list-group-item">
         <strong>{{ member.firstName }} {{ member.lastName }}</strong
-        ><br /><br />
+        ><br/><br/>
 
         <div class="row">
           <div class="col-md-4">
@@ -105,9 +105,9 @@
       <li *ngFor="let portRes of ports$ | async">
         <div *ngIf="portRes.roomNumber == this.roomNumber">
           <strong
-            >Switch {{ portRes.switchID }} port {{ portRes.portNumber }}</strong
+          >Switch {{ portRes.switchID }} port {{ portRes.portNumber }}</strong
           >
-          <br /><br />
+          <br/><br/>
           <div class="row">
             <div class="col-3">
               <button class="w-100 btn btn-success" (click)="etat()">Etat</button>

@@ -17,11 +17,11 @@
   <div style="overflow-x:auto;" class="u-max-full-width">
     <table class="table table-striped clickable-table" *ngIf="result$ | async as result">
       <thead>
-        <tr>
-          <th>Nom</th>
-          <th>Login</th>
-          <th class="roomNumberRow">Chambre</th>
-        </tr>
+      <tr>
+        <th>Nom</th>
+        <th>Login</th>
+        <th class="roomNumberRow">Chambre</th>
+      </tr>
       </thead>
       <tr
         *ngFor="let member of result.members | paginate: { itemsPerPage: result.item_per_page, currentPage: result.current_page, totalItems: result.item_count}"
@@ -33,6 +33,7 @@
       <br/>
     </table>
 
-    <pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChange)="changePage($event)"></pagination>
+    <pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+                (pageChange)="changePage($event)"></pagination>
   </div>
 </div>

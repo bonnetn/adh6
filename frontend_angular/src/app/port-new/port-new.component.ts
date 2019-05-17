@@ -1,6 +1,5 @@
-import {Router, ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from '@angular/router';
 import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NotificationsService} from 'angular2-notifications';
 import {PortService} from '../api/api/port.service';
@@ -44,14 +43,15 @@ export class PortNewComponent implements OnInit {
       portNumber: v.portNumber,
       roomNumber: v.roomNumber,
       switchID: this.switchID
-    }
+    };
     this.portService.portPost(port)
       .takeWhile(() => this.alive)
       .subscribe((res) => {
         this.router.navigate(['/switch/', this.switchID, 'details']);
-        this.notif.success(res.status + ": Success");
-      })
+        this.notif.success(res.status + ': Success');
+      });
   }
+
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.switchID = +params['switchID'];

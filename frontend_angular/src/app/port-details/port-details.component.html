@@ -40,9 +40,10 @@
       <button class="w-100 btn btn-primary" (click)="changeVlanVisible = !changeVlanVisible">Changer de VLAN</button>
       <div [ngStyle]="{'visibility': changeVlanVisible?'visible':'hidden'}">
         <select [(ngModel)]="selectedVlan">
-          <option *ngFor="let v of vlans" [ngValue]="v.value">{{v.name}}</option>
+          <option *ngFor="let v of vlans" [ngValue]="v.value">{{ v.name }}</option>
         </select>
-        <button class="w-100 btn btn-primary" (click)="changeVlan(selectedVlan)">Assigner au VLAN {{selectedVlan}}</button>
+        <button class="w-100 btn btn-primary" (click)="changeVlan(selectedVlan)">Assigner au VLAN {{ selectedVlan }}
+        </button>
       </div>
     </div>
     <div class="col-2">

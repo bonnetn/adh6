@@ -4,7 +4,6 @@ import {authConfig} from './config/auth.config';
 import {NAINA_FIELD, NAINA_PREFIX} from './config/naina.config';
 import {ActivatedRoute} from '@angular/router';
 import {filter, first, map} from 'rxjs/operators';
-import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'app-root',
