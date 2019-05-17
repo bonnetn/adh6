@@ -11,7 +11,6 @@ import {RoomEditComponent} from './room-edit/room-edit.component';
 import {RoomNewComponent} from './room-new/room-new.component';
 import {PortListComponent} from './port-list/port-list.component';
 import {PortDetailsComponent} from './port-details/port-details.component';
-import {PortEditComponent} from './port-edit/port-edit.component';
 import {PortNewComponent} from './port-new/port-new.component';
 import {SwitchLocalComponent} from './switch-local/switch-local.component';
 import {SwitchListComponent} from './switch-list/switch-list.component';
@@ -62,7 +61,6 @@ const routes: Routes = [
       {path: 'edit/:switchID', component: SwitchEditComponent},
       {path: 'add', component: SwitchNewComponent},
       {path: 'view/:switchID/port/:portID', component: PortDetailsComponent},
-      {path: 'edit/:switchID/port/:portID', component: PortEditComponent},
       {path: 'add/:switchID/port', component: PortNewComponent},
     ],
   },

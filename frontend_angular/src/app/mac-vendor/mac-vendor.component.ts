@@ -13,7 +13,7 @@ export class MacVendorComponent implements OnInit, OnDestroy {
   @Input() mac: string;
 
   private alive = true;
-  private vendor = '';
+  vendor = '';
 
   constructor(
     public deviceService: DeviceService

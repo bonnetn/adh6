@@ -35,11 +35,11 @@ export class SearchPage implements OnInit {
     );
   }
 
-  protected search(term: string): void {
+  public search(term: string): void {
     this.searchTerm$.next(term);
   }
 
-  protected changePage(page: number): void {
+  public changePage(page: number): void {
     this.pageNumber$.next(page);
   }
 

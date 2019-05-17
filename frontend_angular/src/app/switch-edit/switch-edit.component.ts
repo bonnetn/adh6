@@ -28,7 +28,7 @@ export class SwitchEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.switches$ = this.switchService.switchGet();
+    //this.switches$ = this.switchService.switchGet();
   }
 
 }
