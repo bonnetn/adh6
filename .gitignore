@@ -61,6 +61,7 @@ frontend_angular/Thumbs.db
 
 #api
 frontend_angular/src/app/api/*
+frontend_angular/src/app/config/auth.config.ts
 
 # certificats
 frontend_angular/certs/
