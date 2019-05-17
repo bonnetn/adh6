@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "^7.2.15",
     "@angular/router": "^7.2.15",
     "angular-oauth2-oidc": "^5.0.2",
-    "angular2-notifications": "^1.0.4",
+    "angular2-notifications": "^2.0.0",
     "bootstrap": "4.2.1",
     "core-js": "^2.6.5",
     "ngx-bootstrap": "^4.1.1",
