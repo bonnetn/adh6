@@ -8,27 +8,59 @@
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse" [ngClass]="{ 'show': navBarStatus }">
+  <div class="collapse navbar-collapse justify-content-end" [ngClass]="{ 'show': navBarStatus }">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['member/search']">Adhérents</a>
+	<a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['member/add']">Inscription</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-item nav-link" [routerLink]="['device/search']">Appareils</a>
+     <li class="nav-item">
+        <a class="nav-item nav-link" [routerLinkActive]="['active']"
+          [routerLink]="['transaction/add']">Transaction</a>
+     </li>
+     <li class="nav-item">
+        <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['switch_local']">Switch Local</a>
+     </li>
+
+     <li class="nav-item dropdown" dropdown>
+        <a class="nav-link" dropdownToggle href="#" (click)="false" id="navbarAdhDropdown"
+          role="button" aria-controls="navbarAdhDropdown" aria-haspopup="true" aria-expanded="false">Gestion adhérents</a>
+        <ul class="dropdown-menu" *dropdownMenu aria-labelledby="navbarAdhDropdown">
+          <li class="menuitem"><a class="dropdown-item"
+                                  [routerLink]="['member/search']">Adhérents</a></li>
+          <li class="menuitem"><a class="dropdown-item"
+                                  [routerLink]="['room/search']">Chambres</a></li>
+          <li class="menuitem"><a class="dropdown-item"
+                                  [routerLink]="['device/search']">Appareils</a></li>
+          <li class="divider dropdown-divider"></li>
+          <li class="menuitem"><a class="dropdown-item"
+                                  [routerLink]="['switch/search']">Switches</a></li>
+          <li class="menuitem"><a class="dropdown-item"
+                                  [routerLink]="['port/search']">Ports</a></li>
+        </ul>
       </li>
-      <li class="nav-item">
-        <a class="nav-item nav-link" [routerLink]="['switch_local']">Switch Local</a>
+     <li class="nav-item dropdown" dropdown>
+        <a class="nav-link" dropdownToggle href="#" (click)="false"
+                                           id="navbarTrezDropdown"
+          role="button" aria-controls="navbarTrezDropdown" aria-haspopup="true"
+                                                          aria-expanded="false">Gestion trésorerie</a>
+        <ul class="dropdown-menu" *dropdownMenu aria-labelledby="navbarTrezDropdown">
+          <li class="menuitem"><a class="dropdown-item"
+                                  [routerLink]="['member/search']">Adhérents</a></li>
+          <li class="menuitem"><a class="dropdown-item"
+                                  [routerLink]="['room/search']">Chambres</a></li>
+          <li class="menuitem"><a class="dropdown-item"
+                                  [routerLink]="['device/search']">Appareils</a></li>
+          <li class="divider dropdown-divider"></li>
+          <li class="menuitem"><a class="dropdown-item"
+                                  [routerLink]="['switch/search']">Switches</a></li>
+          <li class="menuitem"><a class="dropdown-item"
+                                  [routerLink]="['port/search']">Ports</a></li>
+        </ul>
       </li>
-      <li class="nav-item">
-        <a class="nav-item nav-link" [routerLink]="['room/search']">Chambres</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-item nav-link" [routerLink]="['switch/search']">Switchs</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-item nav-link" [routerLink]="['port/search']">Ports</a>
-      </li>
-      <li class="nav-item">
+
+    </ul>
+    <ul class="navbar-nav">
+     <li class="nav-item">
         <a class="nav-item nav-link" (click)="logout()" style="cursor: pointer;">Déconnexion</a>
       </li>
     </ul>
