@@ -35,6 +35,8 @@ import {AuthInterceptor} from './http-interceptor/auth-interceptor';
 import {NotifInterceptor} from './http-interceptor/notif-interceptor';
 import {MemberPasswordEditComponent} from './member-password-edit/member-password-edit.component';
 import {CreateTemporaryAccountComponent} from './create-temporary-account/create-temporary-account.component';
+import {BASE_PATH} from './api';
+import {environment} from '../environments/environment';
 
 
 @NgModule({
@@ -97,6 +99,7 @@ import {CreateTemporaryAccountComponent} from './create-temporary-account/create
       multi: true
     },
     {provide: LOCALE_ID, useValue: 'en-US'},
+    {provide: BASE_PATH, useValue: environment.API_BASE_PATH},
   ],
   bootstrap: [AppComponent]
 })
