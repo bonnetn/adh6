@@ -301,7 +301,6 @@ class Transaction(Base):
     __tablename__ = 'transaction'
 
     id = Column(Integer, primary_key=True)
-    product = Column(ForeignKey('product.id'), nullable=False, index=True)
     value = Column(DECIMAL(8, 2), nullable=False)
     timestamp = Column(TIMESTAMP, nullable=False)
     src = Column(ForeignKey('account.id'), nullable=False, index=True)
@@ -310,9 +309,8 @@ class Transaction(Base):
     attachments = Column(TEXT(65535), nullable=False)
     type = Column(ForeignKey('payment_method.id'), nullable=False, index=True)
 
-    account = relationship('Account', primaryjoin='Transaction.dst == Account.id')
-    product1 = relationship('Product')
-    account1 = relationship('Account', primaryjoin='Transaction.src == Account.id')
+    dst_account = relationship('Account', primaryjoin='Transaction.dst == Account.id')
+    src_account = relationship('Account', primaryjoin='Transaction.src == Account.id')
     payment_method = relationship('PaymentMethod')
 
 

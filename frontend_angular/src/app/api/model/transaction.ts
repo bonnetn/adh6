@@ -12,7 +12,7 @@
 
 
 export interface Transaction { 
-    attachements?: string;
+    attachments?: string;
     dst: number;
     readonly id?: number;
     name: string;

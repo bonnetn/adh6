@@ -950,7 +950,6 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE `transaction` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`product` int(11) NOT NULL,
 	`value` DECIMAL(8,2) NOT NULL,
 	`timestamp` TIMESTAMP NOT NULL,
 	`src` int(11) NOT NULL,

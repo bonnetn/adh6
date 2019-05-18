@@ -1375,23 +1375,29 @@ paths:
       summary: Filter transactions
       tags:
       - transaction
-  /transaction/{id}:
-    delete:
-      parameters:
-      - description: The unique identifier of the transaction that will be deleted
-        in: path
-        name: id
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+        description: Transaction to create
         required: true
-        schema:
-          type: integer
       responses:
-        204:
-          description: Deleted
-        404:
-          description: Not found
-      summary: Delete
+        200:
+          description: Created
+          headers:
+            Location:
+              description: URI to the newly created transaction
+              schema:
+                type: string
+        400:
+          description: Invalid input
+      summary: Create a transaction
       tags:
       - transaction
+  /transaction/{id}:
     get:
       parameters:
       - description: The unique identifier of the transaction that needs to be fetched
@@ -1410,6 +1416,29 @@ paths:
         404:
           description: Not found
       summary: Retrieve
+      tags:
+      - transaction
+    put:
+      parameters:
+      - description: The unique identifier of the transaction that needs to be updated
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+        description: New values for the transaction, only the attachments can be modified
+        required: true
+      responses:
+        204:
+          description: Updated
+        400:
+          description: Invalid input
+      summary: Update/create
       tags:
       - transaction
 components:
@@ -1720,7 +1749,7 @@ components:
       type: object
     Transaction:
       properties:
-        attachements:
+        attachments:
           type: string
         dst:
           example: 0
@@ -1734,10 +1763,6 @@ components:
         name:
           example: Transaction test
           type: string
-        product:
-          example: 0
-          format: int32
-          type: integer
         src:
           example: 0
           format: int32
