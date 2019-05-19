@@ -20,6 +20,7 @@ import {SwitchNewComponent} from './switch-new/switch-new.component';
 import {DeviceListComponent} from './device-list/device-list.component';
 import {MemberPasswordEditComponent} from './member-password-edit/member-password-edit.component';
 import {CreateTemporaryAccountComponent} from './create-temporary-account/create-temporary-account.component';
+import {TreasuryComponent} from "./treasury/treasury.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
@@ -74,6 +75,10 @@ const routes: Routes = [
   {
     path: 'naina',
     component: CreateTemporaryAccountComponent,
+  },
+  {
+    path: 'treasury',
+    component: TreasuryComponent,
   }
 ];
 

@@ -36,6 +36,7 @@ import {AuthInterceptor} from './http-interceptor/auth-interceptor';
 import {NotifInterceptor} from './http-interceptor/notif-interceptor';
 import {MemberPasswordEditComponent} from './member-password-edit/member-password-edit.component';
 import {CreateTemporaryAccountComponent} from './create-temporary-account/create-temporary-account.component';
+import {TreasuryComponent} from "./treasury/treasury.component";
 import {BASE_PATH} from './api';
 import {environment} from '../environments/environment';
 
@@ -67,6 +68,7 @@ import {environment} from '../environments/environment';
     LoginComponent,
     MemberPasswordEditComponent,
     CreateTemporaryAccountComponent,
+    TreasuryComponent,
   ],
   imports: [
     BrowserModule,

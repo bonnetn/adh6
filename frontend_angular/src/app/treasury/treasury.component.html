@@ -1,0 +1,99 @@
+<h2 class="text-left">Gestion de la trésorerie</h2>
+
+<h3>État de la caisse</h3>
+
+<div class="card-deck mb-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title text-center">20 €</h5>
+        <p class="card-text text-center">Fond de caisse le ...</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title text-center">20 €</h5>
+        <p class="card-text text-center">Montant dans la caisse</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title text-center">32 €</h5>
+        <p class="card-text text-center">Montant dans le coffre</p>
+      </div>
+    </div>
+  </div>
+
+<button class="btn btn-primary mb-3" (click)="toggleFundManagement()">Gestion de la caisse</button>
+
+<div class="list-group" *ngIf="showFundManagement">
+  <div class="list-group-item">
+      <form [formGroup]="fundManagementForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="row form-group">
+          <div class="col-md-4">
+            <label>Opérations caisse</label>
+            <select class="form-control">
+              <option>Ajouter dans la caisse</option>
+              <option>Sortir de la caisse</option>
+            </select>
+          </div>
+          <div class="col-md-8">
+            <label>Montant</label>
+            <input
+            class="w-100 form-control"
+            formControlName="toCashRegister"
+            type="number"
+            id="toCashRegister"
+            placeholder="€"
+          />
+          </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-4">
+              <label>Opérations coffre</label>
+              <select class="form-control">
+                <option>Ajouter dans le coffre</option>
+                <option>Sortir du coffre</option>
+              </select>
+            </div>
+            <div class="col-md-8">
+              <label>Montant</label>
+              <input
+              class="w-100 form-control"
+              formControlName="toCashRegister"
+              type="number"
+              id="toCashRegister"
+              placeholder="€"
+            />
+            </div>
+          </div>
+
+          <div class="form-group">
+              <label for="labelOp">Libellé</label>
+              <input
+                class="w-100 form-control"
+                formControlName="labelOp"
+                type="text"
+                id="labelOp"
+                placeholder="Description de l'opération"
+              />
+            </div>
+
+          <div class="form-group">
+            <button
+              type="AC"
+              [disabled]="disabled || fundManagementForm.status == 'INVALID'"
+              class="w-100 btn btn-primary"
+            >
+              Transférer
+            </button>
+          </div>
+        </form>
+  </div>
+</div>
+
+
+<hr />
+
+<h3>Liste des comptes</h3>
+
