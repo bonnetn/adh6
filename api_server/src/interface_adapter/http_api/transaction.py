@@ -23,5 +23,15 @@ class TransactionHandler:
 
     @require_sql
     @auth_regular_admin
+    def post(self, body):
+        pass
+
+    @require_sql
+    @auth_regular_admin
+    def put(self, transaction_id, body):
+        pass
+
+    @require_sql
+    @auth_regular_admin
     def delete(self, transaction_id):
         pass
