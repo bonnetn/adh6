@@ -23,12 +23,14 @@ from src.interface_adapter.sql.member_repository import MemberSQLRepository
 from src.interface_adapter.sql.model.database import Database
 from src.interface_adapter.sql.money_repository import MoneySQLRepository
 from src.interface_adapter.sql.network_object_repository import NetworkObjectSQLRepository
+from src.interface_adapter.sql.payment_method_repository import PaymentMethodSQLRepository
 from src.interface_adapter.sql.room_repository import RoomSQLRepository
 from src.interface_adapter.sql.account_repository import AccountSQLRepository
 from src.interface_adapter.sql.product_repository import ProductSQLRepository
 from src.resolver import ADHResolver
 from src.use_case.device_manager import DeviceManager
 from src.use_case.member_manager import MemberManager
+from src.use_case.payment_method_manager import PaymentMethodManager
 from src.use_case.port_manager import PortManager
 from src.use_case.room_manager import RoomManager
 from src.use_case.switch_manager import SwitchManager
@@ -57,6 +59,7 @@ def init(testing=True):
     switch_network_manager = SwitchSNMPNetworkManager()
     account_sql_repository = AccountSQLRepository()
     product_sql_repository = ProductSQLRepository()
+    payment_method_sql_repository = PaymentMethodSQLRepository()
 
     # Managers
     switch_manager = SwitchManager(
@@ -89,6 +92,9 @@ def init(testing=True):
     product_manager = ProductManager(
         product_repository=product_sql_repository,
     )
+    payment_method_manager = PaymentMethodManager(
+        payment_method_repository=payment_method_sql_repository
+    )
 
     # HTTP Handlers:
     transaction_handler = TransactionHandler()
@@ -99,7 +105,7 @@ def init(testing=True):
     port_handler = PortHandler(port_manager, switch_manager, switch_network_manager)
     temporary_account_handler = TemporaryAccountHandler()
     account_type_handler = AccountTypeHandler()
-    payment_method_handler = PaymentMethodHandler()
+    payment_method_handler = PaymentMethodHandler(payment_method_manager)
     account_handler = AccountHandler(account_manager)
     product_handler = ProductHandler(product_manager)
 

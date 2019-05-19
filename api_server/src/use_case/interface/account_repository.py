@@ -7,7 +7,7 @@ from typing import List
 from src.entity.account import Account
 
 
-class AccountRepository():
+class AccountRepository(metaclass=abc.ABCMeta):
     """
     Abstract interface to handle accounts.
     """

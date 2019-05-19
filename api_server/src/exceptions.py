@@ -133,6 +133,11 @@ class VLANNotFoundError(NotFoundError):
         super().__init__('VLAN', v)
 
 
+class PaymentMethodNotFoundError(NotFoundError):
+    def __init__(self, v=None):
+        super().__init__('payment_method', v)
+
+
 # ALREADY EXIST ERRORS.
 class AlreadyExistsError(UserInputError):
     """
