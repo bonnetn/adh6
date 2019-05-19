@@ -21,6 +21,7 @@ import {DeviceListComponent} from './device-list/device-list.component';
 import {MemberPasswordEditComponent} from './member-password-edit/member-password-edit.component';
 import {CreateTemporaryAccountComponent} from './create-temporary-account/create-temporary-account.component';
 import {TreasuryComponent} from "./treasury/treasury.component";
+import {AccountCreateComponent} from "./account-create/account-create.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
@@ -78,7 +79,15 @@ const routes: Routes = [
   },
   {
     path: 'treasury',
-    component: TreasuryComponent,
+    children: [
+    {path:'', component: TreasuryComponent},
+    ]
+  },
+  {
+    path: 'account',
+    children: [
+    {path: 'add', component: AccountCreateComponent},
+    ]
   }
 ];
 

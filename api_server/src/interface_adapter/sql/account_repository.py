@@ -34,6 +34,21 @@ class AccountSQLRepository(AccountRepository):
 
         # TODO: voir si track_modifications prendre en compte account et si s.add(account) fonctionne
     
-   # TODO: update_account mais même problème qu'au dessus
+    # TODO: update_account mais même problème qu'au dessus
 
 
+def _map_account_sql_to_entity(a) -> Account:
+    """
+    Map a Account object from SQLAlchemy to a Account (from the entity folder/layer).
+    """
+    t = AccountType.Adherent
+    if a.type == 'club':
+        t = AccountType.Club
+    if a.type == 'event':
+        t = AccountType.Event
+    return Account(
+        name=a.name,
+        actif=a.actif,
+        type=t,
+        creation_date=a.creation_date,
+    )

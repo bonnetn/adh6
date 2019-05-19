@@ -96,4 +96,34 @@
 <hr />
 
 <h3>Liste des comptes</h3>
+<br/>
+
+<div class="row">
+  <div class="col-md-8">
+    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="form-control mb-3" type="text"/>
+  </div>
+  <div class="col-md-4">
+    <a [routerLink]="['/account/add']">
+      <button class="w-100 btn btn-primary">Nouveau compte</button>
+    </a>
+  </div>
+</div>
+<br/>
+
+<div style="overflow-x:auto;" class="u-max-full-width">
+  <table class="table table-striped clickable-table" *ngIf="result$ | async as result">
+    <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Actif</th>
+      <th>Type</th>
+    </tr>
+    </thead>
+
+  <pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+              (pageChange)="changePage($event)"></pagination>
+  </table>
+  
+</div>
+
 

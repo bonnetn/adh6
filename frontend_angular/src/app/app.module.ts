@@ -39,6 +39,7 @@ import {CreateTemporaryAccountComponent} from './create-temporary-account/create
 import {TreasuryComponent} from "./treasury/treasury.component";
 import {BASE_PATH} from './api';
 import {environment} from '../environments/environment';
+import { AccountCreateComponent } from './account-create/account-create.component';
 
 
 @NgModule({
@@ -69,6 +70,7 @@ import {environment} from '../environments/environment';
     MemberPasswordEditComponent,
     CreateTemporaryAccountComponent,
     TreasuryComponent,
+    AccountCreateComponent,
   ],
   imports: [
     BrowserModule,

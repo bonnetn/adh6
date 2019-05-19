@@ -25,6 +25,7 @@ from src.interface_adapter.sql.money_repository import MoneySQLRepository
 from src.interface_adapter.sql.network_object_repository import NetworkObjectSQLRepository
 from src.interface_adapter.sql.room_repository import RoomSQLRepository
 from src.interface_adapter.sql.account_repository import AccountSQLRepository
+from src.interface_adapter.sql.product_repository import ProductSQLRepository
 from src.resolver import ADHResolver
 from src.use_case.device_manager import DeviceManager
 from src.use_case.member_manager import MemberManager
@@ -32,6 +33,8 @@ from src.use_case.port_manager import PortManager
 from src.use_case.room_manager import RoomManager
 from src.use_case.switch_manager import SwitchManager
 from src.use_case.account_manager import AccountManager
+from src.use_case.product_manager import ProductManager
+
 
 def init(testing=True):
     """
@@ -53,6 +56,7 @@ def init(testing=True):
     money_repository = MoneySQLRepository()
     switch_network_manager = SwitchSNMPNetworkManager()
     account_sql_repository = AccountSQLRepository()
+    product_sql_repository = ProductSQLRepository()
 
     # Managers
     switch_manager = SwitchManager(
@@ -82,6 +86,9 @@ def init(testing=True):
         account_repository=account_sql_repository,
         member_repository=member_sql_repository,
     )
+    product_manager = ProductManager(
+        product_repository=product_sql_repository,
+    )
 
     # HTTP Handlers:
     transaction_handler = TransactionHandler()
@@ -94,7 +101,7 @@ def init(testing=True):
     account_type_handler = AccountTypeHandler()
     payment_method_handler = PaymentMethodHandler()
     account_handler = AccountHandler(account_manager)
-    product_handler = ProductHandler()
+    product_handler = ProductHandler(product_manager)
 
     # Connexion will use this function to authenticate and fetch the information of the user.
     if os.environ.get('TOKENINFO_FUNC') is None:
