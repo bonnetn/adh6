@@ -1,36 +1,34 @@
-<div class="container mb-3">
-  <h2 class="text-left">Liste des ports</h2>
-  <br/>
+<h2 class="text-left">Liste des ports</h2>
+<br/>
 
-  <div class="row">
-    <div class="col-md-12">
-      <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="w-100 form-control" type="text"/>
-    </div>
-
+<div class="row">
+  <div class="col-md-12">
+    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="w-100 form-control" type="text"/>
   </div>
 
-  <div style="overflow-x:auto;" class="u-max-full-width">
-    <table class="w-100" *ngIf="result$ | async as result">
-      <tr>
-        <th class="center">Switch</th>
-        <th class="center">Numéro de port</th>
-        <th class="center">Chambre</th>
-        <th></th>
-      </tr>
-      <tr
-        *ngFor="let portResult of result.ports | paginate: { itemsPerPage: result.items_per_page, currentPage: result.current_page, totalItems: result.item_count}">
-        <td class="center">{{ portResult.switchID }}</td>
-        <td class="center">{{ portResult.portNumber }}</td>
-        <td class="center">
-          <a [routerLink]="['/room/view', portResult.roomNumber]">{{ portResult.roomNumber }}</a></td>
-        <td class="center">
-          <a [routerLink]="['/switch/view', portResult.switchID, 'port', portResult.id]">
-            <button class="btn btn-primary">Consulter</button>
-          </a>
-        </td>
-      </tr>
-    </table>
-    <pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
-                (pageChange)="changePage($event)"></pagination>
-  </div>
+</div>
+
+<div style="overflow-x:auto;" class="u-max-full-width">
+  <table class="w-100" *ngIf="result$ | async as result">
+    <tr>
+      <th class="center">Switch</th>
+      <th class="center">Numéro de port</th>
+      <th class="center">Chambre</th>
+      <th></th>
+    </tr>
+    <tr
+      *ngFor="let portResult of result.ports | paginate: { itemsPerPage: result.items_per_page, currentPage: result.current_page, totalItems: result.item_count}">
+      <td class="center">{{ portResult.switchID }}</td>
+      <td class="center">{{ portResult.portNumber }}</td>
+      <td class="center">
+        <a [routerLink]="['/room/view', portResult.roomNumber]">{{ portResult.roomNumber }}</a></td>
+      <td class="center">
+        <a [routerLink]="['/switch/view', portResult.switchID, 'port', portResult.id]">
+          <button class="btn btn-primary">Consulter</button>
+        </a>
+      </td>
+    </tr>
+  </table>
+  <pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+              (pageChange)="changePage($event)"></pagination>
 </div>

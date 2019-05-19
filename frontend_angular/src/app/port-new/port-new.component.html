@@ -1,37 +1,36 @@
-<div class="container mb-3">
-  <h2>Création d'un port</h2>
-  <form [formGroup]="portForm" (ngSubmit)="onSubmit()" novalidate>
-    <div class="form-group">
-      <label>ID du port</label>
-      <input class="w-100 form-control" formControlName="id" type="number"/>
-    </div>
 
-    <div class="form-group">
-      <label>Numero du port</label>
-      <input
-        class="w-100 form-control"
-        formControlName="portNumber"
-        type="text"
-      />
-    </div>
+<h2>Création d'un port</h2>
+<form [formGroup]="portForm" (ngSubmit)="onSubmit()" novalidate>
+  <div class="form-group">
+    <label>ID du port</label>
+    <input class="w-100 form-control" formControlName="id" type="number"/>
+  </div>
 
-    <div class="form-group">
-      <label>Numero de chambre</label>
-      <input
-        class="w-100 form-control"
-        formControlName="roomNumber"
-        type="number"
-      />
-    </div>
+  <div class="form-group">
+    <label>Numero du port</label>
+    <input
+      class="w-100 form-control"
+      formControlName="portNumber"
+      type="text"
+    />
+  </div>
 
-    <div class="form-group">
-      <button
-        type="submit"
-        [disabled]="portForm.status == 'INVALID'"
-        class="w-100 btn btn-primary"
-      >
-        Créer
-      </button>
-    </div>
-  </form>
-</div>
+  <div class="form-group">
+    <label>Numero de chambre</label>
+    <input
+      class="w-100 form-control"
+      formControlName="roomNumber"
+      type="number"
+    />
+  </div>
+
+  <div class="form-group">
+    <button
+      type="submit"
+      [disabled]="portForm.status == 'INVALID'"
+      class="w-100 btn btn-primary"
+    >
+      Créer
+    </button>
+  </div>
+</form>

@@ -1,35 +1,33 @@
-<div class="container mb-3">
-  <h2 class="text-left">Liste des chambres</h2>
-  <br/>
+<h2 class="text-left">Liste des chambres</h2>
+<br/>
 
-  <div class="row">
-    <div class="col-md-3">
-      <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="w-100 form-control mb-3" type="text"/>
-    </div>
-    <div class="col-md-4">
-      <a [routerLink]="['/room/add']">
-        <button class="w-100 btn btn-primary">Nouvelle chambre</button>
-      </a>
-    </div>
+<div class="row">
+  <div class="col-md-3">
+    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="w-100 form-control mb-3" type="text"/>
   </div>
-  <br/>
+  <div class="col-md-4">
+    <a [routerLink]="['/room/add']">
+      <button class="w-100 btn btn-primary">Nouvelle chambre</button>
+    </a>
+  </div>
+</div>
+<br/>
 
-  <div style="overflow-x:auto;" class="u-max-full-width">
-    <table class="w-100 table table-striped clickable-table" *ngIf="result$ | async as result">
-      <tr>
-        <th class="center">Numéro</th>
-        <th class="center">Description</th>
-        <th class="center">VLAN</th>
-      </tr>
-      <tr
-        *ngFor="let room of result.room | paginate: { itemsPerPage: result.items_per_page, currentPage: result.current_page, totalItems: result.item_count}"
-        [routerLink]="['/room/view',room.roomNumber]">
-        <td class="center">{{ room.roomNumber }}</td>
-        <td class="center">{{ room.description }}</td>
-        <td class="center">{{ room.vlan }}</td>
-      </tr>
-    </table>
-    <pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
-                (pageChange)="changePage($event)"></pagination>
-  </div>
+<div style="overflow-x:auto;" class="u-max-full-width">
+  <table class="w-100 table table-striped clickable-table" *ngIf="result$ | async as result">
+    <tr>
+      <th class="center">Numéro</th>
+      <th class="center">Description</th>
+      <th class="center">VLAN</th>
+    </tr>
+    <tr
+      *ngFor="let room of result.room | paginate: { itemsPerPage: result.items_per_page, currentPage: result.current_page, totalItems: result.item_count}"
+      [routerLink]="['/room/view',room.roomNumber]">
+      <td class="center">{{ room.roomNumber }}</td>
+      <td class="center">{{ room.description }}</td>
+      <td class="center">{{ room.vlan }}</td>
+    </tr>
+  </table>
+  <pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+              (pageChange)="changePage($event)"></pagination>
 </div>
