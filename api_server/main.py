@@ -27,6 +27,7 @@ from src.interface_adapter.sql.payment_method_repository import PaymentMethodSQL
 from src.interface_adapter.sql.room_repository import RoomSQLRepository
 from src.interface_adapter.sql.account_repository import AccountSQLRepository
 from src.interface_adapter.sql.product_repository import ProductSQLRepository
+from src.interface_adapter.sql.transaction_repository import TransactionSQLRepository
 from src.resolver import ADHResolver
 from src.use_case.device_manager import DeviceManager
 from src.use_case.member_manager import MemberManager
@@ -36,6 +37,7 @@ from src.use_case.room_manager import RoomManager
 from src.use_case.switch_manager import SwitchManager
 from src.use_case.account_manager import AccountManager
 from src.use_case.product_manager import ProductManager
+from src.use_case.transaction_manager import TransactionManager
 
 
 def init(testing=True):
@@ -60,6 +62,7 @@ def init(testing=True):
     account_sql_repository = AccountSQLRepository()
     product_sql_repository = ProductSQLRepository()
     payment_method_sql_repository = PaymentMethodSQLRepository()
+    transaction_sql_repository = TransactionSQLRepository()
 
     # Managers
     switch_manager = SwitchManager(
@@ -95,9 +98,12 @@ def init(testing=True):
     payment_method_manager = PaymentMethodManager(
         payment_method_repository=payment_method_sql_repository
     )
+    transaction_manager = TransactionManager(
+        transaction_repository=transaction_sql_repository,
+    )
 
     # HTTP Handlers:
-    transaction_handler = TransactionHandler()
+    transaction_handler = TransactionHandler(transaction_manager)
     member_handler = MemberHandler(member_manager)
     device_handler = DeviceHandler(device_manager)
     room_handler = RoomHandler(room_manager)

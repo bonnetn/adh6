@@ -22,7 +22,7 @@ class TransactionRepository(metaclass=abc.ABCMeta):
         pass  # pragma: no cover
 
     @abc.abstractmethod
-    def create_transaction(self, ctx, src_account=None, dst_account=None, name=None, value=None, attachments=None):
+    def create_transaction(self, ctx, src=None, dst=None, name=None, value=None, payment_method=None, attachments=None):
         """
         Create a transaction.
         """
