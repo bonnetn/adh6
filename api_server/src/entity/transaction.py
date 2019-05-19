@@ -1,10 +1,7 @@
 # coding=utf-8
 from dataclasses import dataclass
 
-
-@dataclass
-class PaymentMethod:
-    name: str
+from src.entity.payment_method import PaymentMethod
 
 
 @dataclass

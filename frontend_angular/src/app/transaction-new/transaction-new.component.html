@@ -1,0 +1,39 @@
+<h2 class="text-left">Nouvelle transaction</h2>
+<hr>
+
+<form [formGroup]="transactionDetails" (ngSubmit)="onSubmit()" novalidate>
+  <div class="card-deck">
+    <div class="card">
+      <div class="card-header text-white bg-danger">Compte source</div>
+      <div class="card-body">
+        <input class="form-control" placeholder="Rechercher..." type="text">
+      </div>
+      <div class="card-footer">Ce compte sera <span class="font-weight-bold">débité</span></div>
+    </div>
+    <div class="card">
+      <div class="card-header">Transaction</div>
+      <div class="card-body">
+        <div class="form-group mb-3">
+          <input type="text" class="form-control" aria-label="Description" placeholder="Description" formControlName="name">
+        </div>
+        <div class="input-group input-group-lg">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="value">€</span>
+          </div>
+          <input type="text" class="form-control" aria-label="value" aria-describedby="value" formControlName="value" type="number">
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header text-white bg-success">Compte destination</div>
+      <div class="card-body">
+        <input class="form-control" placeholder="Rechercher..." type="text">
+      </div>
+      <div class="card-footer">Ce compte sera <span class="font-weight-bold">crédité</span></div>
+    </div>
+  </div>
+
+  <br>
+  <button type="submit" class="btn btn-primary w-100">Créer</button>
+
+</form>
