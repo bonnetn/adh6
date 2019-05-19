@@ -23,6 +23,7 @@ class MemberListResponse {
   styleUrls: ['./member-list.component.css']
 })
 export class MemberListComponent extends SearchPage implements OnInit {
+
   result$: Observable<MemberListResponse>;
 
   constructor(public memberService: MemberService) {

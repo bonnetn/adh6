@@ -14,7 +14,8 @@
 <br/>
 
 <div style="overflow-x:auto;" class="u-max-full-width">
-  <table class="table table-striped clickable-table">
+  <table class="table table-striped clickable-table" *ngIf="result$ | async as
+    result">
     <thead>
     <tr>
       <th>Nom</th>
@@ -23,7 +24,7 @@
     </tr>
     </thead>
     <tr
-      *ngFor="let member of result$.members | paginate: { itemsPerPage: result$.item_per_page, currentPage: result$.current_page, totalItems: result$.item_count}"
+      *ngFor="let member of result.members | paginate: { itemsPerPage: result.item_per_page, currentPage: result.current_page, totalItems: result.item_count}"
       [routerLink]="['../view', member.username]">
       <td>{{ member.lastName | uppercase }} <span class="capitalize">{{ member.firstName | lowercase }}</span></td>
       <td>{{ member.username }}</td>
