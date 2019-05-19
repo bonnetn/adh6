@@ -21,6 +21,7 @@ import {DeviceListComponent} from './device-list/device-list.component';
 import {MemberPasswordEditComponent} from './member-password-edit/member-password-edit.component';
 import {CreateTemporaryAccountComponent} from './create-temporary-account/create-temporary-account.component';
 import {TreasuryComponent} from "./treasury/treasury.component";
+import {TransactionNewComponent} from "./transaction-new/transaction-new.component"
 
 const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
@@ -79,7 +80,15 @@ const routes: Routes = [
   {
     path: 'treasury',
     component: TreasuryComponent,
+  },
+  {
+    path: 'transaction',
+    children: [
+      {path: '', redirectTo: 'add', pathMatch: 'full'},
+      {path: 'add', component: TransactionNewComponent},
+    ]        
   }
+
 ];
 
 @NgModule({
