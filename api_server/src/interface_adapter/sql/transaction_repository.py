@@ -4,15 +4,19 @@ Implements everything related to actions on the SQL database.
 """
 from typing import List
 
+from datetime import datetime
+
 from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.transaction import Transaction
-from src.interface_adapter.sql.model.models import Transaction as SQLTransaction
+from src.exceptions import AccountNotFoundError, PaymentMethodNotFoundError
+from src.interface_adapter.sql.model.models import Transaction as SQLTransaction, Account, PaymentMethod
+from src.interface_adapter.sql.track_modifications import track_modifications
 from src.use_case.interface.transaction_repository import TransactionRepository
 from src.util.context import log_extra
 from src.util.log import LOG
 
 
-class TreasurySQLRepository(TransactionRepository):
+class TransactionSQLRepository(TransactionRepository):
 
     def search_transaction_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None) \
             -> (List[Transaction], int):
@@ -36,9 +40,48 @@ class TreasurySQLRepository(TransactionRepository):
 
         return list(map(_map_transaction_sql_to_entity, r)), count
 
-    def create_transaction(self, ctx, src_account=None, dst_account=None, name=None, value=None, attachments=None):
+    def create_transaction(self, ctx, src=None, dst=None, name=None, value=None, payment_method=None, attachments=None):
         LOG.debug("sql_device_repository_create_transaction_called", extra=log_extra(ctx, name=name))
+        """
+        Create a transaction.
+
+        :raise AccountNotFound
+        """
         s = ctx.get(CTX_SQL_SESSION)
+        LOG.debug("sql_transaction_repository_create_transaction_called", extra=log_extra(ctx, name=name))
+
+        now = datetime.now().timestamp()
+
+        account_src = None
+        if src is not None:
+            account_src = s.query(Account).filter(Account.id == src).one_or_none()
+            if not account_src:
+                raise AccountNotFoundError(src)
+
+        account_dst = None
+        if dst is not None:
+            account_dst = s.query(Account).filter(Account.id == dst).one_or_none()
+            if not account_dst:
+                raise AccountNotFoundError(dst)
+
+        method = None
+        if payment_method is not None:
+            method = s.query(PaymentMethod).filter(PaymentMethod.id == payment_method).one_or_none()
+            if not method:
+                raise PaymentMethodNotFoundError(payment_method)
+
+        transaction = SQLTransaction(
+            src_account=account_src,
+            dst_account=account_dst,
+            value=value,
+            name=name,
+            timestamp=now,
+            attachments="",
+            payment_method=method
+        )
+
+        with track_modifications(ctx, s, transaction):
+            s.add(transaction)
         pass
 
     def update_transaction(self, ctx, transaction_to_update, attachments=None):

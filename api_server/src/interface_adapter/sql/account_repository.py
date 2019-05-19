@@ -36,6 +36,19 @@ class AccountSQLRepository(AccountRepository):
     
     # TODO: update_account mais même problème qu'au dessus
 
+    def search_account_by(self, ctx, limit=None, offset=None, name=None, terms=None) -> (List[Account], int):
+        """
+        Search for an account.
+        """
+        pass
+
+    def update_account(self, ctx, name=None, type=None, actif=None, creation_date=None):
+        """
+        Update an account.
+        Will raise (one day) AccountNotFound
+        """
+        pass
+
 
 def _map_account_sql_to_entity(a) -> Account:
     """

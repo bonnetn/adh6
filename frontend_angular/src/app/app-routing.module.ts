@@ -21,7 +21,11 @@ import {DeviceListComponent} from './device-list/device-list.component';
 import {MemberPasswordEditComponent} from './member-password-edit/member-password-edit.component';
 import {CreateTemporaryAccountComponent} from './create-temporary-account/create-temporary-account.component';
 import {TreasuryComponent} from "./treasury/treasury.component";
+<<<<<<< HEAD
 import {AccountCreateComponent} from "./account-create/account-create.component";
+=======
+import {TransactionNewComponent} from "./transaction-new/transaction-new.component"
+>>>>>>> origin/master
 
 const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
@@ -87,6 +91,13 @@ const routes: Routes = [
     path: 'account',
     children: [
     {path: 'add', component: AccountCreateComponent},
+    ]
+  },
+  {
+    path: 'transaction',
+    children: [
+      {path: '', redirectTo: 'add', pathMatch: 'full'},
+      {path: 'add', component: TransactionNewComponent},
     ]
   }
 ];

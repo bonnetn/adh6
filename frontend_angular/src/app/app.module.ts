@@ -37,6 +37,7 @@ import {NotifInterceptor} from './http-interceptor/notif-interceptor';
 import {MemberPasswordEditComponent} from './member-password-edit/member-password-edit.component';
 import {CreateTemporaryAccountComponent} from './create-temporary-account/create-temporary-account.component';
 import {TreasuryComponent} from "./treasury/treasury.component";
+import {TransactionNewComponent} from "./transaction-new/transaction-new.component"
 import {BASE_PATH} from './api';
 import {environment} from '../environments/environment';
 import { AccountCreateComponent } from './account-create/account-create.component';
@@ -71,6 +72,7 @@ import { AccountCreateComponent } from './account-create/account-create.componen
     CreateTemporaryAccountComponent,
     TreasuryComponent,
     AccountCreateComponent,
+    TransactionNewComponent,
   ],
   imports: [
     BrowserModule,

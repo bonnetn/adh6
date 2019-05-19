@@ -8,9 +8,9 @@ from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.product import Product
 from src.use_case.interface.product_repository import ProductRepository
 
-
 # TODO: update_product mais même problème qu'au dessus
 # TODO: delete_product
+
 
 class ProductSQLRepository(ProductRepository):
     """

@@ -3,6 +3,7 @@ import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {PagingConf} from '../paging.config';
 
 import {AccountService} from '../api/api/account.service';
 import {Account} from '../api/model/account';
