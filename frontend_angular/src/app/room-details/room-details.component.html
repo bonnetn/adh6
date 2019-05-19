@@ -38,78 +38,81 @@
 
     <ul class="list-group">
       <li *ngFor="let member of members$ | async" class="list-group-item">
-        <div class="col-md-1 my-auto">
+        <div class="row">
+        <div class="col-md-1 my-auto ">
             <img
               class="w-100"
               src="https://trombi.imtbs-tsp.eu/photo.php?uid={{ member.username }}&h=320&w=240"
             />
-          </div>
-          <div class="col-md-11">
-            <strong>{{ member.firstName }} {{ member.lastName }}</strong
-            ><br /><br />
+        </div>
 
-            <div class="row">
-              <div class="col-md-4">
-                <a [routerLink]="['/member/view', member.username]">
-                  <button
-                    class="w-100 btn btn-primary mb-3"
-                    [disabled]="enabled"
-                  >
-                    Consulter le profil
-                  </button>
-                </a>
-              </div>
-              <div class="col-md-4">
+        <div class="col-md-11">
+          <strong>{{ member.firstName }} {{ member.lastName }}</strong>
+          <br/><br/>
+
+          <div class="row">
+            <div class="col-md-4">
+              <a [routerLink]="['/member/view', member.username]">
                 <button
                   class="w-100 btn btn-primary mb-3"
-                  (click)="onDemenager(member.username)"
                   [disabled]="enabled"
                 >
-                  Déménager
+                  Consulter le profil
+                </button>
+              </a>
+            </div>
+            <div class="col-md-4">
+              <button
+                class="w-100 btn btn-primary mb-3"
+                (click)="onDemenager(member.username)"
+                [disabled]="enabled"
+              >
+                Déménager
+              </button>
+            </div>
+            <div class="col-md-4">
+              <a (click)="onRemoveFromRoom(member.username)">
+                <button class="w-100 btn btn-danger" [disabled]="enabled">
+                  Supprimer de la chambre
+                </button>
+              </a>
+            </div>
+        </div>
+      </div>
+    </div>
+
+      <div *ngIf="isDemenager">
+        <div *ngIf="ref == member.username">
+          <hr>
+          <h3>Déménager</h3>
+          <p>Nouveau numéro de chambre</p>
+          <form
+            [formGroup]="roomForm"
+            (ngSubmit)="onSubmitMoveRoom(member.username)"
+            novalidate
+          >
+            <div class="row">
+              <div class="col-md-3">
+                <input
+                  class="w-100 form-control mb-3"
+                  type="number"
+                  formControlName="roomNumberNew"
+                />
+              </div>
+              <div class="col-md-3">
+                <button
+                  class="w-100 btn btn-primary"
+                  [disabled]="disabled || roomForm.status == 'INVALID'"
+                >
+                  Valider
                 </button>
               </div>
-              <div class="col-md-4">
-                <a (click)="onRemoveFromRoom(member.username)">
-                  <button class="w-100 btn btn-danger" [disabled]="enabled">
-                    Supprimer de la chambre
-                  </button>
-                </a>
-           	  </div>
-          </div>
+            </div>
+          </form>
         </div>
-
-        <div *ngIf="isDemenager">
-          <div *ngIf="ref == member.username">
-            <hr>
-            <h3>Déménager</h3>
-            <p>Nouveau numéro de chambre</p>
-            <form
-              [formGroup]="roomForm"
-              (ngSubmit)="onSubmitMoveRoom(member.username)"
-              novalidate
-            >
-              <div class="row">
-                <div class="col-md-3">
-                  <input
-                    class="w-100 form-control mb-3"
-                    type="number"
-                    formControlName="roomNumberNew"
-                  />
-                </div>
-                <div class="col-md-3">
-                  <button
-                    class="w-100 btn btn-primary"
-                    [disabled]="disabled || roomForm.status == 'INVALID'"
-                  >
-                    Valider
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </li>
-    </ul>
+      </div>
+    </li>
+  </ul>
 
     <h3 id="port">Ports</h3>
     <ul>
@@ -120,13 +123,13 @@
           >
           <br/><br/>
           <div class="row">
-            <div class="col-3">
+            <div class="col-md-3 mb-3">
               <button class="w-100 btn btn-success" (click)="etat()">Etat</button>
             </div>
-            <div class="col-3">
+            <div class="col-md-3 mb-3">
               <button class="w-100 btn btn-primary" (click)="auth()">Authentification</button>
             </div>
-            <div class="col-3">
+            <div class="col-md-3 mb-3">
               <a
                 [routerLink]="[
                   '/switch/view',
