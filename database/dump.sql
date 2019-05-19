@@ -1004,7 +1004,7 @@ INSERT INTO `account_type` VALUES (0, "adherents"), (1, "Club");
 UNLOCK TABLES;
 
 ALTER TABLE `account` ADD CONSTRAINT `account_fk0` FOREIGN KEY (`type`) REFERENCES `account_type`(`id`);
-ALTER TABLE `transaction` ADD CONSTRAINT `transaction_fk0` FOREIGN KEY (`product`) REFERENCES `product`(`id`);
+-- ALTER TABLE `transaction` ADD CONSTRAINT `transaction_fk0` FOREIGN KEY (`product`) REFERENCES `product`(`id`);
 ALTER TABLE `transaction` ADD CONSTRAINT `transaction_fk1` FOREIGN KEY (`src`) REFERENCES `account`(`id`);
 ALTER TABLE `transaction` ADD CONSTRAINT `transaction_fk2` FOREIGN KEY (`dst`) REFERENCES `account`(`id`);
 ALTER TABLE `transaction` ADD CONSTRAINT `transaction_fk3` FOREIGN KEY (`type`) REFERENCES `payment_method`(`id`);
