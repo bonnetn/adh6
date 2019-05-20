@@ -1,16 +1,56 @@
 from typing import List, Optional
+from dataclasses import dataclass, asdict
 
 from src.entity.account import Account
 from src.entity.account_type import AccountType
 from src.use_case.interface.member_repository import MemberRepository
 from src.use_case.interface.account_repository import AccountRepository
 
-from src.exceptions import MemberNotFoundError, IntMustBePositive
+from src.exceptions import AccountNotFoundError, IntMustBePositive, StringMustNotBeEmpty, InvalidDate, \
+    MissingRequiredField
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
+from src.util.validator import is_empty, is_date
 
-# TODO: class MutationRequest(Account) pour modifier un compte et lever les différentes erreurs ?
 # TODO: update_or_create
+
+@dataclass
+class PartialMutationRequest:
+    """
+    Mutation request for an account. This represents the 'diff', that is going to be applied on the account object.
+
+    If a field is set to None, field be left untouched.
+    """
+    name: str = None
+    type: AccountType = None
+    creation_date: Optional[str] = None
+    actif: Optional[bool] = None
+
+    def validate(self):
+        # NAME:
+        if self.name is not None and not is_empty(self.name):
+            raise StringMustNotBeEmpty('name')
+
+        # CREATION_DATE:
+        if self.creation_date is not None and not is_date(self.creation_date):
+            raise InvalidDate(self.creation_date)
+
+@dataclass
+class FullMutationRequest(PartialMutationRequest):
+    """
+    Mutation request for a an. This represents the 'diff', that is going to be applied on the account object.
+
+    If a field is set to None, field will be cleared in the database.
+    """
+    name: str = None
+    type: AccountType = None
+    creation_date: Optional[str] = None
+    actif: Optional[bool] = None
+
+    def validate(self):
+        # NAME:
+        if self.name is None:
+            raise MissingRequiredField('name')
 
 
 class AccountManager:
@@ -34,16 +74,16 @@ class AccountManager:
         return result, count
 
     # TODO: get_by_type and get_by_status (actif or not)
-'''
-Necessite la classe MutationRequest
-    def update_or_create(self, ctx, name: str, actif: bool, type: AccountType, creation_date: str, req : MutationRequest):
+
+    def update_or_create(self, ctx, name: str, actif: bool, type: AccountType, creation_date: str, req : \
+            FullMutationRequest) -> bool:
         req.validate()
-        owner, _ = self.member_repository.search_member_by(ctx, name=req.owner_username)
+        owner, _ = self.account_repository.search_account_by(ctx, name=req.owner_name)
         
         # Pour créer un compte, il faut un membre (même pour Soirée MiNET 2018)
         
         if not owner:
-            raise MemberNotFoundError(req.owner_username)
+            raise AccountNotFoundError(req.owner_name)
 
         result, _ = self.account_repository_search_account_by(ctx, name=name)
         if not result:
@@ -58,4 +98,3 @@ Necessite la classe MutationRequest
             self.account_repository.update_account(ctx, name=name, type=type, actif=actif, creation_date=creation_date)
             # TODO: LOG.info
             return False
-'''

@@ -9,7 +9,7 @@ from src.interface_adapter.http_api.util.error import bad_request
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin
 from src.interface_adapter.sql.decorator.sql_session import require_sql
 
-from src.use_case.account_manager import AccountManager
+from src.use_case.account_manager import PartialMutationRequest, AccountManager
 from src.entity.account import Account
 from src.entity.account_type import AccountType
 
@@ -58,8 +58,25 @@ class AccountHandler:
 
     @require_sql
     @auth_regular_admin
-    def patch(self, account_id, body):
-        pass
+    def patch(self, ctx, name, body):
+        """ Partially update an account from the database """
+        LOG.debug("http_account_patch_called", extra=log_extra(ctx, name=name, request=body))
+        try:
+            mutation_request = _map_http_request_to_partial_mutation_request(body)
+            self.account_manager.update_partially(ctx, name, mutation_request)
+            return NoContent, 204  # 204 No Content
+
+        except AccountNotFoundError:
+            return NoContent, 404  # 404 Not Found
+
+
+def _map_http_request_to_partial_mutation_request(body) -> PartialMutationRequest:
+    return PartialMutationRequest(
+        name=body.get('name'),
+        type=body.get('type'),
+        actif=body.get('actif'),
+        creation_date=body.get('creation_date'),
+    )
 
 
 def _map_account_to_http_response(account: Account) -> dict:
