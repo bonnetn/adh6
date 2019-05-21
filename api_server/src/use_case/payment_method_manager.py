@@ -35,7 +35,8 @@ class PaymentMethodManager:
     def __init__(self, payment_method_repository: PaymentMethodRepository):
         self.payment_method_repository = payment_method_repository
 
-    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, name=None) -> (List[PaymentMethod], int):
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, name=None,
+               terms=None) -> (List[PaymentMethod], int):
         """
         Search payment methods in the database.
         """
@@ -47,9 +48,9 @@ class PaymentMethodManager:
             raise IntMustBePositive('offset')
 
         result, count = self.payment_method_repository.search_payment_method_by(ctx, limit=limit,
-                                                                                offset=offset, name=name)
+                                                                                offset=offset, name=name, terms=terms)
         LOG.info("payment_method_search",
-                 extra=log_extra(ctx, name=name))
+                 extra=log_extra(ctx, name=name, terms=terms))
 
         return result, count
 
