@@ -1,23 +1,31 @@
 <h2 class="text-left">Création d'un compte</h2>
-<form>
+
+<form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label>Nom / Intitulé :</label>
-    <input class="w-100 form-control" type="text">
+    <input
+      class="w-100 form-control"
+      type="text"
+      formControlName="accountName"
+    />
   </div>
 
   <div class="form-group">
-    <label for="exampleFormControlSelect1">Type de compte :</label>
-    <select class="form-control" id="exampleFormControlSelect1">
-      <option>Adhérent</option>
-      <option>Club</option>
-      <option>Événement</option>
-      </select>
-    </div>
-<br/>
-  <br/>
-  <br/>
-  <br/>
+    <label for="accountType">Type de compte :</label>
+    <select class="form-control" id="accountType" formControlName="accountType">
+      <option value="0">Adhérent</option>
+      <option value="1">Club</option>
+      <option value="2">Événement</option>
+    </select>
+  </div>
+
   <div class="form-group">
-    <button class="btn btn-primary w-100">Créer le compte</button>
+    <button
+      class="btn btn-primary w-100"
+      type="submit"
+      [disabled]="disabled || accountForm.status == 'INVALID'"
+    >
+      Créer le compte
+    </button>
   </div>
 </form>
