@@ -37,3 +37,29 @@
   <button type="submit" class="btn btn-primary w-100">Créer</button>
 
 </form>
+
+  <br>
+  <h3 class="text-left">Transactions récentes</h3>
+  <table class="table table-striped" *ngIf="result$ | async as result">
+    <thead>
+      <tr>
+        <th>Compte source</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th>Valeur</th>
+        <th>Compte destination</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let transactionResult of result.transactions | paginate: { itemsPerPage: result.items_per_page, currentPage: result.current_page, totalItems: result.item_count}">
+        <td class="center">{{ transactionResult.src }}</td>
+        <td class="center">{{ transactionResult.name }}</td>
+        <td class="center">{{ transactionResult.timestamp }}</td>
+        <td class="center">{{ transactionResult.value }}</td>
+        <td class="center">{{ transactionResult.dst }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+              (pageChange)="changePage($event)"></pagination>

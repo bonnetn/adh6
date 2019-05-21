@@ -19,7 +19,7 @@ export interface PortListResult {
   ports: Array<Port>;
   item_count?: number;
   current_page?: number;
-  imtes_per_page?: number;
+  items_per_page?: number;
 }
 
 @Component({
