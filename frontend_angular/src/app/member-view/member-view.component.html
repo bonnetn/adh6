@@ -44,7 +44,7 @@
       </div>
       <div class="col-md-6">
         <a [routerLink]="['/member/password/', member.username ]">
-          <button class="w-100 btn btn-primary">Changer mot de passe</button>
+          <button class="w-100 btn btn-warning">Changer mot de passe</button>
         </a>
       </div>
     </div>
@@ -54,35 +54,57 @@
 
     <div *ngIf="cotisation">
       <h3>Cotisation</h3>
-      <div class="row">
-        <div class="col-md-5">
-          <select class="w-100 form-control" type="text" formControlName=""
-                  placeholder="Renouvellement">
-            <option value="1">1 mois (9€) - date</option>
-            <option value="2">2 mois (18€) - date</option>
-            <option value="3">3 mois (27€) - date</option>
-            <option value="4">4 mois (36€) - date</option>
-            <option value="5">5 mois (45€) - date</option>
-            <option value="6">1 an (50€) - date</option>
-          </select>
-          <select class="w-100 form-control mt-3" type="text" formControlName=""
-                  placeholder="Matériel">
-            <option value="3m">Câble 3m</option>
-            <option value="5m">Câble 5m</option>
-          </select>
-        </div>
-        <div class="col-md-5">
-          <select class="w-100 form-control" type="text" formControlName=""
-                  placeholder="Payé par">
-            <option value="liq">Liquide</option>
-            <option value="cb">Carte Bancaire</option>
-            <option value="chq">Chèque</option>
-            <option value="smsch">Summer School</option>
-          </select>
-          <button class="w-100 btn btn-primary mt-3">Valider</button>
-        </div>
+        <form [formGroup]="subscriptionForm" (ngSubmit)="submitSubscription()">
+          <div class="form-group">
+            <label>Renouvellement pour</label>
+            <select class="w-100 form-control" type="text"
+              formControlName="renewal" (change)="updateAmount()">
+              <option value="0">Aucun</option>
+              <option value="1">1 mois (9€) - {{ formatDate(1) }}</option>
+              <option value="2">2 mois (18€) - {{ formatDate(2) }}</option>
+              <option value="3">3 mois (27€) - {{ formatDate(3) }}</option>
+              <option value="4">4 mois (36€) - {{ formatDate(4) }}</option>
+              <option value="5">5 mois (45€) - {{ formatDate(5) }}</option>
+              <option value="6">1 an (50€) - {{ formatDate(12) }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+              <label>Matériel à ajouter</label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" formControlName="checkCable3" id="checkCable3" (change)="updateAmount()">
+                <label class="form-check-label" for="checkCable3">
+                    Câble 3m (3 €)
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" formControlName="checkCable5" id="checkCable5" (change)="updateAmount()">
+                <label class="form-check-label" for="checkCable5">
+                    Câble 5m (5 €)
+                </label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" formControlName="checkAdapter" id="checkAdapter" (change)="updateAmount()">
+                  <label class="form-check-label" for="checkAdapter">
+                      Adaptateur Ethernet / USB (13 €)
+                  </label>
+                </div>
+          </div>
+          <div class="form-group">
+            <label>Payer par (montant : {{ amountToPay }} €)</label>
+            <select class="w-100 form-control" type="text"
+              formControlName="paidBy">
+              <option value="liq">Liquide</option>
+              <option value="cb">Carte Bancaire</option>
+              <option value="chq">Chèque</option>
+              <option value="smsch">Summer School</option>
+            </select>
+          </div>
+          <div class="form-group">
+              <button class="w-100 btn btn-success mt-3" type="submit">Valider</button>
+          </div>
+        </form>
       </div>
-    </div>
+
 
     <!-- Device list -->
 

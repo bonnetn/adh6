@@ -19,6 +19,7 @@ import {Utils} from '../utils';
 })
 export class MemberViewComponent implements OnInit, OnDestroy {
   submitDisabled = false;
+  date = new Date;
 
   member$: Observable<Member>;
   all_devices$: Observable<Device[]>;
@@ -30,7 +31,10 @@ export class MemberViewComponent implements OnInit, OnDestroy {
   private username$: Observable<string>;
   private commentForm: FormGroup;
   private deviceForm: FormGroup;
+  private subscriptionForm: FormGroup;
   private selectedDevice: string;
+  private options = {year: "numeric", month: "long", day: "numeric"};
+  private amountToPay: number = 0;
 
   constructor(
     public memberService: MemberService,
@@ -100,6 +104,13 @@ export class MemberViewComponent implements OnInit, OnDestroy {
       mac: ['01-23-45-76-89-AB', [Validators.required, Validators.minLength(17), Validators.maxLength(17)]],
       connectionType: ['wired', Validators.required],
     });
+    this.subscriptionForm = this.fb.group({
+      renewal: ['0', [Validators.required]],
+      checkCable3: [false],
+      checkCable5: [false],
+      checkAdapter: [false],
+      paidBy: ['liq', [Validators.required]],
+    })
   }
 
   submitComment(): void {
@@ -137,7 +148,10 @@ export class MemberViewComponent implements OnInit, OnDestroy {
       )
       .subscribe(() => {
       });
+  }
 
+  submitSubscription(): void {
+    // TODO
   }
 
 
@@ -217,6 +231,30 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
   isDeviceOpened(device: Device): boolean {
     return this.selectedDevice === device.mac;
+  }
+
+  formatDate(monthsToAdd: number) {
+    this.date = new Date();
+    this.date.setMonth(this.date.getMonth() + monthsToAdd);
+
+    return this.date.toLocaleDateString("fr-FR", this.options);
+  }
+
+  private subscriptionPrices: number[] = [0, 9, 18, 27, 36, 45, 50]
+
+  updateAmount() {
+    this.amountToPay = 0;
+    this.amountToPay = this.amountToPay + this.subscriptionPrices[this.subscriptionForm.value.renewal];
+
+    if (this.subscriptionForm.value.checkCable3 == true) {
+      this.amountToPay = this.amountToPay + 3;
+    }
+    if (this.subscriptionForm.value.checkCable5 == true) {
+      this.amountToPay = this.amountToPay + 5;
+    }
+    if (this.subscriptionForm.value.checkAdapter === true) {
+      this.amountToPay = this.amountToPay + 13;
+    }
   }
 
 }
