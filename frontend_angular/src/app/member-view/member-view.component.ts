@@ -115,7 +115,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
       checkCable3: [false],
       checkCable5: [false],
       checkAdapter: [false],
-      paidBy: ['liq', [Validators.required]],
+      paidBy: ['0', [Validators.required]],
     })
   }
 

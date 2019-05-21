@@ -102,11 +102,7 @@
             <label>Payer par (montant : {{ amountToPay }} €)</label>
             <select class="w-100 form-control" type="text"
               formControlName="paidBy">
-              <option value="liq">Liquide</option>
-              <option value="cb">Carte Bancaire</option>
-              <option value="chq">Chèque</option>
-              <option value="smsch">Summer School</option>
-              <option *ngFor="let pm of paymentMethods$ | async">pm.name</option>
+              <option *ngFor="let pm of paymentMethods$ | async" value="{{ pm.id }}">{{ pm.name }}</option>
             </select>
           </div>
           <div class="form-group">
