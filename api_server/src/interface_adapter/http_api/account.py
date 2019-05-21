@@ -1,5 +1,6 @@
 # coding=utf-8
 from connexion import NoContent
+from dataclasses import asdict
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.account import Account
@@ -8,9 +9,10 @@ from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin
 from src.interface_adapter.sql.decorator.sql_session import require_sql
-from src.use_case.account_manager import PartialMutationRequest, AccountManager
+from src.use_case.account_manager import PartialMutationRequest, AccountManager, FullMutationRequest
 from src.util.context import log_extra
 from src.util.log import LOG
+from src.interface_adapter.http_api.util.error import bad_request
 
 
 class AccountHandler:
@@ -40,8 +42,20 @@ class AccountHandler:
     @with_context
     @require_sql
     @auth_regular_admin
-    def post(self, body):
-        pass
+    def post(self, ctx, body):
+        """ Add an account record in the database """
+        LOG.debug("http_member_post_transaction_called", extra=log_extra(ctx, request=body))
+
+        mutation_request = _map_http_request_to_full_mutation_request(body)
+        try:
+            created = self.account_manager.update_or_create(ctx, mutation_request)
+            if created:
+                return NoContent, 201  # 201 Created
+            else:
+                return NoContent, 204  # 204 No Content
+
+        except UserInputError as e:
+            return bad_request(e), 400  # 400 Bad Request
 
     @with_context
     @require_sql
@@ -87,3 +101,7 @@ def _map_account_to_http_response(account: Account) -> dict:
         'type': account.type,
     }
     return {k: v for k, v in fields.items() if v is not None}
+
+def _map_http_request_to_full_mutation_request(body) -> FullMutationRequest:
+    partial = _map_http_request_to_partial_mutation_request(body)
+    return FullMutationRequest(**asdict(partial))
