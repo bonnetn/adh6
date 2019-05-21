@@ -51,6 +51,14 @@ INVALID_MAC = [
 
 TEST_HEADERS = {"Authorization": "Bearer TEST_TOKEN"}
 
+INVALID_TRANSACTION_VALUE = [
+    "",
+    "-1",
+    "-1120192834923949",
+    "0.123",
+    "0,123",
+    "test"
+]
 
 def assert_modification_was_created(s):
     q = s.query(Modification)

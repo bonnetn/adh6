@@ -298,7 +298,7 @@ class Account(Base):
     account_type = relationship('AccountType')
 
 
-class Transaction(Base):
+class Transaction(Base, RubyHashTrackable):
     __tablename__ = 'transaction'
 
     id = Column(Integer, primary_key=True)
@@ -310,9 +310,21 @@ class Transaction(Base):
     attachments = Column(TEXT(65535), nullable=False)
     type = Column(ForeignKey('payment_method.id'), nullable=False, index=True)
 
-    dst_account = relationship('Account', primaryjoin='Transaction.dst == Account.id')
-    src_account = relationship('Account', primaryjoin='Transaction.src == Account.id')
+    dst_account = relationship('Account', foreign_keys=[dst])
+    src_account = relationship('Account', foreign_keys=[src])
     payment_method = relationship('PaymentMethod')
+
+    def serialize_snapshot_diff(self, snap_before: dict, snap_after: dict) -> str:
+        """
+        Override this method to add the prefix.
+        """
+
+        modif = rubydiff(snap_before, snap_after)
+        modif = '--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + modif
+        return modif
+
+    def get_related_member(self):
+        return self
 
 
 class Ecriture(Base):

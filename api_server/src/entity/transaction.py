@@ -12,4 +12,4 @@ class Transaction:
     value: str
     timestamp: str
     attachments: str
-    type: PaymentMethod
+    payment_method: PaymentMethod

@@ -84,8 +84,9 @@ def _map_transaction_to_http_response(transaction: Transaction) -> dict:
         "dst": transaction.dst,
         "timestamp": transaction.timestamp,
         "name": transaction.name,
-        "type": transaction.type.name,
-        "value": transaction.value
+        "payment_method": transaction.payment_method.name,
+        "value": transaction.value,
+        "attachments": transaction.attachments
     }
 
     return {k: v for k, v in fields.items() if v is not None}
@@ -96,7 +97,7 @@ def _map_http_request_to_partial_mutation_request(body) -> PartialMutationReques
         src=body.get('src'),
         dst=body.get('dst'),
         name=body.get('name'),
-        type=body.get('type'),
+        payment_method=body.get('payment_method'),
         value=body.get('value')
     )
 

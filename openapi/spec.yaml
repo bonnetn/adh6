@@ -1776,7 +1776,7 @@ components:
           format: date-time
           readOnly: true
           type: string
-        type:
+        payment_method:
           example: 'liquide'
           type: string
         value:
@@ -1788,7 +1788,7 @@ components:
       - src
       - dst
       - name
-      - type
+      - payment_method
       type: object
 
   securitySchemes:

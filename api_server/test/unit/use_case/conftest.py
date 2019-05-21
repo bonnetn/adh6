@@ -113,7 +113,7 @@ def sample_transaction():
         value='200',
         attachments='',
         timestamp='',
-        type=PaymentMethod(
+        payment_method=PaymentMethod(
             id=0,
             name='liquide'
         ))

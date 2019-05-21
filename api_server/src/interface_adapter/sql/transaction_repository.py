@@ -6,6 +6,8 @@ from typing import List
 
 from datetime import datetime
 
+from sqlalchemy.orm import aliased
+
 from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.transaction import Transaction
 from src.exceptions import AccountNotFoundError, PaymentMethodNotFoundError
@@ -23,15 +25,18 @@ class TransactionSQLRepository(TransactionRepository):
         LOG.debug("sql_transaction_repository_search_called", extra=log_extra(ctx))
         s = ctx.get(CTX_SQL_SESSION)
 
+        account_source = aliased(Account)
+        account_destination = aliased(Account)
+
         q = s.query(SQLTransaction)
+        q = q.join(account_source, account_source.id == SQLTransaction.dst)
+        q = q.join(account_destination, account_destination.id == SQLTransaction.src)
 
         if transaction_id:
             q = q.filter(SQLTransaction.id == transaction_id)
         if terms:
             q = q.filter(
-                (SQLTransaction.name.contains(terms)) |
-                (SQLTransaction.src_account.name.contains(terms)) |
-                (SQLTransaction.dst_account.name.contains(terms))
+                (SQLTransaction.name.contains(terms))
             )
 
         count = q.count()
@@ -52,7 +57,7 @@ class TransactionSQLRepository(TransactionRepository):
         s = ctx.get(CTX_SQL_SESSION)
         LOG.debug("sql_transaction_repository_create_transaction_called", extra=log_extra(ctx, name=name))
 
-        now = datetime.now().timestamp()
+        now = datetime.now()
 
         account_src = None
         if src is not None:
@@ -102,5 +107,6 @@ def _map_transaction_sql_to_entity(t: SQLTransaction) -> Transaction:
         timestamp=t.timestamp,
         name=t.name,
         value=t.value,
-        type=t.payment_method
+        payment_method=t.payment_method,
+        attachments=t.attachments
     )

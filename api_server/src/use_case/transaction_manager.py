@@ -24,7 +24,7 @@ class PartialMutationRequest:
     dst: Optional[str] = None
     name: Optional[str] = None
     value: Optional[int] = None
-    type: Optional[str] = None
+    payment_method: Optional[str] = None
     attachments: Optional[str] = None
 
     def validate(self):
@@ -42,7 +42,7 @@ class FullMutationRequest(PartialMutationRequest):
     dst: str
     name: str
     value: int
-    type: str
+    payment_method: str
     attachments: Optional[str] = None
 
     def validate(self):
@@ -63,8 +63,8 @@ class FullMutationRequest(PartialMutationRequest):
             raise MissingRequiredField('value')
 
         # TYPE:
-        if self.type is None:
-            raise MissingRequiredField('type')
+        if self.payment_method is None:
+            raise MissingRequiredField('payment_method')
 
         super().validate()
 
