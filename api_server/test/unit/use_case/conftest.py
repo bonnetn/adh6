@@ -1,13 +1,15 @@
 import datetime
+
 from pytest import fixture
 
 from src.entity.admin import Admin
 from src.entity.device import Device, DeviceType
 from src.entity.member import Member
+from src.entity.payment_method import PaymentMethod
 from src.entity.port import Port, SwitchInfo
 from src.entity.room import Room
 from src.entity.switch import Switch
-from src.use_case.member_manager import FullMutationRequest
+from src.entity.transaction import Transaction
 from src.util.context import build_context
 
 
@@ -92,3 +94,26 @@ def sample_switch():
         description='description',
         community='community',
     )
+
+
+@fixture
+def sample_payment_method():
+    return PaymentMethod(
+        id=0,
+        name='liquide'
+    )
+
+
+@fixture
+def sample_transaction():
+    return Transaction(
+        src='1',
+        dst='2',
+        name='description',
+        value='200',
+        attachments='',
+        timestamp='',
+        type=PaymentMethod(
+            id=0,
+            name='liquide'
+        ))

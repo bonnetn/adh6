@@ -43,6 +43,7 @@ class FullMutationRequest(PartialMutationRequest):
     name: str
     value: int
     type: str
+    attachments: Optional[str] = None
 
     def validate(self):
         # SOURCE:

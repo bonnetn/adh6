@@ -3,7 +3,6 @@ from connexion import NoContent
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.account import Account
-from src.entity.account_type import AccountType
 from src.exceptions import AccountNotFoundError, UserInputError
 from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
@@ -81,15 +80,10 @@ def _map_http_request_to_partial_mutation_request(body) -> PartialMutationReques
 
 
 def _map_account_to_http_response(account: Account) -> dict:
-    con_types = {
-        AccountType.Adherent: 'adherent',
-        AccountType.Club: 'club',
-        AccountType.Event: 'event',
-    }
     fields = {
         'name': account.name,
         'creation_date': account.creation_date,
         'actif': account.actif,
-        'type': con_types.get(account.type),
+        'type': account.type,
     }
     return {k: v for k, v in fields.items() if v is not None}
