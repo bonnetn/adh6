@@ -23,6 +23,8 @@ import {CreateTemporaryAccountComponent} from './create-temporary-account/create
 import {TreasuryComponent} from "./treasury/treasury.component";
 import {AccountCreateComponent} from "./account-create/account-create.component";
 import {TransactionNewComponent} from "./transaction-new/transaction-new.component"
+import {AccountViewComponent} from "./account-view/account-view.component";
+
 
 const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
@@ -88,6 +90,7 @@ const routes: Routes = [
     path: 'account',
     children: [
     {path: 'add', component: AccountCreateComponent},
+    {path: 'view/:accountID', component: AccountViewComponent},
     ]
   },
   {
