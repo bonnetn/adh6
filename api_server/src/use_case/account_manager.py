@@ -9,7 +9,7 @@ from src.use_case.interface.account_repository import AccountRepository
 from src.exceptions import AccountNotFoundError, IntMustBePositive, StringMustNotBeEmpty, InvalidDate, \
     MissingRequiredField
 
-from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
+from src.constants import DEFAULT_OFFSET, DEFAULT_LIMIT
 from src.util.validator import is_empty, is_date
 
 # TODO: update_or_create
@@ -58,7 +58,7 @@ class AccountManager:
         self.account_repository = account_repository
         self.member_repository = member_repository
 
-    def get_by_name(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, name=None, terms=None) -> (List[Account], int):
+    def get_by_id(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, account_id=None, terms=None) -> (List[Account], int):
         """
         Search an account in the database.
         """
@@ -67,7 +67,10 @@ class AccountManager:
         if offset < 0:
             raise IntMustBePositive('limit')
 
-        result, count = self.account_repository.search_account_by(ctx, limit=limit, offset=offset, name=name, terms=terms)
+        result, count = self.account_repository.search_account_by(ctx, limit=limit, offset=offset, account_id=account_id, terms=terms)
+
+        if count == 0:
+            raise AccountNotFoundError
         
         # TODO: LOG.info
 
@@ -78,7 +81,7 @@ class AccountManager:
     def update_or_create(self, ctx, name: str, actif: bool, type: AccountType, creation_date: str, req : \
             FullMutationRequest) -> bool:
         req.validate()
-        owner, _ = self.account_repository.search_account_by(ctx, name=req.owner_name)
+        owner, _ = self.account_repository.search_account_by(ctx, terms=req.owner_name)
         
         # Pour créer un compte, il faut un membre (même pour Soirée MiNET 2018)
         

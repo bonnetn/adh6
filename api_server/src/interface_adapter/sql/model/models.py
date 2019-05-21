@@ -1,5 +1,5 @@
 # coding: utf-8
-from sqlalchemy import Column, DECIMAL, ForeignKey, String, TIMESTAMP, TEXT
+from sqlalchemy import Column, DECIMAL, ForeignKey, String, TIMESTAMP, TEXT, Boolean
 from sqlalchemy import Date, DateTime, Integer, \
     Numeric, Text, text
 from sqlalchemy.ext.declarative import declarative_base
@@ -293,6 +293,7 @@ class Account(Base):
     type = Column(ForeignKey('account_type.id'), nullable=False, index=True)
     creation_date = Column(TIMESTAMP, nullable=False, unique=True)
     name = Column(String(255), nullable=False)
+    actif = Column(Boolean(), nullable=False)
 
     account_type = relationship('AccountType')
 

@@ -5,9 +5,8 @@ from dataclasses import dataclass, asdict
 from typing import List, Optional
 
 from src.constants import DEFAULT_OFFSET, DEFAULT_LIMIT
-from src.entity.member import Member
-from src.exceptions import InvalidAdmin, MemberNotFoundError, IntMustBePositive, MissingRequiredField, \
-    PaymentMethodNotFoundError
+from src.exceptions import IntMustBePositive, MissingRequiredField, \
+    TransactionNotFoundError
 from src.interface_adapter.sql.model.models import Transaction
 from src.use_case.interface.transaction_repository import TransactionRepository
 from src.util.context import log_extra
@@ -79,20 +78,20 @@ class TransactionManager:
                  ):
         self.transaction_repository = transaction_repository
 
-    def get_by_username(self, ctx, username) -> Member:
+    def get_by_id(self, ctx, transaction_id) -> Transaction:
         """
-        User story: As an admin, I can see the profile of a member, so that I can help her/him.
+        User story: As an admin, I can see the details of a transaction.
 
-        :raise MemberNotFound
+        :raise TransactionNotFound
         """
-        result, _ = self.transaction_repository.search_member_by(ctx, username=username)
+        result, _ = self.transaction_repository.search_transaction_by(ctx, transaction_id=transaction_id)
         if not result:
-            raise MemberNotFoundError(username)
+            raise TransactionNotFoundError(transaction_id)
 
         # Log action.
-        LOG.info('member_get_by_username', extra=log_extra(
+        LOG.info('transaction_get_by_id', extra=log_extra(
             ctx,
-            username='username'
+            transaction_id=transaction_id
         ))
         return result[0]
 

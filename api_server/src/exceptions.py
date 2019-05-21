@@ -106,6 +106,11 @@ class MemberNotFoundError(NotFoundError):
         super().__init__('member', v)
 
 
+class TransactionNotFoundError(NotFoundError):
+    def __init__(self, v=None):
+        super().__init__('transaction', v)
+
+
 class DeviceNotFoundError(NotFoundError):
     def __init__(self, v=None):
         super().__init__('device', v)

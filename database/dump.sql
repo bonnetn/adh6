@@ -959,6 +959,7 @@ CREATE TABLE `transaction` (
 	`type` int(11) NOT NULL,
 	PRIMARY KEY (`id`)
 );
+INSERT INTO `transaction` VALUES (0, 100, CURRENT_TIMESTAMP, 1, 2, 'transaction test', '', 1);
 
 DROP TABLE IF EXISTS `payment_method`;
 CREATE TABLE `payment_method` (
@@ -989,9 +990,12 @@ CREATE TABLE `account` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`type` int(11) DEFAULT NULL,
         `creation_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`name` varchar(255) NOT NULL,
         `actif` BOOLEAN DEFAULT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO `account` VALUES (1, 1, NULL, 'test 1', true);
+INSERT INTO `account` VALUES (2, 1, NULL, 'test 2', true); 
 
 DROP TABLE IF EXISTS `account_type`;
 CREATE TABLE `account_type` (

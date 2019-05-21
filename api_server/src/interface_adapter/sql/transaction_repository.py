@@ -18,13 +18,15 @@ from src.util.log import LOG
 
 class TransactionSQLRepository(TransactionRepository):
 
-    def search_transaction_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None) \
+    def search_transaction_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, transaction_id=None, terms=None) \
             -> (List[Transaction], int):
         LOG.debug("sql_transaction_repository_search_called", extra=log_extra(ctx))
         s = ctx.get(CTX_SQL_SESSION)
 
         q = s.query(SQLTransaction)
 
+        if transaction_id:
+            q = q.filter(SQLTransaction.id == transaction_id)
         if terms:
             q = q.filter(
                 (SQLTransaction.name.contains(terms)) |
