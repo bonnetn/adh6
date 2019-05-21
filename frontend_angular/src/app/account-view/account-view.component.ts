@@ -12,4 +12,7 @@ export class AccountViewComponent implements OnInit {
   ngOnInit() {
   }
 
+  goBack() {
+    window.history.back();
+  }
 }
