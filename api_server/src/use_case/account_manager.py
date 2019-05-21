@@ -12,6 +12,9 @@ from src.exceptions import AccountNotFoundError, IntMustBePositive, StringMustNo
 from src.constants import DEFAULT_OFFSET, DEFAULT_LIMIT
 from src.util.validator import is_empty, is_date
 
+from src.util.context import log_extra
+from src.util.log import LOG
+
 # TODO: update_or_create
 
 @dataclass
@@ -34,6 +37,7 @@ class PartialMutationRequest:
         # CREATION_DATE:
         if self.creation_date is not None and not is_date(self.creation_date):
             raise InvalidDate(self.creation_date)
+
 
 @dataclass
 class FullMutationRequest(PartialMutationRequest):
@@ -74,21 +78,51 @@ class AccountManager:
         
         # TODO: LOG.info
 
-        return result, count
+        return result[0]
 
     # TODO: get_by_type and get_by_status (actif or not)
 
-    def update_or_create(self, ctx, name: str, actif: bool, type: AccountType, creation_date: str, req : \
-            FullMutationRequest) -> bool:
-        req.validate()
-        owner, _ = self.account_repository.search_account_by(ctx, terms=req.owner_name)
-        
-        # Pour créer un compte, il faut un membre (même pour Soirée MiNET 2018)
-        
-        if not owner:
-            raise AccountNotFoundError(req.owner_name)
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, account_id=None, terms=None) -> (
+            List[Account], int):
+        """
+        search member in the database.
 
-        result, _ = self.account_repository_search_account_by(ctx, name=name)
+        user story: as an admin, i want to have a list of accounts with some filters, so that i can browse and find
+        accounts.
+
+        :raise intmustbepositiveexception
+        """
+        if limit < 0:
+            raise IntMustBePositive('limit')
+
+        if offset < 0:
+            raise IntMustBePositive('offset')
+
+        result, count = self.account_repository.search_account_by(ctx,
+                                                                limit=limit,
+                                                                offset=offset,
+                                                                account_id=account_id,
+                                                                terms=terms)
+
+        # Log action.
+        LOG.info('account_search', extra=log_extra(
+            ctx,
+            account_id=account_id,
+            terms=terms,
+        ))
+        return result, count
+
+    def update_or_create(self, ctx, name: str, actif: bool, type: AccountType, creation_date: str,  \
+                         req : FullMutationRequest,  account_id=None) -> bool:
+        req.validate()
+        try:
+            result, _ = self.account_repository.search_account_by(ctx, limit=1, offset=0, account_id=account_id, terms=None)
+        except AccountNotFoundError:
+            raise
+        if name == '':
+            raise StringMustNotBeEmpty('name')
+        if not name:
+            raise MissingRequiredField('name')
         if not result:
             # No account with that name, creating one...
             self.account_repository.create_account(ctx, name=name, type=type, actif=actif, creation_date=creation_date)
@@ -98,6 +132,7 @@ class AccountManager:
         else:
             # An account exists, updating it
             # Warning: AccountNotFound
-            self.account_repository.update_account(ctx, name=name, type=type, actif=actif, creation_date=creation_date)
+            self.account_repository.update_account(ctx, name=name, type=type, actif=actif, creation_date=creation_date,\
+                                                   account_id=account_id)
             # TODO: LOG.info
             return False

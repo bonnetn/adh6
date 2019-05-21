@@ -10,6 +10,9 @@ from src.entity.port import Port, SwitchInfo
 from src.entity.room import Room
 from src.entity.switch import Switch
 from src.entity.transaction import Transaction
+from src.entity.account import Account
+from src.entity.account_type import AccountType
+from src.use_case.member_manager import FullMutationRequest
 from src.util.context import build_context
 
 
@@ -117,3 +120,12 @@ def sample_transaction():
             id=0,
             name='liquide'
         ))
+
+
+def sample_account():
+    return Account(
+        name='MiNET',
+        type=AccountType.Club,
+        actif=True,
+        creation_date='21/05/2019',
+    )
