@@ -121,7 +121,7 @@ def sample_transaction():
             name='liquide'
         ))
 
-
+@fixture
 def sample_account():
     return Account(
         name='MiNET',
