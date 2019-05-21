@@ -11,4 +11,5 @@ class Transaction:
     name: str
     value: str
     timestamp: str
+    attachments: str
     type: PaymentMethod

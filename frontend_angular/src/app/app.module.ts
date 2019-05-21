@@ -41,6 +41,7 @@ import {TransactionNewComponent} from "./transaction-new/transaction-new.compone
 import {BASE_PATH} from './api';
 import {environment} from '../environments/environment';
 import { AccountCreateComponent } from './account-create/account-create.component';
+import { AccountViewComponent } from './account-view/account-view.component';
 
 
 @NgModule({
@@ -73,6 +74,7 @@ import { AccountCreateComponent } from './account-create/account-create.componen
     TreasuryComponent,
     AccountCreateComponent,
     TransactionNewComponent,
+    AccountViewComponent,
   ],
   imports: [
     BrowserModule,

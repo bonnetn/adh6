@@ -13,7 +13,7 @@ class AccountRepository(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def search_account_by(self, ctx, limit=None, offset=None, name=None, terms=None) -> (List[Account], int):
+    def search_account_by(self, ctx, limit=None, offset=None, account_id=None, terms=None) -> (List[Account], int):
         """
         Search for an account.
         """

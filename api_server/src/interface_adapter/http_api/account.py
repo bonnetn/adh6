@@ -1,36 +1,33 @@
 # coding=utf-8
-import requests
 from connexion import NoContent
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
+from src.entity.account import Account
 from src.exceptions import AccountNotFoundError, UserInputError
+from src.interface_adapter.http_api.decorator.with_context import with_context
 from src.interface_adapter.http_api.util.error import bad_request
-
 from src.interface_adapter.sql.decorator.auth import auth_regular_admin
 from src.interface_adapter.sql.decorator.sql_session import require_sql
-
 from src.use_case.account_manager import PartialMutationRequest, AccountManager
-from src.entity.account import Account
-from src.entity.account_type import AccountType
-
-from src.util.log import LOG
 from src.util.context import log_extra
+from src.util.log import LOG
 
 
 class AccountHandler:
     def __init__(self, account_manager: AccountManager):
         self.account_manager = account_manager
 
+    @with_context
     @require_sql
     @auth_regular_admin
-    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None, name=None):
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None, account_id=None):
 
         LOG.debug("http_account_search_called", extra=log_extra(ctx,
                                                                limit=limit,
                                                                offset=offset,
                                                                terms=terms))
         try:
-            result, count = self.account_manager.get_by_name(ctx, limit, offset, name, terms)
+            result, count = self.account_manager.get_by_id(ctx, limit, offset, account_id=None, terms=terms)
             headers = {
                 "X-Total-Count": count,
                 'access-control-expose-headers': 'X-Total-Count'
@@ -40,30 +37,33 @@ class AccountHandler:
         except UserInputError as e:
             return bad_request(e), 400  # 400 Bad Request
 
+    @with_context
     @require_sql
     @auth_regular_admin
     def post(self, body):
         pass
 
+    @with_context
     @require_sql
     @auth_regular_admin
-    def get(self, ctx, name):
+    def get(self, ctx, account_id):
         """ Get a specific account. """
-        LOG.debug("http_account_get_called", extra=log_extra(ctx, name=name))
+        LOG.debug("http_account_get_called", extra=log_extra(ctx, account_id=account_id))
         try:
-            return _map_account_to_http_response(self.account_manager.get_by_name(ctx, name)), 200  # 200 OK
-
+            result,_ = self.account_manager.get_by_id(ctx, 1, 0, account_id)
+            return _map_account_to_http_response(result[0]), 200  # 200 OK
         except AccountNotFoundError:
             return NoContent, 404  # 404 Not Found
 
+    @with_context
     @require_sql
     @auth_regular_admin
-    def patch(self, ctx, name, body):
+    def patch(self, ctx, account_id, body):
         """ Partially update an account from the database """
-        LOG.debug("http_account_patch_called", extra=log_extra(ctx, name=name, request=body))
+        LOG.debug("http_account_patch_called", extra=log_extra(ctx, account_id=account_id, request=body))
         try:
             mutation_request = _map_http_request_to_partial_mutation_request(body)
-            self.account_manager.update_partially(ctx, name, mutation_request)
+            self.account_manager.update_partially(ctx, account_id, mutation_request)
             return NoContent, 204  # 204 No Content
 
         except AccountNotFoundError:
@@ -80,15 +80,10 @@ def _map_http_request_to_partial_mutation_request(body) -> PartialMutationReques
 
 
 def _map_account_to_http_response(account: Account) -> dict:
-    con_types = {
-        AccountType.Adherent: 'adherent',
-        AccountType.Club: 'club',
-        AccountType.Event: 'event',
-    }
     fields = {
         'name': account.name,
         'creation_date': account.creation_date,
         'actif': account.actif,
-        'type': con_types.get(account.type),
+        'type': account.type,
     }
     return {k: v for k, v in fields.items() if v is not None}

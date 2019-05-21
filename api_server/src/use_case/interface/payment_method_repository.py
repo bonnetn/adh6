@@ -16,7 +16,7 @@ class PaymentMethodRepository:
 
     @abc.abstractmethod
     def search_payment_method_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET,
-                                 name: str = None) -> (List[PaymentMethod], int):
+                                 name: str = None, terms: str = None) -> (List[PaymentMethod], int):
         """
         Search payment methods.
         """

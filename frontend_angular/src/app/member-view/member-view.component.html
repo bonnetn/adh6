@@ -44,13 +44,22 @@
       </div>
       <div class="col-md-6">
         <a [routerLink]="['/member/password/', member.username ]">
-          <button class="w-100 btn btn-warning">Changer mot de passe</button>
+          <button class="w-100 btn btn-danger">Changer mot de passe</button>
         </a>
       </div>
     </div>
 
+    <div class="row">
+      <div class="col-md-6">
+        <button class="w-100 btn btn-primary mt-3" (click)="toggleCotisationMenu()">Cotiser</button>
+      </div>
 
-    <button class="w-100 btn btn-primary mt-3" (click)="toggleCotisationMenu()">Cotiser</button>
+      <div class="col-md-6">
+        <button class="w-100 btn btn-primary mt-3" [routerLink]="['../../../account/view/', member.accountID ]">Historique des transactions</button>
+      </div>
+    </div>
+
+
 
     <div *ngIf="cotisation">
       <h3>Cotisation</h3>
@@ -97,6 +106,7 @@
               <option value="cb">Carte Bancaire</option>
               <option value="chq">Chèque</option>
               <option value="smsch">Summer School</option>
+              <option *ngFor="let pm of paymentMethods$ | async">pm.name</option>
             </select>
           </div>
           <div class="form-group">
@@ -108,10 +118,10 @@
 
     <!-- Device list -->
 
-    <table class="w-100 shift-content-right table table-striped clickable-table">
+    <table class="w-100 shift-content-right table table-striped clickable-table mt-3">
       <thead>
       <tr>
-        <th><h3 class="table-title">Appareils</h3></th>
+        <th><h3 class="table-title my-0">Appareils</h3></th>
         <th></th>
       </tr>
       </thead>

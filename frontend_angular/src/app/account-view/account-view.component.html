@@ -1,0 +1,44 @@
+<h2 class="text-left">Liste des écritures du compte ...</h2>
+<br/>
+
+<div class="row">
+  <div class="col-md-3">
+    <button class="btn btn-primary mb-3 w-100">Ajouter une écriture</button>
+  </div>
+  <div class="col-md-3">
+    <button class="btn btn-primary mb-3 w-100" (click)="goBack()">Retour</button>
+  </div>
+</div>
+
+
+<div style="overflow-x:auto;" class="u-max-full-width">
+  <table class="table"> <!-- *ngIf="result$ | async as result" -->
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Auteur</th>
+        <th>Intitulé</th>
+        <th>Moyen</th>
+        <th>Montant</th>
+      </tr>
+    </thead>
+    <!-- TODO : afficher une vrai liste... -->
+    <tr>
+      <td>03/05/2019</td>
+      <td>Gabriel P</td>
+      <td>Cotisation 1 mois</td>
+      <td>CB</td>
+      <td>9 €</td>
+    </tr>
+    <!-- <tr *ngFor="let member of result.members | paginate: { itemsPerPage: result.item_per_page, currentPage: result.current_page, totalItems: result.item_count}"
+    [routerLink]="['../view', member.username]">
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr> -->
+  </table>
+  <br/>
+  <pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+</div>

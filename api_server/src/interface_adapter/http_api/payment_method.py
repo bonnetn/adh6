@@ -20,12 +20,13 @@ class PaymentMethodHandler:
     @with_context
     @require_sql
     @auth_regular_admin
-    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None):
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, name=None, terms=None):
         """ Filter the list of the payment_method according to some criterias """
         LOG.debug("http_payment_method_search_called", extra=log_extra(ctx, limit=limit, offset=offset, terms=terms))
 
         try:
-            result, count = self.payment_method_manager.search(ctx, limit, offset, terms)
+            result, count = self.payment_method_manager.search(ctx, limit=limit, offset=offset,
+                                                               name=name, terms=terms)
 
         except UserInputError as e:
             return bad_request(e), 400
@@ -48,7 +49,8 @@ class PaymentMethodHandler:
         """ Return the payment method specified by the name """
         LOG.debug("http_payment_method_get_called", extra=log_extra(ctx, name=name))
         try:
-            return _map_payment_method_to_http_response(self.payment_method_manager.get_by_name(ctx, name)), 200  # OK
+            result = self.payment_method_manager.get_by_name(ctx, name=name)
+            return _map_payment_method_to_http_response(result, 200)  # OK
 
         except PaymentMethodNotFoundError:
             return NoContent, 404  # 404 Not Found

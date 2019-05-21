@@ -11,17 +11,21 @@ import {catchError, finalize, first, flatMap, map, share, switchMap, tap} from '
 import {combineLatest, interval, Observable} from 'rxjs';
 import {TemporaryAccountService} from '../api/api/temporaryAccount.service';
 import {Utils} from '../utils';
+import { PaymentMethod } from '../api/model/paymentMethod';
+import { PaymentMethodService } from '../api/api/paymentMethod.service';
 
 @Component({
   selector: 'app-member-details',
   templateUrl: './member-view.component.html',
   styleUrls: ['./member-view.component.css']
 })
+
 export class MemberViewComponent implements OnInit, OnDestroy {
   submitDisabled = false;
   date = new Date;
 
   member$: Observable<Member>;
+  paymentMethods$: Observable<Array<PaymentMethod>>;
   all_devices$: Observable<Device[]>;
   log$: Observable<Array<string>>;
   macHighlighted$: Observable<string>;
@@ -39,6 +43,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
   constructor(
     public memberService: MemberService,
     public deviceService: DeviceService,
+    public paymentMethodService: PaymentMethodService,
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
@@ -81,8 +86,9 @@ export class MemberViewComponent implements OnInit, OnDestroy {
           switchMap(() => this.memberService.memberUsernameLogsGet(str))
         );
       }) // refresh every 10 secs
-    )
-    ;
+    );
+
+    this.paymentMethods$ = this.paymentMethodService.paymentMethodGet();
   }
 
   ngOnDestroy() {
@@ -134,7 +140,6 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
     // will trigger the refresh of member$ and thus the update of the comment
     this.refreshInfo();
-
   }
 
   submitDevice(): void {
@@ -156,7 +161,6 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
 
   addDevice(username?: string, alreadyExists?: boolean) {
-
     if (username === undefined) {
       return this.username$
         .pipe(
