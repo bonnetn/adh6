@@ -111,17 +111,33 @@
 <br/>
 
 <div style="overflow-x:auto;" class="u-max-full-width">
-  <table class="table table-striped clickable-table" *ngIf="result$ | async as result">
-    <thead>
+  <table class="table table-striped clickable-table table-sm" *ngIf="result$ | async as result">
     <tr>
       <th>Nom</th>
       <th>Actif</th>
       <th>Type</th>
     </tr>
-    </thead>
 
-  <pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
-              (pageChange)="changePage($event)"></pagination>
-  </table>
-  
+    <tr
+    *ngFor="
+      let accountResult of result.accounts
+        | paginate
+          : {
+              itemsPerPage: result.items_per_page,
+              currentPage: result.current_page,
+              totalItems: result.item_count
+            }
+    "
+    [routerLink]="['/account/view', accountResult.id]"
+  >
+    <td class="align-middle">
+      {{ accountResult.name }}
+    </td>
+    <td class="align-middle">{{ accountResult.actif }}</td>
+    <td class="align-middle">{{ accountResult.type }}</td>
+  </tr>
+</table>
+<pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+(pageChange)="changePage($event)"></pagination>
+
 </div>
