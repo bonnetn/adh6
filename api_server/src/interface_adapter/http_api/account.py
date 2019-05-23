@@ -44,11 +44,14 @@ class AccountHandler:
     @auth_regular_admin
     def post(self, ctx, body):
         """ Add an account record in the database """
-        LOG.debug("http_member_post_transaction_called", extra=log_extra(ctx, request=body))
+        LOG.debug("http_member_post_called", extra=log_extra(ctx, request=body))
 
         mutation_request = _map_http_request_to_full_mutation_request(body)
         try:
-            created = self.account_manager.update_or_create(ctx, mutation_request)
+            created = self.account_manager.update_or_create(ctx, name=body.get('name'), type=body.get('type'),
+                                                            actif=body.get('actif'),
+                                                            creation_date=body.get('creation_date'),
+                                                            req=mutation_request)
             if created:
                 return NoContent, 201  # 201 Created
             else:

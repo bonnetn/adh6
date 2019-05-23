@@ -22,7 +22,7 @@ class TestGetByID:
         result = account_manager.get_by_id(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, account_id=TEST_ACCOUNT_ID,
                                            terms=None)
 
-        assert sample_account == result
+        assert ([sample_account], 1) == result
         mock_account_repository.search_account_by.assert_called_once()
 
     def test_account_not_found(self,

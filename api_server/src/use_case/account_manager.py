@@ -78,7 +78,7 @@ class AccountManager:
         
         # TODO: LOG.info
 
-        return result[0]
+        return result, count
 
     # TODO: get_by_type and get_by_status (actif or not)
 
@@ -112,7 +112,7 @@ class AccountManager:
         ))
         return result, count
 
-    def update_or_create(self, ctx, name: str, actif: bool, type: AccountType, creation_date: str,  \
+    def update_or_create(self, ctx, name: str, actif: bool, type: AccountType, creation_date: str,
                          req : FullMutationRequest,  account_id=None) -> bool:
         req.validate()
         try:
@@ -132,7 +132,7 @@ class AccountManager:
         else:
             # An account exists, updating it
             # Warning: AccountNotFound
-            self.account_repository.update_account(ctx, name=name, type=type, actif=actif, creation_date=creation_date,\
+            self.account_repository.update_account(ctx, name=name, type=type, actif=actif, creation_date=creation_date,
                                                    account_id=account_id)
             # TODO: LOG.info
             return False
