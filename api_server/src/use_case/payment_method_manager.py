@@ -35,7 +35,7 @@ class PaymentMethodManager:
     def __init__(self, payment_method_repository: PaymentMethodRepository):
         self.payment_method_repository = payment_method_repository
 
-    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, name=None,
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, payment_method_id=None,
                terms=None) -> (List[PaymentMethod], int):
         """
         Search payment methods in the database.
@@ -48,20 +48,22 @@ class PaymentMethodManager:
             raise IntMustBePositive('offset')
 
         result, count = self.payment_method_repository.search_payment_method_by(ctx, limit=limit,
-                                                                                offset=offset, name=name, terms=terms)
+                                                                                offset=offset,
+                                                                                payment_method_id=payment_method_id,
+                                                                                terms=terms)
         LOG.info("payment_method_search",
-                 extra=log_extra(ctx, name=name, terms=terms))
+                 extra=log_extra(ctx, payment_method_id=payment_method_id, terms=terms))
 
         return result, count
 
-    def get_by_name(self, ctx, name: str) -> PaymentMethod:
+    def get_by_id(self, ctx, payment_method_id=None) -> PaymentMethod:
         """
         Retrieves a payment method given its name.
         """
-        result, _ = self.payment_method_repository.search_payment_method_by(ctx, name=name)
-        LOG.info('payment_method_get_by_name', extra=log_extra(ctx, name=name))
+        result, _ = self.payment_method_repository.search_payment_method_by(ctx, payment_method_id=payment_method_id)
+        LOG.info('payment_method_get_by_name', extra=log_extra(ctx, payment_method_id=payment_method_id))
 
         if not result:
-            raise PaymentMethodNotFoundError(name)
+            raise PaymentMethodNotFoundError(payment_method_id)
 
         return result[0]

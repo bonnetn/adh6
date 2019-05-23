@@ -14,14 +14,14 @@ from src.util.log import LOG
 
 class PaymentMethodSQLRepository(PaymentMethodRepository):
     def search_payment_method_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET,
-                                 name: str = None, terms: str = None) -> (List[PaymentMethod], int):
+                                 payment_method_id=None, terms: str = None) -> (List[PaymentMethod], int):
         LOG.debug("sql_payment_method_repository_search_called", extra=log_extra(ctx))
         s = ctx.get(CTX_SQL_SESSION)
 
         q = s.query(SQLPaymentMethod)
 
-        if name:
-            q = q.filter(SQLPaymentMethod.name == name)
+        if payment_method_id:
+            q = q.filter(SQLPaymentMethod.id == payment_method_id)
         if terms:
             q = q.filter(SQLPaymentMethod.name.contains(terms))
 
@@ -40,6 +40,6 @@ def _map_account_sql_to_entity(a) -> PaymentMethod:
     """
 
     return PaymentMethod(
-        id=a.id,
+        payment_method_id=a.id,
         name=a.name
     )

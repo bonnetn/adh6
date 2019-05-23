@@ -4,5 +4,5 @@ from dataclasses import dataclass
 
 @dataclass
 class PaymentMethod:
-    id: int
+    payment_method_id: int
     name: str
