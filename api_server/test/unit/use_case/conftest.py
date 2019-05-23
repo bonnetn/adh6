@@ -102,7 +102,7 @@ def sample_switch():
 @fixture
 def sample_payment_method():
     return PaymentMethod(
-        id=0,
+        payment_method_id=0,
         name='liquide'
     )
 
@@ -117,7 +117,7 @@ def sample_transaction():
         attachments='',
         timestamp='',
         payment_method=PaymentMethod(
-            id=0,
+            payment_method_id=0,
             name='liquide'
         ))
 
