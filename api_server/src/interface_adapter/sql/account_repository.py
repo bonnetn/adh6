@@ -8,6 +8,7 @@ from datetime import datetime
 
 from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.account import Account
+from src.exceptions import AccountNotFoundError
 from src.interface_adapter.sql.track_modifications import track_modifications
 from src.interface_adapter.sql.model.models import Account as SQLAccount
 from src.entity.account import AccountType
@@ -68,12 +69,24 @@ class AccountSQLRepository(AccountRepository):
 
         return list(map(_map_account_sql_to_entity, r)), count
 
-    def update_account(self, ctx, name=None, type=None, actif=None, creation_date=None, account_id=None):
+    def update_account(self, ctx, account_to_update, name=None, type=None, actif=None, creation_date=None, \
+                       account_id=None) -> None:
         """
         Update an account.
         Will raise (one day) AccountNotFound
         """
-        pass
+        s = ctx.get(CTX_SQL_SESSION)
+        LOG.debug("sql_account_repository_update_account_called", extra=log_extra(ctx, account_id=account_to_update))
+
+        account = _get_account_by_id(s, account_id)
+        if account is None:
+            raise AccountNotFoundError(account_to_update)
+
+        with track_modifications(ctx, s, account):
+            account.name = name or account.name
+            account.type = type or account.type
+            account.actif = actif or account.actif
+            account.creation_date = creation_date or account.creation_date
 
 
 def _map_account_sql_to_entity(a) -> Account:
@@ -91,3 +104,7 @@ def _map_account_sql_to_entity(a) -> Account:
         type=t,
         creation_date=a.creation_date,
     )
+
+
+def _get_account_by_id(s, id) -> Account:
+    return s.query(Account).filter(Account.id == id).one_or_none()
