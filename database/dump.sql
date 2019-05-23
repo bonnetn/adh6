@@ -968,7 +968,7 @@ CREATE TABLE `payment_method` (
 	PRIMARY KEY (`id`)
 );
 LOCK TABLES `payment_method` WRITE;
-INSERT INTO `payment_method` VALUES (0, "Liquide"), (1, "Carte bancaire");
+INSERT INTO `payment_method` VALUES (0, "Carte bancaire"), (1, "Liquide"), (2, "Chèque"), (3, "Summer School");
 UNLOCK TABLES;
 
 
