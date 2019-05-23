@@ -4,8 +4,11 @@ Implements everything related to actions on the SQL database.
 """
 from typing import List
 
+from datetime import datetime
+
 from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.account import Account
+from src.interface_adapter.sql.track_modifications import track_modifications
 from src.interface_adapter.sql.model.models import Account as SQLAccount
 from src.entity.account import AccountType
 from src.use_case.interface.account_repository import AccountRepository
@@ -18,24 +21,28 @@ class AccountSQLRepository(AccountRepository):
     Represent the interface to the SQL database.
     """
 
-    def create_account(self, ctx, name=None, actif=None, type=None, creation_date=None) -> None:
+    def create_account(self, ctx, name=None, actif=None, type=None) -> None:
         """
         Create an account.
-        Possibly raise nothing ?
+
+        :raise AccountTypeNotFound ?
+        """
 
         s = ctx.get(CTX_SQL_SESSION)
+        LOG.debug("sql_account_repository_create_account_called", extra=log_extra(ctx, name=name))
 
-        # TODO: LOG.debug
+        now = datetime.now()
 
         account = Account(
-                name=name,
-                actif=actif,
-                type=type,
-                creation_date=creation_date)
-        """
-        pass
+            name=name,
+            actif=actif,
+            type=type,
+            creation_date=now,
+        )
 
-        # TODO: voir si track_modifications prendre en compte account et si s.add(account) fonctionne
+        with track_modifications(ctx, s, account):
+            s.add(account)
+        pass
     
     # TODO: update_account mais même problème qu'au dessus
 
