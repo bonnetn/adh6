@@ -1,6 +1,7 @@
 # coding=utf-8
-from connexion import NoContent
 from dataclasses import asdict
+
+from connexion import NoContent
 
 from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.account import Account
@@ -12,7 +13,6 @@ from src.interface_adapter.sql.decorator.sql_session import require_sql
 from src.use_case.account_manager import PartialMutationRequest, AccountManager, FullMutationRequest
 from src.util.context import log_extra
 from src.util.log import LOG
-from src.interface_adapter.http_api.util.error import bad_request
 
 
 class AccountHandler:
@@ -22,14 +22,14 @@ class AccountHandler:
     @with_context
     @require_sql
     @auth_regular_admin
-    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None, account_id=None):
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None):
 
         LOG.debug("http_account_search_called", extra=log_extra(ctx,
-                                                               limit=limit,
-                                                               offset=offset,
-                                                               terms=terms))
+                                                                limit=limit,
+                                                                offset=offset,
+                                                                terms=terms))
         try:
-            result, count = self.account_manager.get_by_id(ctx, limit, offset, account_id=None, terms=terms)
+            result, count = self.account_manager.search(ctx, account_id=None, terms=terms)
             headers = {
                 "X-Total-Count": count,
                 'access-control-expose-headers': 'X-Total-Count'
@@ -44,14 +44,15 @@ class AccountHandler:
     @auth_regular_admin
     def post(self, ctx, body):
         """ Add an account record in the database """
-        LOG.debug("http_member_post_called", extra=log_extra(ctx, request=body))
+        LOG.debug("http_account_post_called", extra=log_extra(ctx, request=body))
 
-        mutation_request = _map_http_request_to_full_mutation_request(body)
         try:
-            created = self.account_manager.update_or_create(ctx, name=body.get('name'), type=body.get('type'),
+            created = self.account_manager.update_or_create(ctx, req=FullMutationRequest(
+                                                            name=body.get('name'),
+                                                            type=body.get('type_'),
                                                             actif=body.get('actif'),
-                                                            creation_date=body.get('creation_date'),
-                                                            req=mutation_request)
+                                                            creation_date=body.get('creation_date')),
+                                                            account_id=body.get('account_id'))
             if created:
                 return NoContent, 201  # 201 Created
             else:
@@ -67,8 +68,8 @@ class AccountHandler:
         """ Get a specific account. """
         LOG.debug("http_account_get_called", extra=log_extra(ctx, account_id=account_id))
         try:
-            result,_ = self.account_manager.get_by_id(ctx, 1, 0, account_id)
-            return _map_account_to_http_response(result[0]), 200  # 200 OK
+            result = self.account_manager.get_by_id(ctx, account_id)
+            return _map_account_to_http_response(result), 200  # 200 OK
         except AccountNotFoundError:
             return NoContent, 404  # 404 Not Found
 
@@ -104,6 +105,7 @@ def _map_account_to_http_response(account: Account) -> dict:
         'type': account.type,
     }
     return {k: v for k, v in fields.items() if v is not None}
+
 
 def _map_http_request_to_full_mutation_request(body) -> FullMutationRequest:
     partial = _map_http_request_to_partial_mutation_request(body)

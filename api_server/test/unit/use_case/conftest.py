@@ -121,11 +121,12 @@ def sample_transaction():
             name='liquide'
         ))
 
+
 @fixture
 def sample_account():
     return Account(
         name='MiNET',
-        type=AccountType.Club,
+        type=1,
         actif=True,
         creation_date='21/05/2019',
     )

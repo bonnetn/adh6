@@ -286,7 +286,7 @@ class Product(Base):
     name = Column(String(255), nullable=False)
 
 
-class Account(Base):
+class Account(Base, RubyHashTrackable):
     __tablename__ = 'account'
 
     id = Column(Integer, primary_key=True, unique=True)
@@ -296,6 +296,17 @@ class Account(Base):
     actif = Column(Boolean(), nullable=False)
 
     account_type = relationship('AccountType')
+
+    def serialize_snapshot_diff(self, snap_before: dict, snap_after: dict) -> str:
+        """
+        Override this method to add the prefix.
+        """
+        modif = rubydiff(snap_before, snap_after)
+        modif = '--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + modif
+        return modif
+
+    def get_related_member(self):
+        return self
 
 
 class Transaction(Base, RubyHashTrackable):

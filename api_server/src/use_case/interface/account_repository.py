@@ -28,7 +28,7 @@ class AccountRepository(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod 
-    def update_account(self, ctx, name=None, type=None, actif=None, creation_date=None, account_id=None):
+    def update_account(self, ctx, account_id=None, name=None, type=None, actif=None, creation_date=None):
         """
         Update an account.
         Will raise (one day) AccountNotFound

@@ -1463,7 +1463,7 @@ components:
         type:
           description: The type of account
           example: 'adherent'
-          type: string
+          type: integer
         creation_date:
           description: The date the account was created
           format: date-time

@@ -989,9 +989,9 @@ DROP TABLE IF EXISTS `account`;
 CREATE TABLE `account` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`type` int(11) DEFAULT NULL,
-        `creation_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `creation_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`name` varchar(255) NOT NULL,
-        `actif` BOOLEAN DEFAULT NULL,
+    `actif` BOOLEAN DEFAULT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 INSERT INTO `account` VALUES (1, 1, NULL, 'test 1', true);

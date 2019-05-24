@@ -1,15 +1,15 @@
 from dataclasses import asdict
-from pytest import fixture, raises, mark
 from unittest.mock import MagicMock
 
-from src.constants import DEFAULT_LIMIT, DEFAULT_OFFSET
+from pytest import fixture, raises, mark
+
 from src.entity.account import Account
 from src.exceptions import AccountNotFoundError, MissingRequiredField, IntMustBePositive
-from src.use_case.interface.account_repository import AccountRepository
 from src.use_case.account_manager import AccountManager, FullMutationRequest
+from src.use_case.interface.account_repository import AccountRepository
 from src.use_case.interface.member_repository import MemberRepository
 
-TEST_ACCOUNT_ID = '1'
+TEST_ACCOUNT_ID = 1200
 
 
 class TestGetByID:
@@ -19,10 +19,9 @@ class TestGetByID:
                         sample_account: Account,
                         account_manager: AccountManager):
         mock_account_repository.search_account_by = MagicMock(return_value=([sample_account], 1))
-        result = account_manager.get_by_id(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, account_id=TEST_ACCOUNT_ID,
-                                           terms=None)
+        result = account_manager.get_by_id(ctx, account_id=TEST_ACCOUNT_ID)
 
-        assert ([sample_account], 1) == result
+        assert sample_account == result
         mock_account_repository.search_account_by.assert_called_once()
 
     def test_account_not_found(self,
@@ -32,8 +31,7 @@ class TestGetByID:
         mock_account_repository.search_account_by = MagicMock(return_value=([], 0))
 
         with raises(AccountNotFoundError):
-            account_manager.get_by_id(ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, account_id=TEST_ACCOUNT_ID,
-                                      terms=None)
+            account_manager.get_by_id(ctx, account_id=TEST_ACCOUNT_ID)
 
 
 class TestSearch:
@@ -47,7 +45,7 @@ class TestSearch:
 
         assert [sample_account] == result
         assert 1 == count
-        mock_account_repository.search_account_by.assert_called_once_with(ctx, limit=42, offset=2, account_id=None, \
+        mock_account_repository.search_account_by.assert_called_once_with(ctx, limit=42, offset=2, account_id=None,
                                                                           terms='abc')
 
     def test_offset_negative(self,
@@ -71,16 +69,16 @@ class TestUpdate:
                         account_manager: AccountManager):
         req = FullMutationRequest(
             name='MiNET',
-            type='club',
+            type=1,
             actif=True,
             creation_date='21/05/2019',
         )
         mock_account_repository.update_account = MagicMock()
 
         mock_account_repository.search_account_by = MagicMock(return_value=([sample_account], 1))
-        account_manager.update_or_create(ctx, req.name, req.actif, req.type, req.creation_date, req, account_id='1')
+        account_manager.update_or_create(ctx, req, account_id=1)
 
-        mock_account_repository.update_account.assert_called_once_with(ctx, **asdict(req), account_id='1')
+        mock_account_repository.update_account.assert_called_once_with(ctx, **asdict(req), account_id=1)
 
     def test_account_not_found(self,
                                ctx,
@@ -89,7 +87,7 @@ class TestUpdate:
                                account_manager: AccountManager):
         req = FullMutationRequest(
             name='MiNET',
-            type='club',
+            type=1,
             actif=True,
             creation_date='21/05/2019',
         )
@@ -97,8 +95,9 @@ class TestUpdate:
         mock_account_repository.update_account = MagicMock(side_effect=AccountNotFoundError)
 
         with raises(AccountNotFoundError):
-            account_manager.update_or_create(ctx, req.name, req.type, req.actif, req.creation_date, req,
-                                             account_id=None)
+            account_manager.update_or_create(ctx, req, TEST_ACCOUNT_ID)
+
+        mock_account_repository.search_account_by.assert_called_once_with(ctx, account_id=TEST_ACCOUNT_ID)
 
     def test_missing_required_field(self,
                                     ctx,
@@ -107,7 +106,7 @@ class TestUpdate:
                                     account_manager: AccountManager):
         req = FullMutationRequest(
             name=None,
-            type='club',
+            type=1,
             actif=True,
             creation_date='21/05/2019',
         )
@@ -116,8 +115,7 @@ class TestUpdate:
         mock_account_repository.update_account = MagicMock()
 
         with raises(MissingRequiredField):
-            account_manager.update_or_create(ctx, req.name, req.type, req.actif, req.creation_date, req,
-                                             account_id=None)
+            account_manager.update_or_create(ctx, req, account_id=None)
 
         mock_account_repository.update_account.assert_not_called()
 
@@ -136,7 +134,7 @@ class TestUpdate:
                                       account_manager: AccountManager):
         req = FullMutationRequest(
             name='',
-            type='club',
+            type=1,
             actif=True,
             creation_date='21/05/2019',
         )
@@ -145,22 +143,22 @@ class TestUpdate:
         mock_account_repository.update_account = MagicMock()
 
         with raises(ValueError):
-            account_manager.update_or_create(ctx, req.name, req.type, req.actif, req.creation_date, req,
-                                             account_id=None)
+            account_manager.update_or_create(ctx, req, account_id=None)
 
 
 class TestCreate:
     def test_happy_path(self,
-                        ctx, mock_account_repository: AccountRepository, sample_account: Account, account_manager: AccountManager):
+                        ctx, mock_account_repository: AccountRepository, sample_account: Account,
+                        account_manager: AccountManager):
         req = FullMutationRequest(
             name='MiNET',
-            type='club',
+            type=1,
             actif=True,
             creation_date='21/05/2019',
         )
         mock_account_repository.create_account = MagicMock()
         mock_account_repository.search_account_by = MagicMock(return_value=([], 0))
-        account_manager.update_or_create(ctx, req.name, req.actif, req.type, req.creation_date, req, account_id=None)
+        account_manager.update_or_create(ctx, req, account_id=None)
 
         mock_account_repository.create_account.assert_called_once_with(ctx, name=req.name, type=req.type,
                                                                        actif=req.actif, creation_date=req.creation_date)

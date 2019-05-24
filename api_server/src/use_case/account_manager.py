@@ -15,6 +15,7 @@ from src.util.validator import is_empty, is_date
 from src.util.context import log_extra
 from src.util.log import LOG
 
+
 # TODO: update_or_create
 
 @dataclass
@@ -25,7 +26,7 @@ class PartialMutationRequest:
     If a field is set to None, field be left untouched.
     """
     name: str = None
-    type: AccountType = None
+    type: int = None
     creation_date: Optional[str] = None
     actif: Optional[bool] = None
 
@@ -33,6 +34,9 @@ class PartialMutationRequest:
         # NAME:
         if self.name is not None and not is_empty(self.name):
             raise StringMustNotBeEmpty('name')
+
+        if self.type is not None:
+            raise MissingRequiredField('type')
 
         # CREATION_DATE:
         if self.creation_date is not None and not is_date(self.creation_date):
@@ -47,7 +51,7 @@ class FullMutationRequest(PartialMutationRequest):
     If a field is set to None, field will be cleared in the database.
     """
     name: str = None
-    type: AccountType = None
+    type: int = None
     creation_date: Optional[str] = None
     actif: Optional[bool] = None
 
@@ -56,29 +60,28 @@ class FullMutationRequest(PartialMutationRequest):
         if self.name is None:
             raise MissingRequiredField('name')
 
+        if self.type is None:
+            raise MissingRequiredField('type')
+
 
 class AccountManager:
     def __init__(self, member_repository: MemberRepository, account_repository: AccountRepository):
         self.account_repository = account_repository
         self.member_repository = member_repository
 
-    def get_by_id(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, account_id=None, terms=None) -> (List[Account], int):
+    def get_by_id(self, ctx, account_id=None) -> Account:
         """
         Search an account in the database.
         """
-        if limit < 0:
-            raise IntMustBePositive('limit')
-        if offset < 0:
-            raise IntMustBePositive('limit')
 
-        result, count = self.account_repository.search_account_by(ctx, limit=limit, offset=offset, account_id=account_id, terms=terms)
+        result, count = self.account_repository.search_account_by(ctx, account_id=account_id)
 
         if count == 0:
             raise AccountNotFoundError
-        
+
         # TODO: LOG.info
 
-        return result, count
+        return result[0]
 
     # TODO: get_by_type and get_by_status (actif or not)
 
@@ -99,10 +102,10 @@ class AccountManager:
             raise IntMustBePositive('offset')
 
         result, count = self.account_repository.search_account_by(ctx,
-                                                                limit=limit,
-                                                                offset=offset,
-                                                                account_id=account_id,
-                                                                terms=terms)
+                                                                  limit=limit,
+                                                                  offset=offset,
+                                                                  account_id=account_id,
+                                                                  terms=terms)
 
         # Log action.
         LOG.info('account_search', extra=log_extra(
@@ -112,27 +115,45 @@ class AccountManager:
         ))
         return result, count
 
-    def update_or_create(self, ctx, name: str, actif: bool, type: AccountType, creation_date: str,
-                         req : FullMutationRequest,  account_id=None) -> bool:
+    def update_or_create(self, ctx, req: FullMutationRequest, account_id=None) -> bool:
         req.validate()
+
         try:
-            result, _ = self.account_repository.search_account_by(ctx, limit=1, offset=0, account_id=account_id, terms=None)
+            result, _ = self.account_repository.search_account_by(ctx, account_id=account_id)
+            fields = {k: v for k, v in asdict(req).items()}
+            LOG.info('account_create', extra=log_extra(
+                ctx,
+                account_id=account_id,
+                type=req.type,
+                fields=fields
+            ))
         except AccountNotFoundError:
             raise
-        if name == '':
+        if req.name == '':
             raise StringMustNotBeEmpty('name')
-        if not name:
+        if not req.name:
             raise MissingRequiredField('name')
-        if not result:
+        if not req.type:
+            raise MissingRequiredField('type')
+
+        if not result or not account_id:
+            LOG.info('account_create', extra=log_extra(
+                ctx,
+                account_id=account_id,
+                type=req.type
+            ))
             # No account with that name, creating one...
-            self.account_repository.create_account(ctx, name=name, type=type, actif=actif, creation_date=creation_date)
+            self.account_repository.create_account(ctx, **fields)
             # TODO: LOG.info
             return True
 
         else:
             # An account exists, updating it
             # Warning: AccountNotFound
-            self.account_repository.update_account(ctx, name=name, type=type, actif=actif, creation_date=creation_date,
-                                                   account_id=account_id)
+            LOG.info('account_update', extra=log_extra(
+                ctx,
+                account_id=account_id,
+            ))
+            self.account_repository.update_account(ctx, account_id=account_id, **fields)
             # TODO: LOG.info
             return False
