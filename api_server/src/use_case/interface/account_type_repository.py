@@ -4,7 +4,9 @@ Account repository.
 """
 import abc  # pour définir des classes abstraites en python
 from typing import List
-from src.entity.account import Account
+
+from src.entity.account_type import AccountType
+from src.constants import DEFAULT_OFFSET, DEFAULT_LIMIT
 
 
 class AccountTypeRepository(metaclass=abc.ABCMeta):
@@ -13,9 +15,10 @@ class AccountTypeRepository(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def search_account_type_by(self, ctx, limit=None, offset=None, name=None, terms=None) -> (List[AccountType], int):
+    def search_account_type_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET,
+                               account_type_id: int = None, terms: str = None) -> (List[AccountType], int):
         """
-        Search for an account.
+        Search for an account type.
         """
         pass
     
@@ -34,7 +37,6 @@ class AccountTypeRepository(metaclass=abc.ABCMeta):
         Will raise (one day) AccountNotFound
         """
         pass
-    
 
     @abc.abstractmethod
     def delete_account_type(self, ctx, name) -> None:

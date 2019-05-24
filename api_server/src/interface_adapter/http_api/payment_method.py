@@ -46,7 +46,7 @@ class PaymentMethodHandler:
     @require_sql
     @auth_regular_admin
     def get(self, ctx, payment_method_id):
-        """ Return the payment method specified by the name """
+        """ Return the payment method specified by the id  """
         LOG.debug("http_payment_method_get_called", extra=log_extra(ctx, payment_method_id=payment_method_id))
         try:
             result = self.payment_method_manager.get_by_id(ctx, payment_method_id=payment_method_id)

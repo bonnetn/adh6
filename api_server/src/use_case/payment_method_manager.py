@@ -61,7 +61,7 @@ class PaymentMethodManager:
         Retrieves a payment method given its name.
         """
         result, _ = self.payment_method_repository.search_payment_method_by(ctx, payment_method_id=payment_method_id)
-        LOG.info('payment_method_get_by_name', extra=log_extra(ctx, payment_method_id=payment_method_id))
+        LOG.info('payment_method_get_by_id', extra=log_extra(ctx, payment_method_id=payment_method_id))
 
         if not result:
             raise PaymentMethodNotFoundError(payment_method_id)

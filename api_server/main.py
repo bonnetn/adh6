@@ -5,6 +5,7 @@ import connexion
 import os
 
 from config import CONFIGURATION, TEST_CONFIGURATION
+from src.interface_adapter.sql.account_type_repository import AccountTypeSQLRepository
 from src.interface_adapter.elasticsearch.repository import ElasticSearchRepository
 from src.interface_adapter.http_api.account import AccountHandler
 from src.interface_adapter.http_api.account_type import AccountTypeHandler
@@ -38,6 +39,7 @@ from src.use_case.switch_manager import SwitchManager
 from src.use_case.account_manager import AccountManager
 from src.use_case.product_manager import ProductManager
 from src.use_case.transaction_manager import TransactionManager
+from src.use_case.account_type_manager import AccountTypeManager
 
 
 def init(testing=True):
@@ -63,6 +65,7 @@ def init(testing=True):
     product_sql_repository = ProductSQLRepository()
     payment_method_sql_repository = PaymentMethodSQLRepository()
     transaction_sql_repository = TransactionSQLRepository()
+    account_type_sql_repository = AccountTypeSQLRepository()
 
     # Managers
     switch_manager = SwitchManager(
@@ -102,6 +105,9 @@ def init(testing=True):
     transaction_manager = TransactionManager(
         transaction_repository=transaction_sql_repository,
     )
+    account_type_manager = AccountTypeManager(
+        account_type_repository=account_type_sql_repository
+    )
 
     # HTTP Handlers:
     transaction_handler = TransactionHandler(transaction_manager)
@@ -111,7 +117,7 @@ def init(testing=True):
     switch_handler = SwitchHandler(switch_manager)
     port_handler = PortHandler(port_manager, switch_manager, switch_network_manager)
     temporary_account_handler = TemporaryAccountHandler()
-    account_type_handler = AccountTypeHandler()
+    account_type_handler = AccountTypeHandler(account_type_manager)
     payment_method_handler = PaymentMethodHandler(payment_method_manager)
     account_handler = AccountHandler(account_manager)
     product_handler = ProductHandler(product_manager)

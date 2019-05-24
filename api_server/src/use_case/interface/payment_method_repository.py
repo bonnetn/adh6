@@ -9,7 +9,7 @@ from src.constants import DEFAULT_OFFSET, DEFAULT_LIMIT
 from src.entity.payment_method import PaymentMethod
 
 
-class PaymentMethodRepository:
+class PaymentMethodRepository(metaclass=abc.ABCMeta):
     """
     Abstract interface to handle payment methods.
     """
