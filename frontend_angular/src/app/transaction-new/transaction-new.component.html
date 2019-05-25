@@ -6,7 +6,19 @@
     <div class="card">
       <div class="card-header text-white bg-danger">Compte source</div>
       <div class="card-body">
-        <input class="form-control" placeholder="Rechercher..." type="text">
+        <div class="suggestion">
+          <input type="text" placeholder="Rechercher..." class="w-100 form-control" #srcAccount
+                 (keyup)="srcSearch(srcAccount.value)"/>
+          <div class="list-group w-100">
+            <a
+              (click)="console.log(searchResult.value)"
+              class="list-group-item"
+              *ngFor="let searchResult of srcSearchResult$ | async"
+            >
+              {{ searchResult.name }}
+            </a>
+          </div>
+        </div>
       </div>
       <div class="card-footer">Ce compte sera <span class="font-weight-bold">débité</span></div>
     </div>
@@ -21,13 +33,29 @@
             <span class="input-group-text" id="value">€</span>
           </div>
           <input type="text" class="form-control" aria-label="value" aria-describedby="value" formControlName="value" type="number">
+          <select class="w-100 form-control" type="text"
+              formControlName="paidBy">
+              <option *ngFor="let pm of paymentMethods$ | async" value="{{ pm.id }}">{{ pm.name }}</option>
+            </select>
         </div>
       </div>
     </div>
     <div class="card">
       <div class="card-header text-white bg-success">Compte destination</div>
       <div class="card-body">
-        <input class="form-control" placeholder="Rechercher..." type="text">
+        <div class="suggestion">
+          <input type="text" placeholder="Rechercher..." class="w-100 form-control" #dstAccount
+                 (keyup)="dstSearch(dstAccount.value)"/>
+          <div class="list-group w-100">
+            <a
+              (click)="console.log(searchResult.value)"
+              class="list-group-item"
+              *ngFor="let searchResult of dstSearchResult$ | async"
+            >
+              {{ searchResult.name }}
+            </a>
+          </div>
+        </div>
       </div>
       <div class="card-footer">Ce compte sera <span class="font-weight-bold">crédité</span></div>
     </div>
