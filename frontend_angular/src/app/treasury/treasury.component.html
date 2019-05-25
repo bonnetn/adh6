@@ -133,8 +133,8 @@
     <td class="align-middle">
       {{ accountResult.name }}
     </td>
-    <td class="align-middle">{{ accountResult.actif }}</td>
-    <td class="align-middle">{{ accountResult.type }}</td>
+    <td class="align-middle">{{ accountResult.actif  == true ? 'Oui' : 'Non' }}</td>
+    <td class="align-middle">{{ accountTypes[accountResult.type-1].name }}</td>
   </tr>
 </table>
 <pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"

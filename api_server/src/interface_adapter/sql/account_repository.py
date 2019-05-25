@@ -97,6 +97,7 @@ def _map_account_sql_to_entity(a) -> Account:
         actif=a.actif,
         type=a.type,
         creation_date=a.creation_date,
+        account_id=a.id
     )
 
 

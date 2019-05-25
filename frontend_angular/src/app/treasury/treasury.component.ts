@@ -10,6 +10,8 @@ import {PagingConf} from '../paging.config';
 
 import {map} from 'rxjs/operators';
 import {SearchPage} from '../search-page';
+import { AccountType } from '../api/model/accountType';
+import { AccountTypeService } from "../api/api/accountType.service";
 
 class AccountListResponse {
   accounts?: Array<Account>;
@@ -25,14 +27,19 @@ class AccountListResponse {
 })
 export class TreasuryComponent extends SearchPage implements OnInit {
   result$: Observable<AccountListResponse>;
+  accountTypes: Array<AccountType>;
 
   showFundManagement = false;
   fundManagementForm: FormGroup;
   create = false;
 
-  constructor(private fb: FormBuilder, public accountService: AccountService) {
-    super();
-    this.createForm();
+  constructor(
+    private fb: FormBuilder,
+    public accountService: AccountService,
+    public accountTypeService: AccountTypeService,
+    ) {
+      super();
+      this.createForm();
   }
 
   createForm() {
@@ -48,9 +55,17 @@ export class TreasuryComponent extends SearchPage implements OnInit {
   ngOnInit() {
     super.ngOnInit();
     this.result$ = this.getSearchResult((terms, page) => this.fetchAccounts(terms, page));
+
+    this.accountTypeService.accountTypeGet()
+    .subscribe(
+      data => {
+        this.accountTypes = data;
+      }
+    );
   }
 
   onSubmit() {
+    // TODO
     console.log("onSubmit() à compléter");;
   }
 

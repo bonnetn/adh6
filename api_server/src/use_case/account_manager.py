@@ -121,12 +121,7 @@ class AccountManager:
         try:
             result, _ = self.account_repository.search_account_by(ctx, account_id=account_id)
             fields = {k: v for k, v in asdict(req).items()}
-            LOG.info('account_create', extra=log_extra(
-                ctx,
-                account_id=account_id,
-                type=req.type,
-                fields=fields
-            ))
+
         except AccountNotFoundError:
             raise
         if req.name == '':

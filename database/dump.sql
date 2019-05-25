@@ -1004,7 +1004,7 @@ CREATE TABLE `account_type` (
 	PRIMARY KEY (`id`)
 );
 LOCK TABLES `account_type` WRITE;
-INSERT INTO `account_type` VALUES (0, "adherents"), (1, "Club");
+INSERT INTO `account_type` VALUES (1, "Adhérent"), (2, "Club");
 UNLOCK TABLES;
 
 ALTER TABLE `account` ADD CONSTRAINT `account_fk0` FOREIGN KEY (`type`) REFERENCES `account_type`(`id`);

@@ -13,9 +13,11 @@
   <div class="form-group">
     <label for="accountType">Type de compte :</label>
     <select class="form-control" id="accountType" formControlName="accountType">
-      <option value="0">Adhérent</option>
-      <option value="1">Club</option>
-      <option value="2">Événement</option>
+      <option
+        *ngFor="let accountType of accountTypes$ | async"
+        value="{{ accountType.account_type_id }}"
+        >{{ accountType.name }}</option
+      >
     </select>
   </div>
 

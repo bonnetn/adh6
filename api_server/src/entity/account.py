@@ -9,3 +9,4 @@ class Account:
     type: int
     creation_date: Optional[str]
     actif: Optional[bool]
+    account_id: Optional[int]

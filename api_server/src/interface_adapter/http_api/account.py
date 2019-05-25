@@ -94,6 +94,7 @@ def _map_http_request_to_partial_mutation_request(body) -> PartialMutationReques
         type=body.get('type'),
         actif=body.get('actif'),
         creation_date=body.get('creation_date'),
+        account_id=body.get('id'),
     )
 
 
@@ -103,6 +104,7 @@ def _map_account_to_http_response(account: Account) -> dict:
         'creation_date': account.creation_date,
         'actif': account.actif,
         'type': account.type,
+        'id': account.account_id,
     }
     return {k: v for k, v in fields.items() if v is not None}
 
