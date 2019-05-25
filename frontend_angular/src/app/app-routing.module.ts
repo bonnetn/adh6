@@ -24,6 +24,7 @@ import {TreasuryComponent} from "./treasury/treasury.component";
 import {AccountCreateComponent} from "./account-create/account-create.component";
 import {TransactionNewComponent} from "./transaction-new/transaction-new.component"
 import {AccountViewComponent} from "./account-view/account-view.component";
+import { AccountEditComponent } from "./account-edit/account-edit.component";
 
 
 const routes: Routes = [
@@ -91,6 +92,7 @@ const routes: Routes = [
     children: [
     {path: 'add', component: AccountCreateComponent},
     {path: 'view/:accountID', component: AccountViewComponent},
+    {path: 'edit/:accountID', component: AccountEditComponent},
     ]
   },
   {

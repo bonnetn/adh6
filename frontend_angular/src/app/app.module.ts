@@ -42,6 +42,7 @@ import {BASE_PATH} from './api';
 import {environment} from '../environments/environment';
 import { AccountCreateComponent } from './account-create/account-create.component';
 import { AccountViewComponent } from './account-view/account-view.component';
+import { AccountEditComponent } from './account-edit/account-edit.component';
 
 
 @NgModule({
@@ -75,6 +76,7 @@ import { AccountViewComponent } from './account-view/account-view.component';
     AccountCreateComponent,
     TransactionNewComponent,
     AccountViewComponent,
+    AccountEditComponent,
   ],
   imports: [
     BrowserModule,

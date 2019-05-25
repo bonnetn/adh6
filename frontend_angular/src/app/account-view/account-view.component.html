@@ -3,11 +3,11 @@
   <br/>
 
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-4">
       <button class="btn btn-primary mb-3 w-100">Ajouter une écriture</button>
     </div>
-    <div class="col-md-3">
-      <button class="btn btn-primary mb-3 w-100" (click)="goBack()">Retour</button>
+    <div class="col-md-4">
+      <button class="btn btn-primary mb-3 w-100" [routerLink]="['../../../treasury']">Retour</button>
     </div>
   </div>
 
@@ -40,7 +40,13 @@
         <td></td>
       </tr> -->
     </table>
-    <br/>
-    <pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+  </div>
+  <br/>
+  <pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+  <br/><br/>
+  <div class="row">
+    <div class="col-md-4">
+      <button class="btn btn-warning mb-3 w-100" [routerLink]="['/account/edit', account.id]">Modifier le compte</button>
+    </div>
   </div>
 </div>

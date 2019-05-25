@@ -51,8 +51,6 @@ export class AccountCreateComponent implements OnInit, OnDestroy {
       type: parseInt(v.accountType)
     };
 
-    console.log(account);
-
     this.accountService.accountPost(account)
       .pipe(takeWhile(() => this.alive))
       .subscribe(res => {

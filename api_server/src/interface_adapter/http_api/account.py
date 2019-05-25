@@ -80,8 +80,8 @@ class AccountHandler:
         """ Partially update an account from the database """
         LOG.debug("http_account_patch_called", extra=log_extra(ctx, account_id=account_id, request=body))
         try:
-            mutation_request = _map_http_request_to_partial_mutation_request(body)
-            self.account_manager.update_partially(ctx, account_id, mutation_request)
+            mutation_request = _map_http_request_to_full_mutation_request(body)
+            self.account_manager.update_or_create(ctx, mutation_request, account_id)
             return NoContent, 204  # 204 No Content
 
         except AccountNotFoundError:
@@ -91,10 +91,9 @@ class AccountHandler:
 def _map_http_request_to_partial_mutation_request(body) -> PartialMutationRequest:
     return PartialMutationRequest(
         name=body.get('name'),
-        type=body.get('type'),
+        type=body.get('type_'),
         actif=body.get('actif'),
         creation_date=body.get('creation_date'),
-        account_id=body.get('id'),
     )
 
 

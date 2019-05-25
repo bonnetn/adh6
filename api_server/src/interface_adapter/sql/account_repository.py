@@ -75,7 +75,8 @@ class AccountSQLRepository(AccountRepository):
         Will raise (one day) AccountNotFound
         """
         s = ctx.get(CTX_SQL_SESSION)
-        LOG.debug("sql_account_repository_update_account_called", extra=log_extra(ctx, account_id=account_id))
+        LOG.debug("sql_account_repository_update_account_called", extra=log_extra(ctx, account_id=account_id,
+                                                                                  actif=actif))
 
         account = _get_account_by_id(s, account_id)
         if account is None:
@@ -84,7 +85,7 @@ class AccountSQLRepository(AccountRepository):
         with track_modifications(ctx, s, account):
             account.name = name or account.name
             account.type = type or account.type
-            account.actif = actif or account.actif
+            account.actif = actif
             account.creation_date = creation_date or account.creation_date
 
 
