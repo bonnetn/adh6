@@ -58,7 +58,7 @@ class TransactionHandler:
     @auth_regular_admin
     def post(self, ctx, body):
         """ Add a transaction record in the database """
-        LOG.debug("http_member_post_transaction_called", extra=log_extra(ctx, request=body))
+        LOG.debug("http_transaction_post_called", extra=log_extra(ctx, request=body))
 
         mutation_request = _map_http_request_to_full_mutation_request(body)
         try:

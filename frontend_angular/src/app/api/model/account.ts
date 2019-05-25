@@ -25,8 +25,12 @@ export interface Account {
      */
     name?: string;
     /**
-     * ID of the type of account
+     * The type of account
      */
     type: number;
+    /**
+     * The date the account was created
+     */
+    creationDate?: Date;
 }
 

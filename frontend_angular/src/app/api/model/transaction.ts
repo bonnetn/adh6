@@ -16,10 +16,9 @@ export interface Transaction {
     dst: number;
     readonly id?: number;
     name: string;
-    product?: number;
     src: number;
-    readonly timestamp?: number;
-    type: number;
+    readonly timestamp?: Date;
+    payment_method: string;
     value: number;
 }
 

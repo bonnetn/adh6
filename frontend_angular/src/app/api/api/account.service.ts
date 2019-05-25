@@ -61,6 +61,95 @@ export class AccountService {
 
 
     /**
+     * Retrieve
+     * 
+     * @param accountId The id of the account that needs to be fetched.
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public accountAccountIdGet(accountId: string, observe?: 'body', reportProgress?: boolean): Observable<Account>;
+    public accountAccountIdGet(accountId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Account>>;
+    public accountAccountIdGet(accountId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Account>>;
+    public accountAccountIdGet(accountId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (accountId === null || accountId === undefined) {
+            throw new Error('Required parameter accountId was null or undefined when calling accountAccountIdGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.get<Account>(`${this.configuration.basePath}/account/${encodeURIComponent(String(accountId))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Partially update
+     * 
+     * @param accountId id of the account will be updated
+     * @param accountPatchRequest New values of the account
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public accountAccountIdPatch(accountId: number, accountPatchRequest: AccountPatchRequest, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public accountAccountIdPatch(accountId: number, accountPatchRequest: AccountPatchRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public accountAccountIdPatch(accountId: number, accountPatchRequest: AccountPatchRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public accountAccountIdPatch(accountId: number, accountPatchRequest: AccountPatchRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (accountId === null || accountId === undefined) {
+            throw new Error('Required parameter accountId was null or undefined when calling accountAccountIdPatch.');
+        }
+        if (accountPatchRequest === null || accountPatchRequest === undefined) {
+            throw new Error('Required parameter accountPatchRequest was null or undefined when calling accountAccountIdPatch.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/account/${encodeURIComponent(String(accountId))}`,
+            accountPatchRequest,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Filter accounts
      * 
      * @param limit Limit the number of accounts returned in the result. Default is 100
@@ -111,95 +200,6 @@ export class AccountService {
         return this.httpClient.get<Array<Account>>(`${this.configuration.basePath}/account/`,
             {
                 params: queryParameters,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Retrieve
-     * 
-     * @param id The id of the account that needs to be fetched.
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public accountIdGet(id: number, observe?: 'body', reportProgress?: boolean): Observable<Account>;
-    public accountIdGet(id: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Account>>;
-    public accountIdGet(id: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Account>>;
-    public accountIdGet(id: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling accountIdGet.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-        ];
-
-        return this.httpClient.get<Account>(`${this.configuration.basePath}/account/${encodeURIComponent(String(id))}`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Partially update
-     * 
-     * @param id id of the account will be updated
-     * @param accountPatchRequest New values of the account
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public accountIdPatch(id: number, accountPatchRequest: AccountPatchRequest, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public accountIdPatch(id: number, accountPatchRequest: AccountPatchRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public accountIdPatch(id: number, accountPatchRequest: AccountPatchRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public accountIdPatch(id: number, accountPatchRequest: AccountPatchRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling accountIdPatch.');
-        }
-        if (accountPatchRequest === null || accountPatchRequest === undefined) {
-            throw new Error('Required parameter accountPatchRequest was null or undefined when calling accountIdPatch.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/account/${encodeURIComponent(String(id))}`,
-            accountPatchRequest,
-            {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

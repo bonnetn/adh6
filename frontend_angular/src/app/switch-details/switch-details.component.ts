@@ -3,7 +3,7 @@ import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 
-import {ModelSwitch} from '../api/model/modelSwitch';
+import {Switch} from '../api/model/switch';
 import {SwitchService} from '../api/api/switch.service';
 
 import {PortService} from '../api/api/port.service';
@@ -29,7 +29,7 @@ export interface PortListResult {
 })
 export class SwitchDetailsComponent extends SearchPage implements OnInit {
 
-  switch$: Observable<ModelSwitch>;
+  switch$: Observable<Switch>;
   result$: Observable<PortListResult>;
   switchID: number;
   page_number = 1;

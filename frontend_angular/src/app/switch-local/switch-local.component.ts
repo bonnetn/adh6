@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {SwitchService} from '../api/api/switch.service';
-import {ModelSwitch} from '../api/model/modelSwitch';
+import {Switch} from '../api/model/switch';
 import {Port} from '../api/model/port';
 import {PortService} from '../api/api/port.service';
 
@@ -12,7 +12,7 @@ import {PortService} from '../api/api/port.service';
 })
 export class SwitchLocalComponent implements OnInit, OnDestroy {
 
-  switch$: Observable<ModelSwitch>;
+  switch$: Observable<Switch>;
   ports$: Observable<Array<Port>>;
   switchID = 1;
 

@@ -115,18 +115,18 @@ export class TransactionService {
     }
 
     /**
-     * Delete
+     * Create a transaction
      * 
-     * @param id The unique identifier of the transaction that will be deleted
+     * @param transaction Transaction to create
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public transactionIdDelete(id: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public transactionIdDelete(id: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public transactionIdDelete(id: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public transactionIdDelete(id: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling transactionIdDelete.');
+    public transactionPost(transaction: Transaction, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public transactionPost(transaction: Transaction, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public transactionPost(transaction: Transaction, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public transactionPost(transaction: Transaction, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (transaction === null || transaction === undefined) {
+            throw new Error('Required parameter transaction was null or undefined when calling transactionPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -141,9 +141,15 @@ export class TransactionService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
+            'application/json'
         ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/transaction/${encodeURIComponent(String(id))}`,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/transaction/`,
+            transaction,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -156,16 +162,16 @@ export class TransactionService {
     /**
      * Retrieve
      * 
-     * @param id The unique identifier of the transaction that needs to be fetched
+     * @param transactionId The unique identifier of the transaction that needs to be fetched
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public transactionIdGet(id: number, observe?: 'body', reportProgress?: boolean): Observable<Transaction>;
-    public transactionIdGet(id: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Transaction>>;
-    public transactionIdGet(id: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Transaction>>;
-    public transactionIdGet(id: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling transactionIdGet.');
+    public transactionTransactionIdGet(transactionId: string, observe?: 'body', reportProgress?: boolean): Observable<Transaction>;
+    public transactionTransactionIdGet(transactionId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Transaction>>;
+    public transactionTransactionIdGet(transactionId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Transaction>>;
+    public transactionTransactionIdGet(transactionId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (transactionId === null || transactionId === undefined) {
+            throw new Error('Required parameter transactionId was null or undefined when calling transactionTransactionIdGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -183,7 +189,56 @@ export class TransactionService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.get<Transaction>(`${this.configuration.basePath}/transaction/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<Transaction>(`${this.configuration.basePath}/transaction/${encodeURIComponent(String(transactionId))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Update/create
+     * 
+     * @param transactionId The unique identifier of the transaction that needs to be updated
+     * @param transaction New values for the transaction, only the attachments can be modified
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public transactionTransactionIdPut(transactionId: number, transaction: Transaction, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public transactionTransactionIdPut(transactionId: number, transaction: Transaction, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public transactionTransactionIdPut(transactionId: number, transaction: Transaction, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public transactionTransactionIdPut(transactionId: number, transaction: Transaction, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (transactionId === null || transactionId === undefined) {
+            throw new Error('Required parameter transactionId was null or undefined when calling transactionTransactionIdPut.');
+        }
+        if (transaction === null || transaction === undefined) {
+            throw new Error('Required parameter transaction was null or undefined when calling transactionTransactionIdPut.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.put<any>(`${this.configuration.basePath}/transaction/${encodeURIComponent(String(transactionId))}`,
+            transaction,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

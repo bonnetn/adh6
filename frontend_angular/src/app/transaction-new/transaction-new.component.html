@@ -1,7 +1,7 @@
 <h2 class="text-left">Nouvelle transaction</h2>
 <hr>
 
-<form [formGroup]="transactionDetails" (ngSubmit)="onSubmit()" novalidate>
+<form [formGroup]="transactionDetails" (ngSubmit)="onSubmit()">
   <div class="card-deck">
     <div class="card">
       <div class="card-header text-white bg-danger">Compte source</div>
@@ -9,14 +9,20 @@
         <div class="suggestion">
           <input type="text" placeholder="Rechercher..." class="w-100 form-control" #srcAccount
                  (keyup)="srcSearch(srcAccount.value)"/>
-          <div class="list-group w-100">
+          <input type="hidden" formControlName="srcAccount" [value]="selectedSrcAccount != undefined ? selectedSrcAccount.id : ''">
+          <div class="list-group w-100" *ngIf="srcSearchResult$ | async as srcSearchResult">
             <a
-              (click)="console.log(searchResult.value)"
+              (click)="setSelectedAccount(account, true)"
               class="list-group-item"
-              *ngFor="let searchResult of srcSearchResult$ | async"
+              *ngFor="let account of srcSearchResult.accounts"
             >
-              {{ searchResult.name }}
+              {{ account.name }}
             </a>
+          </div>
+          <hr>
+          <div *ngIf="selectedSrcAccount != undefined">
+            <p><span class="font-weight-bold">Nom :</span> {{ selectedSrcAccount.name}}</p>
+            <p><span class="font-weight-bold">Actif :</span> {{ selectedSrcAccount.actif}}</p>
           </div>
         </div>
       </div>
@@ -28,15 +34,17 @@
         <div class="form-group mb-3">
           <input type="text" class="form-control" aria-label="Description" placeholder="Description" formControlName="name">
         </div>
+        <div class="form-group">
+          <label for="paidBy">Payé par :</label>
+          <select class="w-100 form-control" formControlName="paymentMethod" id="paidBy">
+            <option *ngFor="let pm of paymentMethods$ | async" [value]="pm.payment_method_id">{{ pm.name }}</option>
+          </select>
+        </div>
         <div class="input-group input-group-lg">
           <div class="input-group-prepend">
             <span class="input-group-text" id="value">€</span>
           </div>
           <input type="text" class="form-control" aria-label="value" aria-describedby="value" formControlName="value" type="number">
-          <select class="w-100 form-control" type="text"
-              formControlName="paidBy">
-              <option *ngFor="let pm of paymentMethods$ | async" value="{{ pm.id }}">{{ pm.name }}</option>
-            </select>
         </div>
       </div>
     </div>
@@ -45,15 +53,21 @@
       <div class="card-body">
         <div class="suggestion">
           <input type="text" placeholder="Rechercher..." class="w-100 form-control" #dstAccount
-                 (keyup)="dstSearch(dstAccount.value)"/>
-          <div class="list-group w-100">
+                 (keyup)="dstSearch(dstAccount.id)"/>
+          <input type="hidden" formControlName="dstAccount" [value]="selectedDstAccount != undefined ? selectedDstAccount.id : ''">
+          <div class="list-group w-100" *ngIf="dstSearchResult$ | async as dstSearchResult">
             <a
-              (click)="console.log(searchResult.value)"
+              (click)="setSelectedAccount(account, false)"
               class="list-group-item"
-              *ngFor="let searchResult of dstSearchResult$ | async"
+              *ngFor="let account of dstSearchResult.accounts"
             >
-              {{ searchResult.name }}
+              {{ account.name }}
             </a>
+          </div>
+          <hr>
+          <div *ngIf="selectedDstAccount != undefined">
+            <p><span class="font-weight-bold">Nom :</span> {{ selectedDstAccount.name}}</p>
+            <p><span class="font-weight-bold">Actif :</span> {{ selectedDstAccount.actif}}</p>
           </div>
         </div>
       </div>
@@ -62,7 +76,7 @@
   </div>
 
   <br>
-  <button type="submit" class="btn btn-primary w-100">Créer</button>
+  <button type="submit" class="btn btn-primary w-100" [disabled]="transactionDetails.status == 'INVALID' || isFormInvalid()">Créer</button>
 
 </form>
 

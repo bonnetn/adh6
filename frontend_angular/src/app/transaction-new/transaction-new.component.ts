@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import {concat, EMPTY, from, merge, Observable, Subject} from 'rxjs';
+import {takeWhile} from 'rxjs/operators';
 import {debounceTime, distinctUntilChanged, map, mergeMap, scan, switchMap} from 'rxjs/operators';
 
 import {TransactionService} from '../api/api/transaction.service';
@@ -22,24 +23,8 @@ export interface TransactionListResult {
   items_per_page?: number;
 }
 
-class QueryParams {
-  highlight: string;
-}
-
-export class SearchResult {
-  objType: string;
-  name: string;
-  color = 'grey';
-  link: Array<string>;
-  queryParams: QueryParams;
-
-  constructor(t: string, n: string, link: Array<string>, params?: QueryParams) {
-    this.objType = t;
-    this.name = n;
-    this.color = 'red';
-    this.link = link;
-    this.queryParams = params;
-  }
+export interface AccountListResult {
+  accounts?: Array<Account>;
 }
 
 @Component({
@@ -49,14 +34,17 @@ export class SearchResult {
 })
 export class TransactionNewComponent extends SearchPage implements OnInit {
   transactionDetails: FormGroup;
+  private alive = true;
 
   paymentMethods$: Observable<Array<PaymentMethod>>;
   result$: Observable<TransactionListResult>;
 
-  srcSearchResult$: Observable<Array<SearchResult>>;
-  dstSearchResult$: Observable<Array<SearchResult>>;
-  private srcSearchTerm$ = new Subject<string>();
-  private dstSearchTerm$ = new Subject<string>();
+  srcSearchResult$: Observable<Array<Account>>;
+  dstSearchResult$: Observable<Array<Account>>;
+
+  selectedSrcAccount: Account;
+  selectedDstAccount: Account;
+
 
   constructor(private fb: FormBuilder,
   public transactionService: TransactionService,
@@ -67,52 +55,55 @@ export class TransactionNewComponent extends SearchPage implements OnInit {
   }
 
   srcSearch(terms: string) {
-    this.srcSearchTerm$.next(terms);
+    this.srcSearchResult$ = this.getSearchResult((terms) => {
+        return this.accountService.accountGet(20, 0, terms).pipe(
+          map((response) => {
+            return <AccountListResult>{
+              accounts: response
+            };
+          }),
+        );
+      });
   }
+
   dstSearch(terms: string) {
-    this.dstSearchTerm$.next(terms);
+    this.dstSearchResult$ = this.getSearchResult((terms) => {
+        return this.accountService.accountGet(20, 0, terms).pipe(
+          map((response) => {
+            return <AccountListResult>{
+              accounts: response
+            };
+          }),
+        );
+      });
+  }
+
+  setSelectedAccount(account, src) {
+    if (src == true) {
+      this.srcSearchResult$ = undefined;
+      this.selectedSrcAccount = account;
+    } else {
+      this.dstSearchResult$ = undefined;
+      this.selectedDstAccount = account;
+    }
+  }
+
+  isFormInvalid() {
+    return this.selectedSrcAccount == undefined || this.selectedDstAccount == undefined;
   }
 
   createForm() {
-    this.transactionDetails = this.fb.group({});
+    this.transactionDetails = this.fb.group({
+      name: ['', Validators.required],
+      value: ['', Validators.required],
+      paymentMethod: ['', Validators.required]
+    });
   }
 
   ngOnInit() {
     super.ngOnInit();
     this.result$ = this.getSearchResult((terms, page) => this.fetchTransaction(terms, page));
     this.paymentMethods$ = this.paymentMethodService.paymentMethodGet();
-
-    this.srcSearchResult$ = this.srcSearchTerm$.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).pipe(
-      switchMap((terms: string) => {
-        return this.accountService.accountGet(20, 0, terms).pipe(
-          mergeMap((array) => from(array)),
-          map((obj) => new SearchResult(
-            'account',
-            obj.name,
-            ['/account/view', ''+obj.id]
-          )),
-        );
-      }),
-    ).pipe(map(x => [x]));
-
-    this.dstSearchResult$ = this.dstSearchTerm$.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).pipe(
-      switchMap((terms: string) => {
-        return this.accountService.accountGet(20, 0, terms).pipe(
-          mergeMap((array) => from(array)),
-          map((obj) => new SearchResult(
-            'account',
-            obj.name,
-            ['/account/view', ''+obj.id]
-          )),
-        );
-      }),
-    ).pipe(map(x => [x]));
   }
 
   private fetchTransaction(terms: string, page: number): Observable<TransactionListResult> {
@@ -132,5 +123,20 @@ export class TransactionNewComponent extends SearchPage implements OnInit {
   }
 
   onSubmit() {
+      const v = this.transactionDetails.value;
+      const varTransaction: Transaction = {
+        attachments: '',
+        dst: this.selectedDstAccount.id,
+        name: v.name,
+        src: this.selectedSrcAccount.id,
+        payment_method: v.paymentMethod,
+        value: v.value,
+      };
+
+    this.transactionService.transactionPost(varTransaction)
+      .pipe(takeWhile(() => this.alive))
+      .subscribe((res) => {
+        
+      });
   }
 }

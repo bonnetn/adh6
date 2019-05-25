@@ -15,7 +15,6 @@ import { RoomService } from './api/room.service';
 import { SwitchService } from './api/switch.service';
 import { TemporaryAccountService } from './api/temporaryAccount.service';
 import { TransactionService } from './api/transaction.service';
-import {BASE_PATH} from './variables';
 
 @NgModule({
   imports:      [],

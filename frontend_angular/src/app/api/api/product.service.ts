@@ -121,10 +121,10 @@ export class ProductService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public productIdGet(id: number, observe?: 'body', reportProgress?: boolean): Observable<Product>;
-    public productIdGet(id: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Product>>;
-    public productIdGet(id: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Product>>;
-    public productIdGet(id: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public productIdGet(id: string, observe?: 'body', reportProgress?: boolean): Observable<Product>;
+    public productIdGet(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Product>>;
+    public productIdGet(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Product>>;
+    public productIdGet(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling productIdGet.');
         }
