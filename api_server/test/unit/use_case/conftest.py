@@ -110,13 +110,25 @@ def sample_payment_method():
 @fixture
 def sample_transaction():
     return Transaction(
-        src='1',
-        dst='2',
+        src=Account(
+            name="Test",
+            type=1,
+            actif=True,
+            creation_date='21/05/2019',
+            account_id=1
+        ),
+        dst=Account(
+            name="Test2",
+            type=1,
+            actif=True,
+            creation_date='21/05/2019',
+            account_id=2
+        ),
         name='description',
         value='200',
         attachments='',
         timestamp='',
-        payment_method=PaymentMethod(
+        paymentMethod=PaymentMethod(
             payment_method_id=0,
             name='liquide'
         ))

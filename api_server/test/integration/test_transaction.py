@@ -77,8 +77,8 @@ def assert_transaction_in_db(body):
     q = q.filter(Transaction.name == body["name"])
     sw = q.one()
     assert sw.name == body["name"]
-    assert sw.src == body["src"]
-    assert sw.dst == body["dst"]
+    assert sw.src == body["srcID"]
+    assert sw.dst == body["dstID"]
     assert sw.value == body["value"]
 
 
@@ -103,12 +103,12 @@ def test_switch_post_invalid_value(api_client, test_value):
 
 def test_transaction_post_valid(api_client):
     sample_transaction1 = {
-        "src": 1,
-        "dst": 2,
+        "srcID": 1,
+        "dstID": 2,
         "name": "test",
         "attachments": "",
         "value": 400,
-        "payment_method": '1'
+        "paymentMethodID": 1
     }
 
     # Insert data to the database

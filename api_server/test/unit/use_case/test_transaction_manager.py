@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 from pytest import fixture, raises
 
 from src.entity.transaction import Transaction
-from src.exceptions import TransactionNotFoundError, IntMustBePositive
+from src.exceptions import TransactionNotFoundError, IntMustBePositive, UserInputError
 from src.use_case.interface.transaction_repository import TransactionRepository
 from src.use_case.transaction_manager import TransactionManager, FullMutationRequest
 
@@ -44,7 +44,8 @@ class TestSearch:
 
         assert [sample_transaction] == result
         assert 1 == count
-        mock_transaction_repository.search_transaction_by.assert_called_once_with(ctx, limit=42, offset=2, terms='abc')
+        mock_transaction_repository.search_transaction_by.assert_called_once_with(ctx, account_id=None, limit=42,
+                                                                                  offset=2, terms='abc')
 
     def test_offset_negative(self,
                              ctx,
@@ -137,10 +138,10 @@ class TestCreate:
                         transaction_manager: TransactionManager):
         req = FullMutationRequest(
             src='1',
-            dst='1',
+            dst='2',
             name='test',
             value=1,
-            payment_method='1',
+            paymentMethod='1',
             attachments=None
 
         )
@@ -150,8 +151,23 @@ class TestCreate:
 
         mock_transaction_repository.create_transaction.assert_called_once_with(ctx, src=req.src, dst=req.dst,
                                                                                name=req.name, value=req.value,
-                                                                               payment_method=req.payment_method,
+                                                                               paymentMethod=req.paymentMethod,
                                                                                attachments=None)
+
+    def test_same_account(self,
+                          ctx,
+                          transaction_manager: TransactionManager):
+        req = FullMutationRequest(
+            src='1',
+            dst='1',
+            name='test',
+            value=1,
+            paymentMethod='1',
+            attachments=None
+
+        )
+        with raises(UserInputError):
+            transaction_manager.update_or_create(ctx, req)
 
 
 @fixture
