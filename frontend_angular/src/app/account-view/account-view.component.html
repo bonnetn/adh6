@@ -29,7 +29,7 @@
         <td>{{ transaction.timestamp }}</td>
         <td>admin</td>
         <td>{{ transaction.name }}</td>
-        <td>{{ transaction.payment_method.name }}</td>
+        <td>{{ transaction.paymentMethod.name }}</td>
         <td>{{ ( transaction.dst.id==account.id ? '+' : '-' ) + transaction.value }}€</td>
         <td>{{ ( transaction.src.id==account.id ? transaction.dst.name : transaction.src.name ) }}</td>
       </tr>
