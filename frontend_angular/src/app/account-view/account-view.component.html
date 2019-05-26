@@ -13,7 +13,7 @@
 
 
   <div style="overflow-x:auto;" class="u-max-full-width">
-    <table class="table"> <!-- *ngIf="result$ | async as result" -->
+    <table class="table" *ngIf="result$ | async as result">
       <thead>
         <tr>
           <th>Date</th>
@@ -23,22 +23,14 @@
           <th>Montant</th>
         </tr>
       </thead>
-      <!-- TODO : afficher une vrai liste... -->
-      <tr>
-        <td>03/05/2019</td>
-        <td>Gabriel P</td>
-        <td>Cotisation 1 mois</td>
-        <td>CB</td>
-        <td>9 €</td>
+      <tr *ngFor="let transaction of result.transactions | paginate: { itemsPerPage: result.item_per_page, currentPage: result.current_page, totalItems: result.item_count}"
+          [ngClass]="(transaction.src==account.id)?'table-success':'table-danger'">
+        <td>{{ transaction.timestamp }}</td>
+        <td>admin</td>
+        <td>{{ transaction.name }}</td>
+        <td>{{ transaction.payment_method }}</td>
+        <td>{{ ((transaction.src==account.id)?'+':'-') + transaction.value }}€</td>
       </tr>
-      <!-- <tr *ngFor="let member of result.members | paginate: { itemsPerPage: result.item_per_page, currentPage: result.current_page, totalItems: result.item_count}"
-      [routerLink]="['../view', member.username]">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr> -->
     </table>
   </div>
   <br/>

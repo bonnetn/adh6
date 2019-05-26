@@ -2,9 +2,8 @@
 """
 Implements everything related to actions on the SQL database.
 """
-from typing import List
-
 from datetime import datetime
+from typing import List
 
 from sqlalchemy.orm import aliased
 
@@ -20,7 +19,8 @@ from src.util.log import LOG
 
 class TransactionSQLRepository(TransactionRepository):
 
-    def search_transaction_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, transaction_id=None, terms=None) \
+    def search_transaction_by(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, transaction_id=None,
+                              account_id=None, terms=None) \
             -> (List[Transaction], int):
         LOG.debug("sql_transaction_repository_search_called", extra=log_extra(ctx))
         s = ctx.get(CTX_SQL_SESSION)
@@ -37,6 +37,11 @@ class TransactionSQLRepository(TransactionRepository):
         if terms:
             q = q.filter(
                 (SQLTransaction.name.contains(terms))
+            )
+        if account_id:
+            q = q.filter(
+                (SQLTransaction.src == account_id) |
+                (SQLTransaction.dst == account_id)
             )
 
         count = q.count()

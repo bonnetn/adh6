@@ -14,7 +14,7 @@ class TransactionRepository(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def search_transaction_by(self, ctx, limit=None, offset=None, transaction_id=None, terms=None) -> \
+    def search_transaction_by(self, ctx, limit=None, offset=None, account_id=None, transaction_id=None, terms=None) -> \
             (List[Transaction], int):
         """
         Search for a transaction.

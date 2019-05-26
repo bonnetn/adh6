@@ -96,7 +96,7 @@ class TransactionManager:
         ))
         return result[0]
 
-    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None) -> (
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, account_id=None, terms=None) -> (
             List[Transaction], int):
         """
         search transactions in the database.
@@ -112,11 +112,13 @@ class TransactionManager:
         result, count = self.transaction_repository.search_transaction_by(ctx,
                                                                           limit=limit,
                                                                           offset=offset,
+                                                                          account_id=account_id,
                                                                           terms=terms)
 
         # Log action.
         LOG.info('transaction_search', extra=log_extra(
             ctx,
+            account_id=account_id,
             terms=terms,
         ))
         return result, count

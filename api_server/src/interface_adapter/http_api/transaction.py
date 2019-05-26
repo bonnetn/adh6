@@ -22,14 +22,15 @@ class TransactionHandler:
     @with_context
     @require_sql
     @auth_regular_admin
-    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, terms=None):
+    def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, account_id=None, terms=None):
         """ Search all the member. """
         LOG.debug("http_transaction_search_called", extra=log_extra(ctx,
                                                                     limit=limit,
                                                                     offset=offset,
+                                                                    account_id=account_id,
                                                                     terms=terms))
         try:
-            result, total_count = self.transaction_manager.search(ctx, limit, offset, terms)
+            result, total_count = self.transaction_manager.search(ctx, limit, offset, account_id, terms)
             headers = {
                 "X-Total-Count": str(total_count),
                 'access-control-expose-headers': 'X-Total-Count'
