@@ -11,4 +11,4 @@ clean:
 
 .PHONY: generate
 generate:
-	docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/openapi/spec.yaml -g typescript-angular -o /local/frontend_angular/src/app/api/
+	docker run --rm -v $(CURDIR):/local openapitools/openapi-generator-cli generate -i /local/openapi/spec.yaml -g typescript-angular -o /local/frontend_angular/src/app/api/
