@@ -17,3 +17,4 @@ export * from './product';
 export * from './room';
 export * from './switch';
 export * from './transaction';
+export * from './transactionRequest';

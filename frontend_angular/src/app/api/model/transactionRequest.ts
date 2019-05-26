@@ -9,18 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Account } from './account';
-import { PaymentMethod } from './paymentMethod';
 
 
-export interface Transaction { 
+export interface TransactionRequest { 
     attachments?: string;
-    dst: Account;
-    readonly id?: number;
+    dst: number;
     name: string;
-    src: Account;
-    readonly timestamp?: Date;
-    paymentMethod: PaymentMethod;
+    src: number;
+    payment_method: number;
     value: number;
 }
 

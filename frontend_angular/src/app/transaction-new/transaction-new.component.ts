@@ -7,6 +7,7 @@ import {debounceTime, distinctUntilChanged, map, mergeMap, scan, switchMap} from
 
 import {TransactionService} from '../api/api/transaction.service';
 import {Transaction} from '../api/model/transaction';
+import {TransactionRequest} from '../api/model/transactionRequest';
 import {PagingConf} from '../paging.config';
 
 import {SearchPage} from '../search-page';
@@ -124,7 +125,7 @@ export class TransactionNewComponent extends SearchPage implements OnInit {
 
   onSubmit() {
       const v = this.transactionDetails.value;
-      const varTransaction: Transaction = {
+      const varTransaction: TransactionRequest = {
         attachments: '',
         dst: this.selectedDstAccount.id,
         name: v.name,

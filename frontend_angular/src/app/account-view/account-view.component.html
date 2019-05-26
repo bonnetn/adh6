@@ -21,15 +21,17 @@
           <th>Intitulé</th>
           <th>Moyen</th>
           <th>Montant</th>
+          <th>De / Vers</th>
         </tr>
       </thead>
       <tr *ngFor="let transaction of result.transactions | paginate: { itemsPerPage: result.item_per_page, currentPage: result.current_page, totalItems: result.item_count}"
-          [ngClass]="(transaction.src==account.id)?'table-success':'table-danger'">
+          [ngClass]="(transaction.dst.id==account.id)?'table-success':'table-danger'">
         <td>{{ transaction.timestamp }}</td>
         <td>admin</td>
         <td>{{ transaction.name }}</td>
-        <td>{{ transaction.payment_method }}</td>
-        <td>{{ ((transaction.src==account.id)?'+':'-') + transaction.value }}€</td>
+        <td>{{ transaction.payment_method.name }}</td>
+        <td>{{ ( transaction.dst.id==account.id ? '+' : '-' ) + transaction.value }}€</td>
+        <td>{{ ( transaction.src.id==account.id ? transaction.dst.name : transaction.src.name ) }}</td>
       </tr>
     </table>
   </div>

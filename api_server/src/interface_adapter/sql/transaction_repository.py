@@ -10,7 +10,9 @@ from sqlalchemy.orm import aliased
 from src.constants import CTX_SQL_SESSION, DEFAULT_LIMIT, DEFAULT_OFFSET
 from src.entity.transaction import Transaction
 from src.exceptions import AccountNotFoundError, PaymentMethodNotFoundError
+from src.interface_adapter.sql.account_repository import _map_account_sql_to_entity
 from src.interface_adapter.sql.model.models import Transaction as SQLTransaction, Account, PaymentMethod
+from src.interface_adapter.sql.payment_method_repository import _map_payment_method_sql_to_entity
 from src.interface_adapter.sql.track_modifications import track_modifications
 from src.use_case.interface.transaction_repository import TransactionRepository
 from src.util.context import log_extra
@@ -107,11 +109,11 @@ def _map_transaction_sql_to_entity(t: SQLTransaction) -> Transaction:
     Map a Transaction object from SQLAlchemy to a Transaction (from the entity folder/layer).
     """
     return Transaction(
-        src=t.src,
-        dst=t.dst,
+        src=_map_account_sql_to_entity(t.src_account),
+        dst=_map_account_sql_to_entity(t.dst_account),
         timestamp=t.timestamp,
         name=t.name,
         value=t.value,
-        payment_method=t.payment_method,
+        payment_method=_map_payment_method_sql_to_entity(t.payment_method),
         attachments=t.attachments
     )

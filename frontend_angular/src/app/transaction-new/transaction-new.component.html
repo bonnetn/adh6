@@ -95,11 +95,11 @@
     <tbody>
       <tr
         *ngFor="let transactionResult of result.transactions | paginate: { itemsPerPage: result.items_per_page, currentPage: result.current_page, totalItems: result.item_count}">
-        <td class="center">{{ transactionResult.src }}</td>
+        <td class="center">{{ transactionResult.src.name }}</td>
         <td class="center">{{ transactionResult.name }}</td>
         <td class="center">{{ transactionResult.timestamp }}</td>
         <td class="center">{{ transactionResult.value }}</td>
-        <td class="center">{{ transactionResult.dst }}</td>
+        <td class="center">{{ transactionResult.dst.name }}</td>
       </tr>
     </tbody>
   </table>

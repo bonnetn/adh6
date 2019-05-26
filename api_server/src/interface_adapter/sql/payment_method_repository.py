@@ -31,12 +31,12 @@ class PaymentMethodSQLRepository(PaymentMethodRepository):
         q = q.limit(limit)
         r = q.all()
 
-        return list(map(_map_account_sql_to_entity, r)), count
+        return list(map(_map_payment_method_sql_to_entity, r)), count
 
 
-def _map_account_sql_to_entity(a) -> PaymentMethod:
+def _map_payment_method_sql_to_entity(a) -> PaymentMethod:
     """
-    Map a Account object from SQLAlchemy to a Account (from the entity folder/layer).
+    Map a Payment Method object from SQLAlchemy to a PaymentMethod (from the entity folder/layer).
     """
 
     return PaymentMethod(

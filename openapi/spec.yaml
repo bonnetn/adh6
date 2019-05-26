@@ -1381,7 +1381,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Transaction'
+              $ref: '#/components/schemas/TransactionRequest'
         description: Transaction to create
         required: true
       responses:
@@ -1756,9 +1756,7 @@ components:
         attachments:
           type: string
         dst:
-          example: 0
-          format: int32
-          type: integer
+          $ref: '#/components/schemas/Account'
         id:
           example: 0
           format: int32
@@ -1768,17 +1766,44 @@ components:
           example: Transaction test
           type: string
         src:
-          example: 0
-          format: int32
-          type: integer
+          $ref: '#/components/schemas/Account'
         timestamp:
           example: '2000-01-23T04:56:07.000+00:00'
           format: date-time
           readOnly: true
           type: string
         payment_method:
-          example: 'liquide'
+          $ref: "#/components/schemas/PaymentMethod"
+        value:
+          example: 42.0
+          format: double
+          type: number
+      required:
+      - value
+      - src
+      - dst
+      - name
+      - payment_method
+      type: object
+    TransactionRequest:
+      properties:
+        attachments:
           type: string
+        dst:
+          example: 0
+          format: int32
+          type: integer
+        name:
+          example: Transaction test
+          type: string
+        src:
+          example: 0
+          format: int32
+          type: integer
+        payment_method:
+          example: 0
+          format: int32
+          type: integer
         value:
           example: 42.0
           format: double
