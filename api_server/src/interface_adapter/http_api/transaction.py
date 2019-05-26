@@ -87,7 +87,7 @@ def _map_transaction_to_http_response(transaction: Transaction) -> dict:
         "dst": _map_account_to_http_response(transaction.dst),
         "timestamp": transaction.timestamp,
         "name": transaction.name,
-        "payment_method": _map_payment_method_to_http_response(transaction.payment_method),
+        "paymentMethod": _map_payment_method_to_http_response(transaction.paymentMethod),
         "value": transaction.value,
         "attachments": transaction.attachments
     }
@@ -97,10 +97,10 @@ def _map_transaction_to_http_response(transaction: Transaction) -> dict:
 
 def _map_http_request_to_partial_mutation_request(body) -> PartialMutationRequest:
     return PartialMutationRequest(
-        src=body.get('src'),
-        dst=body.get('dst'),
+        src=body.get('src_id'),
+        dst=body.get('dst_id'),
         name=body.get('name'),
-        payment_method=body.get('payment_method'),
+        paymentMethod=body.get('payment_method_id'),
         value=body.get('value')
     )
 

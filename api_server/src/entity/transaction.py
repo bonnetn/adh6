@@ -13,4 +13,4 @@ class Transaction:
     value: str
     timestamp: str
     attachments: str
-    payment_method: PaymentMethod
+    paymentMethod: PaymentMethod

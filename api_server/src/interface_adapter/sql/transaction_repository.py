@@ -54,7 +54,7 @@ class TransactionSQLRepository(TransactionRepository):
 
         return list(map(_map_transaction_sql_to_entity, r)), count
 
-    def create_transaction(self, ctx, src=None, dst=None, name=None, value=None, payment_method=None, attachments=None):
+    def create_transaction(self, ctx, src=None, dst=None, name=None, value=None, paymentMethod=None, attachments=None):
         LOG.debug("sql_device_repository_create_transaction_called", extra=log_extra(ctx, name=name))
         """
         Create a transaction.
@@ -79,10 +79,10 @@ class TransactionSQLRepository(TransactionRepository):
                 raise AccountNotFoundError(dst)
 
         method = None
-        if payment_method is not None:
-            method = s.query(PaymentMethod).filter(PaymentMethod.id == payment_method).one_or_none()
+        if paymentMethod is not None:
+            method = s.query(PaymentMethod).filter(PaymentMethod.id == paymentMethod).one_or_none()
             if not method:
-                raise PaymentMethodNotFoundError(payment_method)
+                raise PaymentMethodNotFoundError(paymentMethod)
 
         transaction = SQLTransaction(
             src_account=account_src,
@@ -114,6 +114,6 @@ def _map_transaction_sql_to_entity(t: SQLTransaction) -> Transaction:
         timestamp=t.timestamp,
         name=t.name,
         value=t.value,
-        payment_method=_map_payment_method_sql_to_entity(t.payment_method),
+        paymentMethod=_map_payment_method_sql_to_entity(t.payment_method),
         attachments=t.attachments
     )

@@ -14,13 +14,16 @@ import { PaymentMethod } from './paymentMethod';
 
 
 export interface Transaction { 
-    attachments?: string;
-    dst: Account;
     readonly id?: number;
     name: string;
-    src: Account;
+    readonly src?: Account;
+    readonly dst?: Account;
     readonly timestamp?: Date;
-    paymentMethod: PaymentMethod;
+    readonly paymentMethod?: PaymentMethod;
     value: number;
+    attachments?: string;
+    dstID: number;
+    srcID: number;
+    paymentMethodID: number;
 }
 

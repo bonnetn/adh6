@@ -19,7 +19,6 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { Transaction } from '../model/transaction';
-import { TransactionRequest } from '../model/transactionRequest';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -118,16 +117,16 @@ export class TransactionService {
     /**
      * Create a transaction
      * 
-     * @param transactionRequest Transaction to create
+     * @param transaction Transaction to create
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public transactionPost(transactionRequest: TransactionRequest, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public transactionPost(transactionRequest: TransactionRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public transactionPost(transactionRequest: TransactionRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public transactionPost(transactionRequest: TransactionRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (transactionRequest === null || transactionRequest === undefined) {
-            throw new Error('Required parameter transactionRequest was null or undefined when calling transactionPost.');
+    public transactionPost(transaction: Transaction, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public transactionPost(transaction: Transaction, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public transactionPost(transaction: Transaction, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public transactionPost(transaction: Transaction, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (transaction === null || transaction === undefined) {
+            throw new Error('Required parameter transaction was null or undefined when calling transactionPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -150,7 +149,7 @@ export class TransactionService {
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/transaction/`,
-            transactionRequest,
+            transaction,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

@@ -6,7 +6,7 @@ from typing import List, Optional
 
 from src.constants import DEFAULT_OFFSET, DEFAULT_LIMIT
 from src.exceptions import IntMustBePositive, MissingRequiredField, \
-    TransactionNotFoundError
+    TransactionNotFoundError, UserInputError
 from src.interface_adapter.sql.model.models import Transaction
 from src.use_case.interface.transaction_repository import TransactionRepository
 from src.util.context import log_extra
@@ -24,7 +24,7 @@ class PartialMutationRequest:
     dst: Optional[str] = None
     name: Optional[str] = None
     value: Optional[int] = None
-    payment_method: Optional[str] = None
+    paymentMethod: Optional[str] = None
     attachments: Optional[str] = None
 
     def validate(self):
@@ -42,7 +42,7 @@ class FullMutationRequest(PartialMutationRequest):
     dst: str
     name: str
     value: int
-    payment_method: str
+    paymentMethod: str
     attachments: Optional[str] = None
 
     def validate(self):
@@ -63,8 +63,8 @@ class FullMutationRequest(PartialMutationRequest):
             raise MissingRequiredField('value')
 
         # TYPE:
-        if self.payment_method is None:
-            raise MissingRequiredField('payment_method')
+        if self.paymentMethod is None:
+            raise MissingRequiredField('paymentMethod')
 
         super().validate()
 
@@ -140,6 +140,8 @@ class TransactionManager:
 
         if mutation_request.value < 0:
             raise IntMustBePositive('value')
+        if mutation_request.src == mutation_request.dst:
+            raise UserInputError('source and destination accounts must not be the same')
 
         # Build a dict that will be transformed into a transaction. If a field is not set, consider that it should be
         # None.
