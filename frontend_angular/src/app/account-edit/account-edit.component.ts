@@ -57,7 +57,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
       type: parseInt(v.type),
     };
 
-    this.accountService.accountIdPatch(this.account.id, accountPatch, 'response')
+    this.accountService.accountAccountIdPatch(this.account.id, accountPatch, 'response')
       .pipe(takeWhile(() => this.alive))
       .subscribe((response) => {
         this.router.navigate(['/account/view', this.account.id]);
@@ -72,7 +72,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
 
     this.route.paramMap
       .pipe(
-        switchMap((params: ParamMap) => this.accountService.accountIdGet(+params.get('accountID'))),
+        switchMap((params: ParamMap) => this.accountService.accountAccountIdGet(params.get('accountID'))),
         takeWhile(() => this.alive),
       )
       .subscribe((data: Account) => {

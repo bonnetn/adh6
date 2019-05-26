@@ -33,7 +33,7 @@ export class AccountViewComponent implements OnInit {
       );
 
     this.account$ = refresh$.pipe(
-      switchMap(id => this.accountService.accountIdGet(id)),
+      switchMap(id => this.accountService.accountAccountIdGet(''+id)),
       share()
     );
   }
