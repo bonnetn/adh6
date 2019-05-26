@@ -164,29 +164,6 @@ class TestCreate:
                                                                        actif=req.actif, creation_date=req.creation_date)
 
 
-'''
-class TestDelete:
-    def test_happy_path(self,
-                        ctx,
-                        mock_account_repository: AccountRepository,
-                        account_manager: AccountManager):
-        mock_account_repository.delete_account = MagicMock()
-
-        account_manager.delete(ctx, TEST_ACCOUNT_ID)
-
-        mock_account_repository.delete_account.assert_called_once_with(ctx, TEST_ACCOUNT_ID)
-
-    def test_not_found(self,
-                       ctx,
-                       mock_account_repository: AccountRepository,
-                       account_manager: AccountManager):
-        mock_account_repository.delete_account = MagicMock(side_effect=AccountNotFoundError)
-
-        with raises(AccountNotFoundError):
-            account_manager.delete(ctx, TEST_ACCOUNT_ID)
-'''
-
-
 @fixture
 def account_manager(mock_member_repository, mock_account_repository):
     return AccountManager(

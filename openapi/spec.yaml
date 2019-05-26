@@ -978,7 +978,7 @@ paths:
   /product/:
     get:
       parameters:
-      - description: Limit the number of accounts returned in the result. Default
+      - description: Limit the number of products returned in the result. Default
           is 100
         in: query
         name: limit
@@ -1034,19 +1034,19 @@ paths:
         description: New values of the product
         required: true
       responses:
-        204:
-          description: Updated
+        200:
+          description: Created
         400:
           description: Invalid input
       summary: Create product
       tags:
       - product
-  /product/{id}:
+  /product/{product_id}:
     get:
       parameters:
       - description: The id of the product that needs to be fetched.
         in: path
-        name: id
+        name: product_id
         required: true
         schema:
           type: string
@@ -1062,6 +1062,31 @@ paths:
       summary: Retrieve
       tags:
       - product
+    patch:
+      parameters:
+        - description: id of the product will be updated
+          in: path
+          name: product_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductPatchRequest'
+        description: New values of the product
+        required: true
+      responses:
+        204:
+          description: Updated
+        400:
+          description: Invalid input
+        404:
+          description: Not found
+      summary: Partially update
+      tags:
+        - product
   /room/:
     get:
       parameters:
@@ -1680,12 +1705,12 @@ components:
       type: object
     Product:
       example:
-        buying_price: 0.99
+        buying_price: 99
         id: 1
         name: "C\xE2ble 5m"
-        selling_price: 0.99
+        selling_price: 99
       properties:
-        buying_price_in_cents:
+        buying_price:
           description: Buying price of the product (in cents)
           example: 99
           type: integer
@@ -1697,14 +1722,30 @@ components:
           description: Name of the product
           example: "C\xE2ble 5m"
           type: string
-        selling_price_in_cents:
+        selling_price:
           description: Buying price of the product (in cents)
           example: 99
           type: integer
       required:
-      - buying_price_in_cents
-      - selling_price_in_cents
+      - buying_price
+      - selling_price
       - name
+      type: object
+    ProductPatchRequest:
+      example:
+        name: 'Cable'
+        buying_price: 99
+        selling_price: 99
+      properties:
+        name:
+          example: 'Cable'
+          type: string
+        buying_price:
+          example: 99
+          type: integer
+        selling_price:
+          example: 99
+          type: integer
       type: object
     Room:
       example:

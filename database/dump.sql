@@ -975,13 +975,13 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`buying_price` DECIMAL(8,2) NOT NULL,
-	`selling_price` DECIMAL(8,2) NOT NULL,
+	`buying_price` int(11) NOT NULL,
+	`selling_price` int(11) NOT NULL,
 	`name` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 LOCK TABLES `product` WRITE;
-INSERT INTO `product` VALUES (0, 0, 50, 'Abonnemnt 1an'), (1, 5, 5, 'Cable 5m');
+INSERT INTO `product` VALUES (0, 0, 5000, 'Abonnement 1an'), (1, 5, 500, 'Cable 5m');
 UNLOCK TABLES;
 
 

@@ -11,6 +11,7 @@ from src.entity.room import Room
 from src.entity.switch import Switch
 from src.entity.transaction import Transaction
 from src.entity.account import Account
+from src.entity.product import Product
 from src.entity.account_type import AccountType
 from src.use_case.member_manager import FullMutationRequest
 from src.util.context import build_context
@@ -142,4 +143,14 @@ def sample_account():
         actif=True,
         creation_date='21/05/2019',
         account_id=1
+    )
+
+
+@fixture
+def sample_product():
+    return Product(
+        name='loutre',
+        selling_price=9999,
+        buying_price=999,
+        product_id=1
     )

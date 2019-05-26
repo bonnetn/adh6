@@ -44,8 +44,6 @@ class AccountSQLRepository(AccountRepository):
 
         return account
 
-    # TODO: update_account mais même problème qu'au dessus
-
     def search_account_by(self, ctx, limit=None, offset=None, account_id=None, terms=None) -> (List[Account], int):
         """
         Search for an account.

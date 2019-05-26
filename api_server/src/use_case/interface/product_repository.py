@@ -14,8 +14,7 @@ class ProductRepository(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def search_product_by(self, ctx, limit=None, offset=None, name=None, terms=None) -> \
-            (List[Product], int):
+    def search_product_by(self, ctx, limit=None, offset=None, product_id=None, terms=None) -> (List[Product], int):
         """
         Search for a product.
         """
@@ -31,7 +30,7 @@ class ProductRepository(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def update_product(self, ctx, product_to_update, name=None, buying_price=None, selling_price=None):
+    def update_product(self, ctx, product_id=None, name=None, buying_price=None, selling_price=None ):
         """
         Update a product.
 

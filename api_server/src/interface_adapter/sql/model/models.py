@@ -277,13 +277,24 @@ class PaymentMethod(Base):
     name = Column(String(255), nullable=False)
 
 
-class Product(Base):
+class Product(Base, RubyHashTrackable):
     __tablename__ = 'product'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, unique=True)
     buying_price = Column(DECIMAL(8, 2), nullable=False)
     selling_price = Column(DECIMAL(8, 2), nullable=False)
     name = Column(String(255), nullable=False)
+
+    def serialize_snapshot_diff(self, snap_before: dict, snap_after: dict) -> str:
+        """
+        Override this method to add the prefix.
+        """
+        modif = rubydiff(snap_before, snap_after)
+        modif = '--- !ruby/hash:ActiveSupport::HashWithIndifferentAccess\n' + modif
+        return modif
+
+    def get_related_member(self):
+        return self
 
 
 class Account(Base, RubyHashTrackable):

@@ -153,6 +153,11 @@ class AccountTypeNotFoundError(NotFoundError):
         super().__init__('account_type', v)
 
 
+class ProductNotFoundError(NotFoundError):
+    def __init__(self, v=None):
+        super().__init__('product', v)
+
+
 # ALREADY EXIST ERRORS.
 class AlreadyExistsError(UserInputError):
     """

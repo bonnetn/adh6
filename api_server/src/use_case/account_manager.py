@@ -16,8 +16,6 @@ from src.util.context import log_extra
 from src.util.log import LOG
 
 
-# TODO: update_or_create
-
 @dataclass
 class PartialMutationRequest:
     """
@@ -83,8 +81,6 @@ class AccountManager:
 
         return result[0]
 
-    # TODO: get_by_type and get_by_status (actif or not)
-
     def search(self, ctx, limit=DEFAULT_LIMIT, offset=DEFAULT_OFFSET, account_id=None, terms=None) -> (
             List[Account], int):
         """
@@ -139,7 +135,6 @@ class AccountManager:
             ))
             # No account with that name, creating one...
             self.account_repository.create_account(ctx, **fields)
-            # TODO: LOG.info
             return True
 
         else:
@@ -150,5 +145,4 @@ class AccountManager:
                 account_id=account_id,
             ))
             self.account_repository.update_account(ctx, account_id=account_id, **fields)
-            # TODO: LOG.info
             return False
