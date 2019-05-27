@@ -11,7 +11,7 @@
     />
   </div>
 
-  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="editProductForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label>Prix d'achat :</label>
     <input
@@ -21,7 +21,7 @@
     />
   </div>
 
-    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="editProductForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label>Prix de vente :</label>
     <input
@@ -35,7 +35,7 @@
     <button
       class="btn btn-primary w-100"
       type="submit"
-      [disabled]="disabled || editAccountForm.status == 'INVALID'"
+      [disabled]="disabled || editProductForm.status == 'INVALID'"
     >
       Éditer le compte
     </button>
