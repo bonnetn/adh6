@@ -14,6 +14,7 @@ export * from './paymentMethod';
 export * from './paymentMethodPatchRequest';
 export * from './port';
 export * from './product';
+export * from './productPatchRequest';
 export * from './room';
 export * from './switch';
 export * from './transaction';

@@ -51,7 +51,7 @@ class ProductHandler:
                                                             name=body.get('name'),
                                                             buying_price=body.get('buying_price'),
                                                             selling_price=body.get('selling_price')),
-                                                            product_id=body.get('product_id'))
+                                                            product_id=body.get('id_'))
             if created:
                 return NoContent, 201  # 201 Created
             else:
@@ -90,10 +90,10 @@ class ProductHandler:
     @auth_regular_admin
     def patch(self, ctx, product_id, body):
         """ Partially update a product from the database """
-        LOG.debug("http_product_patch_called", extra=log_extra(ctx, product_id=product_id, request=body))
+        LOG.debug("http_product_patch_called", extra=log_extra(ctx, product_id=body.get("id_"), request=body))
         try:
             mutation_request = _map_http_request_to_full_mutation_request(body)
-            self.product_manager.update_or_create(ctx, mutation_request, product_id)
+            self.product_manager.update_or_create(ctx, mutation_request, body.get("id_"))
             return NoContent, 204  # 204 No Content
 
         except ProductNotFoundError:

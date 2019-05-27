@@ -1,0 +1,42 @@
+<h2 class="text-left">Création d'un produit</h2>
+
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label>Nom :</label>
+    <input
+      class="w-100 form-control"
+      type="text"
+      formControlName="productName"
+    />
+  </div>
+
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label>Prix de vente :</label>
+    <input
+      class="w-100 form-control"
+      type="number"
+      formControlName="productSellingPrice"
+    />
+  </div>
+
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label>Prix d'achat :</label>
+    <input
+      class="w-100 form-control"
+      type="number"
+      formControlName="productBuyingPrice"
+    />
+  </div>
+
+  <div class="form-group">
+    <button
+      class="btn btn-primary w-100"
+      type="submit"
+      [disabled]="disabled || productForm.status == 'INVALID'"
+    >
+      Créer le produit
+    </button>
+  </div>
+</form>

@@ -117,6 +117,11 @@ class ProductManager:
     def update_or_create(self, ctx, req: FullMutationRequest, product_id=None) -> bool:
         req.validate()
 
+        LOG.info('product_update_or_create', extra=log_extra(
+            ctx,
+            product_id=product_id
+        ))
+
         try:
             result, _ = self.product_repository.search_product_by(ctx, product_id=product_id)
             fields = {k: v for k, v in asdict(req).items()}

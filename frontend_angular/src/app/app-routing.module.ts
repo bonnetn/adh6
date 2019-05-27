@@ -25,7 +25,10 @@ import {AccountCreateComponent} from "./account-create/account-create.component"
 import {TransactionNewComponent} from "./transaction-new/transaction-new.component"
 import {AccountViewComponent} from "./account-view/account-view.component";
 import { AccountEditComponent } from "./account-edit/account-edit.component";
-
+import {ProductViewComponent} from "./product-view/product-view.component";
+import {ProductCreateComponent} from "./product-create/product-create.component";
+import {ProductListComponent} from "./product-list/product-list.component";
+import {ProductEditComponent} from "./product-edit/product-edit.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
@@ -100,6 +103,16 @@ const routes: Routes = [
     children: [
       {path: '', redirectTo: 'add', pathMatch: 'full'},
       {path: 'add', component: TransactionNewComponent},
+    ]
+  },
+   {
+    path: 'product',
+    children: [
+    {path: '', redirectTo: 'search', pathMatch: 'full'},
+    {path: 'search', component: ProductListComponent},
+    {path: 'add', component: ProductCreateComponent},
+    {path: 'view/:productID', component: ProductViewComponent},
+    {path: 'edit/:productID', component: ProductEditComponent},
     ]
   }
 ];

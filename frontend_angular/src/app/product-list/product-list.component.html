@@ -1,0 +1,45 @@
+<h2 class="text-left">Liste des produits</h2>
+<br/>
+
+<div class="row">
+  <div class="col-md-12">
+    <input
+      #searchBox
+      id="search-box"
+      (keyup)="search(searchBox.value)"
+      class="w-100 form-control mb-3"
+      type="text"
+    />
+  </div>
+</div>
+
+<div style="overflow-x:auto;" class="u-max-full-width">
+  <table class="table table-striped clickable-table table-sm" *ngIf="result$ | async as result">
+    <tr>
+      <th>Nom</th>
+      <th>Prix d'achat</th>
+      <th>Prix de vente</th>
+    </tr>
+
+    <tr
+    *ngFor="
+      let productResult of result.products
+        | paginate
+          : {
+              itemsPerPage: result.items_per_page,
+              currentPage: result.current_page,
+              totalItems: result.item_count
+            }
+    "
+  >
+    <td class="align-middle">
+      {{ productResult.name }}
+    </td>
+    <td class="align-middle">{{ productResult.buying_price*0.01 }}</td>
+    <td class="align-middle">{{ productResult.selling_price*0.01 }}</td>
+  </tr>
+</table>
+<pagination previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+(pageChange)="changePage($event)"></pagination>
+
+</div>

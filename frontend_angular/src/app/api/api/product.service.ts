@@ -19,6 +19,7 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { Product } from '../model/product';
+import { ProductPatchRequest } from '../model/productPatchRequest';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -62,7 +63,7 @@ export class ProductService {
     /**
      * Filter products
      * 
-     * @param limit Limit the number of accounts returned in the result. Default is 100
+     * @param limit Limit the number of products returned in the result. Default is 100
      * @param offset Skip the first n results
      * @param terms The generic search terms (will search in any field)
      * @param name Filter by name
@@ -115,46 +116,6 @@ export class ProductService {
     }
 
     /**
-     * Retrieve
-     * 
-     * @param id The id of the product that needs to be fetched.
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public productIdGet(id: string, observe?: 'body', reportProgress?: boolean): Observable<Product>;
-    public productIdGet(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Product>>;
-    public productIdGet(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Product>>;
-    public productIdGet(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling productIdGet.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-        ];
-
-        return this.httpClient.get<Product>(`${this.configuration.basePath}/product/${encodeURIComponent(String(id))}`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
      * Create product
      * 
      * @param product New values of the product
@@ -190,6 +151,95 @@ export class ProductService {
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/product/`,
             product,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Retrieve
+     * 
+     * @param productId The id of the product that needs to be fetched.
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public productProductIdGet(productId: string, observe?: 'body', reportProgress?: boolean): Observable<Product>;
+    public productProductIdGet(productId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Product>>;
+    public productProductIdGet(productId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Product>>;
+    public productProductIdGet(productId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (productId === null || productId === undefined) {
+            throw new Error('Required parameter productId was null or undefined when calling productProductIdGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.get<Product>(`${this.configuration.basePath}/product/${encodeURIComponent(String(productId))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Partially update
+     * 
+     * @param productId id of the product will be updated
+     * @param productPatchRequest New values of the product
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public productProductIdPatch(productId: number, productPatchRequest: ProductPatchRequest, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public productProductIdPatch(productId: number, productPatchRequest: ProductPatchRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public productProductIdPatch(productId: number, productPatchRequest: ProductPatchRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public productProductIdPatch(productId: number, productPatchRequest: ProductPatchRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (productId === null || productId === undefined) {
+            throw new Error('Required parameter productId was null or undefined when calling productProductIdPatch.');
+        }
+        if (productPatchRequest === null || productPatchRequest === undefined) {
+            throw new Error('Required parameter productPatchRequest was null or undefined when calling productProductIdPatch.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/product/${encodeURIComponent(String(productId))}`,
+            productPatchRequest,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

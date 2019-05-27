@@ -158,6 +158,7 @@ class TestCreate:
                                                                        selling_price=req.selling_price,
                                                                        buying_price=req.buying_price)
 
+
 class TestDelete:
     def test_happy_path(self, ctx,
                         mock_product_repository: MagicMock,

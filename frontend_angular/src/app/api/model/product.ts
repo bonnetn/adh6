@@ -15,7 +15,7 @@ export interface Product {
     /**
      * Buying price of the product (in cents)
      */
-    buyingPriceInCents: number;
+    buyingPrice: number;
     /**
      * ID of the product
      */
@@ -27,6 +27,6 @@ export interface Product {
     /**
      * Buying price of the product (in cents)
      */
-    sellingPriceInCents: number;
+    sellingPrice: number;
 }
 

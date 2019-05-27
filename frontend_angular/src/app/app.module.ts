@@ -43,6 +43,10 @@ import {environment} from '../environments/environment';
 import { AccountCreateComponent } from './account-create/account-create.component';
 import { AccountViewComponent } from './account-view/account-view.component';
 import { AccountEditComponent } from './account-edit/account-edit.component';
+import { ProductCreateComponent } from './product-create/product-create.component';
+import { ProductViewComponent } from './product-view/product-view.component';
+import { ProductListComponent } from './product-list/product-list.component';
+import { ProductEditComponent } from './product-edit/product-edit.component';
 
 
 @NgModule({
@@ -77,6 +81,10 @@ import { AccountEditComponent } from './account-edit/account-edit.component';
     TransactionNewComponent,
     AccountViewComponent,
     AccountEditComponent,
+    ProductCreateComponent,
+    ProductViewComponent,
+    ProductListComponent,
+    ProductEditComponent,
   ],
   imports: [
     BrowserModule,
