@@ -136,7 +136,7 @@ export class TransactionNewComponent extends SearchPage implements OnInit {
     this.transactionService.transactionPost(varTransaction)
       .pipe(takeWhile(() => this.alive))
       .subscribe((res) => {
-        
+          this.result$ = this.getSearchResult((terms, page) => this.fetchTransaction(terms, page));
       });
   }
 }
