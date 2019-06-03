@@ -12,6 +12,15 @@ info:
 servers:
   - url: /api
 paths:
+  /health/:
+    get:
+      operationId: health
+      responses:
+        200:
+          description: ADH6 is alive!
+        503:
+          description: Database is down.
+      summary: Health endpoint, query this with zabbix to know if ADH6 is running or not.
   /account/:
     get:
       parameters:

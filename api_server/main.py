@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
+import os
 import sys
 
 import connexion
-import os
 
 from config import CONFIGURATION, TEST_CONFIGURATION
-from src.interface_adapter.sql.account_type_repository import AccountTypeSQLRepository
 from src.interface_adapter.elasticsearch.repository import ElasticSearchRepository
 from src.interface_adapter.http_api.account import AccountHandler
 from src.interface_adapter.http_api.account_type import AccountTypeHandler
 from src.interface_adapter.http_api.device import DeviceHandler
+from src.interface_adapter.http_api.health import HealthHandler
 from src.interface_adapter.http_api.member import MemberHandler
 from src.interface_adapter.http_api.payment_method import PaymentMethodHandler
 from src.interface_adapter.http_api.port import PortHandler
@@ -19,27 +19,30 @@ from src.interface_adapter.http_api.switch import SwitchHandler
 from src.interface_adapter.http_api.temporary_account import TemporaryAccountHandler
 from src.interface_adapter.http_api.transaction import TransactionHandler
 from src.interface_adapter.snmp.switch_network_manager import SwitchSNMPNetworkManager
+from src.interface_adapter.sql.account_repository import AccountSQLRepository
+from src.interface_adapter.sql.account_type_repository import AccountTypeSQLRepository
 from src.interface_adapter.sql.device_repository import DeviceSQLRepository
 from src.interface_adapter.sql.member_repository import MemberSQLRepository
 from src.interface_adapter.sql.model.database import Database
 from src.interface_adapter.sql.money_repository import MoneySQLRepository
 from src.interface_adapter.sql.network_object_repository import NetworkObjectSQLRepository
 from src.interface_adapter.sql.payment_method_repository import PaymentMethodSQLRepository
-from src.interface_adapter.sql.room_repository import RoomSQLRepository
-from src.interface_adapter.sql.account_repository import AccountSQLRepository
+from src.interface_adapter.sql.ping_repository import PingSQLRepository
 from src.interface_adapter.sql.product_repository import ProductSQLRepository
+from src.interface_adapter.sql.room_repository import RoomSQLRepository
 from src.interface_adapter.sql.transaction_repository import TransactionSQLRepository
 from src.resolver import ADHResolver
+from src.use_case.account_manager import AccountManager
+from src.use_case.account_type_manager import AccountTypeManager
 from src.use_case.device_manager import DeviceManager
+from src.use_case.health_manager import HealthManager
 from src.use_case.member_manager import MemberManager
 from src.use_case.payment_method_manager import PaymentMethodManager
 from src.use_case.port_manager import PortManager
+from src.use_case.product_manager import ProductManager
 from src.use_case.room_manager import RoomManager
 from src.use_case.switch_manager import SwitchManager
-from src.use_case.account_manager import AccountManager
-from src.use_case.product_manager import ProductManager
 from src.use_case.transaction_manager import TransactionManager
-from src.use_case.account_type_manager import AccountTypeManager
 
 
 def init(testing=True):
@@ -54,6 +57,7 @@ def init(testing=True):
     Database.init_db(configuration.DATABASE, testing=testing)
 
     # Repositories:
+    ping_repository = PingSQLRepository()
     member_sql_repository = MemberSQLRepository()
     network_object_sql_repository = NetworkObjectSQLRepository()
     device_sql_repository = DeviceSQLRepository()
@@ -68,6 +72,7 @@ def init(testing=True):
     account_type_sql_repository = AccountTypeSQLRepository()
 
     # Managers
+    health_manager = HealthManager(ping_repository)
     switch_manager = SwitchManager(
         switch_repository=network_object_sql_repository,
     )
@@ -110,6 +115,7 @@ def init(testing=True):
     )
 
     # HTTP Handlers:
+    health_handler = HealthHandler(health_manager)
     transaction_handler = TransactionHandler(transaction_manager)
     member_handler = MemberHandler(member_manager)
     device_handler = DeviceHandler(device_manager)
@@ -130,6 +136,7 @@ def init(testing=True):
     app.add_api('swagger.yaml',
                 # resolver=RestyResolver('src.interface_adapter.http_api'),
                 resolver=ADHResolver({
+                    'health': health_handler,
                     'transaction': transaction_handler,
                     'member': member_handler,
                     'device': device_handler,
