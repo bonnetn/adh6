@@ -15,7 +15,7 @@ RUN cat auth.config.template.ts | envsubst | tee auth.config.ts
 ###############################################################################
 # 2nd stage, launch the app
 ###############################################################################
-FROM node:8.16.0-stretch-slim
+FROM node:10.16.0-stretch-slim
 
 EXPOSE 8443
 
@@ -32,7 +32,7 @@ RUN openssl genrsa -out /etc/ssl/private/adh6.key 2048 \
     && chown angular:angular /adh6/frontend_angular
 
 # Install angular system-wide
-RUN npm install -g @angular/cli
+RUN NG_CLI_ANALYTICS=ci npm install -g @angular/cli@8.0.1
 
 WORKDIR /adh6/frontend_angular
 

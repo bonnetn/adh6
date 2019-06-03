@@ -18,10 +18,10 @@ stages:
 
 angular_try_build:
   stage: build
-  image: node:8.16.0-stretch-slim
+  image: node:10.16.0-stretch-slim
   before_script:
     - cd frontend_angular/
-    - npm install -g @angular/cli
+    - NG_CLI_ANALYTICS=ci npm install -g @angular/cli@8.0.1
     - npm install
   script:
     - cp src/app/config/auth.config.ts{.example,}
