@@ -16,6 +16,20 @@ api_server/config/CONFIGURATION.py
 api_server/venv
 **/.pytest_cache
 
+# API GATEWAY
+api_gateway/.cache/
+api_gateway/.coverage
+api_gateway/.pytest_cache/
+api_gateway/.swagger-codegen/
+api_gateway/bin/
+api_gateway/include/
+api_gateway/lib/
+api_gateway/htmlcov/*
+api_gateway/pip-selfcheck.json
+api_gateway/certs/
+api_gateway/config/CONFIGURATION.py
+api_gateway/venv
+
 # FRONTEND (ANGULAR)
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 

@@ -1,0 +1,21 @@
+# Lib qui permet de faire un serveur web.
+Flask
+
+# Permet d'avoir des sessions qui sont stockees sur le serveur (et pas envoyees au client) donc on peut mettre des trucs
+# sensibles dedans (genre les tokens). Ca permet aussi de centraliser le stockage des sessions entre toutes les
+# instances de la gateway.
+Flask-Session
+
+# Permet de faire des requetes HTTP facilement.
+requests
+
+# Permet d'avoir pip-compile pour generer un requirements.txt facilement.
+pip-tools
+
+# Permet de valider les JWT recus du CAS.
+pyjwt[crypto]
+
+# Pour verifier manuellement que les utilisateurs sont bien dans les groups d'admin de ADH6...
+# C'est un hack, normalement CAS devrait nous renvoyer les groupes mais vu que l'overlay memberof est pas active
+# sur slapd, on doit faire ca.
+python-ldap
