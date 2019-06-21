@@ -1,0 +1,29 @@
+# Testing
+pytest
+pytest-cov
+
+# HTTP API
+Flask
+connexion
+swagger-ui-bundle
+uWSGI
+
+# SQL 
+SQLAlchemy
+mysqlclient
+
+# Misc
+python-dateutil
+PyYAML
+
+# ADH <-> Switches communication
+pysnmp
+
+# ELK communication
+elasticsearch
+
+# Communicate with other APIs (fetch MAC vendor)
+requests
+
+# Easily create requirements.txt
+pip-tools

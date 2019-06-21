@@ -155,6 +155,13 @@ source venv/bin/activate
 # Et on installe toutes les dépendances de ADH dans l'environnement virtuel.
 pip install -r requirements.txt
 
+#### Comment ajouter une dépendance Python
+Ajoutez votre dépendance dans requirements.in (*pas .TXT*).
+Puis lancez:
+```
+pip-compile # Genere un fichier requirements.txt
+pip-sync # Telecharge les deps et supprime les anciennes.
+```
 ...
 ```
 
