@@ -1,4 +1,10 @@
 # ADH6
+
+# =============================================================
+# THIS REPO HAS BEEN MIGRATED TO https://github.com/minet/adh6
+# =============================================================
+
+
 Auteur original: *Nicolas Bonnet*
 
 Liste des contributeurs:
