@@ -4,25 +4,55 @@
 #
 #    pip-compile
 #
-asn1crypto==0.24.0        # via cryptography
-certifi==2019.6.16        # via requests
-cffi==1.12.3              # via cryptography
-chardet==3.0.4            # via requests
-click==7.0                # via flask, pip-tools
-cryptography==2.7         # via pyjwt
+asn1crypto==0.24.0
+    # via cryptography
+certifi==2019.6.16
+    # via requests
+cffi==1.12.3
+    # via cryptography
+chardet==3.0.4
+    # via requests
+click==7.0
+    # via
+    #   flask
+    #   pip-tools
+cryptography==2.7
+    # via pyjwt
 flask-session==0.3.1
+    # via -r requirements.in
 flask==1.0.3
-idna==2.8                 # via requests
-itsdangerous==1.1.0       # via flask
-jinja2==2.10.1            # via flask
-markupsafe==1.1.1         # via jinja2
+    # via
+    #   -r requirements.in
+    #   flask-session
+idna==2.8
+    # via requests
+itsdangerous==1.1.0
+    # via flask
+jinja2==2.10.1
+    # via flask
+markupsafe==1.1.1
+    # via jinja2
 pip-tools==3.8.0
-pyasn1-modules==0.2.5     # via python-ldap
-pyasn1==0.4.5             # via pyasn1-modules, python-ldap
-pycparser==2.19           # via cffi
+    # via -r requirements.in
+pyasn1-modules==0.2.5
+    # via python-ldap
+pyasn1==0.4.5
+    # via
+    #   pyasn1-modules
+    #   python-ldap
+pycparser==2.19
+    # via cffi
 pyjwt[crypto]==1.7.1
+    # via -r requirements.in
 python-ldap==3.2.0
+    # via -r requirements.in
 requests==2.22.0
-six==1.12.0               # via cryptography, pip-tools
-urllib3==1.25.3           # via requests
-werkzeug==0.15.4          # via flask
+    # via -r requirements.in
+six==1.12.0
+    # via
+    #   cryptography
+    #   pip-tools
+urllib3==1.25.8
+    # via requests
+werkzeug==0.15.4
+    # via flask
